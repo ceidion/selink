@@ -1,0 +1,41 @@
+@import "bootstrap/variables.less";
+@import "bootstrap/mixins.less";
+@import "variables.less";
+@import "mixins.less";
+
+.sidebar {
+
+    .transition(width 0.5s);
+
+    &:before {
+        .transition(width 0.5s);
+    }
+}
+
+.resume {
+
+    // border-radius: 5px;
+    .box-shadow(1px 1px 3px #808080);
+}
+
+.sl-editable {
+
+    padding: 5px;
+
+    .transition(background-color 0.5s);
+    .transition(border-radius 0.5s);
+
+    &:hover {
+        background-color: #DDD;
+        cursor: pointer;
+        .border-radius(5px);
+    }
+
+    .sl-editor {
+        display: none;
+
+        input {
+            line-height: normal;
+        }
+    }
+}

@@ -1,0 +1,5 @@
+
+.sidebar{-webkit-transition:width .5s;transition:width .5s}.sidebar:before{-webkit-transition:width .5s;transition:width .5s}
+.resume{-webkit-box-shadow:1px 1px 3px #808080;box-shadow:1px 1px 3px #808080}
+.sl-editable{padding:5px;-webkit-transition:background-color .5s;transition:background-color .5s;-webkit-transition:border-radius .5s;transition:border-radius .5s}.sl-editable:hover{background-color:#DDD;cursor:pointer;border-radius:5px}
+.sl-editable .sl-editor{display:none}.sl-editable .sl-editor input{line-height:normal}

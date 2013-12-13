@@ -1,0 +1,49 @@
+//- top bar
+#navbar.navbar.navbar-default
+
+  //- container
+  #navbar-container.navbar-container
+
+    //- page name
+    .navbar-header
+      a.navbar-brand(href="#")
+        small
+          block page-name
+
+    //- menu
+    .navbar-header.pull-right(role="navigation")
+      ul.nav.ace-nav
+
+        //- user setting
+        li.light-blue2
+          a(href="/home")
+            span.icon-gears
+
+        //- system notification
+        li.light-orange
+          a.dropdown-toggle(href="#", data-toggle="dropdown")
+            span.icon-bell
+          ul.dropdown-menu
+            li
+              a(href="/products/index") All Products
+            li
+              a(href="/products/new") New Product
+
+        //- message
+        li.light-green
+          a(href="/subscribers/index")
+            span.icon-envelope-alt
+
+        //- user profile, logout etc...
+        li.light-blue
+          a.dropdown-toggle(href="#", data-toggle="dropdown")
+            img.nav-user-photo(src="/images/gallery/image-6.jpg", alt="")
+            span.user-info
+              small こんにちは,
+              | 太郎さん
+            i.icon-caret-down
+          ul.dropdown-menu.user-menu.pull-right.dropdown-blue.dropdown-caret
+            li
+              a(href="/logout")
+                i.icon-signout
+                | ログアウト
