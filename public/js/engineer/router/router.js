@@ -4,7 +4,8 @@ define([], function() {
 
         appRoutes: {
             "home": "showHomeView",
-            "resume": "showResumeView"
+            "resume": "showResumeView",
+            "timecard": "showTimeCardView",
         }
     });
 

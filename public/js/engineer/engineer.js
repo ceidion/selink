@@ -2,12 +2,14 @@ define([
     'view/common/sidenav',
     'view/home/page',
     'view/resume/resume',
+    'view/timecard/timecard',
     'router/router',
     'controller/controller'
 ], function(
     SideNavView,
     HomeView,
     ResumeView,
+    TimeCardView,
     Router,
     Controller
 ) {
@@ -24,6 +26,7 @@ define([
 
         this.homeView = new HomeView();
         this.resumeView = new ResumeView();
+        this.timeCardView = new TimeCardView();
 
         Backbone.Marionette.Region.prototype.open = function(view){
             this.$el.hide();

@@ -16,6 +16,10 @@ define([], function() {
 
         showResumeView: function() {
             this.app.pageContent.show(this.app.resumeView);
+        },
+
+        showTimeCardView: function() {
+            this.app.pageContent.show(this.app.timeCardView);
         }
     });
 

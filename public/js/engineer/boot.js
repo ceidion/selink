@@ -21,7 +21,8 @@ require.config({
         // x-editable
         "bootstrap-editable": "../lib/x-editable/bootstrap-editable.min",
         "ace-editable": "../lib/x-editable/ace-editable.min",
-        "pie-chart": "../lib/jquery.easy-pie-chart.min"
+        "pie-chart": "../lib/jquery.easy-pie-chart.min",
+        "full-calendar": "../lib/fullcalendar.min"
     },
 
     shim: {
@@ -56,6 +57,9 @@ require.config({
         'pie-chart': {
             deps: ['jquery']
         },
+        'full-calendar': {
+            deps: ['jquery']
+        },
         'engineer': {
             deps: [
                 'jquery-ui',
@@ -63,7 +67,8 @@ require.config({
                 'marionette',
                 'ace',
                 'ace-editable',
-                'pie-chart'
+                'pie-chart',
+                "full-calendar"
             ]
         }
     }
