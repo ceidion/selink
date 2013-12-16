@@ -2,17 +2,12 @@ define([], function() {
 
     var BaseItem = Backbone.Marionette.ItemView.extend({
 
-        editMode: false,
-
         /*
             Common events may happend
         */
         commonEvents: {
             // Switch to edit-mode when the div was clicked
-            'click': 'switchToEditor',
-
-            // Set this editor lost foucs when mouseout
-            'focusout': 'switchToValue',
+            'click': 'switchToEditor'
         },
 
         commonUI: {
@@ -25,49 +20,15 @@ define([], function() {
         */
         switchToEditor: function() {
 
-            if (this.editMode)
-                return;
-
-            console.log("toEditor, editMode: " + this.editMode);
-
             var self = this;
 
             // fadeOut view panel
             this.ui.value.fadeOut('fast', function() {
                 // slideDown edit panel
                 self.ui.editor.slideDown('fast');
-                self.ui.editor.find('input:first').focus();
-                self.editMode = true;
+                // mark this editor as opened
+                self.$el.addClass('sl-editor-open');
             });
-        },
-
-        /*
-            Switch sl-editor from edit-mode to view-mode
-        */
-        switchToValue: function() {
-
-            // if (!this.editMode)
-            //     return;
-
-            console.log("toValue, editMode: " + this.editMode);
-
-            var self = this;
-
-            // attach popover for remove button in edit panel
-            // this._appendInfoOnRemoveBtn();
-
-            setTimeout(function() {
-
-                if (self.$el.find('input').is(':focus'))
-                    return;
-
-                // slide up the edit panel
-                self.ui.editor.slideUp('fast', function() {
-                    // fadeIn view panel
-                    self.ui.value.fadeIn('fast');
-                    self.editMode = false;
-                });
-            }, 300);
         },
 
         /*========================= remove button part =================================*/

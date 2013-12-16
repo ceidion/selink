@@ -48,12 +48,12 @@ require.config({
         'ace': {
             deps: ['ace-element', 'ace-extra']
         },
-        'bootstrap-editable': {
-            deps: ['bootstrap']
-        },
-        'ace-editable': {
-            deps: ['bootstrap-editable']
-        },
+        // 'bootstrap-editable': {
+        //     deps: ['bootstrap']
+        // },
+        // 'ace-editable': {
+        //     deps: ['bootstrap-editable']
+        // },
         'pie-chart': {
             deps: ['jquery']
         },
@@ -66,7 +66,7 @@ require.config({
                 'bootstrap',
                 'marionette',
                 'ace',
-                'ace-editable',
+                // 'ace-editable',
                 'pie-chart',
                 "full-calendar"
             ]
