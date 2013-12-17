@@ -7,15 +7,10 @@ define([
 
     var NameEditor = BaseView.extend({
 
-        className: 'sl-editable',
-
-        item: 'name',
-
-        itemName: "Name",
-
+        // template
         template: template,
 
-        /*Initializer*/
+        // initializer
         initialize: function() {
 
             this.ui = _.extend({}, this.commonUI, {
@@ -31,14 +26,14 @@ define([
             });
         },
 
-        /*After Render*/
+        // after render
         onRender: function() {
 
             // Listen to the universal-click, switch to view-mode when input lost focus
             // this.listenTo(vent, 'click:universal', this.switchToValue);
 
             // Attach popover for input control in edit panel
-            this._appendInfoOnInput();
+            // this._appendInfoOnInput();
         },
 
         /*Validate user input value*/
@@ -143,17 +138,6 @@ define([
                 this.ui.value.append('<h2>' + firstName + '&nbsp;' + lastName + '</h2>');
             }
         },
-
-        _appendInfoOnInput: function() {
-            this._appendInfoOn(this.ui.inputFirstName, {
-                title: "First Name",
-                content: "Please input your first name."
-            });
-            this._appendInfoOn(this.ui.inputLastName, {
-                title: "Last Name",
-                content: "Please input your last name."
-            });
-        }
 
     });
 

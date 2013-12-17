@@ -5,52 +5,42 @@ define([
     'view/resume/gender',
 ], function(template, NameItem, BirthDayItem, GenderItem) {
 
-    // PageView is the biggest frame of the application
-    var PageView = Backbone.Marionette.Layout.extend({
+    // resume view
+    var ResumeView = Backbone.Marionette.Layout.extend({
 
-        // Template
+        // template
         template: template,
 
-        // className: "container",
-
-        // Events
+        // events
         events: {
-            // 'click #logoutBtn': 'onLogout',
             'click': 'closeEditor'
         },
 
-        // Regions
+        // regions
         regions: {
             nameRegion: '#name-item',
             birthdayRegion: '#birthday-item',
             genderRegion: '#gender-item',
         },
 
-        // Initializer
+        // initializer
         initialize: function() {
-
+            // create component
             this.nameItem = new NameItem();
             this.birthdayItem = new BirthDayItem();
             this.genderItem = new GenderItem();
         },
 
-        // After render
+        // after render
         onRender: function() {
+            // show every component
             this.nameRegion.show(this.nameItem);
             this.birthdayRegion.show(this.birthdayItem);
             this.genderRegion.show(this.genderItem);
-            // this.listenTo(vent, 'logout:sessionTimeOut', this.doLogout);
         },
 
-        // After show
+        // after show
         onShow: function() {
-            // $.fn.editable.defaults.mode = 'inline';
-            // $('#first-name').editable({
-            //     type: 'text',
-            //     name: 'username',
-            //     url: '/post',
-            //     title: 'your name'
-            // });
 
             $('.easy-pie-chart.percentage').each(function(){
             var barColor = $(this).data('color') || '#555';
@@ -78,10 +68,11 @@ define([
                 forcePlaceholderSize:true,
                 tolerance:'pointer'
             });
-            // move in the page component
-            // this.onPartScreen();
         },
 
+        // resume view handle the click event
+        // -- switch component in editor mode to value mode
+        // *from x-editable*
         closeEditor: function(e) {
             var $target = $(e.target), i,
                 exclude_classes = ['.editable-container',
@@ -115,6 +106,7 @@ define([
             this.closeOthers(e.target);
         },
 
+        // close all open containers (except one - target)
         closeOthers: function(element) {
 
             $('.sl-editor-open').each(function(i, el){
@@ -135,8 +127,7 @@ define([
                 $el.removeClass('sl-editor-open');
             });
         },
-
     });
 
-    return PageView;
+    return ResumeView;
 });

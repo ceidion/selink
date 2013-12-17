@@ -1,7 +1,4 @@
-var users = require('../app/controllers/users'),
-    products = require('../app/controllers/products'),
-    promotions = require('../app/controllers/promotions'),
-    subscribers = require('../app/controllers/subscribers');
+var users = require('../app/controllers/users');
 
 module.exports = function(app) {
 
@@ -9,22 +6,23 @@ module.exports = function(app) {
     app.get('/', function(req, res, next){
         res.render('landing');
     });
+
     // User Login
     app.post('/login', users.login);
     // User Logout
     app.get('/logout', users.logout);
 
-    // // Home
-    // app.get('/home', checkLoginStatus, function(req, res, next){
+    // Home
+    app.get('/home', checkLoginStatus, function(req, res, next){
 
-    //     if(req.session.user.type === "admin") {
-    //         console.log("admin");
-    //         res.render('./admin/index');
-    //     } else {
-    //         console.log("engineer");
-    //         res.render('./engineer/index');
-    //     }
-    // });
+        if(req.session.user.type === "admin") {
+            console.log("admin");
+            res.render('./admin/index');
+        } else {
+            console.log("engineer");
+            res.render('./engineer/index');
+        }
+    });
 
     // // Products List
     // app.get('/products/index', checkLoginStatus, products.index);
@@ -57,7 +55,7 @@ module.exports = function(app) {
     // // !! Promote !!
     // app.post('/promotions/promote', checkLoginStatus, promotions.promote);
     // Mail Open Process
-    app.get('/resource/images/:name', promotions.opened);
+    // app.get('/resource/images/:name', promotions.opened);
 };
 
 checkLoginStatus = function(req, res, next) {

@@ -1,6 +1,6 @@
 require.config({
 
-    baseUrl: "/js/engineer",
+    baseUrl: "/js/landing",
 
     paths: {
         // core library
@@ -18,16 +18,7 @@ require.config({
         ace: "../lib/uncompressed/ace",
         'ace-extra': "../lib/uncompressed/ace-extra",
         'ace-element': "../lib/uncompressed/ace-elements",
-        // pie chart
-        'pie-chart': "../lib/jquery.easy-pie-chart.min",
-        // calendar
-        'full-calendar': "../lib/fullcalendar.min",
-        // date time
-        'datepicker-locale': "../lib/date-time/locales/bootstrap-datepicker.ja",
-        datepicker: "../lib/date-time/bootstrap-datepicker.min",
-        moment: "../lib/date-time/moment.min",
-        // input mask
-        maskedinput: "../lib/jquery.maskedinput.min"
+        gritter: '../lib/jquery.gritter.min'
     },
 
     shim: {
@@ -53,33 +44,21 @@ require.config({
         'ace': {
             deps: ['ace-element', 'ace-extra']
         },
-        'pie-chart': {
-            deps: ['jquery']
+        'gritter': {
+            deps: ['ace']
         },
-        'full-calendar': {
-            deps: ['jquery']
-        },
-        'datepicker-locale': {
-            deps: ['bootstrap', 'datepicker']
-        },
-        'maskedinput': {
-            deps: ['jquery']
-        },
-        'engineer': {
+        'landing': {
             deps: [
                 'jquery-ui',
                 'bootstrap',
                 'marionette',
                 'ace',
-                'pie-chart',
-                'full-calendar',
-                'datepicker-locale',
-                'maskedinput'
+                'gritter'
             ]
         }
     }
 });
 
-require(['engineer'], function(engineer) {
-    engineer.start();
+require(['landing'], function(landing) {
+    landing.start();
 });

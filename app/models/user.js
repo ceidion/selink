@@ -18,8 +18,17 @@ var User = new Schema({
         trim: true
     },
 
+    profile: {
+        type: Schema.Types.ObjectId
+    },
+
     // Create Date
     createDate: {
+        type: Date,
+        default: Date.now
+    },
+
+    lastLogin: {
         type: Date,
         default: Date.now
     }

@@ -14,20 +14,28 @@ define([
     Controller
 ) {
 
-    var Admin = new Backbone.Marionette.Application();
+    // create application instance
+    var engineer = new Backbone.Marionette.Application();
 
-    Admin.addRegions({
+    // create regions
+    engineer.addRegions({
         pageContent: '.page-content'
     });
 
-    Admin.addInitializer(function(options) {
+    // initialize application
+    engineer.addInitializer(function(options) {
 
+        // setup side nav
         this.sideNavView = new SideNavView({el: '#sidebar'});
 
+        // create home view
         this.homeView = new HomeView();
+        // create resume view
         this.resumeView = new ResumeView();
+        // create time card view
         this.timeCardView = new TimeCardView();
 
+        // switch page with fade effect
         Backbone.Marionette.Region.prototype.open = function(view){
             this.$el.hide();
             this.$el.html(view.el);
@@ -44,8 +52,9 @@ define([
             controller: controller
         });
 
+        // start history
         Backbone.history.start();
     });
 
-    return Admin;
+    return engineer;
 });
