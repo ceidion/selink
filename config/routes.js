@@ -1,4 +1,5 @@
-var users = require('../app/controllers/users');
+var user = require('../app/controllers/user');
+var tempaccount = require('../app/controllers/tempaccount');
 
 module.exports = function(app) {
 
@@ -8,9 +9,9 @@ module.exports = function(app) {
     });
 
     // User Login
-    app.post('/login', users.login);
+    app.post('/login', user.login);
     // User Logout
-    app.get('/logout', users.logout);
+    app.get('/logout', user.logout);
 
     // Home
     app.get('/home', checkLoginStatus, function(req, res, next){
@@ -23,6 +24,11 @@ module.exports = function(app) {
             res.render('./engineer/index');
         }
     });
+
+    // User sign-up
+    app.post('/signup', tempaccount.create);
+    // Account activate
+    app.get('/activate/:id', tempaccount.activate);
 
     // // Products List
     // app.get('/products/index', checkLoginStatus, products.index);

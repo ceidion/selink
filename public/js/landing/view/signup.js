@@ -1,37 +1,40 @@
-define(['text!template/signin.html'], function(template){
+define(['text!template/signup.html'], function(template){
 
-    var SignInView = Backbone.Marionette.ItemView.extend({
+    var SignUpView = Backbone.Marionette.ItemView.extend({
 
         template: template,
 
-        tagName: 'form',
+        id: 'signup-box',
 
-        className: 'navbar-form navbar-right',
+        className: 'signup-box widget-box',
 
         ui: {
-            signInBtn: '.btn-signin'
+            form: 'form',
+            signUpBtn: '.btn-signup',
+            errorAlert: '.alert-danger',
+            successAlert: '.alert-success'
         },
 
         events: {
-            'click .btn-signin': 'onSignIn'
+            'click .btn-signup': 'onSignUp'
         },
 
-        // sign in process
-        onSignIn: function(e) {
+        // sign up process
+        onSignUp: function(e) {
 
             // prevent default submit action
             e.preventDefault();
 
             var self = this;
 
-            // sign-in
+            // sign-up
             $.ajax({
 
                 // page url
-                url: '/login',
+                url: '/signup',
 
                 // post form data
-                data: this.$el.serialize(),
+                data: this.ui.form.serialize(),
 
                 // method is post
                 type: 'POST',
@@ -44,27 +47,35 @@ define(['text!template/signin.html'], function(template){
 
                 // disable the button and spin an icon
                 beforeSend: function() {
-                    self.ui.signInBtn.button('loading');
+                    self.ui.signUpBtn.button('loading');
                 },
 
-                // login success handler
-                success: function(account) {
-                    window.location = '/home';
+                // sign up success handler
+                success: function(result) {
+
+                    self.ui.successAlert.text(result.msg).slideDown(function() {
+                        self.ui.form.find("input, textarea").val("");
+                        setTimeout(function() {
+                            self.ui.successAlert.slideUp();
+                        }, 3000);
+                    });
                 },
 
-                // login error handler
+                // sign up error handler
                 error: function(xhr, status) {
 
                     if (status == 'timeout') {
 
                         $.gritter.add({
-                            title: '<i class="icon-wrench icon-animated-wrench bigger-125"></i>&nbsp;&nbsp;サーバが応答しません',
+                            title: 'サーバが応答しません',
                             text: 'サーバと通信できませんでした、しばらくお待ちいただき、もう一度お試してください。',
                             class_name: 'gritter-error',
                             sticky: false,
                             before_open: function(){
                                 if($('.gritter-item-wrapper').length >= 3)
+                                {
                                     return false;
+                                }
                             },
                         });
 
@@ -72,26 +83,21 @@ define(['text!template/signin.html'], function(template){
 
                         var error = $.parseJSON(xhr.responseText);
 
-                        $.gritter.add({
-                            title: error.title,
-                            text: error.msg,
-                            class_name: 'gritter-error',
-                            sticky: false,
-                            before_open: function(){
-                                if($('.gritter-item-wrapper').length >= 3)
-                                    return false;
-                            },
+                        self.ui.errorAlert.text(error.msg).slideDown(function() {
+                            setTimeout(function() {
+                                self.ui.errorAlert.slideUp();
+                            }, 3000);
                         });
                     }
                 },
 
                 // reset button status to normal
                 complete: function() {
-                    self.ui.signInBtn.button('reset');
+                    self.ui.signUpBtn.button('reset');
                 }
             });
         }
     });
 
-    return SignInView;
+    return SignUpView;
 });

@@ -2,7 +2,7 @@
 html(lang="en", xmlns="http://www.w3.org/1999/xhtml")
   head(prefix="og: http://ogp.me/ns#")
     title
-        | SELink
+      | SELink
     meta(charset="utf-8")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     meta(name="description", content="")
@@ -17,18 +17,10 @@ html(lang="en", xmlns="http://www.w3.org/1999/xhtml")
     link(rel='stylesheet', href='/css/landing.css', media="screen")
     script(data-main="js/landing/boot", src="js/require.js")
   body
-    .navbar.navbar-default.navbar-fixed-top(role="navigation")
+    .navbar.navbar-default(role="navigation")
       .navbar-header
         a.navbar-brand(href="#")
           small SELink
-      form.navbar-form.navbar-right(action="/login", method="post")
-        .form-group
-          input.form-control.input-medium(type="email", name="email", placeholder="メールアドレス")
-          input.form-control.input-medium(type="password", name="password", placeholder="パースワード")
-          button.btn.btn-success.btn-sm.btn-signin(type="submit")
-            i.icon-signin.align-middle.bigger-125
-            | &nbsp;&nbsp;サイインイン
-          button.btn.btn-warning.btn-sm
-            i.icon-medkit.align-middle.bigger-125
-            | &nbsp;&nbsp;パースワード忘れたら？
-    .container
+      #sign-in-area
+    .container.login-container
+      #sign-up-area

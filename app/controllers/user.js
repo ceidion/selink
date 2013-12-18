@@ -13,8 +13,8 @@ exports.login = function(req, res, next) {
         // if the account not found, return the fail message
         else if (!user) {
             res.status(401).json({
-                title: "Opps!",
-                msg: "Authentication failed, Please check your input and try again."
+                title: "認証失敗です",
+                msg: "ユーザIDとパースワードを確かめて、もう一度ご入力ください。"
             });
         }
         // if account could be found

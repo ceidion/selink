@@ -1,11 +1,18 @@
-define(["view/signin"], function(SignInView) {
+define([
+    "view/signin",
+    "view/signup"
+], function(
+    SignInView,
+    SignUpView
+) {
 
     // create application instance
     var landing = new Backbone.Marionette.Application();
 
     // create regions
     landing.addRegions({
-        loginArea: '.navbar-form'
+        signInArea: '#sign-in-area',
+        signUpArea: '#sign-up-area'
     });
 
     // initialize application
@@ -18,7 +25,11 @@ define(["view/signin"], function(SignInView) {
             this.$el.fadeIn();
         };
 
-        var signInView = new SignInView({el: '.navbar-form'});
+        var signInView = new SignInView();
+        this.signInArea.show(signInView);
+
+        var signUpView = new SignUpView();
+        this.signUpArea.show(signUpView);
     });
 
     return landing;
