@@ -1,9 +1,20 @@
 var mongoose = require('mongoose'),
     User = mongoose.model('User');
 
+var msgAuthFailedTitle = "アカウントが存在しません",
+    msgAuthFailed = "ユーザIDとパースワードを確かめて、もう一度ご入力ください。",
+    msgMissAuthInfoTitle = "アカウント情報を入力してください",
+    msgMissAuthInfo = "ログインするには、メールアドレスとパースワード両方ご入力する必要があります。";
+
 exports.login = function(req, res, next) {
 
-    console.log(req.body);
+    // do nothing if login info are not enough
+    if (!req.body.email || !req.body.password) {
+        res.status(400).json({
+            title: msgMissAuthInfoTitle,
+            msg: msgMissAuthInfo
+        });
+    }
 
     // look up user info
     User.findOne(req.body, function(err, user) {
@@ -13,8 +24,8 @@ exports.login = function(req, res, next) {
         // if the account not found, return the fail message
         else if (!user) {
             res.status(401).json({
-                title: "認証失敗です",
-                msg: "ユーザIDとパースワードを確かめて、もう一度ご入力ください。"
+                title: msgAuthFailedTitle,
+                msg: msgAuthFailed
             });
         }
         // if account could be found

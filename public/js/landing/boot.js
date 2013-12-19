@@ -1,12 +1,12 @@
 require.config({
 
-    baseUrl: "/js/landing",
+    baseUrl: '/js/landing',
 
     paths: {
         // core library
-        jquery: "../lib/jquery-2.0.3.min",
-        'jquery-ui': "../lib/jquery-ui-1.10.3.custom.min",
-        bootstrap: "../lib/bootstrap.min",
+        jquery: '../lib/jquery-2.0.3.min',
+        'jquery-ui': '../lib/jquery-ui-1.10.3.custom.min',
+        bootstrap: '../lib/bootstrap.min',
         underscore: '../lib/underscore',
         backbone: '../lib/backbone',
         marionette: '../lib/backbone.marionette',
@@ -15,9 +15,11 @@ require.config({
         text: '../lib/text',
         templates: 'template',
         // core theme
-        ace: "../lib/uncompressed/ace",
-        'ace-extra': "../lib/uncompressed/ace-extra",
-        'ace-element': "../lib/uncompressed/ace-elements",
+        ace: '../lib/uncompressed/ace',
+        'ace-extra': '../lib/uncompressed/ace-extra',
+        'ace-element': '../lib/uncompressed/ace-elements',
+        // validator
+        validate: '../lib/jquery.validate.min',
         gritter: '../lib/jquery.gritter.min'
     },
 
@@ -44,6 +46,9 @@ require.config({
         'ace': {
             deps: ['ace-element', 'ace-extra']
         },
+        'validate': {
+            deps: ['jquery']
+        },
         'gritter': {
             deps: ['ace']
         },
@@ -53,6 +58,7 @@ require.config({
                 'bootstrap',
                 'marionette',
                 'ace',
+                'validate',
                 'gritter'
             ]
         }

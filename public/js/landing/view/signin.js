@@ -16,6 +16,78 @@ define(['text!template/signin.html'], function(template){
             'click .btn-signin': 'onSignIn'
         },
 
+        onRender: function() {
+
+            this.$el.validate({
+
+                // errorElement: 'div',
+
+                // errorClass: 'help-block',
+
+                rules: {
+                    email: {
+                        required: true,
+                        email: true
+                    },
+                    password: {
+                        required: true,
+                        minlength: 8
+                    }
+                },
+
+                messages: {
+                    email: {
+                        required: "Please provide a valid email.",
+                        email: "Please provide a valid email."
+                    },
+                    password: {
+                        required: "Please specify a password.",
+                        minlength: "Please specify a secure password."
+                    }
+                },
+
+                invalidHandler: function (event, validator) { //display error alert on form submit
+                    console.log("message2");
+                    $('.alert-danger', $('.login-form')).show();
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error').addClass('has-info');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if(element.is(':checkbox') || element.is(':radio')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if(controls.find(':checkbox,:radio').length > 1) controls.append(error);
+                        else error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    }
+                    else if(element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    }
+                    else if(element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    }
+                    else {
+                        console.log(error);
+                        // error.insertAfter(element.parent());
+                        element.addClass('animated-vertical tooltip-error').tooltip({
+                            placement: 'bottom',
+                            title: error.text()
+                        });
+                    }
+                },
+
+                submitHandler: function (form) {
+                    console.log("message");
+                },
+            });
+        },
+
         // sign in process
         onSignIn: function(e) {
 
@@ -90,7 +162,7 @@ define(['text!template/signin.html'], function(template){
                     self.ui.signInBtn.button('reset');
                 }
             });
-        }
+        },
     });
 
     return SignInView;
