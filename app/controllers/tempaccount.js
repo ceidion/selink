@@ -1,7 +1,7 @@
 var Mailer = require('../mailer/mailer.js'),
     mongoose = require('mongoose'),
     User = mongoose.model('User'),
-    // Resume = mongoose.model('Resume'),
+    Profile = mongoose.model('Profile'),
     TempAccount = mongoose.model('TempAccount');
 
 exports.index = function(req, res, next) {};
@@ -97,61 +97,59 @@ exports.activate = function(req, res, next) {
         // if the target account was found
         else {
 
+            // create profile object for this account
+            var profileObj = new Profile();
+
+            // create real user object and connect it to profile
+            var userObj = new User({
+                email: tempAccount.email,
+                password: tempAccount.password,
+                profile: profileObj._id,
+                type: tempAccount.type,
+                provider: 'local'
+            }, false);
+
+            // save the new user
+            userObj.save(function(err, account) {
+
+                // handle error
+                if (err) {
+                    if (err.code == 11000) res.status(424).send("This e-mail address already in used, Please use another one.");
+                    else next(err);
+                } else {
+
+                    // save the profile object
+                    profileObj.save();
+
+                    // remove the temporary account
+                    tempAccount.remove();
+
+                    // // send notification to administrator
+                    // Account.find({type: "Administrator"}, function(err, admins) {
+                    //     if (err) next(err);
+                    //     Mailer.sendNewUserActivatedNotification(admins, account);
+                    // });
+
+                    // redirect to home page
+                    res.redirect('/');
+                }
+            });
+
             // make a temporary share ID
-            var shareId = tempAccount.firstName.toLowerCase() + '.' + tempAccount.lastName.toLowerCase();
+            // var shareId = tempAccount.firstName.toLowerCase() + '.' + tempAccount.lastName.toLowerCase();
 
             // count the number of resume using this share ID
-            Resume.count({
-                shareId: new RegExp('^' + shareId, 'i')
-            }, function(err, count){
+            // Resume.count({
+            //     shareId: new RegExp('^' + shareId, 'i')
+            // }, function(err, count){
 
-                if(err) next(err);
+            //     if(err) next(err);
 
-                // if exists, alter the share ID
-                if (count !== 0)
-                    shareId += '.' + count;
+            //     // if exists, alter the share ID
+            //     if (count !== 0)
+            //         shareId += '.' + count;
 
-                // create resume object for this account
-                var resumeObj = new Resume({
-                    firstName: tempAccount.firstName,
-                    lastName: tempAccount.lastName,
-                    shareId: shareId
-                });
-
-                // create real account object and connect it to resume
-                var accountObj = new Account({
-                    email: tempAccount.email,
-                    password: tempAccount.password,
-                    provider: 'local',
-                    type: tempAccount.type,
-                    resume: resumeObj._id
-                }, false);
-
-                // save the new account
-                accountObj.save(function(err, account) {
-
-                    // handle error
-                    if (err) {
-                        if (err.code == 11000) res.status(424).send("This e-mail address already in used, Please use another one.");
-                        else next(err);
-                    } else {
-
-                        // save the resume object
-                        resumeObj.save();
-
-                        // remove the temporary account
-                        tempAccount.remove();
-
-                        Account.find({type: "Administrator"}, function(err, admins) {
-                            if (err) next(err);
-                            Mailer.sendNewUserActivatedNotification(admins, account);
-                        });
-
-                        // redirect to home page
-                        res.redirect('/');
-                    }
-                });
-            });
+            // });
         }
     });
 

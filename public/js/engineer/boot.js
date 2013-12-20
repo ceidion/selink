@@ -12,6 +12,7 @@ require.config({
         marionette: '../lib/backbone.marionette',
         'backbone.wreqr': '../lib/backbone.wreqr',
         'backbone.babysitter': '../lib/backbone.babysitter',
+        'deep-model': '../lib/deep-model.min',
         text: '../lib/text',
         templates: 'template',
         // core theme
@@ -44,6 +45,9 @@ require.config({
             deps: ['jquery', 'underscore'],
             exports: 'Backbone'
         },
+        'deep-model': {
+            deps: ['backbone']
+        },
         'ace-element': {
             deps: ['jquery']
         },
@@ -70,6 +74,7 @@ require.config({
                 'jquery-ui',
                 'bootstrap',
                 'marionette',
+                'deep-model',
                 'ace',
                 'pie-chart',
                 'full-calendar',

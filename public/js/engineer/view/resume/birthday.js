@@ -29,6 +29,8 @@ define([
 
             // enable mask input
             this.$el.find('#birthday-item').mask('9999/99/99');
+
+            console.log(this.model);
         }
     });
 

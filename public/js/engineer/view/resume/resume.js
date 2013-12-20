@@ -27,7 +27,7 @@ define([
         initialize: function() {
             // create component
             this.nameItem = new NameItem();
-            this.birthdayItem = new BirthDayItem();
+            this.birthdayItem = new BirthDayItem({model: this.model});
             this.genderItem = new GenderItem();
         },
 
@@ -52,7 +52,7 @@ define([
                 scaleColor: false,
                 lineCap: 'butt',
                 lineWidth: parseInt(size/10),
-                animate:false,
+                animate:1000,
                 size: size
             }).css('color', barColor);
             });
@@ -68,6 +68,8 @@ define([
                 forcePlaceholderSize:true,
                 tolerance:'pointer'
             });
+
+            this.$el.addClass('animated fadeInRightBig');
         },
 
         // resume view handle the click event

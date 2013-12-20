@@ -1,9 +1,19 @@
-define([], function() {
+define(['text!templates/common/sidenav.html',], function(template) {
 
-    var SideNav = Backbone.View.extend({
+    var SideNav = Backbone.Marionette.ItemView.extend({
+
+        template: template,
+
+        tagName: 'ul',
+
+        className: 'nav nav-list',
 
         events: {
             "click li": "activeMenu"
+        },
+
+        onShow: function() {
+            // this.$el.addClass('animated fadeInLeft');
         },
 
         activeMenu: function(event) {

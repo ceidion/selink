@@ -22,6 +22,11 @@ var User = new Schema({
         type: Schema.Types.ObjectId
     },
 
+    provider: {
+        type: String,
+        trim: true
+    },
+
     // Create Date
     createDate: {
         type: Date,

@@ -1,14 +1,16 @@
 define([
+    'view/common/topnav',
     'view/common/sidenav',
     'view/home/page',
-    'view/resume/resume',
+    // 'view/resume/resume',
     'view/timecard/timecard',
     'router/router',
     'controller/controller'
 ], function(
+    TopNavView,
     SideNavView,
     HomeView,
-    ResumeView,
+    // ResumeView,
     TimeCardView,
     Router,
     Controller
@@ -19,19 +21,18 @@ define([
 
     // create regions
     engineer.addRegions({
-        pageContent: '.page-content'
+        pageContent: '.page-content',
+        topnavArea: '#topnav-area',
+        sidenavArea: '#sidenav-area'
     });
 
     // initialize application
     engineer.addInitializer(function(options) {
 
-        // setup side nav
-        this.sideNavView = new SideNavView({el: '#sidebar'});
-
         // create home view
         this.homeView = new HomeView();
         // create resume view
-        this.resumeView = new ResumeView();
+        // this.resumeView = new ResumeView();
         // create time card view
         this.timeCardView = new TimeCardView();
 
@@ -41,6 +42,14 @@ define([
             this.$el.html(view.el);
             this.$el.fadeIn();
         };
+
+        // setup side nav
+        this.sideNavView = new SideNavView();
+        this.sidenavArea.show(this.sideNavView);
+
+        // setup top nav
+        this.topNavView = new TopNavView();
+        this.topnavArea.show(this.topNavView);
 
         // make controller
         var controller = new Controller({

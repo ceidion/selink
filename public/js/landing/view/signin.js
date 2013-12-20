@@ -13,16 +13,14 @@ define(['text!template/signin.html'], function(template){
         },
 
         events: {
-            'click .btn-signin': 'onSignIn'
+            // 'click .btn-signin': 'onSignIn'
         },
 
         onRender: function() {
 
+            var self = this;
+
             this.$el.validate({
-
-                // errorElement: 'div',
-
-                // errorClass: 'help-block',
 
                 rules: {
                     email: {
@@ -30,19 +28,17 @@ define(['text!template/signin.html'], function(template){
                         email: true
                     },
                     password: {
-                        required: true,
-                        minlength: 8
+                        required: true
                     }
                 },
 
                 messages: {
                     email: {
-                        required: "Please provide a valid email.",
-                        email: "Please provide a valid email."
+                        required: "メールアドレスをご入力ください",
+                        email: "メールアドレスのフォーマットでご入力ください"
                     },
                     password: {
-                        required: "Please specify a password.",
-                        minlength: "Please specify a secure password."
+                        required: "パースワードをご入力ください"
                     }
                 },
 
@@ -52,11 +48,21 @@ define(['text!template/signin.html'], function(template){
                 },
 
                 highlight: function (e) {
-                    $(e).closest('.form-group').removeClass('has-info').addClass('has-error');
+                    $(e).addClass('animated-input-error tooltip-error')
+                        .closest('.form-group')
+                        .removeClass('has-success')
+                        .addClass('has-error');
+                },
+
+                unhighlight: function(e) {
+                    $(e).removeClass('animated-input-error tooltip-error')
+                        .tooltip('destroy')
+                        .closest('.form-group')
+                        .removeClass('has-error')
+                        .addClass('has-success');
                 },
 
                 success: function (e) {
-                    $(e).closest('.form-group').removeClass('has-error').addClass('has-info');
                     $(e).remove();
                 },
 
@@ -73,9 +79,8 @@ define(['text!template/signin.html'], function(template){
                         error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
                     }
                     else {
-                        console.log(error);
-                        // error.insertAfter(element.parent());
-                        element.addClass('animated-vertical tooltip-error').tooltip({
+                        error.insertAfter(element.parent()).addClass('hidden');
+                        element.tooltip({
                             placement: 'bottom',
                             title: error.text()
                         });
@@ -83,7 +88,8 @@ define(['text!template/signin.html'], function(template){
                 },
 
                 submitHandler: function (form) {
-                    console.log("message");
+                    // console.log("message");
+                    self.onSignIn();
                 },
             });
         },
@@ -92,7 +98,7 @@ define(['text!template/signin.html'], function(template){
         onSignIn: function(e) {
 
             // prevent default submit action
-            e.preventDefault();
+            // e.preventDefault();
 
             var self = this;
 
