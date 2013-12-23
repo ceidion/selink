@@ -1,20 +1,18 @@
-<div>
-    <div class="profile-info-name">
-        生年月日
+<div class="profile-info-name">
+    生年月日
+</div>
+<div class="profile-info-value">
+    <div class="sl-value">
+        <%= obj.birthDay %>
     </div>
-    <div class="profile-info-value">
-        <div class="sl-value">
-            <%
-                    print('<i class="sl-placeholder">Click to edit</i>')
-            %>
-        </div>
-        <div class="sl-editor row">
-            <div class="col-sm-11 input-group">
-                <span class="input-group-addon">
-                    <i class="icon-calendar bigger-110"></i>
-                </span>
+    <div class="sl-editor row">
+        <div class="col-sm-12 input-group form-group">
+            <span class="input-group-addon">
+                <i class="icon-calendar bigger-110"></i>
+            </span>
+            <form>
                 <input type="text" id="birthday-item" class="input-medium" placeholder="yyyy/mm/dd" name="birthDay" value="">
-            </div>
+            </form>
         </div>
     </div>
 </div>

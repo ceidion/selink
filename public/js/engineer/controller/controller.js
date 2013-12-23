@@ -24,13 +24,6 @@ define([
             this.profileModel = new ProfileModel({
                 _id: this.user.profile
             });
-
-            this.profileModel.fetch();
-
-            // create resume view
-            this.app.resumeView = new ResumeView({
-                model: this.profileModel
-            });
         },
 
         showHomeView: function() {
@@ -38,8 +31,23 @@ define([
             this.app.pageContent.show(this.app.homeView);
         },
 
+        // show resume
         showResumeView: function() {
-            this.app.pageContent.show(this.app.resumeView);
+
+            var self = this;
+
+            // first fetch the model data
+            this.profileModel.fetch({
+                // if success
+                success: function() {
+                    // create resume view
+                    self.app.resumeView = new ResumeView({
+                        model: self.profileModel
+                    });
+                    // show resume view
+                    self.app.pageContent.show(self.app.resumeView);
+                }
+            });
         },
 
         showTimeCardView: function() {

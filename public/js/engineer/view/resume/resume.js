@@ -69,7 +69,7 @@ define([
                 tolerance:'pointer'
             });
 
-            this.$el.addClass('animated fadeInRightBig');
+            this.$el.addClass('animated fadeInRight');
         },
 
         // resume view handle the click event
@@ -113,12 +113,16 @@ define([
 
             $('.sl-editor-open').each(function(i, el){
 
+                var $el = $(el);
+
                 //do nothing with passed element and it's children
-                if(el === element || $(el).find(element).length) {
+                if(el === element || $el.find(element).length) {
                     return;
                 }
 
-                var $el = $(el);
+                if($el.find('.form-group').hasClass('has-error')) {
+                    return;
+                }
 
                 // slide up the edit panel
                 $el.find('.sl-editor').slideUp('fast', function() {

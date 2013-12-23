@@ -43,7 +43,6 @@ define(['text!template/signin.html'], function(template){
                 },
 
                 invalidHandler: function (event, validator) { //display error alert on form submit
-                    console.log("message2");
                     $('.alert-danger', $('.login-form')).show();
                 },
 
@@ -88,9 +87,8 @@ define(['text!template/signin.html'], function(template){
                 },
 
                 submitHandler: function (form) {
-                    // console.log("message");
                     self.onSignIn();
-                },
+                }
             });
         },
 

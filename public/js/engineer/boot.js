@@ -19,6 +19,9 @@ require.config({
         ace: "../lib/uncompressed/ace",
         'ace-extra': "../lib/uncompressed/ace-extra",
         'ace-element': "../lib/uncompressed/ace-elements",
+        // validator
+        'validate-base': '../lib/jquery.validate.min',
+        validate: '../lib/additional-methods.min',
         // pie chart
         'pie-chart': "../lib/jquery.easy-pie-chart.min",
         // calendar
@@ -57,10 +60,19 @@ require.config({
         'ace': {
             deps: ['ace-element', 'ace-extra']
         },
+        'validate-base': {
+            deps: ['jquery']
+        },
+        'validate': {
+            deps: ['validate-base']
+        },
         'pie-chart': {
             deps: ['jquery']
         },
         'full-calendar': {
+            deps: ['jquery']
+        },
+        'datepicker': {
             deps: ['jquery']
         },
         'datepicker-locale': {
@@ -76,6 +88,7 @@ require.config({
                 'marionette',
                 'deep-model',
                 'ace',
+                'validate',
                 'pie-chart',
                 'full-calendar',
                 'datepicker-locale',

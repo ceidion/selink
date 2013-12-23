@@ -26,6 +26,25 @@ define([
         sidenavArea: '#sidenav-area'
     });
 
+    // before application initialization
+    engineer.on('initialize:before', function(options) {
+
+        // THIS IS VITAL, change the default behavior of views load template, 
+        // or the underscore template won't work
+        Backbone.Marionette.TemplateCache.prototype.loadTemplate = function(templateId) {
+
+            var template = templateId;
+
+            if (!template || template.length === 0) {
+                var msg = "Could not find template: '" + templateId + "'";
+                var err = new Error(msg);
+                err.name = "NoTemplateError";
+                throw err;
+            }
+            return template;
+        };
+    });
+
     // initialize application
     engineer.addInitializer(function(options) {
 

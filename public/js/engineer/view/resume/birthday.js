@@ -21,6 +21,8 @@ define([
         // after render
         onRender: function() {
 
+            var self = this;
+
             // append data picker
             this.$el.find('#birthday-item').datepicker({
                 autoclose: true,
@@ -30,7 +32,28 @@ define([
             // enable mask input
             this.$el.find('#birthday-item').mask('9999/99/99');
 
-            console.log(this.model);
+            this.$el.find('form').validate(_.extend({}, this.commonValidate, {
+
+                rules: {
+                    birthDay: {
+                        dateISO: true
+                    }
+                },
+
+                messages: {
+                    birthDay: {
+                        dateISO: "メールアドレスのフォーマットでご入力ください"
+                    }
+                },
+                
+                submitHandler: function (form) {
+                    self.onSignIn();
+                }
+            }));
+        },
+
+        onSignIn: function() {
+            console.log('update birthday');
         }
     });
 
