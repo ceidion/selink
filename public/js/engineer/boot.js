@@ -20,7 +20,7 @@ require.config({
         'ace-extra': "../lib/uncompressed/ace-extra",
         'ace-element': "../lib/uncompressed/ace-elements",
         // validator
-        'validate-base': '../lib/jquery.validate.min',
+        'validate-base': '../lib/uncompressed/jquery.validate',
         validate: '../lib/additional-methods.min',
         // pie chart
         'pie-chart': "../lib/jquery.easy-pie-chart.min",
@@ -31,7 +31,8 @@ require.config({
         datepicker: "../lib/date-time/bootstrap-datepicker.min",
         moment: "../lib/date-time/moment.min",
         // input mask
-        maskedinput: "../lib/jquery.maskedinput.min"
+        maskedinput: "../lib/jquery.maskedinput.min",
+        gritter: '../lib/jquery.gritter.min'
     },
 
     shim: {
@@ -81,6 +82,9 @@ require.config({
         'maskedinput': {
             deps: ['jquery']
         },
+        'gritter': {
+            deps: ['ace']
+        },
         'engineer': {
             deps: [
                 'jquery-ui',
@@ -92,7 +96,8 @@ require.config({
                 'pie-chart',
                 'full-calendar',
                 'datepicker-locale',
-                'maskedinput'
+                'maskedinput',
+                'gritter'
             ]
         }
     }

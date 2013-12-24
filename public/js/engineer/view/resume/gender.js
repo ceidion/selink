@@ -12,8 +12,8 @@ define([
 
         // initializer
         initialize: function() {
-            this.ui = _.extend({}, this.commonUI);
-            this.events = _.extend({}, this.commonEvents);
+            // this.ui = _.extend({}, this.commonUI);
+            // this.events = _.extend({}, this.commonEvents);
         },
 
         // after render

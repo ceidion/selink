@@ -5,42 +5,51 @@ define([], function() {
         /*
             Common events may happend
         */
-        commonEvents: {
+        events: {
             // Switch to edit-mode when the div was clicked
             'click': 'switchToEditor'
         },
 
-        commonUI: {
+        ui: {
             value: '.sl-value',
             editor: '.sl-editor'
         },
 
-        commonValidate: {
+        onRender: function(options) {
 
-            highlight: function (e) {
-                $(e).addClass('tooltip-error')
-                    .closest('.form-group').removeClass('has-success').addClass('has-error')
-                    .closest('.sl-editor').addClass('animated-input-error');
-            },
+            var self = this;
 
-            unhighlight: function(e) {
-                $(e).removeClass('tooltip-error').tooltip('destroy')
-                    .closest('.form-group').removeClass('has-error').addClass('has-success')
-                    .closest('.sl-editor').removeClass('animated-input-error');
-            },
+            this.$el.find('form').validate(_.extend({}, {
 
-            success: function (e) {
-                $(e).remove();
-                this.submitHandler();
-            },
+                highlight: function (e) {
+                    $(e).addClass('tooltip-error')
+                        .closest('.form-group').removeClass('has-success').addClass('has-error')
+                        .closest('.sl-editor').addClass('animated-input-error');
+                },
 
-            errorPlacement: function (error, element) {
-                error.insertAfter(element.parent()).addClass('hidden');
-                element.tooltip({
-                    placement: 'bottom',
-                    title: error.text()
-                });
-            }
+                unhighlight: function(e) {
+                    $(e).removeClass('tooltip-error').tooltip('destroy')
+                        .closest('.form-group').removeClass('has-error').addClass('has-success')
+                        .closest('.sl-editor').removeClass('animated-input-error');
+                },
+
+                success: function (e) {
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    error.insertAfter(element.parent()).addClass('hidden');
+                    element.tooltip({
+                        placement: 'bottom',
+                        title: error.text()
+                    });
+                },
+
+                submitHandler: function (form) {
+                    self.onSignIn();
+                }
+
+            }, options));
         },
 
         /*
