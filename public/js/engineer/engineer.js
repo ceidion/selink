@@ -29,7 +29,7 @@ define([
     // before application initialization
     engineer.on('initialize:before', function(options) {
 
-        // THIS IS VITAL, change the default behavior of views load template, 
+        // THIS IS VITAL, change the default behavior of views load template,
         // or the underscore template won't work
         Backbone.Marionette.TemplateCache.prototype.loadTemplate = function(templateId) {
 
@@ -43,6 +43,25 @@ define([
             }
             return template;
         };
+
+        // change datetime language
+        moment.lang('ja');
+
+        // add custom validator method
+        $.validator.addMethod('dateJa', function(value, element) {
+            return moment(value, 'YYYY/MM/DD').isValid();
+        }, "有効な日付をご入力ください");
+
+        // gritter setting
+        $.extend($.gritter.options, {
+            position: 'bottom-right',
+            sticky: false,
+            time: 3000,
+            before_open: function(){
+                if($('.gritter-item-wrapper').length >= 3)
+                    return false;
+            },
+        });
     });
 
     // initialize application

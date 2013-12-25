@@ -29,9 +29,14 @@ require.config({
         // date time
         'datepicker-locale': "../lib/date-time/locales/bootstrap-datepicker.ja",
         datepicker: "../lib/date-time/bootstrap-datepicker.min",
-        moment: "../lib/date-time/moment.min",
+        moment: "../lib/date-time/moment-with-langs.min",
+        // file upload
+        'jquery.ui.widget': '../lib/jquery.ui.widget',
+        iframetransport: '../lib/jquery.iframe-transport',
+        fileupload: '../lib/jquery.fileupload',
         // input mask
         maskedinput: "../lib/jquery.maskedinput.min",
+        chosen: '../lib/chosen.jquery.min',
         gritter: '../lib/jquery.gritter.min'
     },
 
@@ -79,7 +84,13 @@ require.config({
         'datepicker-locale': {
             deps: ['bootstrap', 'datepicker']
         },
+        fileupload: {
+            deps: ['jquery', 'jquery.ui.widget', 'iframetransport']
+        },
         'maskedinput': {
+            deps: ['jquery']
+        },
+        'chosen': {
             deps: ['jquery']
         },
         'gritter': {
@@ -96,7 +107,10 @@ require.config({
                 'pie-chart',
                 'full-calendar',
                 'datepicker-locale',
+                'moment',
+                'fileupload',
                 'maskedinput',
+                'chosen',
                 'gritter'
             ]
         }

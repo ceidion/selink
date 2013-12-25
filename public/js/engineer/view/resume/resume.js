@@ -1,9 +1,22 @@
 define([
     'text!templates/resume/resume.html',
+    'view/resume/photo',
     'view/resume/name',
     'view/resume/birthday',
     'view/resume/gender',
-], function(template, NameItem, BirthDayItem, GenderItem) {
+    'view/resume/marriage',
+    'view/resume/nationality',
+    'view/resume/address',
+], function(
+    template,
+    PhotoItem,
+    NameItem,
+    BirthDayItem,
+    GenderItem,
+    MarriageItem,
+    NationalityItem,
+    AddressItem
+) {
 
     // resume view
     var ResumeView = Backbone.Marionette.Layout.extend({
@@ -18,25 +31,37 @@ define([
 
         // regions
         regions: {
+            photoRegion: '#photo-item',
             nameRegion: '#name-item',
             birthdayRegion: '#birthday-item',
             genderRegion: '#gender-item',
+            marriageRegion: '#marriage-item',
+            nationalityRegion: '#nationality-item',
+            addressRegion: '#address-item',
         },
 
         // initializer
         initialize: function() {
             // create component
+            this.photoItem = new PhotoItem({model: this.model});
             this.nameItem = new NameItem();
             this.birthdayItem = new BirthDayItem({model: this.model});
-            this.genderItem = new GenderItem();
+            this.genderItem = new GenderItem({model: this.model});
+            this.marriageItem = new MarriageItem({model: this.model});
+            this.nationalityItem = new NationalityItem({model: this.model});
+            this.addressItem = new AddressItem({model: this.model});
         },
 
         // after render
         onRender: function() {
             // show every component
+            this.photoRegion.show(this.photoItem);
             this.nameRegion.show(this.nameItem);
             this.birthdayRegion.show(this.birthdayItem);
             this.genderRegion.show(this.genderItem);
+            this.marriageRegion.show(this.marriageItem);
+            this.nationalityRegion.show(this.nationalityItem);
+            this.addressRegion.show(this.addressItem);
         },
 
         // after show

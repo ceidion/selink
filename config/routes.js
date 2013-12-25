@@ -1,6 +1,7 @@
 var user = require('../app/controllers/user');
 var tempaccount = require('../app/controllers/tempaccount');
-var profile = require('../app/controllers/profile.js');
+var profile = require('../app/controllers/profile');
+var address = require('../app/controllers/address');
 
 module.exports = function(app) {
 
@@ -37,12 +38,21 @@ module.exports = function(app) {
     app.patch('/profile/:id', checkLoginStatus, profile.update);
     // Upload photo
     app.put('/profile/:id', checkLoginStatus, profile.update);
+    // query address
+    app.get('/address/:zipcode', checkLoginStatus, address.show);
 
 };
 
 checkLoginStatus = function(req, res, next) {
     if (!req.session.user) {
-        res.redirect('/');
+        if (req.xhr) {
+            res.status(401).json({
+                title: "セッションの有効期限が切りました。",
+                msg: "セキュリティのため、しばらく操作しない場合はサーバーからセッションを切断することがあります。お手数ですが、もう一度ログインしてください。"
+            });
+        } else {
+            res.redirect('/');
+        }
     } else {
         next();
     }

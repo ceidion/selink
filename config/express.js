@@ -28,6 +28,14 @@ module.exports = function(app, config) {
     // Parse cookie before session
     app.use(express.cookieParser('your secret here'));
 
+    // Parse request body
+    app.use(express.bodyParser({
+        // keep upload file extension
+        keepExtensions: true,
+        // file upload folder
+        uploadDir: path.join(__dirname, '../public/upload')
+    }));
+
     // Memory storage session
     app.use(express.session());
 

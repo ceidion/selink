@@ -9,7 +9,8 @@ define(['text!templates/common/sidenav.html',], function(template) {
         className: 'nav nav-list',
 
         events: {
-            "click li": "activeMenu"
+            'click li': 'activeMenu',
+            'mouseover li': 'attention'
         },
 
         onShow: function() {
@@ -20,6 +21,13 @@ define(['text!templates/common/sidenav.html',], function(template) {
             this.$el.find('li').removeClass('active open');
             $(event.target).closest('li').addClass('active');
             $(event.target).closest('ul').closest('li').addClass('active open');
+        },
+
+        attention: function(event) {
+            $(event.target).find('i').addClass('animated wobble');
+            $(event.target).find('i').one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
+                $(this).removeClass('animated wobble');
+            });
         }
     });
 

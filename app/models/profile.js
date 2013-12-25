@@ -55,7 +55,7 @@ var Profile = new Schema({
         validate: validate('len', 0, 50)
     },
     // Marriage
-    married: {
+    marriage: {
         type: String,
         trim: true,
         enum: metadata.married_option
@@ -86,7 +86,7 @@ var Profile = new Schema({
     zipCode: {
         type: String,
         trim: true,
-        validate: validate('len', 0, 7)
+        validate: validate('len', 0, 8)
     },
     // Address
     address: {

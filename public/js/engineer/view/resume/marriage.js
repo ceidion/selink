@@ -1,11 +1,11 @@
 define([
     'view/common/item-base',
-    'text!template/resume/gender.html'
+    'text!template/resume/marriage.html'
 ], function(
     BaseView,
     template) {
 
-    var GenderItem = BaseView.extend({
+    var MarriageItem = BaseView.extend({
 
         // template
         template: template,
@@ -24,22 +24,22 @@ define([
             // TODO: this is not right
             if ($target.prop('tagName') == "I")
                 return {
-                    gender: $target.closest('.btn').find('input').val()
+                    marriage: $target.closest('.btn').find('input').val()
                 };
             else
                 return {
-                    gender: $target.find('input').val()
+                    marriage: $target.find('input').val()
                 };
         },
 
         renderValue: function(data) {
-            this.ui.value.text(data.gender);
+            this.ui.value.text(data.marriage);
         },
 
         successMsg: function(data) {
-            return "性別は「" +　data.gender + "」に更新しました。";
+            return "婚姻状況は「" +　data.marriage + "」に更新しました。";
         }
     });
 
-    return GenderItem;
+    return MarriageItem;
 });

@@ -37,7 +37,7 @@ exports.update = function(req, res, next) {
         }
 
         var photoName = /.*[\/|\\](.*)$/.exec(photoPath)[1];
-        req.body.photo = 'http://localhost:8080/upload/' + photoName;
+        req.body.photo = 'http://localhost:8081/upload/' + photoName;
     }
 
     Profile.findById(req.params.id, function(err, profile) {
