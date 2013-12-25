@@ -1,7 +1,9 @@
 define([
+    'vent/vent',
     'view/common/item-base',
     'text!template/resume/photo.html'
 ], function(
+    vent,
     BaseView,
     template) {
 
@@ -13,19 +15,17 @@ define([
         // initializer
         initialize: function() {
 
-            this.ui = _.extend(this.ui, {
+            this.ui = _.extend({}, this.ui, {
                 photo: 'img',
                 inputFile: 'input[type="file"]',
             });
-
-            // this.events = _.extend(this.events, {
-            //     'click .btn': 'save'
-            // });
         },
 
         onRender: function() {
 
             var self = this;
+
+            this.ui.photo.colorbox();
 
             this.ui.inputFile.fileupload({
                 type: 'PUT',
@@ -38,10 +38,12 @@ define([
                         $(this).removeClass('rollOut').addClass('rollIn');
                     });
 
-                    // self.ui.photo.fadeOut(function() {
-                    //     self.ui.photo.attr('src', data.result.photo);
-                    //     self.ui.photo.fadeIn();
-                    // });
+                    $.gritter.add({
+                        text: "写真は更新しました",
+                        class_name: 'gritter-success'
+                    });
+
+                    vent.trigger('profile:photo', {src: data.result.photo});
                 },
                 error: function() {
                     // say hello to user
@@ -53,29 +55,6 @@ define([
                     });
                 }
             });
-        },
-
-        getData: function(event) {
-
-            $target = $(event.target);
-
-            // TODO: this is not right
-            if ($target.prop('tagName') == "I")
-                return {
-                    gender: $target.closest('.btn').find('input').val()
-                };
-            else
-                return {
-                    gender: $target.find('input').val()
-                };
-        },
-
-        renderValue: function(data) {
-            this.ui.value.text(data.gender);
-        },
-
-        successMsg: function(data) {
-            return "性別は「" +　data.gender + "」に更新しました。";
         }
     });
 

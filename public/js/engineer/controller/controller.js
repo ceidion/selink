@@ -1,8 +1,12 @@
 define([
     'model/profile',
+    'view/common/topnav',
+    'view/common/sidenav',
     'view/resume/resume'
 ], function(
     ProfileModel,
+    TopNavView,
+    SideNavView,
     ResumeView
 ) {
 
@@ -11,6 +15,8 @@ define([
 
         // Initializer of main page controller
         initialize: function(options) {
+
+            var self = this;
 
             // hold application ref
             this.app = options.app;
@@ -23,6 +29,21 @@ define([
             // create profile model
             this.profileModel = new ProfileModel({
                 _id: this.user.profile
+            });
+
+            // setup side nav
+            this.app.sideNavView = new SideNavView();
+            this.app.sidenavArea.show(this.app.sideNavView);
+
+            // setup top nav
+            this.profileModel.fetch({
+                // if success
+                success: function() {
+                    self.app.topNavView = new TopNavView({
+                        model: self.profileModel
+                    });
+                    self.app.topnavArea.show(self.app.topNavView);
+                }
             });
         },
 

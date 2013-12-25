@@ -92,7 +92,18 @@ var Profile = new Schema({
     address: {
         type: String,
         trim: true,
-        validate: validate('len', 0, 100)
+        validate: validate('len', 0, 80)
+    },
+    // Nearest Station
+    nearestSt: {
+        type: String,
+        trim: true,
+        validate: validate('len', 0, 30)
+    },
+    // Work Experience
+    experience: {
+        type: Number,
+        validate: validate('isInt')
     },
     // Self Introduction
     selfIntroduction: {

@@ -29,6 +29,7 @@ require.config({
         // date time
         'datepicker-locale': "../lib/date-time/locales/bootstrap-datepicker.ja",
         datepicker: "../lib/date-time/bootstrap-datepicker.min",
+        spinner: '../lib/fuelux/fuelux.spinner.min',
         moment: "../lib/date-time/moment-with-langs.min",
         // file upload
         'jquery.ui.widget': '../lib/jquery.ui.widget',
@@ -37,7 +38,8 @@ require.config({
         // input mask
         maskedinput: "../lib/jquery.maskedinput.min",
         chosen: '../lib/chosen.jquery.min',
-        gritter: '../lib/jquery.gritter.min'
+        gritter: '../lib/jquery.gritter.min',
+        colorbox: '../lib/jquery.colorbox-min'
     },
 
     shim: {
@@ -84,7 +86,10 @@ require.config({
         'datepicker-locale': {
             deps: ['bootstrap', 'datepicker']
         },
-        fileupload: {
+        'spinner': {
+            deps: ['jquery']
+        },
+        'fileupload': {
             deps: ['jquery', 'jquery.ui.widget', 'iframetransport']
         },
         'maskedinput': {
@@ -95,6 +100,9 @@ require.config({
         },
         'gritter': {
             deps: ['ace']
+        },
+        'colorbox': {
+            deps: ['jquery']
         },
         'engineer': {
             deps: [
@@ -107,10 +115,12 @@ require.config({
                 'pie-chart',
                 'full-calendar',
                 'datepicker-locale',
+                'spinner',
                 'moment',
                 'fileupload',
                 'maskedinput',
                 'chosen',
+                'colorbox',
                 'gritter'
             ]
         }

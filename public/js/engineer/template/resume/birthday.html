@@ -3,7 +3,12 @@
 </div>
 <div class="profile-info-value">
     <div class="sl-value">
-        <%= obj.birthDayDisplay %>
+        <% 
+            if (obj.birthDayDisplay) 
+                print(obj.birthDayDisplay);
+            else
+                print('<span class="text-muted">クリックして編集</span>');
+        %>
     </div>
     <div class="sl-editor row form-group">
         <div class="col-sm-12 input-group">

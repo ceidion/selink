@@ -13,13 +13,13 @@ define([
         // initializer
         initialize: function() {
 
-            this.ui = _.extend(this.ui, {
+            this.ui = _.extend({}, this.ui, {
                 'zipCodeArea': '#zipCodeArea',
                 'zipCode': '#zipCode',
                 'address': '#address'
             });
 
-            this.events = _.extend(this.events, {
+            this.events = _.extend({}, this.events, {
                 'change #zipCode': 'getAddress',
                 'change #address': 'submitForm'
             });

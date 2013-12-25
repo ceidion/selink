@@ -7,6 +7,8 @@ define([
     'view/resume/marriage',
     'view/resume/nationality',
     'view/resume/address',
+    'view/resume/nearestSt',
+    'view/resume/experience',
 ], function(
     template,
     PhotoItem,
@@ -15,7 +17,9 @@ define([
     GenderItem,
     MarriageItem,
     NationalityItem,
-    AddressItem
+    AddressItem,
+    NearestStItem,
+    ExperienceItem
 ) {
 
     // resume view
@@ -38,6 +42,8 @@ define([
             marriageRegion: '#marriage-item',
             nationalityRegion: '#nationality-item',
             addressRegion: '#address-item',
+            nearestStRegion: '#nearestst-item',
+            experienceRegion: '#experience-item',
         },
 
         // initializer
@@ -50,6 +56,8 @@ define([
             this.marriageItem = new MarriageItem({model: this.model});
             this.nationalityItem = new NationalityItem({model: this.model});
             this.addressItem = new AddressItem({model: this.model});
+            this.nearestStItem = new NearestStItem({model: this.model});
+            this.experienceItem = new ExperienceItem({model: this.model});
         },
 
         // after render
@@ -62,6 +70,8 @@ define([
             this.marriageRegion.show(this.marriageItem);
             this.nationalityRegion.show(this.nationalityItem);
             this.addressRegion.show(this.addressItem);
+            this.nearestStRegion.show(this.nearestStItem);
+            this.experienceRegion.show(this.experienceItem);
         },
 
         // after show

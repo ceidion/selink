@@ -13,7 +13,7 @@ define([
         // initializer
         initialize: function() {
 
-            this.events = _.extend(this.events, {
+            this.events = _.extend({}, this.events, {
                 'change select': 'save'
             });
         },

@@ -1,4 +1,9 @@
-<span class="fileinput-button profile-picture">
-    <img id="avatar" class="editable img-responsive" src="<%- obj.photo %>">
-    <input id="fileupload" type="file" name="photo" data-url="/profile/<%- obj._id %>">
+<span class="fileinput-button profile-picture ace-thumbnails">
+	<li>
+		<div>
+		    <img id="avatar" class="img-responsive" src="<%- obj.photo %>">
+		    <div class="text"><div class="inner">クリックして変更</div></div>
+		    <input id="fileupload" type="file" name="photo" data-url="/profile/<%- obj._id %>">
+		</div>
+    </li>
 </span>

@@ -12,7 +12,7 @@ define([
 
         // initializer
         initialize: function() {
-            this.events = _.extend(this.events, {
+            this.events = _.extend({}, this.events, {
                 'click .btn': 'save'
             });
         },
