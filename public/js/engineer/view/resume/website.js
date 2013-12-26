@@ -1,17 +1,17 @@
 define([
     'view/common/item-base',
-    'text!template/resume/birthday.html'
+    'text!template/resume/website.html'
 ], function(
     BaseView,
     template) {
 
-    var BirthDayItem = BaseView.extend({
+    var WebSiteItem = BaseView.extend({
 
         // template
         template: template,
 
         // icon
-        icon: 'icon-calendar',
+        icon: 'icon-globe',
 
         // initializer
         initialize: function() {
@@ -28,19 +28,6 @@ define([
         // after render
         onRender: function() {
 
-            var self = this;
-
-            // append data picker
-            this.ui.input.datepicker({
-                autoclose: true,
-                startView: 2,
-                endDate: new Date(),
-                language: 'ja'
-            });
-
-            // enable mask input
-            this.ui.input.mask('9999/99/99');
-
             // call super class method append validator
             BaseView.prototype.onRender.call(this, {
 
@@ -49,8 +36,14 @@ define([
                 onkeyup: false,
 
                 rules: {
-                    birthDay: {
-                        dateJa: true
+                    webSite: {
+                        url: true
+                    }
+                },
+
+                messages: {
+                    webSite: {
+                        url: "ウェブサイトは正しいURLフォーマットでご入力ください"
                     }
                 }
             });
@@ -62,19 +55,29 @@ define([
 
         getData: function() {
             return {
-                birthDay: this.ui.input.val()
+                webSite: this.ui.input.val()
             };
         },
 
         renderValue: function(data) {
-            this.ui.value.text(moment(data.birthDay).format('LL'));
+
+            if (!data.webSite) {
+                this.ui.value.html(this.placeholder);
+                return;
+            }
+
+            this.ui.value.text(data.webSite);
         },
 
         successMsg: function(data) {
-            return "生年月日は「" +　moment(data.birthDay).format('LL') + "」に更新しました。";
+
+            if (!data.webSite)
+                return "個人サイトはクリアしました。";
+
+            return "個人サイトは「" +　data.webSite + "」に更新しました。";
         }
 
     });
 
-    return BirthDayItem;
+    return WebSiteItem;
 });

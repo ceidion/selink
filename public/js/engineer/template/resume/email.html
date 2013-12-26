@@ -1,11 +1,11 @@
 <div class="profile-info-name">
-    生年月日
+    E-Mail
 </div>
 <div class="profile-info-value">
     <div class="sl-value">
         <%
-            if (obj.birthDayDisplay)
-                print(obj.birthDayDisplay);
+            if (obj.email)
+                print(obj.email);
             else
                 print('<span class="text-muted">クリックして編集</span>');
         %>
@@ -13,10 +13,10 @@
     <div class="sl-editor row form-group">
         <div class="col-sm-12 input-group">
             <span class="input-group-addon">
-                <i class="icon-calendar bigger-110"></i>
+                <i class="icon-envelope-alt bigger-110"></i>
             </span>
             <form>
-                <input type="text" id="birthday-item" class="input-medium" placeholder="yyyy/mm/dd" name="birthDay" value="<%- obj.birthDayInput %>">
+                <input type="text" class="col-xs-12" placeholder="メールアドレス" name="email" value="<%- obj.email %>">
             </form>
         </div>
     </div>

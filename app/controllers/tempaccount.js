@@ -119,7 +119,9 @@ exports.activate = function(req, res, next) {
                 } else {
 
                     // save the profile object
-                    profileObj.save();
+                    profileObj.save(function(err, profile) {
+                        if (err) next(err);
+                    });
 
                     // remove the temporary account
                     tempAccount.remove();

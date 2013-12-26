@@ -10,6 +10,9 @@ define([
         // template
         template: template,
 
+        // icon
+        icon: 'icon-leaf',
+
         // initializer
         initialize: function() {
             this.events = _.extend({}, this.events, {

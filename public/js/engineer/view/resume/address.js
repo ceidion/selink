@@ -10,6 +10,9 @@ define([
         // template
         template: template,
 
+        // icon
+        icon: 'icon-home',
+
         // initializer
         initialize: function() {
 
@@ -20,7 +23,8 @@ define([
             });
 
             this.events = _.extend({}, this.events, {
-                'change #zipCode': 'getAddress',
+                'change #zipCode': 'submitForm',
+                'keyup #zipCode': 'getAddress',
                 'change #address': 'submitForm'
             });
         },
@@ -30,11 +34,8 @@ define([
 
             var self = this;
 
-            console.log(this.ui);
-            console.log(this.events);
-
             // enable mask input
-            this.$el.find('#zipCode').mask('999-9999');
+            this.ui.zipCode.mask('999-9999');
 
             // call super class method append validator
             BaseView.prototype.onRender.call(this, {
@@ -60,6 +61,9 @@ define([
         getAddress: function() {
 
             var self = this;
+
+            if (this.ui.zipCode.val().indexOf("_") >= 0)
+                return;
 
             $.ajax({
 
@@ -106,11 +110,27 @@ define([
         },
 
         renderValue: function(data) {
-            this.ui.value.text(this.ui.zipCode.val() + " " + this.ui.address.val());
+
+            if (!data.zipCode && !data.address) {
+                this.ui.value.html(this.placeholder);
+                return;
+            }
+
+            if (data.zipCode)
+                this.ui.value.text("（〒 " + data.zipCode + "）" + data.address);
+            else
+                this.ui.value.text(data.address);
         },
 
         successMsg: function(data) {
-            return "住所は「" +　this.ui.zipCode.val() + " " + this.ui.address.val() + "」に更新しました。";
+
+            if (!data.zipCode && !data.address)
+                return "住所情報はクリアしました。";
+
+            if (data.zipCode)
+                return "住所は「（〒 " +　data.zipCode + "）" + data.address + "」に更新しました。";
+            else
+                return "住所は「" + data.address + "」に更新しました。";
         }
 
     });

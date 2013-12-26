@@ -10,8 +10,15 @@ define([
         // template
         template: template,
 
+        // icon
+        icon: 'icon-flag',
+
         // initializer
         initialize: function() {
+
+            this.ui = _.extend({}, this.ui, {
+                'input': 'select'
+            });
 
             this.events = _.extend({}, this.events, {
                 'change select': 'save'
@@ -34,16 +41,16 @@ define([
 
         getData: function() {
             return {
-                nationality: this.$el.find('select').val()
+                nationality: this.ui.input.val()
             };
         },
 
         renderValue: function(data) {
-            this.ui.value.text(this.$el.find('select').val());
+            this.ui.value.text(data.nationality);
         },
 
         successMsg: function(data) {
-            return "国籍は「" +　this.$el.find('select').val() + "」に更新しました。";
+            return "国籍は「" +　data.nationality + "」に更新しました。";
         }
 
     });

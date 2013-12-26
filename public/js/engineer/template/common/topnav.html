@@ -1,3 +1,6 @@
+<%
+    var dispPhoto = obj.photo ? obj.photo : './asset/images/no_photo_male.gif';
+%>
 <ul class="nav ace-nav">
 
     <li class="light-blue2">
@@ -18,7 +21,7 @@
 
     <li class="light-blue">
         <a class="dropdown-toggle" href="/#" data-toggle="dropdown">
-            <img class="nav-user-photo" src="<%- obj.photo %>" alt="">
+            <img class="nav-user-photo" src="<%- dispPhoto %>" alt="">
             <span class="user-info"><small>こんにちは,</small>太郎さん</span>
         </a>
         <ul class="dropdown-menu user-menu pull-right dropdown-blue dropdown-caret">

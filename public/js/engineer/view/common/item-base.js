@@ -2,6 +2,9 @@ define([], function() {
 
     var BaseItem = Backbone.Marionette.ItemView.extend({
 
+        // placeholder for empty value
+        placeholder: '<span class="text-muted">クリックして編集</span>',
+
         // common events
         events: {
             // Switch to edit-mode when the div was clicked
@@ -74,7 +77,8 @@ define([], function() {
             if(this.model) {
 
                 var self = this,
-                    data = this.getData(event);
+                    data = this.getData(event),
+                    icon = this.icon ? this.icon : 'icon-ok';
 
                 // save model
                 this.model.save(data, _.extend({
@@ -85,7 +89,7 @@ define([], function() {
                         self.renderValue(data);
 
                         $.gritter.add({
-                            text: self.successMsg(data),
+                            text: '<i class="' + icon + ' icon-2x animated pulse"></i>&nbsp;&nbsp;' + self.successMsg(data),
                             class_name: 'gritter-success'
                         });
                     },

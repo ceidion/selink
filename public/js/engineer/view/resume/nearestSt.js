@@ -10,8 +10,15 @@ define([
         // template
         template: template,
 
+        // icon
+        icon: 'icon-road',
+
         // initializer
         initialize: function() {
+
+            this.ui = _.extend({}, this.ui, {
+                'input': 'input'
+            });
 
             this.events = _.extend({}, this.events, {
                 'change input': 'submitForm'
@@ -50,16 +57,26 @@ define([
 
         getData: function() {
             return {
-                nearestSt: this.$el.find('input').val()
+                nearestSt: this.ui.input.val()
             };
         },
 
         renderValue: function(data) {
-            this.ui.value.text(this.$el.find('input').val());
+
+            if (!data.nearestSt) {
+                this.ui.value.html(this.placeholder);
+                return;
+            }
+
+            this.ui.value.text(data.nearestSt);
         },
 
         successMsg: function(data) {
-            return "最寄駅は「" +　this.$el.find('input').val() + "」に更新しました。";
+
+            if (!data.nearestSt)
+                return "最寄駅情報はクリアしました。";
+
+            return "最寄駅は「" +　data.nearestSt + "」に更新しました。";
         }
 
     });

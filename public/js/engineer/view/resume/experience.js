@@ -10,8 +10,15 @@ define([
         // template
         template: template,
 
+        // icon
+        icon: 'icon-suitcase',
+
         // initializer
         initialize: function() {
+
+            this.ui = _.extend({}, this.ui, {
+                'input': 'input'
+            });
 
             this.events = _.extend({}, this.events, {
                 'change input': 'save'
@@ -24,30 +31,31 @@ define([
             var self = this;
 
             // enable mask input
-            this.$el.find('input').mask('99');
-            this.$el.find('input').ace_spinner({
-                value: 0,
-                min: 0,
-                max: 99,
-                step: 1,
-                btn_up_class: 'btn-info',
-                btn_down_class:'btn-warning'
-            });
-
+            this.ui.input.mask('9?9');
         },
 
         getData: function() {
             return {
-                birthDay: this.$el.find('input').val()
+                experience: this.ui.input.val()
             };
         },
 
         renderValue: function(data) {
-            this.ui.value.text(this.$el.find('input').val());
+
+            if (!data.experience) {
+                this.ui.value.html(this.placeholder);
+                return;
+            }
+
+            this.ui.value.text(data.experience + "年");
         },
 
         successMsg: function(data) {
-            return "IT経験年数は「" +　this.$el.find('input').val() + "年」に更新しました。";
+
+            if (!data.experience)
+                return "IT経験年数情報はクリアしました。";
+
+            return "IT経験年数は「" +　data.experience + "年」に更新しました。";
         }
 
     });

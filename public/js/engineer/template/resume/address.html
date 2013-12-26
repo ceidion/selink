@@ -3,8 +3,8 @@
 </div>
 <div class="profile-info-value">
     <div class="sl-value">
-        <% 
-            if (obj.address) 
+        <%
+            if (obj.address)
                 print((obj.zipCode ? "（〒 " + obj.zipCode + "）" : "") + obj.address);
             else
                 print('<span class="text-muted">クリックして編集</span>');
@@ -14,7 +14,7 @@
         <form>
         <div id="zipCodeArea" class="col-sm-12 input-group">
             <span class="input-group-addon">〒</span>
-            <input type="text" id="zipCode" class="input-small" placeholder="131-0043" name="zipCode" value="<%- obj.zipCode %>">
+            <input type="text" id="zipCode" class="input-small" placeholder="郵便番号" name="zipCode" value="<%- obj.zipCode %>">
         </div>
         <div class="col-sm-12 input-group">
             <span class="input-group-addon">

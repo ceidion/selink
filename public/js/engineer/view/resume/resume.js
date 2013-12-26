@@ -9,6 +9,9 @@ define([
     'view/resume/address',
     'view/resume/nearestSt',
     'view/resume/experience',
+    'view/resume/telno',
+    'view/resume/email',
+    'view/resume/website',
 ], function(
     template,
     PhotoItem,
@@ -19,7 +22,10 @@ define([
     NationalityItem,
     AddressItem,
     NearestStItem,
-    ExperienceItem
+    ExperienceItem,
+    TelNoItem,
+    EMailItem,
+    WebSiteItem
 ) {
 
     // resume view
@@ -44,13 +50,16 @@ define([
             addressRegion: '#address-item',
             nearestStRegion: '#nearestst-item',
             experienceRegion: '#experience-item',
+            telNoRegion: '#telno-item',
+            emailRegion: '#email-item',
+            webSiteRegion: '#website-item',
         },
 
         // initializer
         initialize: function() {
             // create component
             this.photoItem = new PhotoItem({model: this.model});
-            this.nameItem = new NameItem();
+            this.nameItem = new NameItem({model: this.model});
             this.birthdayItem = new BirthDayItem({model: this.model});
             this.genderItem = new GenderItem({model: this.model});
             this.marriageItem = new MarriageItem({model: this.model});
@@ -58,6 +67,9 @@ define([
             this.addressItem = new AddressItem({model: this.model});
             this.nearestStItem = new NearestStItem({model: this.model});
             this.experienceItem = new ExperienceItem({model: this.model});
+            this.telNoItem = new TelNoItem({model: this.model});
+            this.emailItem = new EMailItem({model: this.model});
+            this.webSiteItem = new WebSiteItem({model: this.model});
         },
 
         // after render
@@ -72,6 +84,9 @@ define([
             this.addressRegion.show(this.addressItem);
             this.nearestStRegion.show(this.nearestStItem);
             this.experienceRegion.show(this.experienceItem);
+            this.telNoRegion.show(this.telNoItem);
+            this.emailRegion.show(this.emailItem);
+            this.webSiteRegion.show(this.webSiteItem);
         },
 
         // after show

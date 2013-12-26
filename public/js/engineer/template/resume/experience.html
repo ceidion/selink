@@ -3,9 +3,9 @@
 </div>
 <div class="profile-info-value">
     <div class="sl-value">
-        <% 
-            if (obj.experience) 
-                print(obj.experience);
+        <%
+            if (obj.experience)
+                print(obj.experience + "年");
             else
                 print('<span class="text-muted">クリックして編集</span>');
         %>
@@ -16,7 +16,7 @@
                 <i class="icon-suitcase bigger-110"></i>
             </span>
             <form>
-                <input type="text" class="input-small" placeholder="" name="experience" value="">
+                <input type="text" class="input-small" placeholder="経験年数" name="experience" value="<%- obj.experience %>">
             </form>
         </div>
     </div>

@@ -76,8 +76,8 @@ var Profile = new Schema({
         trim: true,
         validate: validate({passIfEmpty: true}, 'isEmail')
     },
-    // Home Page
-    homePage: {
+    // Personal WebSite
+    webSite: {
         type: String,
         trim: true,
         validate: validate({passIfEmpty: true}, 'isUrl')
@@ -103,7 +103,7 @@ var Profile = new Schema({
     // Work Experience
     experience: {
         type: Number,
-        validate: validate('isInt')
+        validate: validate({passIfEmpty: true}, 'isInt')
     },
     // Self Introduction
     selfIntroduction: {
@@ -135,12 +135,12 @@ var Profile = new Schema({
         trim: true,
         default: "default"
     },
-    // Share ID
-    shareId: {
-        type: String,
-        trim: true,
-        unique: true
-    },
+    // // Share ID
+    // shareId: {
+    //     type: String,
+    //     trim: true,
+    //     unique: true
+    // },
     // Item open flag
     setting: {
         name: {

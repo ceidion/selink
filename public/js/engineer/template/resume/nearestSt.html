@@ -3,8 +3,8 @@
 </div>
 <div class="profile-info-value">
     <div class="sl-value">
-        <% 
-            if (obj.nearestSt) 
+        <%
+            if (obj.nearestSt)
                 print(obj.nearestSt);
             else
                 print('<span class="text-muted">クリックして編集</span>');
@@ -16,7 +16,7 @@
                 <i class="icon-road bigger-110"></i>
             </span>
             <form>
-                <input type="text" class="input-medium" placeholder="最寄駅" name="nearestSt" value="<%- obj.nearestSt %>">
+                <input type="text" class="col-xs-12" placeholder="最寄駅" name="nearestSt" value="<%- obj.nearestSt %>">
             </form>
         </div>
     </div>

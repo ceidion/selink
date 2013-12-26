@@ -10,135 +10,84 @@ define([
         // template
         template: template,
 
+        // icon
+        icon: 'icon-user',
+
+        placeholder: '氏名',
+
         // initializer
         initialize: function() {
 
-            this.ui = _.extend({}, this.commonUI, {
-                inputFirstName: 'input[name="firstName"]',
-                inputLastName: 'input[name="lastName"]',
-                areaName: '#nameArea'
+            this.ui = _.extend({}, this.ui, {
+                firstName: 'input[name="firstName"]',
+                lastName: 'input[name="lastName"]'
             });
 
-            this.events = _.extend({}, this.commonEvents, {
+            this.events = _.extend({}, this.events, {
                 // Update model when input's value was chenaged
-                'change input[name="firstName"]': 'updateFirstName',
-                'change input[name="lastName"]': 'updateLastName'
+                'change input[name="firstName"]': 'submitForm',
+                'change input[name="lastName"]': 'submitForm'
             });
         },
 
         // after render
         onRender: function() {
 
-            // Listen to the universal-click, switch to view-mode when input lost focus
-            // this.listenTo(vent, 'click:universal', this.switchToValue);
+            // call super class method append validator
+            BaseView.prototype.onRender.call(this, {
 
-            // Attach popover for input control in edit panel
-            // this._appendInfoOnInput();
-        },
+                // onfocusout: false,
 
-        /*Validate user input value*/
-        validate: function() {
+                // onkeyup: false,
 
-            var firstName = this.ui.inputFirstName.val();
-            var lastName = this.ui.inputLastName.val();
-            var errors = [];
-
-            if (firstName.length > 20)
-                errors.push({
-                    target: this.ui.inputFirstName,
-                    title: "First Name",
-                    message: 'Please input your first name in 20 characters.'
-                });
-
-            if (lastName.length > 20)
-                errors.push({
-                    target: this.ui.inputLastName,
-                    title: "Last Name",
-                    message: 'Please input your last name in 20 characters.'
-                });
-
-            return errors;
-        },
-
-        updateFirstName: function() {
-
-            var errors = this.validate();
-            if (errors.length) {
-                this.showError(errors);
-
-                if (_.contains(_.pluck(errors, 'target'), this.ui.inputFirstName))
-                    return;
-            } else {
-                this.clearError();
-                // append normal info help on editor
-                this._appendInfoOnInput();
-            }
-
-            // Get input value
-            var newVal = this.ui.inputFirstName.val();
-            this.updateModel({
-                firstName: newVal
-            });
-        },
-
-        updateLastName: function() {
-
-            var errors = this.validate();
-            if (errors.length) {
-                this.showError(errors);
-
-                if (_.contains(_.pluck(errors, 'target'), this.ui.inputLastName))
-                    return;
-            } else {
-                this.clearError();
-                // append normal info help on editor
-                this._appendInfoOnInput();
-            }
-
-            // Get input value
-            var newVal = this.ui.inputLastName.val();
-            this.updateModel({
-                lastName: newVal
-            });
-        },
-
-        /*Update model when edit finished*/
-        updateModel: function(data) {
-
-            var self = this;
-
-            // Save the model
-            this.model.save(data, {
-
-                // If save success
-                success: function() {
-                    // Update the view panel
-                    self._renderValue();
-                    // Switch to view panel
-                    self.switchToValue();
+                rules: {
+                    firstName: {
+                        maxlength: 20
+                    },
+                    lastName: {
+                        maxlength: 20
+                    }
                 },
-                // use patch
-                patch: true
+
+                messages: {
+                    firstName: {
+                        maxlength: "20文字以内でご入力ください"
+                    },
+                    lastName: {
+                        maxlength: "20文字以内でご入力ください"
+                    }
+                }
             });
         },
 
-        _renderValue: function() {
-
-            var firstName = this.ui.inputFirstName.val();
-            var lastName = this.ui.inputLastName.val();
-
-            this.ui.value.empty();
-
-            if (!firstName && !lastName) {
-
-                this.ui.value.append('<h2 class="sl-placeholder">Your Name</h2>');
-
-            } else {
-
-                this.ui.value.append('<h2>' + firstName + '&nbsp;' + lastName + '</h2>');
-            }
+        submitForm: function() {
+            this.$el.find('form').submit();
         },
 
+        getData: function() {
+            return {
+                firstName: this.ui.firstName.val(),
+                lastName: this.ui.lastName.val()
+            };
+        },
+
+        renderValue: function(data) {
+
+            if (!data.firstName && !data.lastName) {
+                this.ui.value.html(this.placeholder);
+                return;
+            }
+
+            this.ui.value.text(data.firstName + " " + data.lastName);
+        },
+
+        successMsg: function(data) {
+
+            if (!data.firstName && !data.lastName)
+                return "氏名はクリアしました。";
+
+            return "氏名は「" + data.firstName + " " + data.lastName + "」に更新しました。";
+        }
     });
 
     return NameEditor;

@@ -39,7 +39,7 @@ define([
                     });
 
                     $.gritter.add({
-                        text: "写真は更新しました",
+                        text: '<i class="icon-camera icon-2x animated pulse"></i>&nbsp;&nbsp;写真は更新しました',
                         class_name: 'gritter-success'
                     });
 
