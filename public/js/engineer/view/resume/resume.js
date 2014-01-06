@@ -12,6 +12,8 @@ define([
     'view/resume/telno',
     'view/resume/email',
     'view/resume/website',
+    'view/resume/languages',
+    'view/resume/skills',
 ], function(
     template,
     PhotoItem,
@@ -25,7 +27,9 @@ define([
     ExperienceItem,
     TelNoItem,
     EMailItem,
-    WebSiteItem
+    WebSiteItem,
+    LanguageComposite,
+    SkillComposite
 ) {
 
     // resume view
@@ -53,6 +57,8 @@ define([
             telNoRegion: '#telno-item',
             emailRegion: '#email-item',
             webSiteRegion: '#website-item',
+            languageRegion: '#language-composite',
+            skillRegion: '#skill-composite',
         },
 
         // initializer
@@ -70,6 +76,14 @@ define([
             this.telNoItem = new TelNoItem({model: this.model});
             this.emailItem = new EMailItem({model: this.model});
             this.webSiteItem = new WebSiteItem({model: this.model});
+            this.languageComposite = new LanguageComposite({
+                model: this.model,
+                collection: new Backbone.Collection(this.model.get('languages'))
+            });
+            this.skillComposite = new SkillComposite({
+                model: this.model,
+                collection: new Backbone.Collection(this.model.get('skills'))
+            });
         },
 
         // after render
@@ -87,25 +101,12 @@ define([
             this.telNoRegion.show(this.telNoItem);
             this.emailRegion.show(this.emailItem);
             this.webSiteRegion.show(this.webSiteItem);
+            this.languageRegion.show(this.languageComposite);
+            this.skillRegion.show(this.skillComposite);
         },
 
         // after show
         onShow: function() {
-
-            $('.easy-pie-chart.percentage').each(function(){
-            var barColor = $(this).data('color') || '#555';
-            var trackColor = '#E2E2E2';
-            var size = parseInt($(this).data('size')) || 72;
-            $(this).easyPieChart({
-                barColor: barColor,
-                trackColor: trackColor,
-                scaleColor: false,
-                lineCap: 'butt',
-                lineWidth: parseInt(size/10),
-                animate:1000,
-                size: size
-            }).css('color', barColor);
-            });
 
             // Portlets (boxes)
             $('.widget-container-span').sortable({
@@ -116,7 +117,8 @@ define([
                 forceHelperSize:true,
                 placeholder: 'widget-placeholder',
                 forcePlaceholderSize:true,
-                tolerance:'pointer'
+                tolerance:'pointer',
+                handle: '.widget-header'
             });
 
             this.$el.addClass('animated fadeInRight');

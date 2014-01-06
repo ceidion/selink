@@ -39,7 +39,8 @@ require.config({
         maskedinput: "../lib/jquery.maskedinput.min",
         chosen: '../lib/chosen.jquery.min',
         gritter: '../lib/jquery.gritter.min',
-        colorbox: '../lib/jquery.colorbox-min'
+        colorbox: '../lib/jquery.colorbox-min',
+        knob: '../lib/jquery.knob.min'
     },
 
     shim: {
@@ -104,6 +105,9 @@ require.config({
         'colorbox': {
             deps: ['jquery']
         },
+        'knob': {
+            deps: ['jquery']
+        },
         'engineer': {
             deps: [
                 'jquery-ui',
@@ -121,7 +125,8 @@ require.config({
                 'maskedinput',
                 'chosen',
                 'colorbox',
-                'gritter'
+                'gritter',
+                'knob'
             ]
         }
     }

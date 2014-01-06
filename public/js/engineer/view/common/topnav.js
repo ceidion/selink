@@ -1,8 +1,6 @@
 define([
-	'vent/vent',
 	'text!templates/common/topnav.html'
 ], function(
-	vent,
 	template
 ) {
 
@@ -12,21 +10,26 @@ define([
 
         className: 'navbar-header pull-right',
 
+        modelEvents: {
+            'change:photo': 'updatePhoto'
+        },
+
         initialize: function() {
-        	this.listenTo(vent, 'profile:photo', this.updatePhoto);
+        	// this.listenTo(vent, 'profile:photo', this.updatePhoto);
         },
 
         onShow: function() {
             // this.$el.addClass('animated fadeInRight');
         },
 
-        updatePhoto: function(arg) {
+        updatePhoto: function() {
 
-        	var $photo = this.$el.find('.nav-user-photo');
+            var self = this,
+                $photo = this.$el.find('.nav-user-photo');
 
         	$photo.addClass('animated rollOut');
-        	$photo.one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
-        	    $(this).attr('src', arg.src);
+        	$photo.one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
+        	    $(this).attr('src', self.model.get('photo'));
         	    $(this).removeClass('rollOut').addClass('rollIn');
         	});
         }

@@ -111,8 +111,8 @@ var Profile = new Schema({
         trim: true,
         validate: validate('len', 0, 5000)
     },
-    // // Language Background
-    // languageBackground: [LanguageBackground],
+    // Language
+    languages: [String],
     // // Education
     // education: [Education],
     // // Career
@@ -121,8 +121,8 @@ var Profile = new Schema({
     // workExperience: [WorkExperience],
     // // Qualification
     // qualification: [Qualification],
-    // // Skill
-    // skill: [Skill],
+    // Skill
+    skills: [String],
     // BackGround Image
     backgroundImg: {
         type: String,

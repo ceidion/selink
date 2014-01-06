@@ -5,7 +5,7 @@
 .sl-editable .profile-info-name,.sl-editable .sl-value{line-height:33px}
 .sl-editable .form-group{margin-bottom:0px}
 .sl-editable .sl-editor{display:none}.sl-editable .sl-editor input{line-height:normal}
-.ace-thumbnails>li{border:0px}
+.ace-thumbnails>li{border:0px;float:none}
 #zipCodeArea{margin-bottom:10px}
 #gritter-notice-wrapper{top:50px}
 .animated-input-error{display:inline-block;-moz-animation:vertical 2.0s 3 ease 0.5s;-webkit-animation:vertical 2.0s 3 ease 0.5s;-o-animation:vertical 2.0s 3 ease 0.5s;-ms-animation:vertical 2.0s 3 ease 0.5s;animation:vertical 2.0s 3 ease 0.5s}

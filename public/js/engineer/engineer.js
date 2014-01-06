@@ -20,7 +20,7 @@ define([
         sidenavArea: '#sidenav-area'
     });
 
-    // before application initialization
+    // before application initialization, config every plug-ins
     engineer.on('initialize:before', function(options) {
 
         // THIS IS VITAL, change the default behavior of views load template,

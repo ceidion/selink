@@ -1,9 +1,7 @@
 define([
-    'vent/vent',
     'view/common/item-base',
     'text!template/resume/photo.html'
 ], function(
-    vent,
     BaseView,
     template) {
 
@@ -11,6 +9,10 @@ define([
 
         // template
         template: template,
+
+        modelEvents: {
+            'change:photo': 'updatePhoto'
+        },
 
         // initializer
         initialize: function() {
@@ -32,18 +34,12 @@ define([
                 dataType: 'json',
                 done: function(e, data) {
 
-                    self.ui.photo.addClass('animated rollOut');
-                    self.ui.photo.one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
-                        $(this).attr('src', data.result.photo);
-                        $(this).removeClass('rollOut').addClass('rollIn');
-                    });
+                    self.model.set('photo', data.result.photo);
 
                     $.gritter.add({
                         text: '<i class="icon-camera icon-2x animated pulse"></i>&nbsp;&nbsp;写真は更新しました',
                         class_name: 'gritter-success'
                     });
-
-                    vent.trigger('profile:photo', {src: data.result.photo});
                 },
                 error: function() {
                     // say hello to user
@@ -54,6 +50,17 @@ define([
                         layout: 'bottomRight'
                     });
                 }
+            });
+        },
+
+        updatePhoto: function() {
+
+            var self = this;
+            
+            this.ui.photo.addClass('animated rollOut');
+            this.ui.photo.one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
+                $(this).attr('src', self.model.get('photo'));
+                $(this).removeClass('rollOut').addClass('rollIn');
             });
         }
     });
