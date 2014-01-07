@@ -35,10 +35,6 @@ define([
             });
         },
 
-        submitForm: function() {
-            this.$el.find('form').submit();
-        },
-
         getData: function() {
             return {
                 nationality: this.ui.input.val()

@@ -34,10 +34,15 @@ module.exports = function(app) {
 
     // Get single profile
     app.get('/profile/:id', checkLoginStatus, profile.show);
-    // Update profile
+    // Update profile (first-level property)
     app.patch('/profile/:id', checkLoginStatus, profile.update);
+    // Update profile (create nested collection item)
+    app.post('/profile/:id/:sub', checkLoginStatus, profile.createSubDocument);
+    // Update profile (update nested collection item)
+    app.patch('/profile/:id/:sub/:subid', checkLoginStatus, profile.updateSubDocument);
     // Upload photo
     app.put('/profile/:id', checkLoginStatus, profile.update);
+
     // query address
     app.get('/address/:zipcode', checkLoginStatus, address.show);
 

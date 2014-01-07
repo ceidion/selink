@@ -76,10 +76,7 @@ define([
             this.telNoItem = new TelNoItem({model: this.model});
             this.emailItem = new EMailItem({model: this.model});
             this.webSiteItem = new WebSiteItem({model: this.model});
-            this.languageComposite = new LanguageComposite({
-                model: this.model,
-                collection: new Backbone.Collection(this.model.get('languages'))
-            });
+            this.languageComposite = new LanguageComposite({model: this.model});
             this.skillComposite = new SkillComposite({
                 model: this.model,
                 collection: new Backbone.Collection(this.model.get('skills'))

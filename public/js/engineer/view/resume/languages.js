@@ -2,10 +2,12 @@ define([
     'view/common/composite-base',
     'text!template/resume/languages.html',
     'view/resume/language',
+    'model/profile/languages',
 ], function(
     BaseView,
     template,
-    ItemView) {
+    ItemView,
+    LanguagesModel) {
 
     var LanguageComposite = BaseView.extend({
 
@@ -15,18 +17,20 @@ define([
         // for dnd add class here
         className: 'widget-box transparent',
 
-        // icon
-        icon: 'icon-heart',
-
         // item view container
         itemViewContainer: '.widget-main',
 
         // item view
         itemView: ItemView,
 
+        // max item number
+        itemLimit: 8,
+
         // initializer
         initialize: function() {
-            this.events = _.extend({}, this.events, {});
+            this.events = _.extend({}, this.events);
+            this.collection = new LanguagesModel(this.model.get('languages'));
+            this.collection.document = this.model;
         }
     });
 

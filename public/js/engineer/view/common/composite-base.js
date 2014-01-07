@@ -1,9 +1,9 @@
-define([], function() {
+define(['view/common/composite-empty'], function(EmptyView) {
 
     var BaseView = Backbone.Marionette.CompositeView.extend({
 
         // Empty View
-        // emptyView: EmptyView,
+        emptyView: EmptyView,
 
         // common events
         events: {
@@ -22,8 +22,8 @@ define([], function() {
 
         // Common events may happend on Collection
         collectionEvents: {
-            'remove': 'updateModel',
-            'change': 'updateModel'
+            'change': 'updateItem',
+            'remove': 'removeItem',
         },
 
         // SubView append behavior
@@ -49,16 +49,25 @@ define([], function() {
                 // hide subview for slide down effect later
                 // itemView.$el.hide();
 
-                // hide subview's value panel
-                if (itemView.ui && itemView.ui.value) itemView.ui.value.hide();
-
-                // show subview's editor panel
-                if (itemView.ui && itemView.ui.editor) itemView.ui.editor.show();
-
                 // append the subview
                 this.$el.find(this.itemViewContainer).append(itemView.el);
 
                 itemView.$el.addClass('animated bounceIn');
+
+                itemView.$el.one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
+                    $(this).removeClass('animated bounceIn');
+                });
+
+                // show subview's editor panel
+                if (itemView.ui && itemView.ui.editor && itemView.ui.value) {
+
+                    itemView.ui.value.hide();
+
+                    itemView.ui.editor.fadeIn(function() {
+                        // mark this editor as opened
+                        itemView.$el.addClass('sl-editor-open');
+                    });
+                }
 
                 // slide down the subview editor panel, the order is important
                 // itemView.$el.show(function() {
@@ -68,16 +77,16 @@ define([], function() {
             }
 
             // let composite listen to the new subview's delete event
-            this.listenTo(itemView, 'item:delete', this.deleteItem);
+            // this.listenTo(itemView, 'item:delete', this.deleteItem);
         },
 
         // Add new composite item
         addItem: function() {
             // add a new model to composite's collection
-            this.collection.add(new Backbone.Model());
+            this.collection.create();
             // if the number of items exceed the limitation
-            if (this.collection.length >= this.itemNumber)
-            // hide the add button
+            if (this.collection.length >= this.itemLimit)
+                // hide the add button
                 this.ui.addBtn.fadeOut('fast');
         },
 
@@ -86,8 +95,8 @@ define([], function() {
             // remove the specified model from collection
             this.collection.remove(model);
             // if the number of items fewer than limitation
-            if (this.collection.length < this.itemNumber)
-            // show the add button
+            if (this.collection.length < this.itemLimit)
+                // show the add button
                 this.ui.addBtn.fadeIn('fast');
         },
 
@@ -135,38 +144,17 @@ define([], function() {
         },
 
         // Update model
-        updateModel: function() {
+        updateItem: function(model) {
 
             var self = this;
 
-            // Prepare the date for model update
-            var data = {};
-            data[this.item] = _.reject(this.collection.toJSON(), function(item) {
-                // reject emtpy input
-                return _.isEmpty(item);
-            });
-
             // Save the model
-            this.model.save(data, {
+            model.save(null , {
 
                 // if save success
                 success: function() {
                     // Switch to view panel
-                    self.switchToValue();
-                },
-                // handle some error status
-                statusCode: {
-                    // unauthorized
-                    401: function(xhr, status) {
-                        noty({
-                            type: 'error',
-                            timeout: 5000,
-                            text: xhr.responseText,
-                            layout: 'bottomRight'
-                        })
-                        // singnal logout, main page will capture this
-                        vent.trigger('logout:sessionTimeOut');
-                    }
+                    // self.switchToValue();
                 },
                 // if other errors happend
                 error: function(xhr, status) {

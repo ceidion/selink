@@ -1,3 +1,4 @@
+var util = require('util');
 // Definition of Profile
 var mongoose = require('mongoose');
 var Profile = mongoose.model('Profile');
@@ -23,10 +24,12 @@ exports.create = function(req, res, next) {};
 // Edit Profile
 exports.update = function(req, res, next) {
 
+    console.log("request body: " + util.inspect(req.body));
+    console.log("request params: " + util.inspect(req.params));
+    console.log("request attach: " + util.inspect(req.files));
     delete req.body._id;
-    console.log(req.body);
-    console.log(req.files);
 
+    // handle photo file
     if (req.files && req.files.photo) {
         var photoType = req.files.photo.type;
         var photoPath = req.files.photo.path;
@@ -52,6 +55,52 @@ exports.update = function(req, res, next) {
             });
         }
     });
+};
+
+// Create new sub document
+exports.createSubDocument = function(req, res, next) {
+
+    Profile.findById(req.params.id, function(err, profile) {
+        if (err) next(err);
+        else {
+
+            var length = profile[req.params.sub].push(req.body);
+
+            profile.save(function(err, newProfile) {
+                if (err) next(err);
+                else res.send(newProfile[req.params.sub][length - 1]);
+            });
+        }
+    });
+};
+
+// Edit sub document
+exports.updateSubDocument = function(req, res, next) {
+
+    Profile.findById(req.params.id, function(err, profile) {
+        if (err) next(err);
+        else {
+
+            var subDoc = profile[req.params.sub].id(req.params.subid);
+
+            if (subDoc) {
+
+                for(var prop in req.body) {
+                    subDoc[prop] = req.body[prop];
+                }
+
+                profile.save(function(err, newProfile) {
+                    if (err) next(err);
+                    else res.send(subDoc);
+                });
+            } else {
+                res.status(404).json({
+                    msg: "更新失敗しました"
+                });
+            }
+        }
+    });
+
 };
 
 // Delete Profile

@@ -15,18 +15,24 @@ define([
 
         // initializer
         initialize: function() {
-            this.events = _.extend({}, this.events, {
-                'click .btn': 'save'
-            });
+            this.events = _.extend({}, this.events);
         },
 
         // after render
         onRender: function() {
+
+            var self = this;
+
+            // enable knob
             this.$el.find('.knob').knob({
+
+                // custom draw
                 'draw': function() {
 
+                    // change label
                     $(this.i).val(this.cv + 'pt');
 
+                    // change color by value
                     if (this.cv > 85)
                         this.fgColor = '#59a84b';
                     else if (this.cv > 70)
@@ -35,13 +41,14 @@ define([
                         this.fgColor = '#f2bb46';
                     else if (this.cv > 30)
                         this.fgColor = '#ca5952';
-                    else 
+                    else
                         this.fgColor = '#9585bf';
 
+                    // below are copied from default knob
                     var c = this.g,                 // context
-                        a = this.angle(this.cv)    // Angle
-                        , sat = this.startAngle     // Start angle
-                        , eat = sat + a;             // End angle
+                        a = this.angle(this.cv),    // Angle
+                        sat = this.startAngle,     // Start angle
+                        eat = sat + a;             // End angle
 
                     c.lineWidth = this.lineWidth;
 
@@ -62,38 +69,35 @@ define([
                     this.i.css('color', this.fgColor);
 
                     return false;
+                },
+                'release': function(value) {
+                    // self.save();
+                    self.model.set('weight', value);
                 }
             });
 
             // enable chosen
             this.$el.find('select').chosen({
                 width: "95%",
-                no_results_text: "該当国名は存在しません"
+                disable_search_threshold: 10
             });
+
         },
 
-        getData: function(event) {
+        // getData: function() {
+        //     return {
+        //         language: this.$el.find('select').val(),
+        //         weigth: this.$el.find('input').val()
+        //     };
+        // },
 
-            $target = $(event.target);
+        // renderValue: function(data) {
+        //     this.ui.value.text(data.language);
+        // },
 
-            // TODO: this is not right
-            if ($target.prop('tagName') == "I")
-                return {
-                    marriage: $target.closest('.btn').find('input').val()
-                };
-            else
-                return {
-                    marriage: $target.find('input').val()
-                };
-        },
-
-        renderValue: function(data) {
-            this.ui.value.text(data.marriage);
-        },
-
-        successMsg: function(data) {
-            return "婚姻状況は「" +　data.marriage + "」に更新しました。";
-        }
+        // successMsg: function(data) {
+        //     return "婚姻状況は「" +　data.marriage + "」に更新しました。";
+        // }
     });
 
     return LanguageItem;

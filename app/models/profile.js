@@ -11,7 +11,7 @@ var Schema = mongoose.Schema;
 // var Education = require('./education');
 // var Qualification = require('./qualification');
 // var WorkExperience = require('./workexperience');
-// var LanguageBackground = require('./languagebackground');
+var Language = require('./profile/language');
 
 var Profile = new Schema({
 
@@ -112,7 +112,7 @@ var Profile = new Schema({
         validate: validate('len', 0, 5000)
     },
     // Language
-    languages: [String],
+    languages: [Language],
     // // Education
     // education: [Education],
     // // Career
