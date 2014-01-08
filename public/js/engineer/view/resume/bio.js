@@ -16,6 +16,8 @@ define([
         // icon
         icon: 'icon-quote-left',
 
+        placeholder: '<div class="text-muted bigger-125 center">登録していません</div>',
+
         // initializer
         initialize: function() {
 
@@ -24,7 +26,8 @@ define([
             });
 
             this.events = _.extend({}, this.events, {
-                'change input': 'save'
+                'mouseover .widget-header': 'attention',
+                'focusout .sl-editor': 'save'
             });
         },
 
@@ -68,28 +71,35 @@ define([
             }).prev().addClass('wysiwyg-style3');
         },
 
+        attention: function(event) {
+            $(event.target).find('i').addClass('animated swing');
+            $(event.target).find('i').one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
+                $(this).removeClass('animated swing');
+            });
+        },
+
         getData: function() {
             return {
-                telNo: this.ui.input.val()
+                bio: this.$el.find('.wysiwyg-editor').html()
             };
         },
 
         renderValue: function(data) {
 
-            if (!data.telNo) {
+            if (!data.bio) {
                 this.ui.value.html(this.placeholder);
                 return;
             }
 
-            this.ui.value.text(data.telNo);
+            this.ui.value.empty().html(data.bio);
         },
 
         successMsg: function(data) {
 
-            if (!data.telNo)
-                return "電話番号はクリアしました。";
+            if (!data.bio)
+                return "自己紹介はクリアしました。";
 
-            return "電話番号は「" +　data.telNo + "」に更新しました。";
+            return "自己紹介は更新しました。";
         }
 
     });

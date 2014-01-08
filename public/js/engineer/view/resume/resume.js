@@ -15,6 +15,7 @@ define([
     'view/resume/bio',
     'view/resume/languages',
     'view/resume/skills',
+    'view/resume/qualifications',
 ], function(
     template,
     PhotoItem,
@@ -31,7 +32,8 @@ define([
     WebSiteItem,
     BioItem,
     LanguageComposite,
-    SkillComposite
+    SkillComposite,
+    QualificationComposite
 ) {
 
     // resume view
@@ -62,6 +64,7 @@ define([
             bioRegion: '#bio-item',
             languageRegion: '#language-composite',
             skillRegion: '#skill-composite',
+            qualificationRegion: '#qualification-composite',
         },
 
         // initializer
@@ -82,6 +85,7 @@ define([
             this.bioItem = new BioItem({model: this.model});
             this.languageComposite = new LanguageComposite({model: this.model});
             this.skillComposite = new SkillComposite({model: this.model});
+            this.qualificationComposite = new QualificationComposite({model: this.model});
         },
 
         // after render
@@ -102,6 +106,7 @@ define([
             this.bioRegion.show(this.bioItem);
             this.languageRegion.show(this.languageComposite);
             this.skillRegion.show(this.skillComposite);
+            this.qualificationRegion.show(this.qualificationComposite);
         },
 
         // after show

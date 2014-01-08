@@ -10,6 +10,7 @@ define(['view/common/composite-empty'], function(EmptyView) {
 
             // Add a new item when add button clicked
             'click .btn-add': 'addItem',
+            'mouseover .widget-header': 'attention'
         },
 
         // common UI
@@ -75,6 +76,13 @@ define(['view/common/composite-empty'], function(EmptyView) {
 
             // let composite listen to the new subview's delete event
             // this.listenTo(itemView, 'item:delete', this.deleteItem);
+        },
+
+        attention: function(event) {
+            $(event.target).find('i').addClass('animated swing');
+            $(event.target).find('i').one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
+                $(this).removeClass('animated swing');
+            });
         },
 
         // Add new composite item

@@ -44,6 +44,11 @@ define([
                 title: "スキルを追加"
             });
 
+            this.$el.find('.btn-sort').tooltip({
+                placement: 'top',
+                title: "並び替え"
+            });
+
             this.$el.find('.btn-handle').tooltip({
                 placement: 'top',
                 title: "ドラグして移動"

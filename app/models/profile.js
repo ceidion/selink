@@ -106,7 +106,7 @@ var Profile = new Schema({
         validate: validate({passIfEmpty: true}, 'isInt')
     },
     // Self Introduction
-    selfIntroduction: {
+    bio: {
         type: String,
         trim: true,
         validate: validate('len', 0, 5000)

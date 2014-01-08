@@ -1,15 +1,15 @@
 define([
     'view/common/composite-base',
-    'text!template/resume/languages.html',
-    'view/resume/language',
-    'model/profile/languages',
+    'text!template/resume/qualifications.html',
+    'view/resume/qualification',
+    'model/profile/qualifications',
 ], function(
     BaseView,
     template,
     ItemView,
-    LanguagesModel) {
+    QualificationsModel) {
 
-    var LanguageComposite = BaseView.extend({
+    var QualificationComposite = BaseView.extend({
 
         // template
         template: template,
@@ -18,7 +18,7 @@ define([
         className: 'widget-box transparent',
 
         // icon
-        icon: 'icon-comments-alt',
+        icon: 'icon-ticket',
 
         // item view container
         itemViewContainer: '.widget-main',
@@ -27,14 +27,14 @@ define([
         itemView: ItemView,
 
         // max item number
-        itemLimit: 6,
+        itemLimit: 8,
 
         // initializer
         initialize: function() {
 
             this.events = _.extend({}, this.events);
 
-            this.collection = new LanguagesModel(this.model.get('languages'));
+            this.collection = new QualificationsModel(this.model.get('qualifications'));
             this.collection.document = this.model;
         },
 
@@ -42,7 +42,7 @@ define([
 
             this.$el.find('.btn-add').tooltip({
                 placement: 'top',
-                title: "語学力を追加"
+                title: "資格を追加"
             });
 
             this.$el.find('.btn-sort').tooltip({
@@ -57,13 +57,13 @@ define([
         },
 
         updateMsg: function(data) {
-            return "語学力「" +　data.language + "」を" + data.weight + "ptに更新しました。";
+            return "資格「" +　data.language + "」を" + data.weight + "ptに更新しました。";
         },
 
         removeMsg: function(data) {
-            return "語学力「" +　data.language + "(" + data.weight + "pt)」を削除しました。";
+            return "資格「" +　data.language + "(" + data.weight + "pt)」を削除しました。";
         }
     });
 
-    return LanguageComposite;
+    return QualificationComposite;
 });
