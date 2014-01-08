@@ -40,7 +40,9 @@ require.config({
         chosen: '../lib/chosen.jquery.min',
         gritter: '../lib/jquery.gritter.min',
         colorbox: '../lib/jquery.colorbox-min',
-        knob: '../lib/jquery.knob.min'
+        knob: '../lib/jquery.knob.min',
+        wysiwyg: '../lib/bootstrap-wysiwyg.min',
+        hotkeys: '../lib/jquery.hotkeys.min'
     },
 
     shim: {
@@ -108,6 +110,12 @@ require.config({
         'knob': {
             deps: ['jquery']
         },
+        'hotkeys': {
+            deps: ['jquery']
+        },
+        'wysiwyg': {
+            deps: ['bootstrap', 'hotkeys']
+        },
         'engineer': {
             deps: [
                 'jquery-ui',
@@ -126,7 +134,8 @@ require.config({
                 'chosen',
                 'colorbox',
                 'gritter',
-                'knob'
+                'knob',
+                'wysiwyg'
             ]
         }
     }

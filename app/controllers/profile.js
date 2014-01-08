@@ -103,6 +103,31 @@ exports.updateSubDocument = function(req, res, next) {
 
 };
 
+exports.removeSubDocument = function(req, res, next) {
+
+    Profile.findById(req.params.id, function(err, profile) {
+        if (err) next(err);
+        else {
+
+            var subDoc = profile[req.params.sub].id(req.params.subid);
+
+            if (subDoc) {
+
+                var removedDoc = subDoc.remove();
+
+                profile.save(function(err, newProfile) {
+                    if (err) next(err);
+                    else res.send(removedDoc);
+                });
+            } else {
+                res.status(404).json({
+                    msg: "更新失敗しました"
+                });
+            }
+        }
+    });
+};
+
 // Delete Profile
 exports.destroy = function(req, res, next) {};
 

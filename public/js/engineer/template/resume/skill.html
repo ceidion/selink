@@ -1,9 +1,58 @@
-<div class="sl-editable">
-	
-<div class="progress">
-    <div class="progress-bar" style="width:80%">
-        <span class="pull-left">HTML5 & CSS3</span>
-        <span class="pull-right">80pt</span>
+<%
+    var length = obj.weight ? obj.weight : 20,
+        progressClass = 'progress-bar-purple',
+        sliderClass = 'ui-slider-purple',
+        indecatorClass = 'purple';
+
+    if (obj.weight > 85) {
+        progressClass = 'progress-bar-success';
+        sliderClass = 'ui-slider-green';
+        indecatorClass = 'green';
+
+    } else if (obj.weight > 70) {
+        progressClass = 'progress-bar';
+        sliderClass = 'ui-slider';
+        indecatorClass = 'blue';
+
+    } else if (obj.weight > 50) {
+        progressClass = 'progress-bar-warning';
+        sliderClass = 'ui-slider-orange';
+        indecatorClass = 'orange';
+
+    } else if (obj.weight > 30) {
+        progressClass = 'progress-bar-danger';
+        sliderClass = 'ui-slider-red';
+        indecatorClass = 'red';
+    }
+
+%>
+
+<div class="sl-value progress">
+    <div class="progress-bar <%= progressClass %>" style="width:<%= length %>%">
+        <span class="pull-left">
+            <%
+                if (obj.skill) print(obj.skill)
+                else print('<span class="light-grey">未選択</span>');
+            %>
+        </span>
+        <span class="pull-right">
+            <%
+                print(length + "pt")
+            %>
+        </span>
     </div>
 </div>
+<div class="sl-editor row">
+    <div class="col-sm-12 input-group">
+        <span class="input-icon input-icon-right">
+            <input type="text" value="<%- obj.skill %>">
+            <i class="icon-nothing <%= indecatorClass %>"><%= length %>pt</i>
+        </span>
+        <span class="input-group-addon">
+            <div class="ui-slider <%= sliderClass %> sl-slider" style="width: 150px;"></div>
+        </span>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-danger btn-remove btn-xs"><i class="icon-trash bigger-150"></i></button>
+        </span>
+    </div>
 </div>

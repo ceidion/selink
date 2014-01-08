@@ -10,9 +10,6 @@ define(['view/common/composite-empty'], function(EmptyView) {
 
             // Add a new item when add button clicked
             'click .btn-add': 'addItem',
-
-            // Remove the item when remove button clicked
-            'click .btn-remove': 'removeItem'
         },
 
         // common UI
@@ -100,65 +97,73 @@ define(['view/common/composite-empty'], function(EmptyView) {
                 this.ui.addBtn.fadeIn('fast');
         },
 
-        // Hide composite
-        removeItem: function(option) {
-
-            var self = this;
-
-            // if silence is true
-            if (option && option.silence === true) {
-                // just singnal item remove
-                vent.trigger('resume:itemRemoved', {
-                    item: self.item,
-                    itemName: self.itemName,
-                    itemIcon: self.itemIcon
-                });
-                return;
-            }
-
-            var data = this.model.get('setting');
-            data[this.item] = false;
-
-            // save the model
-            this.model.save({
-                setting: data
-            }, {
-
-                // if save success
-                success: function() {
-
-                    vent.trigger('resume:itemRemoved', {
-                        item: self.item,
-                        itemName: self.itemName,
-                        itemIcon: self.itemIcon
-                    });
-                    // slide up editor
-                    self.$el.slideUp('fast', function() {
-                        // dispose the view
-                        self.close();
-                    });
-                },
-                // use patch
-                patch: true
-            });
-        },
-
         // Update model
         updateItem: function(model) {
 
-            var self = this;
+            var self = this,
+                icon = this.icon ? this.icon : 'icon-ok';
 
             // Save the model
             model.save(null , {
 
                 // if save success
                 success: function() {
-                    // Switch to view panel
-                    // self.switchToValue();
+
+                    // $.gritter.add({
+                    //     text: '<i class="' + icon + ' icon-2x animated pulse"></i>&nbsp;&nbsp;' + self.updateMsg(model.toJSON()),
+                    //     class_name: 'gritter-success'
+                    // });
                 },
+
                 // if other errors happend
-                error: function(xhr, status) {
+                error: function(model, xhr, options) {
+
+                    var error = $.parseJSON(xhr.responseText);
+
+                    $.gritter.add({
+                        title: error.title,
+                        text: error.msg,
+                        sticky: true,
+                        class_name: 'gritter-error gritter-center',
+                    });
                 },
+
+                // use patch
+                patch: true
+            });
+        },
+
+        // remove an item from collection
+        removeItem: function(model) {
+
+            var self = this,
+                icon = this.icon ? this.icon : 'icon-ok';
+
+            // Save the model
+            model.destroy({
+
+                // if save success
+                success: function() {
+
+                    $.gritter.add({
+                        text: '<i class="' + icon + ' icon-2x animated pulse"></i>&nbsp;&nbsp;' + self.removeMsg(model.toJSON()),
+                        class_name: 'gritter-warning'
+                    });
+                },
+
+                // if other errors happend
+                error: function(model, xhr, options) {
+
+                    var error = $.parseJSON(xhr.responseText);
+
+                    $.gritter.add({
+                        title: error.title,
+                        text: error.msg,
+                        sticky: true,
+                        class_name: 'gritter-error gritter-center',
+                    });
+                },
+
                 // use patch
                 patch: true
             });

@@ -12,6 +12,7 @@ define([
     'view/resume/telno',
     'view/resume/email',
     'view/resume/website',
+    'view/resume/bio',
     'view/resume/languages',
     'view/resume/skills',
 ], function(
@@ -28,6 +29,7 @@ define([
     TelNoItem,
     EMailItem,
     WebSiteItem,
+    BioItem,
     LanguageComposite,
     SkillComposite
 ) {
@@ -57,6 +59,7 @@ define([
             telNoRegion: '#telno-item',
             emailRegion: '#email-item',
             webSiteRegion: '#website-item',
+            bioRegion: '#bio-item',
             languageRegion: '#language-composite',
             skillRegion: '#skill-composite',
         },
@@ -76,11 +79,9 @@ define([
             this.telNoItem = new TelNoItem({model: this.model});
             this.emailItem = new EMailItem({model: this.model});
             this.webSiteItem = new WebSiteItem({model: this.model});
+            this.bioItem = new BioItem({model: this.model});
             this.languageComposite = new LanguageComposite({model: this.model});
-            this.skillComposite = new SkillComposite({
-                model: this.model,
-                collection: new Backbone.Collection(this.model.get('skills'))
-            });
+            this.skillComposite = new SkillComposite({model: this.model});
         },
 
         // after render
@@ -98,6 +99,7 @@ define([
             this.telNoRegion.show(this.telNoItem);
             this.emailRegion.show(this.emailItem);
             this.webSiteRegion.show(this.webSiteItem);
+            this.bioRegion.show(this.bioItem);
             this.languageRegion.show(this.languageComposite);
             this.skillRegion.show(this.skillComposite);
         },
@@ -115,7 +117,7 @@ define([
                 placeholder: 'widget-placeholder',
                 forcePlaceholderSize:true,
                 tolerance:'pointer',
-                handle: '.widget-header'
+                handle: '.btn-handle'
             });
 
             this.$el.addClass('animated fadeInRight');

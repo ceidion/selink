@@ -12,15 +12,17 @@
     }
 }
 
+// adjust font for japanese
 .gritter-item {
     font-size: 12px;
 }
 
 .sl-editable {
 
-    .transition(background-color 1s);
-
     min-height: 48px;
+
+    // highlight the editable
+    .transition(background-color 1s);
 
     &:hover {
         background-color: #EEE;
@@ -44,13 +46,54 @@
     }
 }
 
+// profile photo, cancel the float for FF
 .ace-thumbnails > li {
   border: 0px;
   float: none;
 }
 
+// add some space for address input
 #zipCodeArea {
   margin-bottom: 10px;
+}
+
+#language-composite {
+
+  .grid2, .grid3, .grid4 {
+
+    min-height: 113px;
+
+    margin-top: 1%;
+
+    border-left: none;
+
+    .sl-value {
+      margin-top: -10px;
+    }
+
+    .sl-editor {
+      margin-top: -5px;
+    }
+
+    // for the delete button append on select
+    .input-group-btn:last-child>.btn {
+      min-height: 30px;
+      margin-left: -2px;
+    }
+  }
+}
+
+#skill-composite {
+
+  .sl-editable {
+    min-height: 40px;
+    padding: 7px;
+  }
+
+  // for the delete button append on select
+  .input-group-btn:last-child>.btn {
+    min-height: 33px;
+  }
 }
 
 /* the norm */
@@ -58,6 +101,7 @@
   top: 50px;
 }
 
+// highlight the error input with animation
 .animated-input-error  {
   display: inline-block;
   .animation(~"vertical 2.0s 3 ease 0.5s");

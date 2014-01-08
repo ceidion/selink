@@ -6,7 +6,7 @@ var metadata = require('./metadata');
 var Schema = mongoose.Schema;
 
 // Sub documents
-// var Skill = require('./skill');
+var Skill = require('./profile/skill');
 // var Career = require('./career');
 // var Education = require('./education');
 // var Qualification = require('./qualification');
@@ -122,7 +122,7 @@ var Profile = new Schema({
     // // Qualification
     // qualification: [Qualification],
     // Skill
-    skills: [String],
+    skills: [Skill],
     // BackGround Image
     backgroundImg: {
         type: String,

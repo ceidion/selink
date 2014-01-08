@@ -10,57 +10,114 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-heart',
+        className: 'sl-editable',
 
         // initializer
         initialize: function() {
+
+            this.ui = _.extend({}, this.ui, {
+                'input': 'input',
+                'progress': '.progress-bar',
+                'valIndicator': '.icon-nothing',
+                'slider': '.sl-slider',
+                'remove': '.btn-remove'
+            });
+
             this.events = _.extend({}, this.events, {
-                'click .btn': 'save'
+                'change input': 'updateModel',
+                'click .btn-remove': 'removeModel'
             });
         },
 
-        // after show
-        onShow: function() {
-            this.$el.find('.knob').knob();
-            // $('.easy-pie-chart.percentage').each(function(){
-            // var barColor = $(this).data('color') || '#555';
-            // var trackColor = '#E2E2E2';
-            // var size = parseInt($(this).data('size')) || 72;
-            // $(this).easyPieChart({
-            //     barColor: barColor,
-            //     trackColor: trackColor,
-            //     scaleColor: false,
-            //     lineCap: 'butt',
-            //     lineWidth: parseInt(size/10),
-            //     animate:1000,
-            //     size: size
-            // }).css('color', barColor);
-            // });
+        onRender: function() {
+
+            var self = this;
+
+            this.$el.find('.sl-slider').empty().slider({
+                value: this.model.get('weight'),
+                range: "min",
+                animate: true,
+                min: 20,
+                max: 100,
+                slide: function(event, ui) {
+
+                    var slideClass = 'ui-slider',
+                        indecatorClass = 'blue';
+
+                    // change color by value
+                    if (ui.value > 85){
+                        slideClass = 'ui-slider-green';
+                        indecatorClass = 'green';
+                    } else if (ui.value > 70) {
+                        slideClass = 'ui-slider';
+                        indecatorClass = 'blue';
+                    } else if (ui.value > 50) {
+                        slideClass = 'ui-slider-orange';
+                        indecatorClass = 'orange';
+                    } else if (ui.value > 30) {
+                        slideClass = 'ui-slider-red';
+                        indecatorClass = 'red';
+                    } else {
+                        slideClass = 'ui-slider-purple';
+                        indecatorClass = 'purple';
+                    }
+
+                    self.ui.slider
+                        .removeClass('ui-slider-green ui-slider-orange ui-slider-red ui-slider-purple')
+                        .addClass(slideClass);
+
+                    self.ui.valIndicator
+                        .removeClass('green orange blue red purple')
+                        .addClass(indecatorClass);
+
+                    self.ui.valIndicator.empty().text(ui.value);
+                },
+                stop: function(event, ui) {
+
+                    self.model.set('weight', ui.value);
+
+                    var progressClass = 'progress-bar-purple';
+
+                    // change color by value
+                    if (ui.value > 85){
+                        progressClass = 'progress-bar-success';
+                    } else if (ui.value > 70) {
+                        progressClass = 'progress-bar';
+                    } else if (ui.value > 50) {
+                        progressClass = 'progress-bar-warning';
+                    } else if (ui.value > 30) {
+                        progressClass = 'progress-bar-danger';
+                    }
+
+                    self.ui.progress
+                        .removeClass('progress-bar-success progress-bar-warning progress-bar-danger progress-bar-purple')
+                        .addClass(progressClass)
+                        .css('width', ui.value + '%')
+                        .find('.pull-right').empty().text(ui.value + 'pt');
+                }
+            });
         },
 
-        getData: function(event) {
+        updateModel: function() {
 
-            $target = $(event.target);
+            var skill = this.ui.input.val();
 
-            // TODO: this is not right
-            if ($target.prop('tagName') == "I")
-                return {
-                    marriage: $target.closest('.btn').find('input').val()
-                };
-            else
-                return {
-                    marriage: $target.find('input').val()
-                };
+            this.model.set('skill', skill);
+            if (skill)
+                this.$el.find('.pull-left').empty().text(skill);
         },
 
-        renderValue: function(data) {
-            this.ui.value.text(data.marriage);
-        },
+        removeModel: function() {
 
-        successMsg: function(data) {
-            return "婚姻状況は「" +　data.marriage + "」に更新しました。";
+            var self = this;
+
+            this.$el.addClass('animated bounceOut');
+            this.$el.one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
+                $(this).removeClass('animated bounceOut');
+                self.model.collection.remove(self.model);
+            });
         }
+
     });
 
     return SkillItem;

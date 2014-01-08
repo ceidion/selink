@@ -40,6 +40,8 @@ module.exports = function(app) {
     app.post('/profile/:id/:sub', checkLoginStatus, profile.createSubDocument);
     // Update profile (update nested collection item)
     app.patch('/profile/:id/:sub/:subid', checkLoginStatus, profile.updateSubDocument);
+    // Update profile (remove nested collection item)
+    app.delete('/profile/:id/:sub/:subid', checkLoginStatus, profile.removeSubDocument);
     // Upload photo
     app.put('/profile/:id', checkLoginStatus, profile.update);
 

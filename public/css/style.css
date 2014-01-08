@@ -1,12 +1,17 @@
 
 .sidebar{-webkit-transition:width .5s;transition:width .5s}.sidebar:before{-webkit-transition:width .5s;transition:width .5s}
 .gritter-item{font-size:12px}
-.sl-editable{-webkit-transition:background-color 1s;transition:background-color 1s;min-height:48px}.sl-editable:hover{background-color:#EEE;cursor:pointer}
+.sl-editable{min-height:48px;-webkit-transition:background-color 1s;transition:background-color 1s}.sl-editable:hover{background-color:#EEE;cursor:pointer}
 .sl-editable .profile-info-name,.sl-editable .sl-value{line-height:33px}
 .sl-editable .form-group{margin-bottom:0px}
 .sl-editable .sl-editor{display:none}.sl-editable .sl-editor input{line-height:normal}
 .ace-thumbnails>li{border:0px;float:none}
 #zipCodeArea{margin-bottom:10px}
+#language-composite .grid2,#language-composite .grid3,#language-composite .grid4{min-height:113px;margin-top:1%;border-left:none}#language-composite .grid2 .sl-value,#language-composite .grid3 .sl-value,#language-composite .grid4 .sl-value{margin-top:-10px}
+#language-composite .grid2 .sl-editor,#language-composite .grid3 .sl-editor,#language-composite .grid4 .sl-editor{margin-top:-5px}
+#language-composite .grid2 .input-group-btn:last-child>.btn,#language-composite .grid3 .input-group-btn:last-child>.btn,#language-composite .grid4 .input-group-btn:last-child>.btn{min-height:30px;margin-left:-2px}
+#skill-composite .sl-editable{min-height:40px;padding:7px}
+#skill-composite .input-group-btn:last-child>.btn{min-height:33px}
 #gritter-notice-wrapper{top:50px}
 .animated-input-error{display:inline-block;-moz-animation:vertical 2.0s 3 ease 0.5s;-webkit-animation:vertical 2.0s 3 ease 0.5s;-o-animation:vertical 2.0s 3 ease 0.5s;-ms-animation:vertical 2.0s 3 ease 0.5s;animation:vertical 2.0s 3 ease 0.5s}
 @-moz-keyframes vertical{0%{-moz-transform:translate(0, -3px)} 4%{-moz-transform:translate(0, 3px)} 8%{-moz-transform:translate(0, -3px)} 12%{-moz-transform:translate(0, 3px)} 16%{-moz-transform:translate(0, -3px)} 20%{-moz-transform:translate(0, 3px)} 22%{-moz-transform:translate(0, 0)}}@-webkit-keyframes vertical{0%{-webkit-transform:translate(0, -3px)} 4%{-webkit-transform:translate(0, 3px)} 8%{-webkit-transform:translate(0, -3px)} 12%{-webkit-transform:translate(0, 3px)} 16%{-webkit-transform:translate(0, -3px)} 20%{-webkit-transform:translate(0, 3px)} 22%{-webkit-transform:translate(0, 0)}}@-ms-keyframes vertical{0%{-ms-transform:translate(0, -3px)} 4%{-ms-transform:translate(0, 3px)} 8%{-ms-transform:translate(0, -3px)} 12%{-ms-transform:translate(0, 3px)} 16%{-ms-transform:translate(0, -3px)} 20%{-ms-transform:translate(0, 3px)} 22%{-ms-transform:translate(0, 0)}}@keyframes vertical{0%{transform:translate(0, -3px)} 4%{transform:translate(0, 3px)} 8%{transform:translate(0, -3px)} 12%{transform:translate(0, 3px)} 16%{transform:translate(0, -3px)} 20%{transform:translate(0, 3px)} 22%{transform:translate(0, 0)}}

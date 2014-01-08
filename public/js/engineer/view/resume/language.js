@@ -10,12 +10,20 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-heart',
+        className: 'grid3 center sl-editable',
 
         // initializer
         initialize: function() {
-            this.events = _.extend({}, this.events);
+
+            this.ui = _.extend({}, this.ui, {
+                'input': 'select',
+                'remove': '.btn-remove'
+            });
+
+            this.events = _.extend({}, this.events, {
+                'change select': 'updateModel',
+                'click .btn-remove': 'removeModel'
+            });
         },
 
         // after render
@@ -50,7 +58,7 @@ define([
                         sat = this.startAngle,     // Start angle
                         eat = sat + a;             // End angle
 
-                    c.lineWidth = this.lineWidth;
+                    c.lineWidth = 12;//this.lineWidth;
 
                     this.o.cursor
                         && (sat = eat - this.cursorExt)
@@ -84,20 +92,21 @@ define([
 
         },
 
-        // getData: function() {
-        //     return {
-        //         language: this.$el.find('select').val(),
-        //         weigth: this.$el.find('input').val()
-        //     };
-        // },
+        updateModel: function() {
+            this.model.set('language', this.ui.input.val());
+            this.render();
+        },
 
-        // renderValue: function(data) {
-        //     this.ui.value.text(data.language);
-        // },
+        removeModel: function() {
 
-        // successMsg: function(data) {
-        //     return "婚姻状況は「" +　data.marriage + "」に更新しました。";
-        // }
+            var self = this;
+
+            this.$el.addClass('animated bounceOut');
+            this.$el.one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
+                $(this).removeClass('animated bounceOut');
+                self.model.collection.remove(self.model);
+            });
+        }
     });
 
     return LanguageItem;

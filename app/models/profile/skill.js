@@ -2,8 +2,8 @@ var mongoose = require('mongoose');
 var validate = require('mongoose-validator').validate;
 var Schema = mongoose.Schema;
 
-var Language = new Schema({
-    language: {
+var Skill = new Schema({
+    skill: {
         type: String,
         trim: true,
         validate: validate('len', 0, 20)
@@ -18,4 +18,4 @@ var Language = new Schema({
     }
 });
 
-module.exports = Language;
+module.exports = Skill;
