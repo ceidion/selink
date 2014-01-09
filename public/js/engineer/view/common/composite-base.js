@@ -78,6 +78,10 @@ define(['view/common/composite-empty'], function(EmptyView) {
             // this.listenTo(itemView, 'item:delete', this.deleteItem);
         },
 
+        templateHelpers:  {
+            limit: this.itemLimit
+        },
+
         attention: function(event) {
             $(event.target).find('i').addClass('animated swing');
             $(event.target).find('i').one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {

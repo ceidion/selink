@@ -1,10 +1,11 @@
 <div class="profile-info-name">
+    <i class="icon-heart"></i>&nbsp;
     婚姻状況
 </div>
 <div class="profile-info-value">
     <div class="sl-value">
-        <% 
-            if (obj.marriage) 
+        <%
+            if (obj.marriage)
                 print(obj.marriage);
             else
                 print('<span class="text-muted">クリックして編集</span>');

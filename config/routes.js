@@ -45,6 +45,15 @@ module.exports = function(app) {
     // Upload photo
     app.put('/profile/:id', checkLoginStatus, profile.update);
 
+    // Get user's events
+    app.get('/user/:id/events', checkLoginStatus, user.events);
+    // Update events (create new event)
+    app.post('/user/:id/events', checkLoginStatus, user.createEvent);
+    // Update events (update event)
+    app.patch('/user/:id/events/:eventid', checkLoginStatus, user.updateEvent);
+    // Update events (remove event)
+    app.delete('/user/:id/events/:eventid', checkLoginStatus, user.removeEvent);
+
     // query address
     app.get('/address/:zipcode', checkLoginStatus, address.show);
 

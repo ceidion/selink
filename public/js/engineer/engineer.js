@@ -1,11 +1,9 @@
 define([
     'view/home/page',
-    'view/timecard/timecard',
     'router/router',
     'controller/controller'
 ], function(
     HomeView,
-    TimeCardView,
     Router,
     Controller
 ) {
@@ -66,7 +64,7 @@ define([
         // create resume view
         // this.resumeView = new ResumeView();
         // create time card view
-        this.timeCardView = new TimeCardView();
+        // this.timeCardView = new TimeCardView();
 
         // switch page with fade effect
         Backbone.Marionette.Region.prototype.open = function(view){

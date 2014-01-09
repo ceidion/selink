@@ -12,6 +12,17 @@
 #language-composite .grid2 .input-group-btn:last-child>.btn,#language-composite .grid3 .input-group-btn:last-child>.btn,#language-composite .grid4 .input-group-btn:last-child>.btn{min-height:30px;margin-left:-2px}
 #skill-composite .sl-editable{min-height:40px;padding:7px}
 #skill-composite .input-group-btn:last-child>.btn{min-height:33px}
+#qualification-composite .sl-editable{padding:7px}
+#qualification-composite .row{margin-top:5px}#qualification-composite .row:first-child{margin-top:0px}
+#qualification-composite i{width:14px}
+#education-composite .sl-editable{padding:7px}
+#education-composite .row{margin-top:5px}#education-composite .row:first-child{margin-top:0px}
+#education-composite .label{line-height:1.5;margin-left:15px;padding-left:7px;padding-right:7px}
+#education-composite i{width:14px}
+#employment-composite .sl-editable{padding:7px}
+#employment-composite .row{margin-top:5px}#employment-composite .row:first-child{margin-top:0px}
+#employment-composite .label{line-height:1.5;margin-left:15px;padding-left:7px;padding-right:7px}
+#employment-composite i{width:14px}
 #gritter-notice-wrapper{top:50px}
 .animated-input-error{display:inline-block;-moz-animation:vertical 2.0s 3 ease 0.5s;-webkit-animation:vertical 2.0s 3 ease 0.5s;-o-animation:vertical 2.0s 3 ease 0.5s;-ms-animation:vertical 2.0s 3 ease 0.5s;animation:vertical 2.0s 3 ease 0.5s}
 @-moz-keyframes vertical{0%{-moz-transform:translate(0, -3px)} 4%{-moz-transform:translate(0, 3px)} 8%{-moz-transform:translate(0, -3px)} 12%{-moz-transform:translate(0, 3px)} 16%{-moz-transform:translate(0, -3px)} 20%{-moz-transform:translate(0, 3px)} 22%{-moz-transform:translate(0, 0)}}@-webkit-keyframes vertical{0%{-webkit-transform:translate(0, -3px)} 4%{-webkit-transform:translate(0, 3px)} 8%{-webkit-transform:translate(0, -3px)} 12%{-webkit-transform:translate(0, 3px)} 16%{-webkit-transform:translate(0, -3px)} 20%{-webkit-transform:translate(0, 3px)} 22%{-webkit-transform:translate(0, 0)}}@-ms-keyframes vertical{0%{-ms-transform:translate(0, -3px)} 4%{-ms-transform:translate(0, 3px)} 8%{-ms-transform:translate(0, -3px)} 12%{-ms-transform:translate(0, 3px)} 16%{-ms-transform:translate(0, -3px)} 20%{-ms-transform:translate(0, 3px)} 22%{-ms-transform:translate(0, 0)}}@keyframes vertical{0%{transform:translate(0, -3px)} 4%{transform:translate(0, 3px)} 8%{transform:translate(0, -3px)} 12%{transform:translate(0, 3px)} 16%{transform:translate(0, -3px)} 20%{transform:translate(0, 3px)} 22%{transform:translate(0, 0)}}

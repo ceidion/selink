@@ -43,3 +43,107 @@ exports.logout = function(req, res, next) {
     req.session.destroy();
     res.redirect('/');
 };
+
+// Get single user
+exports.show = function(req, res, next) {
+
+    User.findById({
+        _id: req.params.id
+    }, function(err, user) {
+        if (err) next(err);
+        console.log(profile);
+        if (user) {
+            user.delete('password');
+            res.json(profile);
+        }
+    });
+};
+
+exports.events = function(req, res, next) {
+
+    // look up user info
+    User.findById(req.params.id, function(err, user) {
+
+        // pass if error happend
+        if (err) next(err);
+        // if account could be found
+        else {
+            // return user's event
+            res.json(user.events);
+        }
+    });
+};
+
+exports.createEvent = function(req, res, next) {
+
+    // look up user info
+    User.findById(req.params.id, function(err, user) {
+
+        // pass if error happend
+        if (err) next(err);
+        // if account could be found
+        else {
+
+            var length = user.events.push(req.body);
+
+            user.save(function(err, newUser) {
+                if (err) next(err);
+                else res.send(newUser.events[length - 1]);
+            });
+        }
+    });
+};
+
+exports.updateEvent = function(req, res, next) {
+
+    // look up user info
+    User.findById(req.params.id, function(err, user) {
+        if (err) next(err);
+        else {
+
+            var event = user.events.id(req.params.eventid);
+
+            if (event) {
+
+                for(var prop in req.body) {
+                    event[prop] = req.body[prop];
+                }
+
+                user.save(function(err, newUser) {
+                    if (err) next(err);
+                    else res.send(event);
+                });
+            } else {
+                res.status(404).json({
+                    msg: "更新失敗しました"
+                });
+            }
+        }
+    });
+};
+
+exports.removeEvent = function(req, res, next) {
+
+    // look up user info
+    User.findById(req.params.id, function(err, user) {
+        if (err) next(err);
+        else {
+
+            var event = user.events.id(req.params.eventid);
+
+            if (event) {
+
+                var removedEvent = event.remove();
+
+                user.save(function(err, newUser) {
+                    if (err) next(err);
+                    else res.send(removedEvent);
+                });
+            } else {
+                res.status(404).json({
+                    msg: "更新失敗しました"
+                });
+            }
+        }
+    });
+};

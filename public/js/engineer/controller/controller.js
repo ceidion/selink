@@ -2,12 +2,14 @@ define([
     'model/profile',
     'view/common/topnav',
     'view/common/sidenav',
-    'view/resume/resume'
+    'view/resume/resume',
+    'view/timecard/timecard',
 ], function(
     ProfileModel,
     TopNavView,
     SideNavView,
-    ResumeView
+    ResumeView,
+    TimeCardView
 ) {
 
     // Main page controller
@@ -23,6 +25,7 @@ define([
 
             // get user info base
             this.user = {
+                id: $('#info-base').data('id'),
                 profile: $('#info-base').data('profile')
             };
 
@@ -72,6 +75,11 @@ define([
         },
 
         showTimeCardView: function() {
+
+            this.app.timeCardView = new TimeCardView({
+                userId: this.user.id
+            });
+
             this.app.pageContent.show(this.app.timeCardView);
         }
     });

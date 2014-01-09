@@ -1,6 +1,8 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
+var Event = require('./event');
+
 var User = new Schema({
 
     email: {
@@ -26,6 +28,8 @@ var User = new Schema({
         type: String,
         trim: true
     },
+
+    events: [Event],
 
     // Create Date
     createDate: {

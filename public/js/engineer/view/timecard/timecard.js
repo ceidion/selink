@@ -8,39 +8,49 @@ define([
         // Template
         template: template,
 
-        // className: "container",
-
         // Events
         events: {
-            // 'click #logoutBtn': 'onLogout',
-            // 'click': 'onClick'
         },
 
         // Regions
         regions: {
-            // header: '#header',
-            // content: '#content',
-            // footer: '#footer'
         },
 
         // Initializer
         initialize: function() {
-            // for slide animation effect change the default
-            // behavior of show view on content region
-            // this.content.open = function(view) {
-            //     this.$el.hide();
-            //     this.$el.html(view.el);
-            //     this.$el.fadeIn();
-            // };
         },
 
         // After render
         onRender: function() {
-            // this.listenTo(vent, 'logout:sessionTimeOut', this.doLogout);
         },
 
         // After show
         onShow: function() {
+
+            console.log(this.options.userId);
+
+            /* initialize the external events
+            -----------------------------------------------------------------*/
+            $('#external-events div.external-event').each(function() {
+
+                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+                // it doesn't need to have a start or end
+                var eventObject = {
+                    title: $.trim($(this).text()) // use the element's text as the event title
+                };
+
+                // store the Event Object in the DOM element so we can get to it later
+                $(this).data('eventObject', eventObject);
+
+                // make the event draggable using jQuery UI
+                $(this).draggable({
+                    zIndex: 999,
+                    revert: true,      // will cause the event to go back to its
+                    revertDuration: 0  //  original position after the drag
+                });
+
+            });
+
             /* initialize the calendar
             -----------------------------------------------------------------*/
 
@@ -51,34 +61,34 @@ define([
 
 
             var calendar = $('#calendar').fullCalendar({
-                 buttonText: {
-                    prev: '<i class="icon-chevron-left"></i>',
-                    next: '<i class="icon-chevron-right"></i>'
-                },
-
+                // basic setting & localize
                 header: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'month,agendaWeek,agendaDay'
                 },
-                events: [
-                {
-                    title: 'All Day Event',
-                    start: new Date(y, m, 1),
-                    className: 'label-important'
+                buttonText: {
+                    prev: '<i class="icon-chevron-left"></i>',
+                    next: '<i class="icon-chevron-right"></i>',
+                    today: '本日',
+                    month: '月',
+                    week: '週',
+                    day: '日'
                 },
-                {
-                    title: 'Long Event',
-                    start: new Date(y, m, d-5),
-                    end: new Date(y, m, d-2),
-                    className: 'label-success'
+                titleFormat: {
+                    month: 'yyyy年 MMMM',
+                    week: "yyyy年　MMM d日{ '&#8212;'[ MMM] d日}",
+                    day: 'yyyy年 MMM d日 dddd'
                 },
-                {
-                    title: 'Some Event',
-                    start: new Date(y, m, d-3, 16, 0),
-                    allDay: false
-                }]
-                ,
+                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                monthNamesShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                dayNames: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
+                dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],
+                // event setting
+                eventSources: [
+                    '/user/' + this.options.userId + '/events'
+                ],
+                // drag and drop setting
                 editable: true,
                 droppable: true, // this allows things to be dropped onto the calendar !!!
                 drop: function(date, allDay) { // this function is called when something is dropped
@@ -106,8 +116,8 @@ define([
                         $(this).remove();
                     }
 
-                }
-                ,
+                },
+                // selection setting
                 selectable: true,
                 selectHelper: true,
                 select: function(start, end, allDay) {
@@ -129,8 +139,7 @@ define([
 
                     calendar.fullCalendar('unselect');
 
-                }
-                ,
+                },
                 eventClick: function(calEvent, jsEvent, view) {
 
                     var form = $("<form class='form-inline'><label>Change event name &nbsp;</label></form>");

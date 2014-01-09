@@ -15,7 +15,7 @@ define([
         template: template,
 
         // for dnd add class here
-        className: 'widget-box transparent',
+        className: 'widget-box',
 
         // icon
         icon: 'icon-ticket',
@@ -27,7 +27,7 @@ define([
         itemView: ItemView,
 
         // max item number
-        itemLimit: 8,
+        itemLimit: 6,
 
         // initializer
         initialize: function() {

@@ -7,9 +7,9 @@ var Schema = mongoose.Schema;
 
 // Sub documents
 var Skill = require('./profile/skill');
-// var Career = require('./career');
-// var Education = require('./education');
-// var Qualification = require('./qualification');
+var Employment = require('./profile/employment');
+var Education = require('./profile/education');
+var Qualification = require('./profile/qualification');
 // var WorkExperience = require('./workexperience');
 var Language = require('./profile/language');
 
@@ -113,14 +113,14 @@ var Profile = new Schema({
     },
     // Language
     languages: [Language],
-    // // Education
-    // education: [Education],
-    // // Career
-    // career: [Career],
+    // Education
+    educations: [Education],
+    // Employment
+    employments: [Employment],
     // // Work Experience
     // workExperience: [WorkExperience],
-    // // Qualification
-    // qualification: [Qualification],
+    // Qualification
+    qualifications: [Qualification],
     // Skill
     skills: [Skill],
     // BackGround Image
