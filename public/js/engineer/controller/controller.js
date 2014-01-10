@@ -1,11 +1,13 @@
 define([
     'model/profile',
+    'model/events',
     'view/common/topnav',
     'view/common/sidenav',
     'view/resume/resume',
     'view/timecard/timecard',
 ], function(
     ProfileModel,
+    EventsModel,
     TopNavView,
     SideNavView,
     ResumeView,
@@ -29,14 +31,21 @@ define([
                 profile: $('#info-base').data('profile')
             };
 
+            this.showNavigation();
+        },
+
+        showNavigation: function() {
+
+            // setup side nav
+            this.app.sideNavView = new SideNavView();
+            this.app.sidenavArea.show(this.app.sideNavView);
+
             // create profile model
             this.profileModel = new ProfileModel({
                 _id: this.user.profile
             });
 
-            // setup side nav
-            this.app.sideNavView = new SideNavView();
-            this.app.sidenavArea.show(this.app.sideNavView);
+            var self = this;
 
             // setup top nav
             this.profileModel.fetch({
@@ -74,14 +83,27 @@ define([
             });
         },
 
+        // show time card
         showTimeCardView: function() {
 
-            this.app.timeCardView = new TimeCardView({
-                userId: this.user.id
-            });
+            var self = this;
 
-            this.app.pageContent.show(this.app.timeCardView);
+            // create events model
+            this.eventsModel = new EventsModel();
+            this.eventsModel.userId = this.user.id;
+
+            this.eventsModel.fetch({
+                success: function() {
+
+                    self.app.timeCardView = new TimeCardView({
+                        collection: self.eventsModel
+                    });
+
+                    self.app.pageContent.show(self.app.timeCardView);
+                }
+            });
         }
+
     });
 
     return Controller;

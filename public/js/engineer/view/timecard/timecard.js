@@ -8,6 +8,12 @@ define([
         // Template
         template: template,
 
+        // ui
+        ui: {
+            defaultEvents: '#external-events div.external-event',
+            calendar: '#calendar'
+        },
+
         // Events
         events: {
         },
@@ -27,23 +33,33 @@ define([
         // After show
         onShow: function() {
 
-            console.log(this.options.userId);
+            this.initialDefaultEvent();
+            this.initialTimeCard();
+        },
+
+        initialDefaultEvent: function() {
 
             /* initialize the external events
             -----------------------------------------------------------------*/
-            $('#external-events div.external-event').each(function() {
+            this.ui.defaultEvents.each(function() {
+
+                var $this = $(this);
 
                 // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
                 // it doesn't need to have a start or end
                 var eventObject = {
-                    title: $.trim($(this).text()) // use the element's text as the event title
+                    title: $.trim($this.text()), // use the element's text as the event title
+                    className: $this.data('class'),
+                    allDay: $this.data('allday'),
+                    start: $this.data('start'),
+                    end: $this.data('end'),
                 };
 
                 // store the Event Object in the DOM element so we can get to it later
-                $(this).data('eventObject', eventObject);
+                $this.data('eventObject', eventObject);
 
                 // make the event draggable using jQuery UI
-                $(this).draggable({
+                $this.draggable({
                     zIndex: 999,
                     revert: true,      // will cause the event to go back to its
                     revertDuration: 0  //  original position after the drag
@@ -51,16 +67,14 @@ define([
 
             });
 
-            /* initialize the calendar
-            -----------------------------------------------------------------*/
+        },
 
-            var date = new Date();
-            var d = date.getDate();
-            var m = date.getMonth();
-            var y = date.getFullYear();
+        // initialize the calendar
+        initialTimeCard: function() {
 
+            var self = this;
 
-            var calendar = $('#calendar').fullCalendar({
+            this.ui.calendar.fullCalendar({
                 // basic setting & localize
                 header: {
                     left: 'prev,next today',
@@ -86,7 +100,7 @@ define([
                 dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],
                 // event setting
                 eventSources: [
-                    '/user/' + this.options.userId + '/events'
+                    self.collection.toJSON()
                 ],
                 // drag and drop setting
                 editable: true,
@@ -94,28 +108,45 @@ define([
                 drop: function(date, allDay) { // this function is called when something is dropped
 
                     // retrieve the dropped element's stored Event Object
-                    var originalEventObject = $(this).data('eventObject');
-                    var $extraEventClass = $(this).attr('data-class');
+                    var eventObject = $(this).data('eventObject');
 
+                    // we need a copy of event object, because JSON.stringify will change the start/end time
+                    // we will adjust the time in this object for save it on server
+                    var postEventObject = $.extend({}, eventObject);
 
-                    // we need to copy it, so that multiple events don't have a reference to the same object
-                    var copiedEventObject = $.extend({}, originalEventObject);
+                    // setup start and end time
+                    var startDateTime = new Date(date),
+                        endDateTime = new Date(date),
+                        startTime = postEventObject.start ? postEventObject.start.split(':') : ["0","0"],
+                        endTime = postEventObject.end ? postEventObject.end.split(':') : ["0","0"];
 
-                    // assign it the date that was reported
-                    copiedEventObject.start = date;
-                    copiedEventObject.allDay = allDay;
-                    if($extraEventClass) copiedEventObject['className'] = [$extraEventClass];
+                    // JSON.stringify() will convert all date to UTC which is 9 hours later than Japan, I add it here
+                    // better: date.setHours(date.getHours() - date.getTimezoneOffset()/60);
+                    // This lost internationalization, but have to do this
+                    startDateTime.setHours(Number(startTime[0]) + 9);
+                    startDateTime.setMinutes(startTime[1]);
+                    postEventObject.start = startDateTime;
 
-                    // render the event on the calendar
-                    // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-                    $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+                    endDateTime.setHours(Number(endTime[0]) + 9);
+                    endDateTime.setMinutes(endTime[1]);
+                    postEventObject.end = endDateTime;
 
-                    // is the "remove after drop" checkbox checked?
-                    if ($('#drop-remove').is(':checked')) {
-                        // if so, remove the element from the "Draggable Events" list
-                        $(this).remove();
-                    }
+                    // safe the event
+                    self.collection.create(postEventObject, {
 
+                        // event saved successful
+                        success: function(model, response, options) {
+
+                            // render the event(the response from server) on the calendar
+                            // the last `true` argument determines if the event "sticks"
+                            // (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                            self.ui.calendar.fullCalendar('renderEvent', response, true);
+                        },
+                        // if error happend
+                        error: function(model, xhr, options) {
+
+                        }
+                    });
                 },
                 // selection setting
                 selectable: true,
@@ -136,9 +167,7 @@ define([
                         }
                     });
 
-
                     calendar.fullCalendar('unselect');
-
                 },
                 eventClick: function(calEvent, jsEvent, view) {
 
@@ -185,7 +214,7 @@ define([
                 }
 
             });
-        },
+        }
     });
 
     return TimeCardView;
