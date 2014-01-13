@@ -43,7 +43,8 @@ require.config({
         'colorbox': '../lib/jquery.colorbox-min',
         'knob': '../lib/jquery.knob.min',
         'wysiwyg': '../lib/bootstrap-wysiwyg.min',
-        'hotkeys': '../lib/jquery.hotkeys.min'
+        'hotkeys': '../lib/jquery.hotkeys.min',
+        'isotope': '../lib/jquery.isotope'
     },
 
     shim: {
@@ -117,6 +118,9 @@ require.config({
         'wysiwyg': {
             deps: ['bootstrap', 'hotkeys']
         },
+        'isotope': {
+            deps: ['jquery']
+        },
         'engineer': {
             deps: [
                 'jquery-ui',
@@ -137,7 +141,8 @@ require.config({
                 'colorbox',
                 'gritter',
                 'knob',
-                'wysiwyg'
+                'wysiwyg',
+                'isotope'
             ]
         }
     }

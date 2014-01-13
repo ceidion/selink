@@ -136,6 +136,10 @@ define([
             });
 
             this.$el.addClass('animated fadeInRight');
+
+            // this.$el.find('.portable').isotope({
+            //     itemSelector: '.widget-container-span'
+            // })
         },
 
         // resume view handle the click event

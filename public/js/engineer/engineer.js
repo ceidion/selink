@@ -44,6 +44,39 @@ define([
             return moment(value, 'YYYY/MM/DD').isValid();
         }, "有効な日付をご入力ください");
 
+        _.extend(Backbone.Validation.validators, {
+            dateJa: function(value, attr, customValue, model) {
+                if (!moment(value, 'YYYY/MM/DD').isValid())
+                    return "有効な日付をご入力ください"
+            }
+        });
+
+        _.extend(Backbone.Validation.callbacks, {
+            valid: function(view, attr, selector) {
+
+                console.log(arguments);
+
+                view.$el.find('input[name="' + attr + '"]')
+                    .removeClass('tooltip-error').tooltip('destroy')
+                    .closest('.form-group').removeClass('has-error')
+                    .closest('.sl-editor').removeClass('animated-input-error');
+            },
+            invalid: function(view, attr, error, selector) {
+
+                console.log(arguments);
+
+                console.log(view);
+
+                view.$el.find('input[name="' + attr + '"]')
+                    .addClass('tooltip-error').tooltip({
+                        placement: 'bottom',
+                        title: error
+                    })
+                    .closest('.form-group').addClass('has-error')
+                    .closest('.sl-editor').addClass('animated-input-error');
+            }
+        });
+
         // gritter setting
         $.extend($.gritter.options, {
             position: 'bottom-right',

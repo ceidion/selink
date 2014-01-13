@@ -21,7 +21,7 @@ define([
         icon: 'icon-wrench',
 
         // item view container
-        itemViewContainer: '.profile-skills',
+        itemViewContainer: '.widget-main',
 
         // item view
         itemView: ItemView,
