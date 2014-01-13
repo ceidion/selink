@@ -1,0 +1,39 @@
+<div class="sl-value">
+    <blockquote>
+        <p>
+            <i class="icon-certificate bigger-110 orange2"></i>&nbsp;
+            <%
+                if (obj.name) print(obj.name);
+                else print('<span class="text-muted">資格名称</span>');
+            %>
+        </p>
+        <small>
+            取得日：
+            <%
+                if (obj.acquireDate) print(moment(obj.acquireDate).format('YYYY年M月'));
+                else print('<span class="text-muted">未入力</span>');
+            %>
+        </small>
+    </blockquote>
+</div>
+<div class="sl-editor">
+    <div class="row">
+        <div class="col-sm-12 input-group">
+            <span class="input-group-addon">
+                <i class="icon-certificate bigger-110"></i>
+            </span>
+            <input type="text" placeholder="資格名称" name="name" value="<%- obj.name %>">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 input-group">
+            <span class="input-group-addon">
+                <i class="icon-calendar bigger-110"></i>
+            </span>
+            <input type="text" placeholder="取得年月" name="acquireDate" value="<%- obj.acquireDate %>">
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-danger btn-remove btn-xs"><i class="icon-trash bigger-150"></i></button>
+            </span>
+        </div>
+    </div>
+</div>

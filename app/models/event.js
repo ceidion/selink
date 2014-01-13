@@ -21,6 +21,10 @@ var Event = new Schema({
     className: {
         type: String,
         trim: true
+    },
+    memo: {
+        type: String,
+        trim: true
     }
 });
 

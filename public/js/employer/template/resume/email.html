@@ -1,0 +1,24 @@
+<div class="profile-info-name">
+    <i class="icon-envelope"></i>&nbsp;
+    E-Mail
+</div>
+<div class="profile-info-value">
+    <div class="sl-value">
+        <%
+            if (obj.email)
+                print(obj.email);
+            else
+                print('<span class="text-muted">クリックして編集</span>');
+        %>
+    </div>
+    <div class="sl-editor row form-group">
+        <div class="col-sm-12 input-group">
+            <span class="input-group-addon">
+                <i class="icon-envelope-alt bigger-110"></i>
+            </span>
+            <form>
+                <input type="text" class="col-xs-12" placeholder="メールアドレス" name="email" value="<%- obj.email %>">
+            </form>
+        </div>
+    </div>
+</div>

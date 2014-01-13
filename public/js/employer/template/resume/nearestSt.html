@@ -1,0 +1,24 @@
+<div class="profile-info-name">
+    <i class="icon-road"></i>&nbsp;
+    最寄駅
+</div>
+<div class="profile-info-value">
+    <div class="sl-value">
+        <%
+            if (obj.nearestSt)
+                print(obj.nearestSt);
+            else
+                print('<span class="text-muted">クリックして編集</span>');
+        %>
+    </div>
+    <div class="sl-editor row form-group">
+        <div class="col-sm-12 input-group">
+            <span class="input-group-addon">
+                <i class="icon-road bigger-110"></i>
+            </span>
+            <form>
+                <input type="text" class="col-xs-12" placeholder="最寄駅" name="nearestSt" value="<%- obj.nearestSt %>">
+            </form>
+        </div>
+    </div>
+</div>

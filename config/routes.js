@@ -18,9 +18,12 @@ module.exports = function(app) {
     // Home
     app.get('/home', checkLoginStatus, function(req, res, next){
 
-        if(req.session.user.type === "admin") {
+        if (req.session.user.type === "admin") {
             console.log("admin");
             res.render('./admin/index');
+        } else if (req.session.user.type === "employer") {
+            console.log("employer");
+            res.render('./employer/index', req.session.user);
         } else {
             console.log("engineer");
             res.render('./engineer/index', req.session.user);

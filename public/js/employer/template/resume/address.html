@@ -1,0 +1,28 @@
+<div class="profile-info-name">
+    <i class="icon-map-marker"></i>&nbsp;
+    住所
+</div>
+<div class="profile-info-value">
+    <div class="sl-value">
+        <%
+            if (obj.address)
+                print((obj.zipCode ? "（〒 " + obj.zipCode + "）" : "") + obj.address);
+            else
+                print('<span class="text-muted">クリックして編集</span>');
+        %>
+    </div>
+    <div class="sl-editor row form-group">
+        <form>
+        <div id="zipCodeArea" class="col-sm-12 input-group">
+            <span class="input-group-addon">〒</span>
+            <input type="text" id="zipCode" class="input-small" placeholder="郵便番号" name="zipCode" value="<%- obj.zipCode %>">
+        </div>
+        <div class="col-sm-12 input-group">
+            <span class="input-group-addon">
+                <i class="icon-home bigger-110"></i>
+            </span>
+            <input type="text" id="address" class="col-xs-12" placeholder="住所" name="address" value="<%- obj.address %>">
+        </div>
+        </form>
+    </div>
+</div>

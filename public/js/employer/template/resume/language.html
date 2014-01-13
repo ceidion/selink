@@ -1,0 +1,22 @@
+<div class="knob-container inline">
+    <input type="text" class="input-small knob" value="<%= obj.weight %>" data-min="0" data-max="100" data-step="10" data-width="100" data-height="80" data-angleOffset="-125" data-angleArc="250"　data-thickness=".2" />
+</div>
+<div class="sl-value">
+    <%
+        if (obj.language) print(obj.language)
+        else print('<span class="text-muted">未選択</span>');
+    %>
+</div>
+<div class="sl-editor row">
+    <div class="col-sm-12 input-group">
+        <select name="language">
+            <option value="英語">英語</option>
+            <option value="中国語">中国語</option>
+            <option value="日本語">日本語</option>
+            <option value="韓国語">韓国語</option>
+        </select>
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-danger btn-remove btn-xs"><i class="icon-trash bigger-150"></i></button>
+        </span>
+    </div>
+</div>

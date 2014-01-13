@@ -1,0 +1,58 @@
+<div class="sl-value">
+    <blockquote>
+        <p>
+            <i class="icon-book bigger-110 green"></i>&nbsp;
+            <%
+                if (obj.school) print(obj.school);
+                else print('<span class="text-muted">学校名称</span>');
+
+                if (obj.major) print('<span class="label label-sm label-success arrowed arrowed-right">' + obj.major + '</span>');
+            %>
+        </p>
+        <small>
+            <%
+                if (obj.startDate) print(moment(obj.startDate).format('YYYY年M月'));
+                else print('<span class="text-muted">未入力</span>');
+            %>
+        </small>
+    </blockquote>
+</div>
+<div class="sl-editor">
+    <div class="row">
+        <div class="col-md-12 input-group">
+            <span class="input-group-addon">
+                <i class="icon-building bigger-110"></i>
+            </span>
+            <input type="text" placeholder="学校名称" name="school" value="<%- obj.school %>">
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-danger btn-remove btn-xs"><i class="icon-trash bigger-150"></i></button>
+            </span>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 input-group">
+            <span class="input-group-addon">
+                <i class="icon-book bigger-110"></i>
+            </span>
+            <input type="text" placeholder="学部・専門・専攻" name="major" value="<%- obj.major %>">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="icon-calendar bigger-110"></i>
+                </span>
+                <input type="text" class="col-xs-12" placeholder="開始日" name="startDate" value="<%- obj.startDate %>">
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="icon-calendar bigger-110"></i>
+                </span>
+                <input type="text" class="col-xs-12" placeholder="終了日" name="endDate" value="<%- obj.endDate %>">
+            </div>
+        </div>
+    </div>
+</div>

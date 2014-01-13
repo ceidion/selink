@@ -167,9 +167,57 @@
   }
 }
 
+#event-modal {
+
+  input {
+      line-height: normal;
+  }
+
+  .row {
+    margin-top: 15px;
+
+    &:first-child {
+      margin-top: 0px;
+    }
+  }
+
+  .checkbox {
+    margin-top: 4px;
+    margin-bottom: 0px;
+  }
+
+  .wysiwyg-editor {
+    margin: 0 15px;
+    height: 150px;
+  }
+
+  .wysiwyg-toolbar {
+    margin: 0 15px !important;
+  }
+}
+
 /* the norm */
 #gritter-notice-wrapper {
   top: 50px;
+}
+
+// expand effect for event on calendar
+#external-events > div,.fc-event-container > div {
+  
+  &:hover {
+    text-decoration:none;
+    .transition(~"all 0.2s");
+    .transform(~"scale(1.1)");
+    opacity:0.85;
+  }
+}
+
+.fc-event-inner {
+  padding: 3px 5px;
+
+  .sl-event-memo {
+    padding: 10px 15px;
+  }
 }
 
 // highlight the error input with animation

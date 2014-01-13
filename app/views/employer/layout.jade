@@ -1,0 +1,43 @@
+!!! 5
+html(lang="ja", xmlns="http://www.w3.org/1999/xhtml")
+
+  //- header
+  include partials/header
+
+  //- body
+  body
+
+    //- top navigation
+    //- top bar
+    #navbar.navbar.navbar-default
+
+      //- container
+      #navbar-container.navbar-container
+
+        //- page name
+        .navbar-header
+          a.navbar-brand(href="#")
+            small
+              block page-name
+
+        //- menu
+        #topnav-area
+
+    //- container
+    #main-container.main-container
+      .main-container-inner
+
+        //- side navigation
+        a#menu-toggler.menu-toggler(href="#")
+          span.menu-text
+        #sidebar.sidebar
+          #sidenav-area
+          #sidebar-collapse.sidebar-collapse
+            i.icon-double-angle-left(data-icon1="icon-double-angle-left", data-icon2="icon-double-angle-right")
+
+        //- content
+        .main-content
+          .page-content
+
+    //- bootstrap data
+    #info-base(data-id="#{_id}", data-profile="#{profile}")
