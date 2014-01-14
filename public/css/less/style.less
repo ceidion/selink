@@ -19,18 +19,12 @@
 
 .sl-editable {
 
-    min-height: 48px;
-
     // highlight the editable
     .transition(background-color 1s);
 
     &:hover {
         background-color: #EEE;
         cursor: pointer;
-    }
-
-    .profile-info-name,.sl-value {
-        line-height: 33px;
     }
 
     .form-group {
@@ -44,6 +38,15 @@
             line-height: normal;
         }
     }
+}
+
+#sl-basic-info .sl-editable {
+
+  min-height: 48px;
+
+  .profile-info-name,.sl-value {
+      line-height: 33px;
+  }
 }
 
 // profile photo, cancel the float for FF
@@ -63,7 +66,8 @@
 
     min-height: 113px;
 
-    margin-top: 1%;
+    margin-bottom: 6px;
+    padding-top: 6px;
 
     border-left: none;
 
@@ -76,7 +80,7 @@
     }
 
     // for the delete button append on select
-    .input-group-btn:last-child>.btn {
+    .input-group-btn .btn {
       min-height: 30px;
       margin-left: -2px;
     }
@@ -91,7 +95,7 @@
   }
 
   // for the delete button append on select
-  .input-group-btn:last-child>.btn {
+  .input-group-btn .btn {
     min-height: 33px;
   }
 }
@@ -100,6 +104,10 @@
 
   .sl-editable {
     padding: 7px;
+  }
+
+  blockquote {
+    margin: 0px;
   }
 
   .row {
@@ -119,6 +127,10 @@
 
   .sl-editable {
     padding: 7px;
+  }
+
+  blockquote {
+    margin: 0px;
   }
 
   .row {
@@ -145,6 +157,10 @@
 
   .sl-editable {
     padding: 7px;
+  }
+
+  blockquote {
+    margin: 0px;
   }
 
   .row {
@@ -203,7 +219,7 @@
 
 // expand effect for event on calendar
 #external-events > div,.fc-event-container > div {
-  
+
   &:hover {
     text-decoration:none;
     .transition(~"all 0.2s");

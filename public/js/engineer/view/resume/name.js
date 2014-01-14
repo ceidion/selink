@@ -23,45 +23,40 @@ define([
                 lastName: 'input[name="lastName"]'
             });
 
+            // Update model when input's value was chenaged
             this.events = _.extend({}, this.events, {
-                // Update model when input's value was chenaged
-                'change input[name="firstName"]': 'submitForm',
-                'change input[name="lastName"]': 'submitForm'
+                'change input[name="firstName"]': 'updateModel',
+                'change input[name="lastName"]': 'updateModel'
             });
+
+            // listen on nearestSt property for save
+            this.modelEvents = {
+                'change:firstName': 'save',
+                'change:lastName': 'save'
+            };
         },
 
         // after render
         onRender: function() {
-
-            // call super class method append validator
-            BaseView.prototype.onRender.call(this, {
-
-                // onfocusout: false,
-
-                // onkeyup: false,
-
-                rules: {
-                    firstName: {
-                        maxlength: 20
-                    },
-                    lastName: {
-                        maxlength: 20
-                    }
-                },
-
-                messages: {
-                    firstName: {
-                        maxlength: "20文字以内でご入力ください"
-                    },
-                    lastName: {
-                        maxlength: "20文字以内でご入力ください"
-                    }
-                }
-            });
+            // bind validator
+            Backbone.Validation.bind(this);
         },
 
-        submitForm: function() {
-            this.$el.find('form').submit();
+        updateModel: function() {
+            // clear all errors
+            this.clearError();
+
+            // check input value
+            var errors = this.model.preValidate(this.getData());
+
+            // if input has errors
+            if (errors) {
+                // show error
+                this.showError(errors);
+            } else {
+                // set value on model
+                this.model.set(this.getData());
+            }
         },
 
         getData: function() {

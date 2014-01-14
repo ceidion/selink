@@ -15,7 +15,7 @@ define([
         template: template,
 
         // for dnd add class here
-        className: 'widget-box',
+        className: 'widget-box transparent',
 
         // icon
         icon: 'icon-ticket',
@@ -54,6 +54,9 @@ define([
                 placement: 'top',
                 title: "ドラグして移動"
             });
+
+            // bind validator
+            Backbone.Validation.bind(this);
         },
 
         updateMsg: function(data) {

@@ -11,7 +11,7 @@ define([
         template: template,
 
         // for dnd add class here
-        className: 'widget-box',
+        className: 'widget-box transparent',
 
         // icon
         icon: 'icon-quote-left',

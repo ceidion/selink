@@ -36,7 +36,7 @@ define([
 
         getData: function() {
             return {
-                experience: this.ui.input.val()
+                experience: Number(this.ui.input.val())
             };
         },
 

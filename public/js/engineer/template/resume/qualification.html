@@ -17,23 +17,23 @@
     </blockquote>
 </div>
 <div class="sl-editor">
-    <div class="row">
+    <div class="row form-group">
         <div class="col-sm-12 input-group">
             <span class="input-group-addon">
                 <i class="icon-certificate bigger-110"></i>
             </span>
             <input type="text" placeholder="資格名称" name="name" value="<%- obj.name %>">
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-danger btn-remove btn-xs"><i class="icon-trash bigger-150"></i></button>
+            </span>
         </div>
     </div>
-    <div class="row">
+    <div class="row form-group">
         <div class="col-sm-6 input-group">
             <span class="input-group-addon">
                 <i class="icon-calendar bigger-110"></i>
             </span>
             <input type="text" placeholder="取得年月" name="acquireDate" value="<%- obj.acquireDate %>">
-            <span class="input-group-btn">
-                <button type="button" class="btn btn-danger btn-remove btn-xs"><i class="icon-trash bigger-150"></i></button>
-            </span>
         </div>
     </div>
 </div>

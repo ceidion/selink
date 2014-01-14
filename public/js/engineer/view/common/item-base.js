@@ -33,41 +33,6 @@ define([], function() {
 
         // subclass call this as needed
         onRender: function(options) {
-
-            var self = this;
-
-            // append validator
-            this.$el.find('form').validate(_.extend({}, {
-
-                highlight: function (e) {
-                    $(e).addClass('tooltip-error')
-                        .closest('.form-group').addClass('has-error')
-                        .closest('.sl-editor').addClass('animated-input-error');
-                },
-
-                unhighlight: function(e) {
-                    $(e).removeClass('tooltip-error').tooltip('destroy')
-                        .closest('.form-group').removeClass('has-error')
-                        .closest('.sl-editor').removeClass('animated-input-error');
-                },
-
-                success: function (e) {
-                    $(e).remove();
-                },
-
-                errorPlacement: function (error, element) {
-                    error.insertAfter(element.parent()).addClass('hidden');
-                    element.tooltip({
-                        placement: 'bottom',
-                        title: error.text()
-                    });
-                },
-
-                submitHandler: function (form) {
-                    self.save();
-                }
-
-            }, options));
         },
 
         // update model
@@ -112,6 +77,27 @@ define([], function() {
 
                 }, this.saveOpt));
             }
+        },
+
+        // show input validation error on the view
+        showError: function(errors) {
+            for(var key in errors) {
+                this.$el.find('input[name="' + key + '"]')
+                    .addClass('tooltip-error').tooltip({
+                        placement: 'bottom',
+                        title: errors[key]
+                    })
+                    .closest('.form-group').addClass('has-error')
+                    .find('i').addClass('animated-input-error');
+            }
+        },
+
+        // clear input validation error
+        clearError: function() {
+            this.$el.find('input')
+                .removeClass('tooltip-error').tooltip('destroy')
+                .closest('.form-group').removeClass('has-error')
+                .find('i').removeClass('animated-input-error');
         },
 
         // subclass should provide these methods

@@ -10,10 +10,11 @@
 <div class="sl-editor row">
     <div class="col-sm-12 input-group">
         <select name="language">
-            <option value="英語">英語</option>
-            <option value="中国語">中国語</option>
-            <option value="日本語">日本語</option>
-            <option value="韓国語">韓国語</option>
+            <option value=""> -- </option>
+            <% _.each(obj.languageList, function(option) {
+                var selected = (option == obj.language) ? 'selected' : '';
+                print('<option value="' + option + '" ' + selected + '>' + option + '</option>' );
+            }); %>
         </select>
         <span class="input-group-btn">
             <button type="button" class="btn btn-danger btn-remove btn-xs"><i class="icon-trash bigger-150"></i></button>

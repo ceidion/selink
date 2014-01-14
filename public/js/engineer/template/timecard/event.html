@@ -21,9 +21,11 @@
     <div class="modal-body overflow-visible">
 
         <div class="row">
-            <div class="input-group col-xs-8">
-                <span class="input-group-addon"><i class="icon-tag"></i></span>
-                <input class="form-control" type="text" name="title" placeholder="タイトル" value="<%- obj.title %>"/>
+            <div class="form-group col-xs-8">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="icon-tag"></i></span>
+                    <input class="form-control" type="text" name="title" placeholder="タイトル" value="<%- obj.title %>"/>
+                </div>
             </div>
 
             <div class="checkbox col-xs-4">
@@ -35,29 +37,37 @@
         </div>
 
         <div class="row">
-            <div class="input-group col-xs-5">
-                <span class="input-group-addon"><i class="icon-calendar"></i></span>
-                <input class="form-control" type="text" name="startDate" placeholder="開始日" value="<%- obj.start %>"/>
+            <div class="form-group col-xs-5">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                    <input class="form-control" type="text" name="startDate" placeholder="開始日" value="<%- obj.start %>"/>
+                </div>
             </div>
 
-            <div class="input-group col-xs-5">
-                <span class="input-group-addon"><i class="icon-time"></i></span>
-                <div class="bootstrap-timepicker">                    
-                    <input class="form-control" type="text" name="startTime" placeholder="開始時間" value="<%- obj.startTime %>"/>
+            <div class="form-group col-xs-5">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="icon-time"></i></span>
+                    <div class="bootstrap-timepicker">
+                        <input class="form-control" type="text" name="startTime" placeholder="開始時間" value="<%- obj.startTime %>"/>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="row">
-            <div class="input-group col-xs-5">
-                <span class="input-group-addon"><i class="icon-calendar"></i></span>
-                <input class="form-control" type="text" name="endDate" placeholder="終了日" value="<%- obj.end %>"/>
+            <div class="form-group col-xs-5">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                    <input class="form-control" type="text" name="endDate" placeholder="終了日" value="<%- obj.end %>"/>
+                </div>
             </div>
 
-            <div class="input-group col-xs-5">
-                <span class="input-group-addon"><i class="icon-time"></i></span>
-                <div class="bootstrap-timepicker">  
-                    <input class="form-control" type="text" name="endTime" placeholder="終了時間" value="<%- obj.endTime %>"/>
+            <div class="form-group col-xs-5">
+                <div class="input-group">
+                    <span class="input-group-addon"><i class="icon-time"></i></span>
+                    <div class="bootstrap-timepicker">
+                        <input class="form-control" type="text" name="endTime" placeholder="終了時間" value="<%- obj.endTime %>"/>
+                    </div>
                 </div>
             </div>
         </div>

@@ -1,25 +1,28 @@
 
 .sidebar{-webkit-transition:width .5s;transition:width .5s}.sidebar:before{-webkit-transition:width .5s;transition:width .5s}
 .gritter-item{font-size:12px}
-.sl-editable{min-height:48px;-webkit-transition:background-color 1s;transition:background-color 1s}.sl-editable:hover{background-color:#EEE;cursor:pointer}
-.sl-editable .profile-info-name,.sl-editable .sl-value{line-height:33px}
+.sl-editable{-webkit-transition:background-color 1s;transition:background-color 1s}.sl-editable:hover{background-color:#EEE;cursor:pointer}
 .sl-editable .form-group{margin-bottom:0px}
 .sl-editable .sl-editor{display:none}.sl-editable .sl-editor input{line-height:normal}
+#sl-basic-info .sl-editable{min-height:48px}#sl-basic-info .sl-editable .profile-info-name,#sl-basic-info .sl-editable .sl-value{line-height:33px}
 .ace-thumbnails>li{border:0px;float:none}
 #zipCodeArea{margin-bottom:10px}
-#language-composite .grid2,#language-composite .grid3,#language-composite .grid4{min-height:113px;margin-top:1%;border-left:none}#language-composite .grid2 .sl-value,#language-composite .grid3 .sl-value,#language-composite .grid4 .sl-value{margin-top:-10px}
+#language-composite .grid2,#language-composite .grid3,#language-composite .grid4{min-height:113px;margin-bottom:6px;padding-top:6px;border-left:none}#language-composite .grid2 .sl-value,#language-composite .grid3 .sl-value,#language-composite .grid4 .sl-value{margin-top:-10px}
 #language-composite .grid2 .sl-editor,#language-composite .grid3 .sl-editor,#language-composite .grid4 .sl-editor{margin-top:-5px}
-#language-composite .grid2 .input-group-btn:last-child>.btn,#language-composite .grid3 .input-group-btn:last-child>.btn,#language-composite .grid4 .input-group-btn:last-child>.btn{min-height:30px;margin-left:-2px}
+#language-composite .grid2 .input-group-btn .btn,#language-composite .grid3 .input-group-btn .btn,#language-composite .grid4 .input-group-btn .btn{min-height:30px;margin-left:-2px}
 #skill-composite .sl-editable{min-height:40px;padding:7px}
-#skill-composite .input-group-btn:last-child>.btn{min-height:33px}
+#skill-composite .input-group-btn .btn{min-height:33px}
 #qualification-composite .sl-editable{padding:7px}
+#qualification-composite blockquote{margin:0px}
 #qualification-composite .row{margin-top:5px}#qualification-composite .row:first-child{margin-top:0px}
 #qualification-composite i{width:14px}
 #education-composite .sl-editable{padding:7px}
+#education-composite blockquote{margin:0px}
 #education-composite .row{margin-top:5px}#education-composite .row:first-child{margin-top:0px}
 #education-composite .label{line-height:1.5;margin-left:15px;padding-left:7px;padding-right:7px}
 #education-composite i{width:14px}
 #employment-composite .sl-editable{padding:7px}
+#employment-composite blockquote{margin:0px}
 #employment-composite .row{margin-top:5px}#employment-composite .row:first-child{margin-top:0px}
 #employment-composite .label{line-height:1.5;margin-left:15px;padding-left:7px;padding-right:7px}
 #employment-composite i{width:14px}

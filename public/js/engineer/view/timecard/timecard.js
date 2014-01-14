@@ -37,6 +37,7 @@ define([
 
         // After render
         onRender: function() {
+            Backbone.Validation.bind(this);
         },
 
         // After show
@@ -108,6 +109,11 @@ define([
                 dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],
                 allDayText: '終日',
                 // event setting
+                events: {
+                    url: 'https://www.google.com/calendar/feeds/ja.japanese%23holiday%40group.v.calendar.google.com/public/basic',
+                    className: 'gcal-event',           // an option!
+                    currentTimezone: 'America/Chicago' // an option!
+                },
                 eventSources: [
                     self.collection.toJSON()
                 ],
@@ -173,7 +179,7 @@ define([
 
                     // create a event editor modal, pass it the event collection
                     var eventModal = new EventView({
-                        model: new Backbone.Model({
+                        model: new self.collection.model({
                             start: moment(self.adjustDateTime(start)).toJSON()
                         }),
                         collection: self.collection

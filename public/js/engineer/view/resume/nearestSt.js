@@ -20,39 +20,40 @@ define([
                 'input': 'input'
             });
 
+            // update model when input value changed
             this.events = _.extend({}, this.events, {
-                'change input': 'submitForm'
+                'change input': 'updateModel'
             });
+
+            // listen on nearestSt property for save
+            this.modelEvents = {
+                'change:nearestSt': 'save'
+            };
         },
 
         // after render
         onRender: function() {
-
-            var self = this;
-
-            // call super class method append validator
-            BaseView.prototype.onRender.call(this, {
-
-                onfocusout: false,
-
-                onkeyup: false,
-
-                rules: {
-                    nearestSt: {
-                        maxlength: 30
-                    }
-                },
-
-                messages: {
-                    nearestSt: {
-                        maxlength: "最寄駅は最大30文字までご入力ください"
-                    }
-                }
-            });
+            // bind validator
+            Backbone.Validation.bind(this);
         },
 
-        submitForm: function() {
-            this.$el.find('form').submit();
+        // reflect user input on model
+        updateModel: function() {
+
+            // clear all errors
+            this.clearError();
+
+            // check input value
+            var errors = this.model.preValidate(this.getData());
+
+            // if input has errors
+            if (errors) {
+                // show error
+                this.showError(errors);
+            } else {
+                // set value on model
+                this.model.set(this.getData());
+            }
         },
 
         getData: function() {

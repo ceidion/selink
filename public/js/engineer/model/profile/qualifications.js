@@ -1,10 +1,11 @@
-define([], function() {
+define(['model/profile/qualification'], function(qualificationModel) {
 
     var Qualifications = Backbone.Collection.extend({
 
         idAttribute: "_id",
 
-        model: Backbone.Model.extend({idAttribute: "_id"}),
+        // model: Backbone.Model.extend({idAttribute: "_id"}),
+        model: qualificationModel,
 
         url:  function() {
             return this.document.url() + '/qualifications';

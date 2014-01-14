@@ -22,8 +22,8 @@ define([
             });
 
             this.events = _.extend({}, this.events, {
-                'change input[name="acquireDate"]': 'updateDate',
-                'change input[name="name"]': 'updateName',
+                'change input[name="acquireDate"]': 'updateModel',
+                'change input[name="name"]': 'updateModel',
                 'click .btn-remove': 'removeModel'
             });
         },
@@ -43,16 +43,27 @@ define([
 
             // enable mask input
             this.ui.date.mask('9999/99');
+
+            // ?? I did bind on collection....
+            Backbone.Validation.bind(this);
         },
 
-        updateDate: function() {
-            this.model.set('acquireDate', this.ui.date.val());
-            this.render();
-        },
+        updateModel: function() {
 
-        updateName: function() {
-            this.model.set('name', this.ui.name.val());
-            this.render();
+            // clear all errors
+            this.clearError();
+
+            // check input value
+            var errors = this.model.preValidate(this.getData());
+
+            // if input has errors
+            if (errors) {
+                // show error
+                this.showError(errors);
+            } else {
+                // set value on model
+                this.model.set(this.getData());
+            }
         },
 
         removeModel: function() {
@@ -64,6 +75,13 @@ define([
                 $(this).removeClass('animated bounceOut');
                 self.model.collection.remove(self.model);
             });
+        },
+
+        getData: function() {
+            return {
+                name: this.ui.name.val(),
+                acquireDate: this.ui.date.val()
+            };
         }
     });
 

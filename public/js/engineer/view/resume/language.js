@@ -5,6 +5,8 @@ define([
     BaseView,
     template) {
 
+    var languageList = ["日本語","英語","中国語","韓国語","ヒンディー語","スペイン語","ロシア語","フランス語","アラビア語","ポルトガル語","マレー語","ベンガル語","ドイツ語","ウルドゥー語","イタリア語","ベトナム語","ペルシア語","タガログ語","タイ語","トルコ語"];
+
     var LanguageItem = BaseView.extend({
 
         // template
@@ -14,6 +16,8 @@ define([
 
         // initializer
         initialize: function() {
+
+            this.model.set('languageList', languageList, {silent: true});
 
             this.ui = _.extend({}, this.ui, {
                 'input': 'select',
@@ -86,8 +90,8 @@ define([
 
             // enable chosen
             this.$el.find('select').chosen({
-                width: "95%",
-                disable_search_threshold: 10
+                width: "100%",
+                disable_search_threshold: 100
             });
 
         },
