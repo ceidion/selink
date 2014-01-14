@@ -34,7 +34,7 @@ define([
 
             this.events = _.extend({}, this.events);
 
-            this.collection = new EducationsModel(this.model.get('educations'));
+            this.collection = new EducationsModel(this.model.get('educations'), {parse: true});
             this.collection.document = this.model;
         },
 
@@ -54,6 +54,9 @@ define([
                 placement: 'top',
                 title: "ドラグして移動"
             });
+
+            // bind validator
+            Backbone.Validation.bind(this);
         },
 
         updateMsg: function(data) {

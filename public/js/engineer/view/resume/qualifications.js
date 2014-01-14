@@ -34,7 +34,7 @@ define([
 
             this.events = _.extend({}, this.events);
 
-            this.collection = new QualificationsModel(this.model.get('qualifications'));
+            this.collection = new QualificationsModel(this.model.get('qualifications'), {parse: true});
             this.collection.document = this.model;
         },
 

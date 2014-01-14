@@ -2,23 +2,34 @@
     <blockquote>
         <p>
             <i class="icon-book bigger-110 green"></i>&nbsp;
+            <span id="school-value">                
             <%
                 if (obj.school) print(obj.school);
                 else print('<span class="text-muted">学校名称</span>');
-
+            %>
+            </span>
+            <span id="major-value">                
+            <%
                 if (obj.major) print('<span class="label label-sm label-success arrowed arrowed-right">' + obj.major + '</span>');
             %>
+            </span>
         </p>
-        <small>
+        <small id="duration-value">
             <%
-                if (obj.startDate) print(moment(obj.startDate).format('YYYY年M月'));
-                else print('<span class="text-muted">未入力</span>');
+                if (obj.startDate && !obj.endDate) 
+                    print(obj.startDateDisplay + "〜");
+                else if (!obj.startDate && obj.endDate) 
+                    print("〜" + obj.endDateDisplay);
+                else if (obj.startDate && obj.endDate) 
+                    print(obj.startDateDisplay + "〜" + obj.endDateDisplay);
+                else 
+                    print('<span class="text-muted">未入力</span>');
             %>
         </small>
     </blockquote>
 </div>
 <div class="sl-editor">
-    <div class="row">
+    <div class="row form-group">
         <div class="col-md-12 input-group">
             <span class="input-group-addon">
                 <i class="icon-building bigger-110"></i>
@@ -29,7 +40,7 @@
             </span>
         </div>
     </div>
-    <div class="row">
+    <div class="row form-group">
         <div class="col-md-12 input-group">
             <span class="input-group-addon">
                 <i class="icon-book bigger-110"></i>
@@ -38,20 +49,20 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-5 form-group">
             <div class="input-group">
                 <span class="input-group-addon">
                     <i class="icon-calendar bigger-110"></i>
                 </span>
-                <input type="text" class="col-xs-12" placeholder="開始日" name="startDate" value="<%- obj.startDate %>">
+                <input type="text" class="col-xs-12" placeholder="開始日" name="startDate" value="<%- obj.startDateInput %>">
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 form-group">
             <div class="input-group">
                 <span class="input-group-addon">
                     <i class="icon-calendar bigger-110"></i>
                 </span>
-                <input type="text" class="col-xs-12" placeholder="終了日" name="endDate" value="<%- obj.endDate %>">
+                <input type="text" class="col-xs-12" placeholder="終了日" name="endDate" value="<%- obj.endDateInput %>">
             </div>
         </div>
     </div>

@@ -16,6 +16,8 @@ define([
         initialize: function() {
 
             this.ui = _.extend({}, this.ui, {
+                'dateValue': '#date-value',
+                'nameValue': '#name-value',
                 'date': 'input[name="acquireDate"]',
                 'name': 'input[name="name"]',
                 'remove': '.btn-remove'
@@ -53,8 +55,10 @@ define([
             // clear all errors
             this.clearError();
 
+            var inputData = this.getData();
+
             // check input value
-            var errors = this.model.preValidate(this.getData());
+            var errors = this.model.preValidate(inputData);
 
             // if input has errors
             if (errors) {
@@ -62,7 +66,8 @@ define([
                 this.showError(errors);
             } else {
                 // set value on model
-                this.model.set(this.getData());
+                this.model.set(inputData);
+                this.renderValue(inputData);
             }
         },
 
@@ -78,10 +83,26 @@ define([
         },
 
         getData: function() {
+
+            var acquireDate = this.ui.date.val() ? moment(this.ui.date.val()).toJSON() : ""
+
             return {
                 name: this.ui.name.val(),
-                acquireDate: this.ui.date.val()
+                acquireDate: acquireDate
             };
+        },
+
+        renderValue: function(data) {
+
+            if (data.name)
+                this.ui.nameValue.text(data.name);
+            else
+                this.ui.nameValue.html('<span class="text-muted">資格名称</span>');
+
+            if (data.acquireDate)
+                this.ui.dateValue.text(moment(data.acquireDate).format('YYYY年M月'));
+            else
+                this.ui.dateValue.html('<span class="text-muted">未入力</span>');             
         }
     });
 

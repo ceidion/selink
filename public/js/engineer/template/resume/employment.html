@@ -2,24 +2,39 @@
     <blockquote>
         <p>
             <i class="icon-building bigger-110 blue"></i>&nbsp;
+            <span id="company-value"> 
             <%
                 if (obj.company) print(obj.company);
                 else print('<span class="text-muted">会社名</span>');
-
+            %>
+            </span>
+            <span id="position-value">                
+            <%
                 if (obj.position) print('<span class="label label-sm label-primary arrowed arrowed-right">' + obj.position + '</span>');
             %>
+            </span>
         </p>
-        <small>
+        <small id="duration-value">
             <%
-                if (obj.startDate) print(moment(obj.startDate).format('YYYY年M月'));
-                else print('<span class="text-muted">未入力</span>');
+                if (obj.startDate && !obj.endDate) 
+                    print(obj.startDateDisplay + "〜");
+                else if (!obj.startDate && obj.endDate) 
+                    print("〜" + obj.endDateDisplay);
+                else if (obj.startDate && obj.endDate) 
+                    print(obj.startDateDisplay + "〜" + obj.endDateDisplay);
+                else 
+                    print('<span class="text-muted">未入力</span>');
+            %>
+        </small>
+        <small id="address-value">                
+            <%
                 if (obj.address) print(obj.address);
             %>
         </small>
     </blockquote>
 </div>
 <div class="sl-editor">
-    <div class="row">
+    <div class="row form-group">
         <div class="col-md-12 input-group">
             <span class="input-group-addon">
                 <i class="icon-building bigger-110"></i>
@@ -30,7 +45,7 @@
             </span>
         </div>
     </div>
-    <div class="row">
+    <div class="row form-group">
         <div class="col-md-12 input-group">
             <span class="input-group-addon">
                 <i class="icon-map-marker bigger-110"></i>
@@ -38,7 +53,7 @@
             <input type="text" placeholder="住所" name="address" value="<%- obj.address %>">
         </div>
     </div>
-    <div class="row">
+    <div class="row form-group">
         <div class="col-md-12 input-group">
             <span class="input-group-addon">
                 <i class="icon-bookmark bigger-110"></i>
@@ -47,20 +62,20 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-5 form-group">
             <div class="input-group">
                 <span class="input-group-addon">
                     <i class="icon-calendar bigger-110"></i>
                 </span>
-                <input type="text" class="col-xs-12" placeholder="開始日" name="startDate" value="<%- obj.startDate %>">
+                <input type="text" class="col-xs-12" placeholder="開始日" name="startDate" value="<%- obj.startDateInput %>">
             </div>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-5 form-group">
             <div class="input-group">
                 <span class="input-group-addon">
                     <i class="icon-calendar bigger-110"></i>
                 </span>
-                <input type="text" class="col-xs-12" placeholder="終了日" name="endDate" value="<%- obj.endDate %>">
+                <input type="text" class="col-xs-12" placeholder="終了日" name="endDate" value="<%- obj.endDateInput %>">
             </div>
         </div>
     </div>

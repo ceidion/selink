@@ -16,6 +16,10 @@ define([
         initialize: function() {
 
             this.ui = _.extend({}, this.ui, {
+                'companyValue': '#company-value',
+                'positionValue': '#position-value',
+                'durationValue': '#duration-value',
+                'addressValue': '#address-value',
                 'company': 'input[name="company"]',
                 'address': 'input[name="address"]',
                 'position': 'input[name="position"]',
@@ -25,11 +29,11 @@ define([
             });
 
             this.events = _.extend({}, this.events, {
-                'change input[name="company"]': 'updateCompany',
-                'change input[name="address"]': 'updateAddress',
-                'change input[name="position"]': 'updatePosition',
-                'change input[name="startDate"]': 'updateStartDate',
-                'change input[name="endDate"]': 'updateEndDate',
+                'change input[name="company"]': 'updateModel',
+                'change input[name="address"]': 'updateModel',
+                'change input[name="position"]': 'updateModel',
+                'change input[name="startDate"]': 'updateModel',
+                'change input[name="endDate"]': 'updateModel',
                 'click .btn-remove': 'removeModel'
             });
         },
@@ -49,31 +53,41 @@ define([
 
             // enable mask input
             this.$el.find('input[name="startDate"],input[name="endDate"]').mask('9999/99');
+
+            // ?? I did bind on collection....
+            Backbone.Validation.bind(this);
         },
 
-        updateCompany: function() {
-            this.model.set('company', this.ui.company.val());
-            this.render();
-        },
+        updateModel: function() {
 
-        updateAddress: function() {
-            this.model.set('address', this.ui.address.val());
-            this.render();
-        },
+            // clear all errors
+            this.clearError();
 
-        updatePosition: function() {
-            this.model.set('position', this.ui.position.val());
-            this.render();
-        },
+            var inputData = this.getData();
 
-        updateStartDate: function() {
-            this.model.set('startDate', this.ui.startDate.val());
-            this.render();
-        },
+            // check input value
+            var errors = this.model.preValidate(inputData) || {};
 
-        updateEndDate: function() {
-            this.model.set('endDate', this.ui.endDate.val());
-            this.render();
+            // check wheter end date is after start date
+            if (this.ui.startDate.val() && this.ui.endDate.val()) {
+
+                // looks very bad, but work
+                var startDate = new Date(this.ui.startDate.val()),
+                    endDate = new Date(this.ui.endDate.val());
+
+                if (moment(startDate).isAfter(endDate))
+                    errors.endDate = errors.endTime = "開始日より後の時間をご入力ください";
+            }
+
+            // if input has errors
+            if (!_.isEmpty(errors)) {
+                // show error
+                this.showError(errors);
+            } else {
+                // set value on model
+                this.model.set(inputData);
+                this.renderValue(inputData);
+            }
         },
 
         removeModel: function() {
@@ -85,6 +99,47 @@ define([
                 $(this).removeClass('animated bounceOut');
                 self.model.collection.remove(self.model);
             });
+        },
+
+        getData: function() {
+
+            var startDate = this.ui.startDate.val() ? moment(this.ui.startDate.val()).toJSON() : "",
+                endDate = this.ui.endDate.val() ? moment(this.ui.endDate.val()).toJSON() : "";
+
+            return {
+                company: this.ui.company.val(),
+                address: this.ui.address.val(),
+                position: this.ui.position.val(),
+                startDate: startDate,
+                endDate: endDate
+            };
+        },
+
+        renderValue: function(data) {
+
+            if (data.company)
+                this.ui.companyValue.text(data.company);
+            else
+                this.ui.companyValue.html('<span class="text-muted">会社名</span>');
+
+            if (data.position)
+                this.ui.positionValue.html('<span class="label label-sm label-primary arrowed arrowed-right">' + data.position + '</span>');
+            else
+                this.ui.positionValue.empty();
+
+            if (data.address)
+                this.ui.addressValue.text(data.address);
+            else
+                this.ui.addressValue.empty();
+
+            if (data.startDate && !data.endDate)
+                this.ui.durationValue.text(moment(data.startDate).format('YYYY年M月') + "〜");
+            else if (!data.startDate && data.endDate)
+                this.ui.durationValue.text("〜" + moment(data.endDate).format('YYYY年M月'));
+            else if (data.startDate && data.endDate)
+                this.ui.durationValue.text(moment(data.startDate).format('YYYY年M月') + "〜" + moment(data.endDate).format('YYYY年M月'));
+            else
+                this.ui.durationValue.html('<span class="text-muted">未入力</span>');             
         }
     });
 

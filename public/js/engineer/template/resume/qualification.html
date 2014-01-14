@@ -2,17 +2,21 @@
     <blockquote>
         <p>
             <i class="icon-certificate bigger-110 orange2"></i>&nbsp;
+            <span id="name-value">
             <%
                 if (obj.name) print(obj.name);
                 else print('<span class="text-muted">資格名称</span>');
             %>
+            </span>
         </p>
         <small>
             取得日：
+            <span id="date-value">
             <%
-                if (obj.acquireDate) print(moment(obj.acquireDate).format('YYYY年M月'));
+                if (obj.acquireDate) print(obj.acquireDateDisplay);
                 else print('<span class="text-muted">未入力</span>');
             %>
+            </span>
         </small>
     </blockquote>
 </div>
@@ -33,7 +37,7 @@
             <span class="input-group-addon">
                 <i class="icon-calendar bigger-110"></i>
             </span>
-            <input type="text" placeholder="取得年月" name="acquireDate" value="<%- obj.acquireDate %>">
+            <input type="text" placeholder="取得年月" name="acquireDate" value="<%- obj.acquireDateInput %>">
         </div>
     </div>
 </div>

@@ -198,7 +198,7 @@ define([
             }) || {};
 
             // check wheter end date is after start date
-            if (this.ui.endDate.val()) {
+            if (this.ui.startDate.val() && this.ui.endDate.val()) {
 
                 // looks very bad, but work
                 var startDate = new Date(this.ui.startDate.val()),
@@ -216,7 +216,7 @@ define([
             }
 
             // if got input error
-            if (errors) {
+            if (!_.isEmpty(errors)) {
 
                 // append error message for every input
                 for(var key in errors) {
