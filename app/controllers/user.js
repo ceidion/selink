@@ -2,8 +2,6 @@ var mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Profile = mongoose.model('Profile');
 
-var http = require('http');
-
 var msgAuthFailedTitle = "アカウントが存在しません",
     msgAuthFailed = "ユーザIDとパースワードを確かめて、もう一度ご入力ください。",
     msgMissAuthInfoTitle = "アカウント情報を入力してください",
@@ -49,8 +47,6 @@ exports.logout = function(req, res, next) {
 
 // Get single user
 exports.show = function(req, res, next) {
-
-    testStack();
 
     User.findById(req.params.id, '-password', function(err, user) {
         if (err) next(err);
@@ -152,23 +148,5 @@ exports.removeEvent = function(req, res, next) {
                 });
             }
         }
-    });
-};
-
-testStack = function testStack() {
-
-    var options = {
-      host: 'api.stackoverflow.com',
-      port: 80,
-      path: '/1.1/tags?pagesize=100&page=1'
-    };
-
-    http.get(options, function(resp){
-      resp.setEncoding('utf8');
-      resp.on('data', function(chunk){
-        console.log(chunk);
-      });
-    }).on("error", function(e){
-      console.log("Got error: " + e.message);
     });
 };

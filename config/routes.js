@@ -1,3 +1,4 @@
+var tag = require('../app/controllers/tag');
 var user = require('../app/controllers/user');
 var tempaccount = require('../app/controllers/tempaccount');
 var profile = require('../app/controllers/profile');
@@ -61,6 +62,8 @@ module.exports = function(app) {
 
     // query address
     app.get('/address/:zipcode', checkLoginStatus, address.show);
+
+    app.post('/stack', checkLoginStatus, tag.create);
 
 };
 

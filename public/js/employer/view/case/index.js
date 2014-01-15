@@ -10,10 +10,12 @@ define([
 
         // ui
         ui: {
+            'stack': '#stack'
         },
 
         // Events
         events: {
+            'click #stack': 'getStack'
         },
 
         collectionEvents: {
@@ -25,6 +27,8 @@ define([
         // Regions
         regions: {
         },
+
+        count: 1,
 
         // Initializer
         initialize: function() {
@@ -124,6 +128,46 @@ define([
             var dateClone = new Date(date);
             dateClone.setHours(dateClone.getHours() + 9);
             return dateClone;
+        },
+
+        getStack: function getStack() {
+            var self = this;
+            $.ajax({
+                type: 'GET',
+                url: 'http://api.stackoverflow.com/1.1/tags',
+                data: {
+                    pagesize: 100,
+                    page: self.count
+                },
+                // use json format
+                dataType: 'jsonp',
+
+                jsonp: 'jsonp',
+                success: function(data) {
+                    self.saveStack(data);
+                    self.count++;
+                    self.getStack();
+                },
+                error: function() {
+                    console.log('suck');
+                }
+            })
+        },
+
+        saveStack: function(data) {
+            $.ajax({
+                type: 'POST',
+                url: '/stack',
+                data: {tag : data.tags},
+                // use json format
+                dataType: 'json',
+                success: function(data) {
+                    
+                },
+                error: function() {
+                    console.log('suck');
+                }
+            });
         }
     });
 
