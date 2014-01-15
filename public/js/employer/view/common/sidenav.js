@@ -1,4 +1,4 @@
-define(['text!templates/common/sidenav.html',], function(template) {
+define(['text!employer/template/common/sidenav.html',], function(template) {
 
     var SideNav = Backbone.Marionette.ItemView.extend({
 

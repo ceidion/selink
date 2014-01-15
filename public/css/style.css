@@ -4,6 +4,8 @@
 .sl-editable{-webkit-transition:background-color 1s;transition:background-color 1s}.sl-editable:hover{background-color:#EEE;cursor:pointer}
 .sl-editable .form-group{margin-bottom:0px}
 .sl-editable .sl-editor{display:none}.sl-editable .sl-editor input{line-height:normal}
+.label{line-height:1.5;margin-left:15px;padding-left:7px;padding-right:7px}
+.badge{top:-2px !important;padding-top:2px;padding-bottom:1px}
 #sl-basic-info .sl-editable{min-height:48px}#sl-basic-info .sl-editable .profile-info-name,#sl-basic-info .sl-editable .sl-value{line-height:33px}
 .ace-thumbnails>li{border:0px;float:none}
 #zipCodeArea{margin-bottom:10px}
@@ -19,12 +21,10 @@
 #education-composite .sl-editable{padding:7px}
 #education-composite blockquote{margin:0px}
 #education-composite .row{margin-top:5px}#education-composite .row:first-child{margin-top:0px}
-#education-composite .label{line-height:1.5;margin-left:15px;padding-left:7px;padding-right:7px}
 #education-composite i{width:14px}
 #employment-composite .sl-editable{padding:7px}
 #employment-composite blockquote{margin:0px}
 #employment-composite .row{margin-top:5px}#employment-composite .row:first-child{margin-top:0px}
-#employment-composite .label{line-height:1.5;margin-left:15px;padding-left:7px;padding-right:7px}
 #employment-composite i{width:14px}
 #event-modal input{line-height:normal}
 #event-modal .row{margin-top:15px}#event-modal .row:first-child{margin-top:0px}

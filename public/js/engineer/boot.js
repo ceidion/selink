@@ -1,48 +1,48 @@
 require.config({
 
-    baseUrl: "/js/engineer",
+    baseUrl: "/js",
 
     paths: {
         // core library
-        'jquery': "../lib/jquery-2.0.3.min",
-        'jquery-ui': "../lib/jquery-ui-1.10.3.custom.min",
-        'bootstrap': "../lib/bootstrap.min",
-        'underscore': '../lib/underscore',
-        'backbone': '../lib/backbone',
-        'marionette': '../lib/backbone.marionette',
-        'backbone.wreqr': '../lib/backbone.wreqr',
-        'backbone.babysitter': '../lib/backbone.babysitter',
-        'backbone.validation': '../lib/backbone.validation.min',
-        'deep-model': '../lib/deep-model.min',
-        'text': '../lib/text',
-        'templates': 'template',
+        'jquery': "lib/jquery-2.0.3.min",
+        'jquery-ui': "lib/jquery-ui-1.10.3.custom.min",
+        'bootstrap': "lib/bootstrap.min",
+        'underscore': 'lib/underscore',
+        'backbone': 'lib/backbone',
+        'marionette': 'lib/backbone.marionette',
+        'backbone.wreqr': 'lib/backbone.wreqr',
+        'backbone.babysitter': 'lib/backbone.babysitter',
+        'backbone.validation': 'lib/backbone.validation.min',
+        'deep-model': 'lib/deep-model.min',
+        'text': 'lib/text',
         // core theme
-        'ace': "../lib/uncompressed/ace",
-        'ace-extra': "../lib/uncompressed/ace-extra",
-        'ace-element': "../lib/uncompressed/ace-elements",
+        'ace': "lib/uncompressed/ace",
+        'ace-extra': "lib/uncompressed/ace-extra",
+        'ace-element': "lib/uncompressed/ace-elements",
         // pie chart
-        'pie-chart': "../lib/jquery.easy-pie-chart.min",
+        'pie-chart': "lib/jquery.easy-pie-chart.min",
         // calendar
-        'full-calendar': "../lib/fullcalendar.min",
-        'google-calendar': "../lib/gcal",
+        'full-calendar': "lib/fullcalendar.min",
+        'google-calendar': "lib/gcal",
         // date time
-        'datepicker-locale': "../lib/date-time/locales/bootstrap-datepicker.ja",
-        'datepicker': "../lib/date-time/bootstrap-datepicker.min",
-        'timepicker': "../lib/date-time/bootstrap-timepicker.min",
-        'moment': "../lib/date-time/moment-with-langs.min",
+        'datepicker-locale': "lib/date-time/locales/bootstrap-datepicker.ja",
+        'datepicker': "lib/date-time/bootstrap-datepicker.min",
+        'timepicker': "lib/date-time/bootstrap-timepicker.min",
+        'moment': "lib/date-time/moment-with-langs.min",
         // file upload
-        'jquery.ui.widget': '../lib/jquery.ui.widget',
-        'iframetransport': '../lib/jquery.iframe-transport',
-        'fileupload': '../lib/jquery.fileupload',
+        'jquery.ui.widget': 'lib/jquery.ui.widget',
+        'iframetransport': 'lib/jquery.iframe-transport',
+        'fileupload': 'lib/jquery.fileupload',
         // input mask
-        'maskedinput': "../lib/jquery.maskedinput.min",
-        'chosen': '../lib/chosen.jquery.min',
-        'gritter': '../lib/jquery.gritter.min',
-        'colorbox': '../lib/jquery.colorbox-min',
-        'knob': '../lib/jquery.knob.min',
-        'wysiwyg': '../lib/bootstrap-wysiwyg.min',
-        'hotkeys': '../lib/jquery.hotkeys.min',
-        'isotope': '../lib/jquery.isotope'
+        'maskedinput': "lib/jquery.maskedinput.min",
+        'chosen': 'lib/chosen.jquery.min',
+        'gritter': 'lib/jquery.gritter.min',
+        'colorbox': 'lib/jquery.colorbox-min',
+        'knob': 'lib/jquery.knob.min',
+        'wysiwyg': 'lib/bootstrap-wysiwyg.min',
+        'hotkeys': 'lib/jquery.hotkeys.min',
+        'isotope': 'lib/jquery.isotope',
+        'app': 'engineer/engineer'
     },
 
     shim: {
@@ -116,7 +116,7 @@ require.config({
         'isotope': {
             deps: ['jquery']
         },
-        'engineer': {
+        'app': {
             deps: [
                 'jquery-ui',
                 'bootstrap',
@@ -143,6 +143,6 @@ require.config({
     }
 });
 
-require(['engineer'], function(engineer) {
+require(['app'], function(engineer) {
     engineer.start();
 });

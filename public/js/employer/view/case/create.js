@@ -1,6 +1,6 @@
 define([
-    'view/common/item-base',
-    'text!template/case/create.html'
+    'common/view/item-base',
+    'text!employer/template/case/create.html'
 ], function(
     BaseView,
     template) {

@@ -1,9 +1,13 @@
 define([
-    'view/home/page',
-    'router/router',
-    'controller/controller'
+    'common/model/user',
+    'common/model/profile',
+    'common/model/events',
+    'engineer/router/router',
+    'engineer/controller/controller'
 ], function(
-    HomeView,
+    UserModel,
+    ProfileModel,
+    EventsModel,
     Router,
     Controller
 ) {
@@ -36,6 +40,13 @@ define([
             return template;
         };
 
+        // switch page with fade effect
+        Backbone.Marionette.Region.prototype.open = function(view){
+            this.$el.hide();
+            this.$el.html(view.el);
+            this.$el.fadeIn();
+        };
+
         // change datetime language
         moment.lang('ja');
 
@@ -62,32 +73,36 @@ define([
     // initialize application
     engineer.addInitializer(function(options) {
 
-        // create home view
-        this.homeView = new HomeView();
-        // create resume view
-        // this.resumeView = new ResumeView();
-        // create time card view
-        // this.timeCardView = new TimeCardView();
+        var self = this;
 
-        // switch page with fade effect
-        Backbone.Marionette.Region.prototype.open = function(view){
-            this.$el.hide();
-            this.$el.html(view.el);
-            this.$el.fadeIn();
-        };
-
-        // make controller
-        var controller = new Controller({
-            app: this
+        this.userModel = new UserModel({
+            _id: $('#info-base').data('id')
         });
 
-        // setup router
-        var router = new Router({
-            controller: controller
-        });
+        this.userModel.fetch({
+            success: function() {
 
-        // start history
-        Backbone.history.start();
+                self.profileModel = new ProfileModel(self.userModel.get('profile'));
+                self.eventsModel = new EventsModel(self.userModel.get('events'));
+                self.eventsModel.document = self.userModel;
+
+                // make controller
+                var controller = new Controller({
+                    app: self
+                });
+
+                // setup router
+                var router = new Router({
+                    controller: controller
+                });
+
+                // start history
+                Backbone.history.start();
+            },
+            error: function() {
+
+            }
+        });
     });
 
     return engineer;

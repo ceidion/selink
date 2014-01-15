@@ -1,49 +1,48 @@
 require.config({
 
-    baseUrl: "/js/employer",
+    baseUrl: "/js",
 
     paths: {
         // core library
-        jquery: "../lib/jquery-2.0.3.min",
-        'jquery-ui': "../lib/jquery-ui-1.10.3.custom.min",
-        bootstrap: "../lib/bootstrap.min",
-        underscore: '../lib/underscore',
-        backbone: '../lib/backbone',
-        marionette: '../lib/backbone.marionette',
-        'backbone.wreqr': '../lib/backbone.wreqr',
-        'backbone.babysitter': '../lib/backbone.babysitter',
-        'deep-model': '../lib/deep-model.min',
-        text: '../lib/text',
-        templates: 'template',
+        'jquery': "lib/jquery-2.0.3.min",
+        'jquery-ui': "lib/jquery-ui-1.10.3.custom.min",
+        'bootstrap': "lib/bootstrap.min",
+        'underscore': 'lib/underscore',
+        'backbone': 'lib/backbone',
+        'marionette': 'lib/backbone.marionette',
+        'backbone.wreqr': 'lib/backbone.wreqr',
+        'backbone.babysitter': 'lib/backbone.babysitter',
+        'backbone.validation': 'lib/backbone.validation.min',
+        'deep-model': 'lib/deep-model.min',
+        'text': 'lib/text',
         // core theme
-        ace: "../lib/uncompressed/ace",
-        'ace-extra': "../lib/uncompressed/ace-extra",
-        'ace-element': "../lib/uncompressed/ace-elements",
-        // validator
-        'validate-base': '../lib/uncompressed/jquery.validate',
-        validate: '../lib/additional-methods.min',
+        'ace': "lib/uncompressed/ace",
+        'ace-extra': "lib/uncompressed/ace-extra",
+        'ace-element': "lib/uncompressed/ace-elements",
         // pie chart
-        'pie-chart': "../lib/jquery.easy-pie-chart.min",
+        'pie-chart': "lib/jquery.easy-pie-chart.min",
         // calendar
-        'full-calendar': "../lib/fullcalendar.min",
+        'full-calendar': "lib/fullcalendar.min",
+        'google-calendar': "lib/gcal",
         // date time
-        'datepicker-locale': "../lib/date-time/locales/bootstrap-datepicker.ja",
-        datepicker: "../lib/date-time/bootstrap-datepicker.min",
-        timepicker: "../lib/date-time/bootstrap-timepicker.min",
-        spinner: '../lib/fuelux/fuelux.spinner.min',
-        moment: "../lib/date-time/moment-with-langs.min",
+        'datepicker-locale': "lib/date-time/locales/bootstrap-datepicker.ja",
+        'datepicker': "lib/date-time/bootstrap-datepicker.min",
+        'timepicker': "lib/date-time/bootstrap-timepicker.min",
+        'moment': "lib/date-time/moment-with-langs.min",
         // file upload
-        'jquery.ui.widget': '../lib/jquery.ui.widget',
-        iframetransport: '../lib/jquery.iframe-transport',
-        fileupload: '../lib/jquery.fileupload',
+        'jquery.ui.widget': 'lib/jquery.ui.widget',
+        'iframetransport': 'lib/jquery.iframe-transport',
+        'fileupload': 'lib/jquery.fileupload',
         // input mask
-        maskedinput: "../lib/jquery.maskedinput.min",
-        chosen: '../lib/chosen.jquery.min',
-        gritter: '../lib/jquery.gritter.min',
-        colorbox: '../lib/jquery.colorbox-min',
-        knob: '../lib/jquery.knob.min',
-        wysiwyg: '../lib/bootstrap-wysiwyg.min',
-        hotkeys: '../lib/jquery.hotkeys.min'
+        'maskedinput': "lib/jquery.maskedinput.min",
+        'chosen': 'lib/chosen.jquery.min',
+        'gritter': 'lib/jquery.gritter.min',
+        'colorbox': 'lib/jquery.colorbox-min',
+        'knob': 'lib/jquery.knob.min',
+        'wysiwyg': 'lib/bootstrap-wysiwyg.min',
+        'hotkeys': 'lib/jquery.hotkeys.min',
+        'isotope': 'lib/jquery.isotope',
+        'app': 'employer/employer'
     },
 
     shim: {
@@ -72,17 +71,14 @@ require.config({
         'ace': {
             deps: ['ace-element', 'ace-extra']
         },
-        'validate-base': {
-            deps: ['jquery']
-        },
-        'validate': {
-            deps: ['validate-base']
-        },
         'pie-chart': {
             deps: ['jquery']
         },
         'full-calendar': {
             deps: ['jquery']
+        },
+        'google-calendar': {
+            deps: ['full-calendar']
         },
         'datepicker': {
             deps: ['jquery']
@@ -91,9 +87,6 @@ require.config({
             deps: ['bootstrap', 'datepicker']
         },
         'timepicker': {
-            deps: ['jquery']
-        },
-        'spinner': {
             deps: ['jquery']
         },
         'fileupload': {
@@ -120,19 +113,22 @@ require.config({
         'wysiwyg': {
             deps: ['bootstrap', 'hotkeys']
         },
-        'employer': {
+        'isotope': {
+            deps: ['jquery']
+        },
+        'app': {
             deps: [
                 'jquery-ui',
                 'bootstrap',
                 'marionette',
                 'deep-model',
+                'backbone.validation',
                 'ace',
-                'validate',
                 'pie-chart',
                 'full-calendar',
+                'google-calendar',
                 'datepicker-locale',
                 'timepicker',
-                'spinner',
                 'moment',
                 'fileupload',
                 'maskedinput',
@@ -146,6 +142,6 @@ require.config({
     }
 });
 
-require(['employer'], function(employer) {
+require(['app'], function(employer) {
     employer.start();
 });

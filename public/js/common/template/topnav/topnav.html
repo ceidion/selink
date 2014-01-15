@@ -1,0 +1,76 @@
+<%
+    var dispPhoto = obj.profile.photo ? obj.profile.photo : './asset/images/no_photo_male.gif';
+%>
+<ul class="nav ace-nav">
+
+    <li class="light-blue2">
+        <a href="#"><span class="icon-tasks"></span></a>
+    </li>
+
+    <li id="event-nav" class="light-orange">
+        <a class="dropdown-toggle" href="/#" data-toggle="dropdown">
+            <i class="icon-bell-alt"></i>
+            <span class="badge badge-important"><%- obj.nearestEventsNum %></span>
+        </a>
+        <ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret">
+            <li class="dropdown-header">
+                <i class="icon-bell"></i>&nbsp;イベント（<%- obj.nearestEventsNum %>件）
+            </li>
+            <% _.each(obj.nearestEvents, function(event){ %>
+                <li>
+                    <a href="#">
+                        &nbsp;&nbsp;<%- event.title %>
+                        <span class="pull-left"><i class="icon-tags"></i></span>
+                        <span class="pull-right badge <%- event.className %>" style="margin-top:-1px;">
+                            <% print(moment(event.start).fromNow()) %>
+                        </span>
+                    </a>
+                </li>
+            <% }); %>
+            <li>
+                <a href="#timecard">
+                    予定表へ
+                    <i class="icon-arrow-right"></i>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="light-green">
+        <a class="dropdown-toggle" href="/#" data-toggle="dropdown">
+            <span class="icon-envelope"></span>
+        </a>
+        <ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret">
+            <li class="dropdown-header">
+                <i class="icon-envelope-alt"></i>&nbsp;メッセージ
+            </li>
+            <li><a href="#">All Product</a></li>
+            <li><a href="#">New Product</a></li>
+            <li>
+                <a href="#">
+                    メッセージ一覧へ
+                    <i class="icon-arrow-right"></i>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="light-blue">
+        <a class="dropdown-toggle" href="/#" data-toggle="dropdown">
+            <img class="nav-user-photo" src="<%- dispPhoto %>" alt="">
+            <span class="user-info"><small>こんにちは,</small><%- obj.profile.firstName %>さん</span>
+        </a>
+        <ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret">
+            <li class="dropdown-header">
+                <i class="icon-user"></i>&nbsp;アカウント
+            </li>
+            <li><a href="#"><i class="icon-gears"></i>&nbsp;各種設定</a></li>
+            <li><a href="#"><i class="icon-bug"></i>&nbsp;バッグ報告</a></li>
+            <li><a href="#"><i class="icon-key"></i>&nbsp;パスワード変更</a></li>
+            <li>
+                <a href="/logout">ログアウト&nbsp;<i class="icon-signout"></i></a>
+            </li>
+        </ul>
+    </li>
+
+</ul>

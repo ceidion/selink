@@ -1,5 +1,5 @@
 define([
-    'text!templates/case/index.html',
+    'text!employer/template/case/index.html',
 ], function(template) {
 
     // PageView is the biggest frame of the application

@@ -34,6 +34,8 @@ module.exports = function(app) {
     app.post('/signup', tempaccount.create);
     // Account activate
     app.get('/activate/:id', tempaccount.activate);
+    // Get user's events
+    app.get('/user/:id', checkLoginStatus, user.show);
 
     // Get single profile
     app.get('/profile/:id', checkLoginStatus, profile.show);
