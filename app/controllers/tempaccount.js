@@ -58,7 +58,7 @@ exports.create = function(req, res, next) {
                     //     Mailer.sendNewUserRegistedNotification(admins, {email: email});
                     // });
 
-                    console.log("http://localhost:8080/activate/" + tempAccountObj._id);
+                    console.log("http://localhost:8081/activate/" + tempAccountObj._id);
 
                     // send success message
                     res.json({

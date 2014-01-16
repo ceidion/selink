@@ -1,8 +1,9 @@
-var tag = require('../app/controllers/tag');
-var user = require('../app/controllers/user');
-var tempaccount = require('../app/controllers/tempaccount');
-var profile = require('../app/controllers/profile');
-var address = require('../app/controllers/address');
+var tag = require('../app/controllers/tag'),
+    user = require('../app/controllers/user'),
+    tempaccount = require('../app/controllers/tempaccount'),
+    profile = require('../app/controllers/profile'),
+    job = require('../app/controllers/job'),
+    address = require('../app/controllers/address');
 
 module.exports = function(app) {
 
@@ -21,7 +22,7 @@ module.exports = function(app) {
 
         if (req.session.user.type === "admin") {
             console.log("admin");
-            res.render('./admin/index');
+            res.render('./admin/index', req.session.user);
         } else if (req.session.user.type === "employer") {
             console.log("employer");
             res.render('./employer/index', req.session.user);
@@ -59,6 +60,9 @@ module.exports = function(app) {
     app.patch('/user/:id/events/:eventid', checkLoginStatus, user.updateEvent);
     // Update events (remove event)
     app.delete('/user/:id/events/:eventid', checkLoginStatus, user.removeEvent);
+
+    // Update jobs (create new job)
+    app.post('/job', checkLoginStatus, job.create);
 
     // query address
     app.get('/address/:zipcode', checkLoginStatus, address.show);

@@ -3,19 +3,15 @@ var mongoose = require('mongoose'),
 
 exports.create = function(req, res) {
 
-    req.body.tag.forEach(function(tagData) {
-        var newTag = new Tag(tagData, false);
-        newTag.save(function(err) {
-            if (err) console.log(err);
-        });        
-    })
+    if (req.body.tag) {
 
-    res.send('got it');
-};
+        req.body.tag.forEach(function(tagData) {
+            var newTag = new Tag(tagData, false);
+            newTag.save(function(err) {
+                if (err) console.log(err);
+            });
+        });
+    }
 
-exports.stack = function(req, res, next) {
-
-    console.log("request body: " + util.inspect(req.body));
-    console.log("request params: " + util.inspect(req.params));
     res.send('got it');
 };

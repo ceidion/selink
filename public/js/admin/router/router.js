@@ -4,7 +4,7 @@ define([], function() {
 
         appRoutes: {
             "home": "showHomeView",
-            "administrator": "showAdministratorView"
+            // "administrator": "showAdministratorView"
         }
     });
 

@@ -1,3 +1,112 @@
 <div class="page-header">
-    <h1 style="display: inline-table; margin-top: 6px;">案件作成<small><i class="icon-double-angle-right"></i> 新規案件の作成・提案</small></h1>
+    <h1 style="display: inline-table; margin-top: 6px;">
+        案件作成
+        <small><i class="icon-double-angle-right"></i> 新規案件の作成・提案</small>
+    </h1>
+</div>
+
+<div class="row">
+    <div class="form-horizontal col-xs-12">
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="name">
+                案件名
+            </label>
+            <div class="col-sm-9">
+                <input type="text" id="name" name="name" placeholder="案件名" class="col-xs-10 col-sm-5" />
+            </div>
+        </div>
+
+        <div class="space-4"></div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="expiredDate">
+                有効期限
+            </label>
+            <div class="col-sm-9">
+                <input type="text" id="expiredDate" name="expiredDate" placeholder="有効期限" class="col-xs-10 col-sm-2" />
+            </div>
+        </div>
+
+        <div class="space-4"></div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="startDate">
+                作業期間
+            </label>
+            <div class="col-sm-9">
+                <input type="text" id="startDate" name="startDate" placeholder="開始日" class="col-xs-5 col-sm-2" />
+                <input type="text" id="endDate" name="endDate" placeholder="終了日" class="col-xs-5 col-sm-2" />
+            </div>
+        </div>
+
+        <div class="space-4"></div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="priceBottom">
+                単価
+            </label>
+            <div class="col-sm-9">
+                <input type="text" id="priceBottom" name="priceBottom" placeholder="下限" class="col-xs-5 col-sm-1" />
+                <input type="text" id="priceTop" name="priceTop" placeholder="上限" class="col-xs-5 col-sm-1" />
+            </div>
+        </div>
+
+        <div class="space-4"></div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="address">
+                作業場所
+            </label>
+            <div class="col-sm-9">
+                <input type="text" id="address" name="address" placeholder="作業場所" class="col-xs-10 col-sm-5" />
+            </div>
+        </div>
+
+        <div class="space-4"></div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="nativesOnly">
+                外国籍可否
+            </label>
+            <div class="col-sm-9">
+                <label>
+                    <input name="switch-field-1" class="ace ace-switch ace-switch-7" type="checkbox" />
+                    <span class="lbl"></span>
+                </label>
+                <!-- <input type="text" id="nativesOnly" name="nativesOnly" placeholder="外国籍可否" class="col-xs-10 col-sm-5" /> -->
+            </div>
+        </div>
+
+        <div class="space-4"></div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="recruitNum">
+                募集人数
+            </label>
+            <div class="col-sm-9">
+                <input type="text" id="recruitNum" name="recruitNum" placeholder="人数" class="col-xs-10 col-sm-1" />
+            </div>
+        </div>
+
+        <div class="space-4"></div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="interviewNum">
+                面接
+            </label>
+            <div class="col-sm-9">
+                <input type="text" id="interviewNum" name="interviewNum" placeholder="面接" class="col-xs-10 col-sm-1" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="remark">
+                詳細
+            </label>
+            <div class="col-sm-9">
+                <input type="text" id="remark" name="remark" placeholder="面接" class="col-xs-10 col-sm-5" />
+            </div>
+        </div>
+    </div>
 </div>

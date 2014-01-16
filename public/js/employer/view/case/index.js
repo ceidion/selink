@@ -134,10 +134,13 @@ define([
             var self = this;
             $.ajax({
                 type: 'GET',
-                url: 'http://api.stackoverflow.com/1.1/tags',
+                url: 'http://api.stackexchange.com/2.1/tags',
                 data: {
                     pagesize: 100,
-                    page: self.count
+                    page: self.count,
+                    order: 'desc',
+                    sort: 'popular',
+                    site: 'stackoverflow'
                 },
                 // use json format
                 dataType: 'jsonp',
@@ -145,24 +148,27 @@ define([
                 jsonp: 'jsonp',
                 success: function(data) {
                     self.saveStack(data);
-                    self.count++;
-                    self.getStack();
+                    if (data.has_more) {
+                        self.count++;
+                        console.log(self.count);
+                        setTimeout(self.getStack(), 1000);
+                    }
                 },
                 error: function() {
                     console.log('suck');
                 }
-            })
+            });
         },
 
         saveStack: function(data) {
             $.ajax({
                 type: 'POST',
                 url: '/stack',
-                data: {tag : data.tags},
+                data: {tag : data.items},
                 // use json format
                 dataType: 'json',
                 success: function(data) {
-                    
+
                 },
                 error: function() {
                     console.log('suck');
