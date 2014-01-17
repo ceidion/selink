@@ -136,7 +136,8 @@ require.config({
                 'colorbox',
                 'gritter',
                 'knob',
-                'wysiwyg'
+                'wysiwyg',
+                'isotope'
             ]
         }
     }

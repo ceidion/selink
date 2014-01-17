@@ -1,7 +1,7 @@
 define([
     'common/model/user',
     'common/model/profile',
-    'common/model/events',
+    'common/collection/events',
     'employer/router/router',
     'employer/controller/controller'
 ], function(

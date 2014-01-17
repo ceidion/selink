@@ -1,4 +1,4 @@
-define(['common/model/profile/education'], function(EducationModel) {
+define(['common/model/education'], function(EducationModel) {
 
     var Educations = Backbone.Collection.extend({
 

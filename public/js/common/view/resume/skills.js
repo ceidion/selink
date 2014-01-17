@@ -2,7 +2,7 @@ define([
     'common/view/composite-base',
     'text!common/template/resume/skills.html',
     'common/view/resume/skill',
-    'common/model/profile/skills',
+    'common/collection/skills',
 ], function(
     BaseView,
     template,

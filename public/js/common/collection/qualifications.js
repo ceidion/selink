@@ -1,4 +1,4 @@
-define(['common/model/profile/qualification'], function(QualificationModel) {
+define(['common/model/qualification'], function(QualificationModel) {
 
     var Qualifications = Backbone.Collection.extend({
 

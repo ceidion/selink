@@ -125,6 +125,10 @@ define([
                 Backbone.Validation.bind(this);
         },
 
+        onBeforeClose: function() {
+           this.$el.find('input[name="startDate"],input[name="endDate"]').datepicker('remove');
+        },
+
         // set input status according all-day attribute
         setAllDay: function() {
 

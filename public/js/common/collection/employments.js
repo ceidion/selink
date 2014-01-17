@@ -1,4 +1,4 @@
-define(['common/model/profile/employment'], function(EmploymentModel) {
+define(['common/model/employment'], function(EmploymentModel) {
 
     var Employments = Backbone.Collection.extend({
 

@@ -2,7 +2,7 @@ define([
     'common/view/composite-base',
     'text!common/template/resume/languages.html',
     'common/view/resume/language',
-    'common/model/profile/languages',
+    'common/collection/languages',
 ], function(
     BaseView,
     template,

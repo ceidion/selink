@@ -2,12 +2,14 @@ define([
     'common/view/topnav/topnav',
     'admin/view/common/sidenav',
     'admin/view/home/page',
+    'admin/view/data/skill/skills',
     'common/view/resume/resume',
     'common/view/timecard/timecard',
 ], function(
     TopNavView,
     SideNavView,
     HomeView,
+    SkillsView,
     ResumeView,
     TimeCardView
 ) {
@@ -41,9 +43,16 @@ define([
 
         showHomeView: function() {
             // create home view
-            this.homeView = new HomeView();
+            this.app.homeView = new HomeView();
             // show main page
             this.app.pageContent.show(this.app.homeView);
+        },
+
+        showSkillsView: function() {
+            // create home view
+            this.app.skillsView = new SkillsView();
+            // show main page
+            this.app.pageContent.show(this.app.skillsView);
         },
 
         // show resume

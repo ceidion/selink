@@ -50,6 +50,10 @@ define([
             Backbone.Validation.bind(this);
         },
 
+        onBeforeClose: function() {
+            this.ui.date.datepicker('remove');
+        },
+
         updateModel: function() {
 
             // clear all errors

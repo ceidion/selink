@@ -7,7 +7,7 @@ var Tag = new Schema({
         type: String,
         trim: true
     },
-    score: {
+    count: {
         type: Number,
     }
 });

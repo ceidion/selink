@@ -2,7 +2,7 @@ define([
     'common/view/composite-base',
     'text!common/template/resume/qualifications.html',
     'common/view/resume/qualification',
-    'common/model/profile/qualifications',
+    'common/collection/qualifications',
 ], function(
     BaseView,
     template,

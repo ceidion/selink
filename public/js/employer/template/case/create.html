@@ -5,108 +5,120 @@
     </h1>
 </div>
 
-<div class="row">
-    <div class="form-horizontal col-xs-12">
+<div id="sl-new-job" class="col-xs-12 col-md-10 col-md-offset-1">
 
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="name">
-                案件名
-            </label>
-            <div class="col-sm-9">
-                <input type="text" id="name" name="name" placeholder="案件名" class="col-xs-10 col-sm-5" />
+    <div class="row col-xs-12">
+        <div class="profile-info-name">
+            <i class="icon-edit"></i>&nbsp;
+            案件名
+        </div>
+        <div class="profile-info-value input-group col-xs-12 col-md-8">
+            <span class="input-group-addon"><i class="icon-edit"></i></span>
+            <input class="form-control" type="text" name="name" placeholder="案件名" value="<%- obj.title %>"/>
+        </div>
+    </div>
+
+    <div class="row col-xs-12">
+        <div class="profile-info-name">
+            <i class="icon-time"></i>&nbsp;
+            有効期限
+        </div>
+        <div class="profile-info-value input-group col-xs-12 col-md-3">
+            <span class="input-group-addon"><i class="icon-time"></i></span>
+            <input class="form-control" type="text" name="expiredDate" placeholder="有効期限" value="<%- obj.start %>"/>
+        </div>
+    </div>
+
+    <div class="row col-xs-12">
+        <div class="profile-info-name">
+            <i class="icon-building"></i>&nbsp;
+            作業場所
+        </div>
+        <div class="profile-info-value input-group col-xs-12 col-md-6">
+            <span class="input-group-addon"><i class="icon-building"></i></span>
+            <input class="form-control" type="text" name="address" placeholder="作業場所" value="<%- obj.start %>"/>
+        </div>
+    </div>
+
+    <div class="row col-xs-12">
+        <div class="profile-info-name">
+            <i class="icon-calendar"></i>&nbsp;
+            作業期間
+        </div>
+        <div class="profile-info-value col-xs-12">
+            <div class="input-group col-md-3">
+                <span class="input-group-addon"><i class="icon-flag-alt"></i></span>
+                <input class="form-control" type="text" name="startDate" placeholder="開始日" value="<%- obj.end %>"/>
+            </div>
+            <div class="input-group col-md-3">
+                <span class="input-group-addon"><i class="icon-flag-checkered"></i></span>
+                <input class="form-control" type="text" name="endDate" placeholder="終了日" value="<%- obj.end %>"/>
             </div>
         </div>
+    </div>
 
-        <div class="space-4"></div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="expiredDate">
-                有効期限
-            </label>
-            <div class="col-sm-9">
-                <input type="text" id="expiredDate" name="expiredDate" placeholder="有効期限" class="col-xs-10 col-sm-2" />
+    <div class="row col-xs-12">
+        <div class="profile-info-name">
+            <i class="icon-jpy"></i>&nbsp;
+            単価
+        </div>
+        <div class="profile-info-value col-xs-12">
+            <div class="input-group col-md-3">
+                <span class="input-group-addon"><i class="icon-circle-arrow-down"></i></span>
+                <input class="form-control" type="text" name="priceTop" placeholder="単価上限" value="<%- obj.end %>"/>
+            </div>
+            <div class="input-group col-md-3">
+                <span class="input-group-addon"><i class="icon-circle-arrow-up"></i></span>
+                <input class="form-control" type="text" name="priceBottom" placeholder="単価下限" value="<%- obj.end %>"/>
             </div>
         </div>
+    </div>
 
-        <div class="space-4"></div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="startDate">
-                作業期間
-            </label>
-            <div class="col-sm-9">
-                <input type="text" id="startDate" name="startDate" placeholder="開始日" class="col-xs-5 col-sm-2" />
-                <input type="text" id="endDate" name="endDate" placeholder="終了日" class="col-xs-5 col-sm-2" />
-            </div>
+    <div class="row col-xs-12">
+        <div class="profile-info-name">
+            <i class="icon-bullhorn"></i>&nbsp;
+            募集人数
         </div>
-
-        <div class="space-4"></div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="priceBottom">
-                単価
-            </label>
-            <div class="col-sm-9">
-                <input type="text" id="priceBottom" name="priceBottom" placeholder="下限" class="col-xs-5 col-sm-1" />
-                <input type="text" id="priceTop" name="priceTop" placeholder="上限" class="col-xs-5 col-sm-1" />
-            </div>
+        <div class="profile-info-value input-group col-xs-12 col-md-2">
+            <span class="input-group-addon"><i class="icon-bullhorn"></i></span>
+            <input class="form-control" type="text" name="recruitNum" placeholder="募集人数" value="<%- obj.start %>"/>
         </div>
+    </div>
 
-        <div class="space-4"></div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="address">
-                作業場所
-            </label>
-            <div class="col-sm-9">
-                <input type="text" id="address" name="address" placeholder="作業場所" class="col-xs-10 col-sm-5" />
-            </div>
+    <div class="row col-xs-12">
+        <div class="profile-info-name">
+            <i class="icon-user"></i>&nbsp;
+            面接
         </div>
+        <div class="profile-info-value input-group col-xs-12 col-md-2">
+            <span class="input-group-addon"><i class="icon-user"></i></span>
+            <input class="form-control" type="text" name="interviewNum" placeholder="面接" value="<%- obj.start %>"/>
+        </div>
+    </div>
 
-        <div class="space-4"></div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="nativesOnly">
-                外国籍可否
-            </label>
-            <div class="col-sm-9">
-                <label>
-                    <input name="switch-field-1" class="ace ace-switch ace-switch-7" type="checkbox" />
-                    <span class="lbl"></span>
+    <div class="row col-xs-12">
+        <div class="profile-info-name">
+            <i class="icon-globe"></i>&nbsp;
+            外国籍可否
+        </div>
+        <div class="profile-info-value col-sm-9">
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-sm btn-success <% if (obj.gender === '可') print('active') %>">
+                    <i class="icon-ok bigger-110"></i>&nbsp;&nbsp;可
+                    <input type="radio" name="gender" value="可" />
                 </label>
-                <!-- <input type="text" id="nativesOnly" name="nativesOnly" placeholder="外国籍可否" class="col-xs-10 col-sm-5" /> -->
+                <label class="btn btn-sm btn-warning <% if (obj.gender === '不可') print('active') %>">
+                    <i class="icon-ban-circle bigger-110"></i>&nbsp;&nbsp;不可
+                    <input type="radio" name="gender" value="不可" />
+                </label>
             </div>
         </div>
+    </div>
 
-        <div class="space-4"></div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="recruitNum">
-                募集人数
-            </label>
-            <div class="col-sm-9">
-                <input type="text" id="recruitNum" name="recruitNum" placeholder="人数" class="col-xs-10 col-sm-1" />
-            </div>
-        </div>
-
-        <div class="space-4"></div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="interviewNum">
-                面接
-            </label>
-            <div class="col-sm-9">
-                <input type="text" id="interviewNum" name="interviewNum" placeholder="面接" class="col-xs-10 col-sm-1" />
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right" for="remark">
-                詳細
-            </label>
-            <div class="col-sm-9">
-                <input type="text" id="remark" name="remark" placeholder="面接" class="col-xs-10 col-sm-5" />
-            </div>
+    <div class="col-xs-12">
+        <div class="profile-info-value input-group">
+            <span class="input-group-addon"><i class="icon-calendar"></i></span>
+            <input class="form-control" type="text" name="remark" placeholder="詳細" value="<%- obj.start %>"/>
         </div>
     </div>
 </div>

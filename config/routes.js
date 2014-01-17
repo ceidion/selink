@@ -67,7 +67,9 @@ module.exports = function(app) {
     // query address
     app.get('/address/:zipcode', checkLoginStatus, address.show);
 
+    // Get StackExcahge Tag Data
     app.post('/stack', checkLoginStatus, tag.create);
+    app.get('/tag', checkLoginStatus, tag.index);
 
 };
 

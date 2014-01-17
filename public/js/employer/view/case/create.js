@@ -81,15 +81,8 @@ define([
                 language: 'ja'
             });
 
-            this.$el.find('input[name="startTime"],input[name="endTime"]').timepicker({
-                minuteStep: 1,
-                showMeridian: false,
-                defaultTime: false
-            });
-
             // enable mask input
             this.$el.find('input[name="startDate"],input[name="endDate"]').mask('9999/99/99');
-            this.$el.find('input[name="startTime"],input[name="endTime"]').mask('99:99');
 
         },
 
