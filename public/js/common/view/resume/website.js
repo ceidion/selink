@@ -75,7 +75,7 @@ define([
             if (!data.webSite)
                 return "個人サイトはクリアしました。";
 
-            return "個人サイトは「" +　data.webSite + "」に更新しました。";
+            return "個人サイトは「" + data.webSite + "」に更新しました。";
         }
 
     });

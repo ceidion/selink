@@ -5,15 +5,13 @@ define([], function() {
         idAttribute: "_id",
 
         validation: {
-            title: {
-                required: true,
-                msg: "イベントのタイトルをご入力ください"
+            name: {
+                maxLength: 50,
+                msg: "最大50文字までご入力ください"
             },
-            startDate: {
-                dateJa: true
-            },
-            endDate: {
-                dateJa: true
+            address: {
+                maxLength: 100,
+                msg: "最大100文字までご入力ください"
             }
         }
     });

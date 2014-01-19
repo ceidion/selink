@@ -6,7 +6,7 @@ define([], function() {
 
         model: Backbone.Model.extend({idAttribute: "_id"}),
 
-        url:  '/tag'
+        url:  '/tags'
     });
 
     return Tags;

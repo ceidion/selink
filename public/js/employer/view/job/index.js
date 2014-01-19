@@ -1,21 +1,37 @@
 define([
-    'text!employer/template/case/index.html',
-], function(template) {
+    'common/view/composite-base',
+    'text!employer/template/job/index.html',
+    'employer/view/job/widget'
+], function(
+    BaseView,
+    template,
+    ItemView
+) {
 
     // PageView is the biggest frame of the application
-    var IndexView = Backbone.Marionette.Layout.extend({
+    var IndexView = BaseView.extend({
 
         // Template
         template: template,
 
+        // icon
+        icon: 'icon-ticket',
+
+        // item view container
+        itemViewContainer: '.job-container',
+
+        // item view
+        itemView: ItemView,
+
+        // max item number
+        itemLimit: 6,
+
         // ui
         ui: {
-            'stack': '#stack'
         },
 
         // Events
         events: {
-            'click #stack': 'getStack'
         },
 
         collectionEvents: {
@@ -23,12 +39,6 @@ define([
             // 'change': 'updateEvent',
             // 'remove': 'removeEvent',
         },
-
-        // Regions
-        regions: {
-        },
-
-        count: 1,
 
         // Initializer
         initialize: function() {
@@ -128,52 +138,6 @@ define([
             var dateClone = new Date(date);
             dateClone.setHours(dateClone.getHours() + 9);
             return dateClone;
-        },
-
-        getStack: function getStack() {
-            var self = this;
-            $.ajax({
-                type: 'GET',
-                url: 'http://api.stackexchange.com/2.1/tags',
-                data: {
-                    pagesize: 100,
-                    page: self.count,
-                    order: 'desc',
-                    sort: 'popular',
-                    site: 'stackoverflow'
-                },
-                // use json format
-                dataType: 'jsonp',
-
-                jsonp: 'jsonp',
-                success: function(data) {
-                    self.saveStack(data);
-                    if (data.has_more) {
-                        self.count++;
-                        console.log(self.count);
-                        setTimeout(self.getStack(), 1000);
-                    }
-                },
-                error: function() {
-                    console.log('suck');
-                }
-            });
-        },
-
-        saveStack: function(data) {
-            $.ajax({
-                type: 'POST',
-                url: '/stack',
-                data: {tag : data.items},
-                // use json format
-                dataType: 'json',
-                success: function(data) {
-
-                },
-                error: function() {
-                    console.log('suck');
-                }
-            });
         }
     });
 

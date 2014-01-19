@@ -40,7 +40,7 @@ define([
         },
 
         successMsg: function(data) {
-            return "性別は「" +　data.gender + "」に更新しました。";
+            return "性別は「" + data.gender + "」に更新しました。";
         }
     });
 

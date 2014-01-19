@@ -58,7 +58,7 @@ define([
         },
 
         successMsg: function(data) {
-            return "国籍は「" +　data.nationality + "」に更新しました。";
+            return "国籍は「" + data.nationality + "」に更新しました。";
         }
 
     });

@@ -1,17 +1,17 @@
 define([
     'common/view/item-base',
-    'text!common/template/resume/nearestSt.html'
+    'text!employer/template/job/price.html'
 ], function(
     BaseView,
     template) {
 
-    var NearestStItem = BaseView.extend({
+    var PriceItem = BaseView.extend({
 
         // template
         template: template,
 
         // icon
-        icon: 'icon-road',
+        icon: 'icon-jpy',
 
         // initializer
         initialize: function() {
@@ -25,9 +25,9 @@ define([
                 'change input': 'updateModel'
             });
 
-            // listen on nearestSt property for save
+            // listen on price property for save
             this.modelEvents = {
-                'change:nearestSt': 'save'
+                'change:price': 'save'
             };
         },
 
@@ -40,7 +40,7 @@ define([
         // reflect user input on model
         updateModel: function() {
 
-            // clear all errors
+            // clear all error
             this.clearError();
 
             // check input value
@@ -56,31 +56,40 @@ define([
             }
         },
 
+        save: function() {
+
+            if (this.model.isNew()) {
+                this.collection.add(this.model.toJSON());
+                // // this.model.save();
+                // console.log(this.model.collection);
+            }
+        },
+
         getData: function() {
             return {
-                nearestSt: this.ui.input.val()
+                price: this.ui.input.val()
             };
         },
 
         renderValue: function(data) {
 
-            if (!data.nearestSt) {
+            if (!data.price) {
                 this.ui.value.html(this.placeholder);
                 return;
             }
 
-            this.ui.value.text(data.nearestSt);
+            this.ui.value.text(data.price);
         },
 
         successMsg: function(data) {
 
-            if (!data.nearestSt)
-                return "最寄駅情報はクリアしました。";
+            if (!data.price)
+                return "メールアドレスはクリアしました。";
 
-            return "最寄駅は「" + data.nearestSt + "」に更新しました。";
+            return "メールアドレスは「" + data.price + "」に更新しました。";
         }
 
     });
 
-    return NearestStItem;
+    return PriceItem;
 });

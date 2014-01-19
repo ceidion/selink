@@ -55,7 +55,7 @@ define([
             if (!data.experience)
                 return "IT経験年数情報はクリアしました。";
 
-            return "IT経験年数は「" +　data.experience + "年」に更新しました。";
+            return "IT経験年数は「" + data.experience + "年」に更新しました。";
         }
 
     });

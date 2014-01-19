@@ -1,18 +1,20 @@
 define([
+    'common/model/job',
     'common/view/topnav/topnav',
     'employer/view/common/sidenav',
     'employer/view/home/page',
     'common/view/resume/resume',
-    'employer/view/case/index',
-    'employer/view/case/create',
+    'employer/view/job/index',
+    'employer/view/job/edit',
     'common/view/timecard/timecard',
 ], function(
+    JobModel,
     TopNavView,
     SideNavView,
     HomeView,
     ResumeView,
-    CaseIndexView,
-    CaseCreateView,
+    JobIndexView,
+    JobEditView,
     TimeCardView
 ) {
 
@@ -60,14 +62,27 @@ define([
             this.app.pageContent.show(this.app.resumeView);
         },
 
-        showCaseIndexView: function() {
-            this.app.caseIndexView = new CaseIndexView();
-            this.app.pageContent.show(this.app.caseIndexView);
+        showJobIndexView: function() {
+            this.app.jobIndexView = new JobIndexView({
+                collection: this.app.jobsModel
+            });
+            this.app.pageContent.show(this.app.jobIndexView);
         },
 
-        showCaseCreateView: function() {
-            this.app.caseCreateView = new CaseCreateView();
-            this.app.pageContent.show(this.app.caseCreateView);
+        showJobCreateView: function() {
+            this.app.jobEditView = new JobEditView({
+                model: new JobModel(),
+                collection: this.app.jobsModel
+            });
+            this.app.pageContent.show(this.app.jobEditView);
+        },
+
+        showJobEditView: function(id) {
+            this.app.jobEditView = new JobEditView({
+                model: this.app.jobsModel.get(id),
+                collection: this.app.jobsModel
+            });
+            this.app.pageContent.show(this.app.jobEditView);
         },
 
         // show time card

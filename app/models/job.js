@@ -8,6 +8,10 @@ var Language = require('./profile/language');
 
 var Job = new Schema({
 
+    // Job Owner
+    owner: {
+        type: Schema.Types.ObjectId
+    },
     // Name
     name: {
         type: String,

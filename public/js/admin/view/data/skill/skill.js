@@ -15,28 +15,38 @@ define([
         // initializer
         initialize: function() {
 
-            // var self = this;
-            // $.ajax({
-            //     type: 'GET',
-            //     url: 'http://api.stackexchange.com/2.1/tags/' + self.model.get('name') + '/wikis',
-            //     data: {
-            //         site: 'stackoverflow'
-            //     },
-            //     // use json format
-            //     dataType: 'jsonp',
+            this.ui = _.extend({}, this.ui, {});
 
-            //     jsonp: 'jsonp',
-            //     success: function(data) {
-            //         self.model.set('wikis', data.items[0].excerpt);
-            //     },
-            //     error: function() {
-            //         console.log('suck');
-            //     }
-            // });
+            this.events = _.extend({}, this.events, {
+                'click .widget-body': 'getWikis'
+            });
+
         },
 
         onRender: function() {
+        },
 
+        getWikis: function() {
+
+            var self = this;
+            $.ajax({
+                type: 'GET',
+                url: 'http://api.stackexchange.com/2.1/tags/' + encodeURIComponent(self.model.get('name')) + '/wikis',
+                data: {
+                    site: 'stackoverflow'
+                },
+                // use json format
+                dataType: 'jsonp',
+
+                jsonp: 'jsonp',
+                success: function(data) {
+                    self.model.set('wikis', data.items[0].excerpt);
+                    self.render();
+                },
+                error: function() {
+                    console.log('suck');
+                }
+            });
 
         },
 

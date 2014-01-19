@@ -128,7 +128,7 @@ define([
                 return "住所情報はクリアしました。";
 
             if (data.zipCode)
-                return "住所は「（〒 " +　data.zipCode + "）" + data.address + "」に更新しました。";
+                return "住所は「（〒 " + data.zipCode + "）" + data.address + "」に更新しました。";
             else
                 return "住所は「" + data.address + "」に更新しました。";
         }

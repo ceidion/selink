@@ -8,7 +8,8 @@ define([], function() {
         // common events
         events: {
             // Switch to edit-mode when the div was clicked
-            'click': 'switchToEditor'
+            'click': 'switchToEditor',
+            'mouseover': 'attention'
         },
 
         // common ui
@@ -98,6 +99,13 @@ define([], function() {
                 .removeClass('tooltip-error').tooltip('destroy')
                 .closest('.form-group').removeClass('has-error')
                 .find('i').removeClass('animated-input-error');
+        },
+
+        attention: function(event) {
+            $(event.target).find('i').addClass('animated swing');
+            $(event.target).find('i').one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
+                $(this).removeClass('animated swing');
+            });
         },
 
         // subclass should provide these methods

@@ -85,7 +85,7 @@ define([
         },
 
         successMsg: function(data) {
-            return "生年月日は「" +　moment(data.birthDay).format('LL') + "」に更新しました。";
+            return "生年月日は「" + moment(data.birthDay).format('LL') + "」に更新しました。";
         }
 
     });

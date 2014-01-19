@@ -100,7 +100,7 @@ define([
                 },
                 titleFormat: {
                     month: 'yyyy年 MMMM',
-                    week: "yyyy年　MMM d日{ '&#8212;'[ MMM] d日}",
+                    week: "yyyy年 MMM d日{ '&#8212;'[ MMM] d日}",
                     day: 'yyyy年 MMM d日 dddd'
                 },
                 monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],

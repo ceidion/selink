@@ -3,7 +3,7 @@ var mongoose = require('mongoose'),
 
 exports.index = function(req, res, next) {
 
-    var query = Tag.find().sort({count:-1}).limit(1000);
+    var query = Tag.find().sort({count:-1}).limit(100);
 
     query.exec(function(err, tags) {
         if(err) next(err);
@@ -25,4 +25,38 @@ exports.create = function(req, res) {
     }
 
     res.send('got it');
+};
+
+exports.update = function(req, res, next) {
+
+    // look up tag info
+    Tag.findById(req.params.id, function(err, tag) {
+        if (err) next(err);
+        else {
+
+            for(var prop in req.body) {
+                tag[prop] = req.body[prop];
+            }
+
+            tag.save(function(err, newTag) {
+                if (err) next(err);
+                else res.send(newTag);
+            });
+        }
+    });
+};
+
+exports.remove = function(req, res, next) {
+
+    // look up tag info
+    Tag.findById(req.params.id, function(err, tag) {
+        if (err) next(err);
+        else {
+
+            tag.remove(function(err, removedTag) {
+                if (err) next(err);
+                else res.send(removedTag);
+            });
+        }
+    });
 };

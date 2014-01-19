@@ -6,7 +6,9 @@ define(['common/model/job'], function(JobModel) {
 
         model: JobModel,
 
-        urlRoot:  '/job'
+        url: function() {
+        	return this.document.url() + '/jobs'
+        }
     });
 
     return Jobs;

@@ -60,11 +60,11 @@ define([
         },
 
         updateMsg: function(data) {
-            return "学歴「" +　data.language + "」を" + data.weight + "ptに更新しました。";
+            return "学歴「" + data.language + "」を" + data.weight + "ptに更新しました。";
         },
 
         removeMsg: function(data) {
-            return "学歴「" +　data.language + "(" + data.weight + "pt)」を削除しました。";
+            return "学歴「" + data.language + "(" + data.weight + "pt)」を削除しました。";
         }
     });
 

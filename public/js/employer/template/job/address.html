@@ -1,0 +1,22 @@
+<div class="profile-info-name">
+    <i class="icon-building"></i>&nbsp;
+    作業場所
+</div>
+<div class="profile-info-value">
+    <div class="sl-value">
+        <%
+            if (obj.address)
+                print(obj.address);
+            else
+                print('<span class="text-muted">クリックして編集</span>');
+        %>
+    </div>
+    <div class="sl-editor row form-group">
+        <div class="col-sm-12 input-group">
+            <span class="input-group-addon">
+                <i class="icon-building bigger-110"></i>
+            </span>
+            <input type="text" class="col-xs-12" placeholder="作業場所" name="address" value="<%- obj.address %>">
+        </div>
+    </div>
+</div>

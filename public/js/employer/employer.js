@@ -2,12 +2,14 @@ define([
     'common/model/user',
     'common/model/profile',
     'common/collection/events',
+    'common/collection/jobs',
     'employer/router/router',
     'employer/controller/controller'
 ], function(
     UserModel,
     ProfileModel,
     EventsModel,
+    JobsModel,
     Router,
     Controller
 ) {
@@ -86,18 +88,26 @@ define([
                 self.eventsModel = new EventsModel(self.userModel.get('events'));
                 self.eventsModel.document = self.userModel;
 
-                // make controller
-                var controller = new Controller({
-                    app: self
+                self.jobsModel = new JobsModel();
+                self.jobsModel.document = self.userModel;
+                self.jobsModel.fetch({
+                    success: function() {
+                        
+                        // make controller
+                        var controller = new Controller({
+                            app: self
+                        });
+
+                        // setup router
+                        var router = new Router({
+                            controller: controller
+                        });
+
+                        // start history
+                        Backbone.history.start();
+                    }
                 });
 
-                // setup router
-                var router = new Router({
-                    controller: controller
-                });
-
-                // start history
-                Backbone.history.start();
             },
             error: function() {
 

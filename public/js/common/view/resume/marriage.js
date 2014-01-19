@@ -40,7 +40,7 @@ define([
         },
 
         successMsg: function(data) {
-            return "婚姻状況は「" +　data.marriage + "」に更新しました。";
+            return "婚姻状況は「" + data.marriage + "」に更新しました。";
         }
     });
 

@@ -5,8 +5,9 @@ define([], function() {
         appRoutes: {
             'home': 'showHomeView',
             'resume': 'showResumeView',
-            'caseIndex': 'showCaseIndexView',
-            'caseCreate': 'showCaseCreateView',
+            'jobIndex': 'showJobIndexView',
+            'jobCreate': 'showJobCreateView',
+            'jobEdit/:id': 'showJobEditView',
             'timecard': 'showTimeCardView',
         }
     });

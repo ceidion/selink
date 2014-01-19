@@ -1,17 +1,17 @@
 define([
     'common/view/item-base',
-    'text!common/template/resume/nearestSt.html'
+    'text!employer/template/job/recruit.html'
 ], function(
     BaseView,
     template) {
 
-    var NearestStItem = BaseView.extend({
+    var RecruitItem = BaseView.extend({
 
         // template
         template: template,
 
         // icon
-        icon: 'icon-road',
+        icon: 'icon-bullhorn',
 
         // initializer
         initialize: function() {
@@ -25,9 +25,9 @@ define([
                 'change input': 'updateModel'
             });
 
-            // listen on nearestSt property for save
+            // listen on recruitNum property for save
             this.modelEvents = {
-                'change:nearestSt': 'save'
+                'change:recruitNum': 'save'
             };
         },
 
@@ -40,7 +40,7 @@ define([
         // reflect user input on model
         updateModel: function() {
 
-            // clear all errors
+            // clear all error
             this.clearError();
 
             // check input value
@@ -56,31 +56,40 @@ define([
             }
         },
 
+        save: function() {
+
+            if (this.model.isNew()) {
+                this.collection.add(this.model.toJSON());
+                // // this.model.save();
+                // console.log(this.model.collection);
+            }
+        },
+
         getData: function() {
             return {
-                nearestSt: this.ui.input.val()
+                recruitNum: this.ui.input.val()
             };
         },
 
         renderValue: function(data) {
 
-            if (!data.nearestSt) {
+            if (!data.recruitNum) {
                 this.ui.value.html(this.placeholder);
                 return;
             }
 
-            this.ui.value.text(data.nearestSt);
+            this.ui.value.text(data.recruitNum);
         },
 
         successMsg: function(data) {
 
-            if (!data.nearestSt)
-                return "最寄駅情報はクリアしました。";
+            if (!data.recruitNum)
+                return "メールアドレスはクリアしました。";
 
-            return "最寄駅は「" + data.nearestSt + "」に更新しました。";
+            return "メールアドレスは「" + data.recruitNum + "」に更新しました。";
         }
 
     });
 
-    return NearestStItem;
+    return RecruitItem;
 });

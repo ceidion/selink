@@ -1,17 +1,17 @@
 define([
     'common/view/item-base',
-    'text!common/template/resume/nearestSt.html'
+    'text!employer/template/job/expiredDate.html'
 ], function(
     BaseView,
     template) {
 
-    var NearestStItem = BaseView.extend({
+    var ExpiredDateItem = BaseView.extend({
 
         // template
         template: template,
 
         // icon
-        icon: 'icon-road',
+        icon: 'icon-time',
 
         // initializer
         initialize: function() {
@@ -25,16 +25,34 @@ define([
                 'change input': 'updateModel'
             });
 
-            // listen on nearestSt property for save
+            // listen on expiredDate property for save
             this.modelEvents = {
-                'change:nearestSt': 'save'
+                'change:expiredDate': 'save'
             };
         },
 
         // after render
         onRender: function() {
+
+            var self = this;
+
+            // append data picker
+            this.ui.input.datepicker({
+                autoclose: true,
+                startView: 2,
+                startDate: new Date(),
+                language: 'ja'
+            });
+
+            // enable mask input
+            this.ui.input.mask('9999/99/99');
+
             // bind validator
             Backbone.Validation.bind(this);
+        },
+
+        onBeforeClose: function() {
+            this.ui.input.datepicker('remove');
         },
 
         // reflect user input on model
@@ -56,31 +74,28 @@ define([
             }
         },
 
+        save: function() {
+
+            if (this.model.isNew()) {
+                this.collection.add(this.model);
+            }
+        },
+
         getData: function() {
             return {
-                nearestSt: this.ui.input.val()
+                expiredDate: moment(this.ui.input.val()).toJSON()
             };
         },
 
         renderValue: function(data) {
-
-            if (!data.nearestSt) {
-                this.ui.value.html(this.placeholder);
-                return;
-            }
-
-            this.ui.value.text(data.nearestSt);
+            this.ui.value.text(moment(data.expiredDate).format('LL'));
         },
 
         successMsg: function(data) {
-
-            if (!data.nearestSt)
-                return "最寄駅情報はクリアしました。";
-
-            return "最寄駅は「" + data.nearestSt + "」に更新しました。";
+            return "生年月日は「" + moment(data.expiredDate).format('LL') + "」に更新しました。";
         }
 
     });
 
-    return NearestStItem;
+    return ExpiredDateItem;
 });

@@ -1,17 +1,17 @@
 define([
     'common/view/item-base',
-    'text!common/template/resume/nearestSt.html'
+    'text!employer/template/job/address.html'
 ], function(
     BaseView,
     template) {
 
-    var NearestStItem = BaseView.extend({
+    var AddressItem = BaseView.extend({
 
         // template
         template: template,
 
         // icon
-        icon: 'icon-road',
+        icon: 'icon-building',
 
         // initializer
         initialize: function() {
@@ -25,9 +25,9 @@ define([
                 'change input': 'updateModel'
             });
 
-            // listen on nearestSt property for save
+            // listen on address property for save
             this.modelEvents = {
-                'change:nearestSt': 'save'
+                'change:address': 'save'
             };
         },
 
@@ -40,7 +40,7 @@ define([
         // reflect user input on model
         updateModel: function() {
 
-            // clear all errors
+            // clear all error
             this.clearError();
 
             // check input value
@@ -53,34 +53,42 @@ define([
             } else {
                 // set value on model
                 this.model.set(this.getData());
+                this.renderValue(this.getData());
+            }
+        },
+
+        save: function() {
+
+            if (this.model.isNew()) {
+                this.collection.add(this.model);
             }
         },
 
         getData: function() {
             return {
-                nearestSt: this.ui.input.val()
+                address: this.ui.input.val()
             };
         },
 
         renderValue: function(data) {
 
-            if (!data.nearestSt) {
+            if (!data.address) {
                 this.ui.value.html(this.placeholder);
                 return;
             }
 
-            this.ui.value.text(data.nearestSt);
+            this.ui.value.text(data.address);
         },
 
         successMsg: function(data) {
 
-            if (!data.nearestSt)
-                return "最寄駅情報はクリアしました。";
+            if (!data.address)
+                return "メールアドレスはクリアしました。";
 
-            return "最寄駅は「" + data.nearestSt + "」に更新しました。";
+            return "メールアドレスは「" + data.address + "」に更新しました。";
         }
 
     });
 
-    return NearestStItem;
+    return AddressItem;
 });

@@ -55,7 +55,7 @@ define([
             if (!data.telNo)
                 return "電話番号はクリアしました。";
 
-            return "電話番号は「" +　data.telNo + "」に更新しました。";
+            return "電話番号は「" + data.telNo + "」に更新しました。";
         }
 
     });

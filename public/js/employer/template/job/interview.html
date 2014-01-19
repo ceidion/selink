@@ -1,0 +1,22 @@
+<div class="profile-info-name">
+    <i class="icon-user"></i>&nbsp;
+    面接回数
+</div>
+<div class="profile-info-value">
+    <div class="sl-value">
+        <%
+            if (obj.interviewNum)
+                print(obj.interviewNum);
+            else
+                print('<span class="text-muted">クリックして編集</span>');
+        %>
+    </div>
+    <div class="sl-editor row form-group">
+        <div class="col-sm-12 input-group">
+            <span class="input-group-addon">
+                <i class="icon-user bigger-110"></i>
+            </span>
+            <input type="text" class="col-xs-12" placeholder="面接回数" name="interviewNum" value="<%- obj.interviewNum %>">
+        </div>
+    </div>
+</div>

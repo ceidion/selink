@@ -9,6 +9,10 @@ var Tag = new Schema({
     },
     count: {
         type: Number,
+    },
+    wikis: {
+        type: String,
+        trim: true  
     }
 });
 

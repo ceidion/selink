@@ -61,15 +61,26 @@ module.exports = function(app) {
     // Update events (remove event)
     app.delete('/user/:id/events/:eventid', checkLoginStatus, user.removeEvent);
 
+    // Get user's jobs (employer only)
+    app.get('/user/:id/jobs', checkLoginStatus, job.index);
     // Update jobs (create new job)
-    app.post('/job', checkLoginStatus, job.create);
+    app.post('/user/:id/jobs', checkLoginStatus, job.create);
+    // Update jobs (update job)
+    app.patch('/user/:id/jobs/:jobid', checkLoginStatus, job.update);
+    // Update jobs (remove job)
+    app.delete('/user/:id/jobs/:jobid', checkLoginStatus, job.remove);
 
     // query address
     app.get('/address/:zipcode', checkLoginStatus, address.show);
 
     // Get StackExcahge Tag Data
     app.post('/stack', checkLoginStatus, tag.create);
-    app.get('/tag', checkLoginStatus, tag.index);
+    // Show tags
+    app.get('/tags', checkLoginStatus, tag.index);
+    // Update tags (update tag)
+    app.patch('/tags/:id', checkLoginStatus, tag.update);
+    // Update tags (remove tag)
+    app.delete('/tags/:id', checkLoginStatus, tag.remove);
 
 };
 

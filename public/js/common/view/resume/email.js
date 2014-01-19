@@ -77,7 +77,7 @@ define([
             if (!data.email)
                 return "メールアドレスはクリアしました。";
 
-            return "メールアドレスは「" +　data.email + "」に更新しました。";
+            return "メールアドレスは「" + data.email + "」に更新しました。";
         }
 
     });

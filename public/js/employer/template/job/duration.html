@@ -1,0 +1,28 @@
+<div class="profile-info-name">
+    <i class="icon-calendar"></i>&nbsp;
+    作業期間
+</div>
+<div class="profile-info-value">
+    <div class="sl-value">
+        <%
+            if (obj.startDate)
+                print(obj.startDate);
+            else
+                print('<span class="text-muted">クリックして編集</span>');
+        %>
+    </div>
+    <div class="sl-editor row form-group">
+        <div class="col-sm-12 col-md-4 input-group">
+            <span class="input-group-addon">
+                <i class="icon-flag-alt bigger-110"></i>
+            </span>
+            <input type="text" class="input-small" placeholder="開始日" name="startDate" value="<%- obj.startDate %>">
+        </div>
+        <div class="col-sm-12 col-md-4 input-group">
+            <span class="input-group-addon">
+                <i class="icon-flag-checkered bigger-110"></i>
+            </span>
+            <input type="text" class="input-small" placeholder="終了日" name="endDate" value="<%- obj.endDate %>">
+        </div>
+    </div>
+</div>

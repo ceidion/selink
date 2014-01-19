@@ -60,11 +60,11 @@ define([
         },
 
         updateMsg: function(data) {
-            return "資格「" +　data.language + "」を" + data.weight + "ptに更新しました。";
+            return "資格「" + data.language + "」を" + data.weight + "ptに更新しました。";
         },
 
         removeMsg: function(data) {
-            return "資格「" +　data.language + "(" + data.weight + "pt)」を削除しました。";
+            return "資格「" + data.language + "(" + data.weight + "pt)」を削除しました。";
         }
     });
 

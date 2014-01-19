@@ -202,7 +202,7 @@ define([
 
                 $el.removeClass('sl-editor-open');
             });
-        },
+        }
     });
 
     return ResumeView;
