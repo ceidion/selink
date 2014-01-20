@@ -1,3 +1,4 @@
+var util = require('util');
 var mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Job = mongoose.model('Job');
@@ -13,6 +14,10 @@ exports.index = function(req, res, next) {
 };
 
 exports.create = function(req, res, next) {
+
+    console.log("request body: " + util.inspect(req.body));
+    console.log("request params: " + util.inspect(req.params));
+    console.log("request attach: " + util.inspect(req.files));
 
     // create job object
     var job = new Job(req.body, false);
@@ -46,7 +51,7 @@ exports.update = function(req, res, next) {
 
             job.save(function(err, newJob) {
                 if (err) next(err);
-                else res.send(newJob);
+                else res.json(newJob);
             });
         }
     });
@@ -61,7 +66,7 @@ exports.remove = function(req, res, next) {
 
             job.remove(function(err, removedJob) {
                 if (err) next(err);
-                else res.send(removedJob);
+                else res.json(removedJob);
             });
         }
     });

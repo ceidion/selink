@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-bullhorn',
-
         // initializer
         initialize: function() {
 
@@ -79,14 +76,6 @@ define([
             }
 
             this.ui.value.text(data.recruitNum);
-        },
-
-        successMsg: function(data) {
-
-            if (!data.recruitNum)
-                return "メールアドレスはクリアしました。";
-
-            return "メールアドレスは「" + data.recruitNum + "」に更新しました。";
         }
 
     });

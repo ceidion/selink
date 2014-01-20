@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-edit',
-
         // initializer
         initialize: function() {
 
@@ -54,13 +51,6 @@ define([
             } else {
                 // set value on model
                 this.model.set(this.getData());
-                this.renderValue(this.getData());
-            }
-        },
-
-        save: function() {
-            if (this.model.isNew()) {
-                this.collection.add(this.model);
             }
         },
 
@@ -78,14 +68,6 @@ define([
             }
 
             this.ui.nameValue.text(data.name);
-        },
-
-        successMsg: function(data) {
-
-            if (!data.name)
-                return "メールアドレスはクリアしました。";
-
-            return "メールアドレスは「" + data.name + "」に更新しました。";
         }
 
     });

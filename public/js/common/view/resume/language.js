@@ -62,7 +62,7 @@ define([
                         sat = this.startAngle,     // Start angle
                         eat = sat + a;             // End angle
 
-                    c.lineWidth = 12;//this.lineWidth;
+                    c.lineWidth = 10;//this.lineWidth;
 
                     this.o.cursor
                         && (sat = eat - this.cursorExt)
@@ -105,11 +105,12 @@ define([
 
             var self = this;
 
-            this.$el.addClass('animated bounceOut');
-            this.$el.one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
-                $(this).removeClass('animated bounceOut');
-                self.model.collection.remove(self.model);
-            });
+            this.$el
+                .addClass('animated bounceOut')
+                .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
+                    $(this).removeClass('animated bounceOut');
+                    self.model.collection.remove(self.model);
+                });
         }
     });
 

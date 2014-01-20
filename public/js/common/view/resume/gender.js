@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-leaf',
-
         // initializer
         initialize: function() {
             this.events = _.extend({}, this.events, {
@@ -37,11 +34,8 @@ define([
 
         renderValue: function(data) {
             this.ui.value.text(data.gender);
-        },
-
-        successMsg: function(data) {
-            return "性別は「" + data.gender + "」に更新しました。";
         }
+
     });
 
     return GenderItem;

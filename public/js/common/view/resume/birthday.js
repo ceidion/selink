@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-calendar',
-
         // initializer
         initialize: function() {
 
@@ -82,10 +79,6 @@ define([
 
         renderValue: function(data) {
             this.ui.value.text(moment(data.birthDay).format('LL'));
-        },
-
-        successMsg: function(data) {
-            return "生年月日は「" + moment(data.birthDay).format('LL') + "」に更新しました。";
         }
 
     });

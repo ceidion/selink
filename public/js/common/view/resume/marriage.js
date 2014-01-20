@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-heart',
-
         // initializer
         initialize: function() {
             this.events = _.extend({}, this.events, {
@@ -37,11 +34,8 @@ define([
 
         renderValue: function(data) {
             this.ui.value.text(data.marriage);
-        },
-
-        successMsg: function(data) {
-            return "婚姻状況は「" + data.marriage + "」に更新しました。";
         }
+
     });
 
     return MarriageItem;

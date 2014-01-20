@@ -22,7 +22,7 @@ define([
         sidenavArea: '#sidenav-area'
     });
 
-    // before application initialization, config every plug-ins
+    // before application initialization, config plug-ins
     engineer.on('initialize:before', function(options) {
 
         // THIS IS VITAL, change the default behavior of views load template,
@@ -75,14 +75,20 @@ define([
 
         var self = this;
 
+        // create user model
         this.userModel = new UserModel({
             _id: $('#info-base').data('id')
         });
 
+        // populate user model
         this.userModel.fetch({
+
+            // on success
             success: function() {
 
-                self.profileModel = new ProfileModel(self.userModel.get('profile'));
+                // create profile model from user model
+                self.profileModel = new ProfileModel(self.userModel.get('profile'), {parse: true});
+                // create events model(collection) from user model
                 self.eventsModel = new EventsModel(self.userModel.get('events'));
                 self.eventsModel.document = self.userModel;
 
@@ -99,8 +105,10 @@ define([
                 // start history
                 Backbone.history.start();
             },
-            error: function() {
 
+            // on error
+            error: function() {
+                // show the error to user
             }
         });
     });

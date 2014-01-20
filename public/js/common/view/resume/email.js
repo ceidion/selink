@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-envelope-alt',
-
         // initializer
         initialize: function() {
 
@@ -70,14 +67,6 @@ define([
             }
 
             this.ui.value.text(data.email);
-        },
-
-        successMsg: function(data) {
-
-            if (!data.email)
-                return "メールアドレスはクリアしました。";
-
-            return "メールアドレスは「" + data.email + "」に更新しました。";
         }
 
     });

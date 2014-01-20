@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-globe',
-
         // initializer
         initialize: function() {
 
@@ -68,14 +65,6 @@ define([
             }
 
             this.ui.value.text(data.webSite);
-        },
-
-        successMsg: function(data) {
-
-            if (!data.webSite)
-                return "個人サイトはクリアしました。";
-
-            return "個人サイトは「" + data.webSite + "」に更新しました。";
         }
 
     });

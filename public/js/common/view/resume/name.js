@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-user',
-
         placeholder: '氏名',
 
         // initializer
@@ -74,15 +71,8 @@ define([
             }
 
             this.ui.value.text(data.firstName + " " + data.lastName);
-        },
-
-        successMsg: function(data) {
-
-            if (!data.firstName && !data.lastName)
-                return "氏名はクリアしました。";
-
-            return "氏名は「" + data.firstName + " " + data.lastName + "」に更新しました。";
         }
+
     });
 
     return NameEditor;

@@ -1,14 +1,18 @@
 <div class="profile-info-name">
-    <i class="icon-jpy"></i>&nbsp;
+    <i class="icon-jpy sl-icon"></i>&nbsp;
     単価
 </div>
 <div class="profile-info-value">
     <div class="sl-value">
         <%
-            if (obj.priceTop)
-                print(obj.priceTop);
-            else
-                print('<span class="text-muted">クリックして編集</span>');
+        if (obj.priceTop && !obj.priceBottom)
+            print("〜" + obj.priceTop);
+        else if (!obj.priceTop && obj.priceBottom)
+            print(obj.priceBottom + "〜");
+        else if (obj.priceTop && obj.priceBottom)
+            print(obj.priceBottom + "〜" + obj.priceTop);
+        else
+            print('<span class="text-muted">クリックして編集</span>');
         %>
     </div>
     <div class="sl-editor row form-group">
@@ -16,13 +20,13 @@
             <span class="input-group-addon">
                 <i class="icon-circle-arrow-up bigger-110"></i>
             </span>
-            <input type="text" class="input-small" placeholder="作業下限" name="priceTop" value="<%- obj.priceTop %>">
+            <input type="text" class="input-small" placeholder="下限" name="priceBottom" value="<%- obj.priceBottom %>">
         </div>
         <div class="col-sm-12 col-md-4 input-group">
             <span class="input-group-addon">
                 <i class="icon-circle-arrow-down bigger-110"></i>
             </span>
-            <input type="text" class="input-small" placeholder="作業上限" name="priceTop" value="<%- obj.priceTop %>">
+            <input type="text" class="input-small" placeholder="上限" name="priceTop" value="<%- obj.priceTop %>">
         </div>
     </div>
 </div>

@@ -19,9 +19,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-flag',
-
         // initializer
         initialize: function() {
 
@@ -55,10 +52,6 @@ define([
 
         renderValue: function(data) {
             this.ui.value.text(data.nationality);
-        },
-
-        successMsg: function(data) {
-            return "国籍は「" + data.nationality + "」に更新しました。";
         }
 
     });

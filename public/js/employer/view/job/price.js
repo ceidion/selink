@@ -10,14 +10,12 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-jpy',
-
         // initializer
         initialize: function() {
 
             this.ui = _.extend({}, this.ui, {
-                'input': 'input'
+                'priceTop': 'input[name="priceTop"]',
+                'priceBottom': 'input[name="priceBottom"]'
             });
 
             // update model when input value changed
@@ -27,7 +25,8 @@ define([
 
             // listen on price property for save
             this.modelEvents = {
-                'change:price': 'save'
+                'change:priceTop': 'save',
+                'change:priceBottom': 'save'
             };
         },
 
@@ -56,37 +55,31 @@ define([
             }
         },
 
-        save: function() {
-
-            if (this.model.isNew()) {
-                this.collection.add(this.model.toJSON());
-                // // this.model.save();
-                // console.log(this.model.collection);
-            }
-        },
-
         getData: function() {
-            return {
-                price: this.ui.input.val()
-            };
+
+            var data = {};
+
+            if (this.ui.priceTop.val()) {
+                data.priceTop = this.ui.priceTop.val();
+            }
+
+            if (this.ui.priceBottom.val()) {
+                data.priceBottom = this.ui.priceBottom.val();
+            }
+
+            return data;
         },
 
         renderValue: function(data) {
 
-            if (!data.price) {
+            if (data.priceTop && !data.priceBottom)
+                this.ui.value.text("〜" + data.priceTop);
+            else if (!data.priceTop && data.priceBottom)
+                this.ui.value.text(data.priceBottom + "〜");
+            else if (data.priceTop && data.priceBottom)
+                this.ui.value.text(data.priceBottom + "〜" + data.priceTop);
+            else
                 this.ui.value.html(this.placeholder);
-                return;
-            }
-
-            this.ui.value.text(data.price);
-        },
-
-        successMsg: function(data) {
-
-            if (!data.price)
-                return "メールアドレスはクリアしました。";
-
-            return "メールアドレスは「" + data.price + "」に更新しました。";
         }
 
     });

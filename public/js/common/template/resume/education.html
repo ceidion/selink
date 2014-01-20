@@ -1,14 +1,14 @@
 <div class="sl-value">
     <blockquote>
         <p>
-            <i class="icon-book bigger-110 green"></i>&nbsp;
-            <span id="school-value">                
+            <i class="icon-book sl-icon bigger-110 green"></i>&nbsp;
+            <span id="school-value">
             <%
                 if (obj.school) print(obj.school);
                 else print('<span class="text-muted">学校名称</span>');
             %>
             </span>
-            <span id="major-value">                
+            <span id="major-value">
             <%
                 if (obj.major) print('<span class="label label-sm label-success arrowed arrowed-right">' + obj.major + '</span>');
             %>
@@ -16,13 +16,13 @@
         </p>
         <small id="duration-value">
             <%
-                if (obj.startDate && !obj.endDate) 
+                if (obj.startDate && !obj.endDate)
                     print(obj.startDateDisplay + "〜");
-                else if (!obj.startDate && obj.endDate) 
+                else if (!obj.startDate && obj.endDate)
                     print("〜" + obj.endDateDisplay);
-                else if (obj.startDate && obj.endDate) 
+                else if (obj.startDate && obj.endDate)
                     print(obj.startDateDisplay + "〜" + obj.endDateDisplay);
-                else 
+                else
                     print('<span class="text-muted">未入力</span>');
             %>
         </small>

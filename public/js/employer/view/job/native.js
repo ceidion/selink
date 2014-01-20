@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-globe',
-
         // initializer
         initialize: function() {
 
@@ -79,14 +76,6 @@ define([
             }
 
             this.ui.value.text(data.nativeOnly);
-        },
-
-        successMsg: function(data) {
-
-            if (!data.nativeOnly)
-                return "メールアドレスはクリアしました。";
-
-            return "メールアドレスは「" + data.nativeOnly + "」に更新しました。";
         }
 
     });

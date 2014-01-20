@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-home',
-
         // initializer
         initialize: function() {
 
@@ -120,17 +117,6 @@ define([
                 this.ui.value.text("（〒 " + data.zipCode + "）" + data.address);
             else
                 this.ui.value.text(data.address);
-        },
-
-        successMsg: function(data) {
-
-            if (!data.zipCode && !data.address)
-                return "住所情報はクリアしました。";
-
-            if (data.zipCode)
-                return "住所は「（〒 " + data.zipCode + "）" + data.address + "」に更新しました。";
-            else
-                return "住所は「" + data.address + "」に更新しました。";
         }
 
     });

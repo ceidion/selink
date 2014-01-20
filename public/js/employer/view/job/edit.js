@@ -44,23 +44,17 @@ define([
             remarkRegion: '#remark-item',
         },
 
-        collectionEvents: {
-            'add': 'createJob',
-            'change': 'updateJob',
-            // 'remove': 'removeJob',
-        },
-
         // initializer
         initialize: function() {
-            this.nameItem = new NameView({model: this.model, collection: this.collection});
-            this.addressItem = new AddressView({model: this.model, collection: this.collection});
-            this.expiredDateItem = new ExpiredDateView({model: this.model, collection: this.collection});
-            this.durationItem = new DurationView({model: this.model, collection: this.collection});
-            this.priceItem = new PriceView({model: this.model, collection: this.collection});
-            this.recruitItem = new RecruitView({model: this.model, collection: this.collection});
-            this.interviewItem = new InterviewView({model: this.model, collection: this.collection});
-            this.nativeItem = new NativeView({model: this.model, collection: this.collection});
-            this.remarkItem = new RemarkView({model: this.model, collection: this.collection});
+            this.nameItem = new NameView({model: this.model});
+            this.addressItem = new AddressView({model: this.model});
+            this.expiredDateItem = new ExpiredDateView({model: this.model});
+            this.durationItem = new DurationView({model: this.model});
+            this.priceItem = new PriceView({model: this.model});
+            this.recruitItem = new RecruitView({model: this.model});
+            this.interviewItem = new InterviewView({model: this.model});
+            this.nativeItem = new NativeView({model: this.model});
+            this.remarkItem = new RemarkView({model: this.model});
         },
 
         // after render
@@ -74,68 +68,6 @@ define([
             this.interviewRegion.show(this.interviewItem);
             this.nativeRegion.show(this.nativeItem);
             this.remarkRegion.show(this.remarkItem);
-        },
-
-        createJob: function(model) {
-
-            var self = this;
-
-            // Save the model
-            model.save(null , {
-
-                // if save success
-                success: function(model, response, options) {
-
-                },
-
-                // if other errors happend
-                error: function(model, xhr, options) {
-
-                    var error = $.parseJSON(xhr.responseText);
-
-                    $.gritter.add({
-                        title: error.title,
-                        text: error.msg,
-                        sticky: true,
-                        class_name: 'gritter-error gritter-center',
-                    });
-                },
-
-                // use patch
-                patch: true
-            });
-        },
-
-        updateJob: function(model) {
-
-            if (model.isNew()) return;
-
-            var self = this;
-
-            // Save the model
-            model.save(null , {
-
-                // if save success
-                success: function(model, response, options) {
-
-                },
-
-                // if other errors happend
-                error: function(model, xhr, options) {
-
-                    var error = $.parseJSON(xhr.responseText);
-
-                    $.gritter.add({
-                        title: error.title,
-                        text: error.msg,
-                        sticky: true,
-                        class_name: 'gritter-error gritter-center',
-                    });
-                },
-
-                // use patch
-                patch: true
-            });
         },
 
         // resume view handle the click event

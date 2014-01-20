@@ -5,7 +5,7 @@
 .sl-editable .form-group{margin-bottom:0px}
 .sl-editable .sl-editor{display:none}.sl-editable .sl-editor input{line-height:normal}
 .label{line-height:1.5;margin-left:15px;padding-left:7px;padding-right:7px}
-.badge{top:-2px !important;padding-top:2px;padding-bottom:1px}
+.badge{top:-2px !important;padding-top:3px;padding-bottom:1px}
 #sl-basic-info .sl-editable{min-height:48px}#sl-basic-info .sl-editable .profile-info-name,#sl-basic-info .sl-editable .sl-value{line-height:33px}
 .ace-thumbnails>li{border:0px;float:none}
 #zipCodeArea{margin-bottom:10px}

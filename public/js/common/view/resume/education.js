@@ -95,11 +95,12 @@ define([
 
             var self = this;
 
-            this.$el.addClass('animated bounceOut');
-            this.$el.one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
-                $(this).removeClass('animated bounceOut');
-                self.model.collection.remove(self.model);
-            });
+            this.$el
+                .addClass('animated bounceOut')
+                .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
+                    $(this).removeClass('animated bounceOut');
+                    self.model.collection.remove(self.model);
+                });
         },
 
         getData: function() {

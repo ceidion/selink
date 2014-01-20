@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-suitcase',
-
         // initializer
         initialize: function() {
 
@@ -48,14 +45,6 @@ define([
             }
 
             this.ui.value.text(data.experience + "年");
-        },
-
-        successMsg: function(data) {
-
-            if (!data.experience)
-                return "IT経験年数情報はクリアしました。";
-
-            return "IT経験年数は「" + data.experience + "年」に更新しました。";
         }
 
     });

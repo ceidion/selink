@@ -1,12 +1,12 @@
 <div class="profile-info-name">
-    <i class="icon-time"></i>&nbsp;
+    <i class="icon-time sl-icon"></i>&nbsp;
     有効期限
 </div>
 <div class="profile-info-value">
     <div class="sl-value">
         <%
             if (obj.expiredDate)
-                print(obj.expiredDate);
+                print(obj.expiredDateDisplay);
             else
                 print('<span class="text-muted">クリックして編集</span>');
         %>
@@ -16,7 +16,7 @@
             <span class="input-group-addon">
                 <i class="icon-time bigger-110"></i>
             </span>
-            <input type="text" class="input-medium" placeholder="yyyy/mm/dd" name="expiredDate" value="<%- obj.expiredDate %>">
+            <input type="text" class="input-medium" placeholder="yyyy/mm/dd" name="expiredDate" value="<%- obj.expiredDateInput %>">
         </div>
     </div>
 </div>

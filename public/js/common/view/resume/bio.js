@@ -13,9 +13,6 @@ define([
         // for dnd add class here
         className: 'widget-box transparent',
 
-        // icon
-        icon: 'icon-quote-left',
-
         placeholder: '<div class="text-muted bigger-125 center">登録していません</div>',
 
         // initializer
@@ -26,7 +23,6 @@ define([
             });
 
             this.events = _.extend({}, this.events, {
-                'mouseover .widget-header': 'attention',
                 'focusout .sl-editor': 'save'
             });
         },
@@ -71,13 +67,6 @@ define([
             }).prev().addClass('wysiwyg-style3');
         },
 
-        attention: function(event) {
-            $(event.target).find('i').addClass('animated swing');
-            $(event.target).find('i').one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
-                $(this).removeClass('animated swing');
-            });
-        },
-
         getData: function() {
             return {
                 bio: this.$el.find('.wysiwyg-editor').html()
@@ -92,14 +81,6 @@ define([
             }
 
             this.ui.value.empty().html(data.bio);
-        },
-
-        successMsg: function(data) {
-
-            if (!data.bio)
-                return "自己紹介はクリアしました。";
-
-            return "自己紹介は更新しました。";
         }
 
     });

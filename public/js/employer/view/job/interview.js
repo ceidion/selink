@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-building',
-
         // initializer
         initialize: function() {
 
@@ -79,14 +76,6 @@ define([
             }
 
             this.ui.value.text(data.interviewNum);
-        },
-
-        successMsg: function(data) {
-
-            if (!data.interviewNum)
-                return "メールアドレスはクリアしました。";
-
-            return "メールアドレスは「" + data.interviewNum + "」に更新しました。";
         }
 
     });

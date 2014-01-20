@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-calendar',
-
         // initializer
         initialize: function() {
 
@@ -78,26 +75,33 @@ define([
             }
         },
 
-        save: function() {
-
-            if (this.model.isNew()) {
-                this.collection.add(this.model);
-            }
-        },
-
         getData: function() {
-            return {
-                startDate: moment(this.ui.startDate.val()).toJSON(),
-                endDate: moment(this.ui.endDate.val()).toJSON()
-            };
+
+            var data = {},
+                startDateInput = this.ui.startDate.val(),
+                endDateInput = this.ui.endDate.val();
+
+            if (startDateInput) {
+                data.startDate = moment(startDateInput).toJSON();
+            }
+
+            if (endDateInput) {
+                data.endDate = moment(endDateInput).toJSON();
+            }
+
+            return data;
         },
 
         renderValue: function(data) {
-            this.ui.value.text(moment(data.startDate).format('LL'));
-        },
 
-        successMsg: function(data) {
-            return "生年月日は「" + moment(data.startDate).format('LL') + "」に更新しました。";
+            if (data.startDate && !data.endDate)
+                this.ui.value.text(moment(data.startDate).format('LL') + "〜");
+            else if (!data.startDate && data.endDate)
+                this.ui.value.text("〜" + moment(data.endDate).format('LL'));
+            else if (data.startDate && data.endDate)
+                this.ui.value.text(moment(data.startDate).format('LL') + "〜" + moment(data.endDate).format('LL'));
+            else
+                this.ui.value.html(this.placeholder);
         }
 
     });

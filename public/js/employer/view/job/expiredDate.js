@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-time',
-
         // initializer
         initialize: function() {
 
@@ -74,13 +71,6 @@ define([
             }
         },
 
-        save: function() {
-
-            if (this.model.isNew()) {
-                this.collection.add(this.model);
-            }
-        },
-
         getData: function() {
             return {
                 expiredDate: moment(this.ui.input.val()).toJSON()
@@ -89,10 +79,6 @@ define([
 
         renderValue: function(data) {
             this.ui.value.text(moment(data.expiredDate).format('LL'));
-        },
-
-        successMsg: function(data) {
-            return "生年月日は「" + moment(data.expiredDate).format('LL') + "」に更新しました。";
         }
 
     });

@@ -82,7 +82,7 @@ define([
         this.userModel.fetch({
             success: function() {
 
-                self.profileModel = new ProfileModel(self.userModel.get('profile'));
+                self.profileModel = new ProfileModel(self.userModel.get('profile'), {parse: true});
                 self.eventsModel = new EventsModel(self.userModel.get('events'));
                 self.eventsModel.document = self.userModel;
 

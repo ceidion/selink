@@ -5,17 +5,17 @@ define(['common/view/composite-empty'], function(EmptyView) {
         // Empty View
         emptyView: EmptyView,
 
+        // common UI
+        ui: {
+            addBtn: '.btn-add',
+        },
+
         // common events
         events: {
 
             // Add a new item when add button clicked
             'click .btn-add': 'addItem',
             'mouseover .widget-header': 'attention'
-        },
-
-        // common UI
-        ui: {
-            addBtn: '.btn-add',
         },
 
         // Common events may happend on Collection
@@ -36,25 +36,19 @@ define(['common/view/composite-empty'], function(EmptyView) {
 
                 // just append the subview
                 this.$el.find(this.itemViewContainer).append(itemView.el);
-
-                // let the subview listen to univeral click event
-                // itemView.listenTo(vent, 'click:universal', itemView.switchToValue);
             }
             // this happend on user click add button
             // subview's model don't have _id attribute, so it's a new model
             else {
 
-                // hide subview for slide down effect later
-                // itemView.$el.hide();
-
                 // append the subview
                 this.$el.find(this.itemViewContainer).append(itemView.el);
 
-                itemView.$el.addClass('animated bounceIn');
-
-                itemView.$el.one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
-                    $(this).removeClass('animated bounceIn');
-                });
+                itemView.$el
+                    .addClass('animated bounceIn')
+                    .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
+                        $(this).removeClass('animated bounceIn');
+                    });
 
                 // show subview's editor panel
                 if (itemView.ui && itemView.ui.editor && itemView.ui.value) {
@@ -66,27 +60,15 @@ define(['common/view/composite-empty'], function(EmptyView) {
                         itemView.$el.addClass('sl-editor-open');
                     });
                 }
-
-                // slide down the subview editor panel, the order is important
-                // itemView.$el.show(function() {
-                //     // let the subview listen to univeral click event
-                //     // itemView.listenTo(vent, 'click:universal', itemView.switchToValue);
-                // });
             }
-
-            // let composite listen to the new subview's delete event
-            // this.listenTo(itemView, 'item:delete', this.deleteItem);
-        },
-
-        templateHelpers:  {
-            limit: this.itemLimit
         },
 
         attention: function(event) {
-            $(event.target).find('i').addClass('animated swing');
-            $(event.target).find('i').one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
-                $(this).removeClass('animated swing');
-            });
+            $(event.target).find('.sl-icon')
+                .addClass('animated swing')
+                .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
+                    $(this).removeClass('animated swing');
+                });
         },
 
         // Add new composite item
@@ -112,19 +94,13 @@ define(['common/view/composite-empty'], function(EmptyView) {
         // Update model
         updateItem: function(model) {
 
-            var self = this,
-                icon = this.icon ? this.icon : 'icon-ok';
+            var self = this;
 
             // Save the model
             model.save(null , {
 
                 // if save success
                 success: function() {
-
-                    // $.gritter.add({
-                    //     text: '<i class="' + icon + ' icon-2x animated pulse"></i>&nbsp;&nbsp;' + self.updateMsg(model.toJSON()),
-                    //     class_name: 'gritter-success'
-                    // });
                 },
 
                 // if other errors happend
@@ -148,19 +124,13 @@ define(['common/view/composite-empty'], function(EmptyView) {
         // remove an item from collection
         removeItem: function(model) {
 
-            var self = this,
-                icon = this.icon ? this.icon : 'icon-ok';
+            var self = this;
 
             // Save the model
             model.destroy({
 
                 // if save success
                 success: function() {
-
-                    $.gritter.add({
-                        text: '<i class="' + icon + ' icon-2x animated pulse"></i>&nbsp;&nbsp;' + self.removeMsg(model.toJSON()),
-                        class_name: 'gritter-warning'
-                    });
                 },
 
                 // if other errors happend

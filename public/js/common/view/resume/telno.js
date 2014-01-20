@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-phone',
-
         // initializer
         initialize: function() {
 
@@ -48,14 +45,6 @@ define([
             }
 
             this.ui.value.text(data.telNo);
-        },
-
-        successMsg: function(data) {
-
-            if (!data.telNo)
-                return "電話番号はクリアしました。";
-
-            return "電話番号は「" + data.telNo + "」に更新しました。";
         }
 
     });

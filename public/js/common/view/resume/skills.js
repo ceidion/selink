@@ -17,9 +17,6 @@ define([
         // for dnd add class here
         className: 'widget-box transparent',
 
-        // icon
-        icon: 'icon-wrench',
-
         // item view container
         itemViewContainer: '.widget-main',
 
@@ -53,15 +50,8 @@ define([
                 placement: 'top',
                 title: "ドラグして移動"
             });
-        },
-
-        updateMsg: function(data) {
-            return "スキル「" + data.language + "」を" + data.weight + "ptに更新しました。";
-        },
-
-        removeMsg: function(data) {
-            return "スキル「" + data.language + "(" + data.weight + "pt)」を削除しました。";
         }
+
     });
 
     return SkillComposite;

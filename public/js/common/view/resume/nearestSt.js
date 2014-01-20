@@ -10,9 +10,6 @@ define([
         // template
         template: template,
 
-        // icon
-        icon: 'icon-road',
-
         // initializer
         initialize: function() {
 
@@ -70,14 +67,6 @@ define([
             }
 
             this.ui.value.text(data.nearestSt);
-        },
-
-        successMsg: function(data) {
-
-            if (!data.nearestSt)
-                return "最寄駅情報はクリアしました。";
-
-            return "最寄駅は「" + data.nearestSt + "」に更新しました。";
         }
 
     });

@@ -32,10 +32,6 @@ define([], function() {
             });
         },
 
-        // subclass call this as needed
-        onRender: function(options) {
-        },
-
         // update model
         save: function(event) {
 
@@ -43,8 +39,7 @@ define([], function() {
             if(this.model) {
 
                 var self = this,
-                    data = this.getData(event),
-                    icon = this.icon ? this.icon : 'icon-ok';
+                    data = this.getData(event);
 
                 // save model
                 this.model.save(data, _.extend({
@@ -54,10 +49,11 @@ define([], function() {
 
                         self.renderValue(data);
 
-                        $.gritter.add({
-                            text: '<i class="' + icon + ' icon-2x animated pulse"></i>&nbsp;&nbsp;' + self.successMsg(data),
-                            class_name: 'gritter-success'
-                        });
+                        self.$el.find('.sl-icon')
+                            .addClass('animated flip green')
+                            .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
+                                $(this).removeClass('animated flip green');
+                            });
                     },
 
                     // error handler
@@ -102,18 +98,17 @@ define([], function() {
         },
 
         attention: function(event) {
-            $(event.target).find('i').addClass('animated swing');
-            $(event.target).find('i').one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
-                $(this).removeClass('animated swing');
-            });
+            $(event.target).find('.sl-icon')
+                .addClass('animated swing')
+                .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
+                    $(this).removeClass('animated swing');
+                });
         },
 
         // subclass should provide these methods
         getData: function() {},
 
-        renderValue: function(data) {},
-
-        successMsg: function(data) {}
+        renderValue: function(data) {}
     });
 
     return BaseItem;

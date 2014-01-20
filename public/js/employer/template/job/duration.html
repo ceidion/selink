@@ -1,12 +1,16 @@
 <div class="profile-info-name">
-    <i class="icon-calendar"></i>&nbsp;
+    <i class="icon-calendar sl-icon"></i>&nbsp;
     作業期間
 </div>
 <div class="profile-info-value">
     <div class="sl-value">
         <%
-            if (obj.startDate)
-                print(obj.startDate);
+            if (obj.startDate && !obj.endDate)
+                print(obj.startDateDisplay + "〜");
+            else if (!obj.startDate && obj.endDate)
+                print("〜" + obj.endDateDisplay);
+            else if (obj.startDate && obj.endDate)
+                print(obj.startDateDisplay + "〜" + obj.endDateDisplay);
             else
                 print('<span class="text-muted">クリックして編集</span>');
         %>
