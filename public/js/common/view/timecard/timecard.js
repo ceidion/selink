@@ -3,7 +3,6 @@ define([
     'common/view/timecard/event'
 ], function(template, EventView) {
 
-    // PageView is the biggest frame of the application
     var TimeCardView = Backbone.Marionette.Layout.extend({
 
         // Template
@@ -20,6 +19,7 @@ define([
         events: {
         },
 
+        // Collection events
         collectionEvents: {
             'add': 'createEvent',
             'change': 'updateEvent',
@@ -83,6 +83,7 @@ define([
 
             var self = this;
 
+            // config calendar
             var calendar = this.ui.calendar.fullCalendar({
                 // basic setting & localize
                 header: {
@@ -129,7 +130,8 @@ define([
                 // drag and drop setting
                 editable: true,
                 droppable: true, // this allows things to be dropped onto the calendar !!!
-                drop: function(date, allDay) { // this function is called when something is dropped
+                // this function is called when something is dropped
+                drop: function(date, allDay) {
 
                     // retrieve the dropped element's stored Event Object
                     var eventObject = $(this).data('eventObject');
@@ -144,43 +146,49 @@ define([
                         startTime = postEventObject.start ? postEventObject.start.split(':') : ["0","0"],
                         endTime = postEventObject.end ? postEventObject.end.split(':') : ["0","0"];
 
-                    // JSON.stringify() will convert all date to UTC which is 9 hours later than Japan, I add it here
-                    // better: date.setHours(date.getHours() - date.getTimezoneOffset()/60);
-                    // This lost internationalization, but have to do this
-                    startDateTime.setHours(Number(startTime[0]) + 9);
+                    startDateTime.setHours(startTime[0]);
                     startDateTime.setMinutes(startTime[1]);
                     postEventObject.start = startDateTime;
 
-                    endDateTime.setHours(Number(endTime[0]) + 9);
+                    endDateTime.setHours(endTime[0]);
                     endDateTime.setMinutes(endTime[1]);
                     postEventObject.end = endDateTime;
+
+                    postEventObject.allDay = allDay;
 
                     // create the event
                     self.collection.add(postEventObject);
                 },
+                // when event was moved to another place
                 eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
 
+                    // find the event in collection and reset the datetime
                     self.collection.get(event._id).set({
-                        start: self.adjustDateTime(event.start),
-                        end: self.adjustDateTime(event.end)
+                        allDay: allDay,
+                        start: event.start,
+                        end: event.end
                     });
                 },
+                // when event dragged to expand
                 eventResize:function(event, dayDelta, minuteDelta, revertFunc) {
 
+                    // find the event in collection and reset the datetime
                     self.collection.get(event._id).set({
-                        start: self.adjustDateTime(event.start),
-                        end: self.adjustDateTime(event.end)
+                        start: event.start,
+                        end: event.end
                     });
                 },
                 // selection setting
                 selectable: true,
                 selectHelper: true,
+                // when the calendar date was selected
                 select: function(start, end, allDay) {
 
                     // create a event editor modal, pass it the event collection
                     var eventModal = new EventView({
                         model: new self.collection.model({
-                            start: moment(self.adjustDateTime(start)).toJSON()
+                            allDay: allDay,
+                            start: start
                         }),
                         collection: self.collection
                     });
@@ -193,6 +201,7 @@ define([
 
                     calendar.fullCalendar('unselect');
                 },
+                // when event was clicked
                 eventClick: function(event, jsEvent, view) {
 
                     // create a event modal with selected event
@@ -211,6 +220,7 @@ define([
             });
         },
 
+        // create new event
         createEvent: function(event) {
 
             var self = this;
@@ -234,6 +244,7 @@ define([
             });
         },
 
+        // update event
         updateEvent: function(model) {
 
             if (model.isNew()) return;
@@ -275,6 +286,7 @@ define([
             });
         },
 
+        // remove event
         removeEvent: function(model) {
 
             var self = this;
@@ -289,14 +301,8 @@ define([
                 }
             });
 
-        },
-
-        adjustDateTime: function(date) {
-
-            var dateClone = new Date(date);
-            dateClone.setHours(dateClone.getHours() + 9);
-            return dateClone;
         }
+
     });
 
     return TimeCardView;

@@ -28,11 +28,15 @@ define([
         initialize: function() {
 
             // these properties are for display, we set them silently(won't trigger event)
-            if (this.model.has('start'))
-                this.model.set('startTime', moment.parseZone(this.model.get('start')).format('HH:mm'), {silent: true});
+            if (this.model.has('start')) {
+                this.model.set('startDate', moment(this.model.get('start')).format('YYYY/MM/DD'), {silent: true});
+                this.model.set('startTime', moment(this.model.get('start')).format('HH:mm'), {silent: true});
+            }
 
-            if (this.model.has('end'))
-                this.model.set('endTime', moment.parseZone(this.model.get('end')).format('HH:mm'), {silent: true});
+            if (this.model.has('end')) {
+                this.model.set('endDate', moment(this.model.get('end')).format('YYYY/MM/DD'), {silent: true});
+                this.model.set('endTime', moment(this.model.get('end')).format('HH:mm'), {silent: true});
+            }
 
             this.model.set('labels', labelList, {silent: true});
 
@@ -154,9 +158,9 @@ define([
                     startTime = this.ui.startTime.val() ? this.ui.startTime.val().split(':') : ["0","0"],
                     endTime = this.ui.endTime.val() ? this.ui.endTime.val().split(':') : ["0","0"];
 
-                startDate.setHours(Number(startTime[0]) + 9);
+                startDate.setHours(Number(startTime[0]));
                 startDate.setMinutes(Number(startTime[1]));
-                endDate.setHours(Number(endTime[0]) + 9);
+                endDate.setHours(Number(endTime[0]));
                 endDate.setMinutes(Number(endTime[1]));
 
                 // produce allDay value
@@ -210,9 +214,9 @@ define([
                     startTime = this.ui.startTime.val() ? this.ui.startTime.val().split(':') : ["0","0"],
                     endTime = this.ui.endTime.val() ? this.ui.endTime.val().split(':') : ["0","0"];
 
-                startDate.setHours(Number(startTime[0]) + 9);
+                startDate.setHours(Number(startTime[0]));
                 startDate.setMinutes(Number(startTime[1]));
-                endDate.setHours(Number(endTime[0]) + 9);
+                endDate.setHours(Number(endTime[0]));
                 endDate.setMinutes(Number(endTime[1]));
 
                 if (moment(startDate).isAfter(endDate))

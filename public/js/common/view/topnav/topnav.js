@@ -1,7 +1,7 @@
 define([
-	'text!common/template/topnav/topnav.html'
+    'text!common/template/topnav/topnav.html'
 ], function(
-	template
+    template
 ) {
 
     var TopNav = Backbone.Marionette.ItemView.extend({
@@ -12,7 +12,7 @@ define([
 
         modelEvents: {
             'change:photo': 'updatePhoto',
-            'change:events': 'render'
+            'change:events': 'updateEvent'
         },
 
         initialize: function() {
@@ -34,14 +34,20 @@ define([
 
         updatePhoto: function() {
 
+            console.log("photo update");
+
             var self = this,
                 $photo = this.$el.find('.nav-user-photo');
 
-        	$photo.addClass('animated rollOut');
-        	$photo.one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
-        	    $(this).attr('src', self.model.get('photo'));
-        	    $(this).removeClass('rollOut').addClass('rollIn');
-        	});
+            $photo.addClass('animated rollOut')
+                .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
+                    $(this).attr('src', self.model.get('photo'));
+                    $(this).removeClass('rollOut').addClass('rollIn');
+                });
+        },
+
+        updateEvent: function() {
+            console.log("event changed");
         }
 
     });

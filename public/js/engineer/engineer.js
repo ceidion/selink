@@ -89,7 +89,7 @@ define([
                 // create profile model from user model
                 self.profileModel = new ProfileModel(self.userModel.get('profile'), {parse: true});
                 // create events model(collection) from user model
-                self.eventsModel = new EventsModel(self.userModel.get('events'));
+                self.eventsModel = new EventsModel(self.userModel.get('events'), {parse: true});
                 self.eventsModel.document = self.userModel;
 
                 // make controller
