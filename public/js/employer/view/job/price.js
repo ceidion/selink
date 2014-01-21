@@ -57,27 +57,20 @@ define([
 
         getData: function() {
 
-            var data = {};
-
-            if (this.ui.priceTop.val()) {
-                data.priceTop = this.ui.priceTop.val();
-            }
-
-            if (this.ui.priceBottom.val()) {
-                data.priceBottom = this.ui.priceBottom.val();
-            }
-
-            return data;
+            return {
+                priceTop: Number(this.ui.priceTop.val()),
+                priceBottom: Number(this.ui.priceBottom.val())
+            };
         },
 
         renderValue: function(data) {
 
             if (data.priceTop && !data.priceBottom)
-                this.ui.value.text("〜" + data.priceTop);
+                this.ui.value.text("〜" + data.priceTop + "万円");
             else if (!data.priceTop && data.priceBottom)
-                this.ui.value.text(data.priceBottom + "〜");
+                this.ui.value.text(data.priceBottom + "万円〜");
             else if (data.priceTop && data.priceBottom)
-                this.ui.value.text(data.priceBottom + "〜" + data.priceTop);
+                this.ui.value.text(data.priceBottom + "〜" + data.priceTop　+ "万円");
             else
                 this.ui.value.html(this.placeholder);
         }

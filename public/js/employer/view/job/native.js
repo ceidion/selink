@@ -12,70 +12,29 @@ define([
 
         // initializer
         initialize: function() {
-
-            this.ui = _.extend({}, this.ui, {
-                'input': 'input'
-            });
-
-            // update model when input value changed
             this.events = _.extend({}, this.events, {
-                'change input': 'updateModel'
+                'click .btn': 'save'
             });
-
-            // listen on nativeOnly property for save
-            this.modelEvents = {
-                'change:nativeOnly': 'save'
-            };
         },
 
-        // after render
-        onRender: function() {
-            // bind validator
-            Backbone.Validation.bind(this);
-        },
+        getData: function(event) {
 
-        // reflect user input on model
-        updateModel: function() {
+            $target = $(event.target);
 
-            // clear all error
-            this.clearError();
-
-            // check input value
-            var errors = this.model.preValidate(this.getData());
-
-            // if input has errors
-            if (errors) {
-                // show error
-                this.showError(errors);
-            } else {
-                // set value on model
-                this.model.set(this.getData());
-            }
-        },
-
-        save: function() {
-
-            if (this.model.isNew()) {
-                this.collection.add(this.model.toJSON());
-                // // this.model.save();
-                // console.log(this.model.collection);
-            }
-        },
-
-        getData: function() {
-            return {
-                nativeOnly: this.ui.input.val()
-            };
+            // TODO: this is not right
+            if ($target.prop('tagName') == "I")
+                return {
+                    nativesOnly: $target.closest('.btn').find('input').val()
+                };
+            else
+                return {
+                    nativesOnly: $target.find('input').val()
+                };
         },
 
         renderValue: function(data) {
-
-            if (!data.nativeOnly) {
-                this.ui.value.html(this.placeholder);
-                return;
-            }
-
-            this.ui.value.text(data.nativeOnly);
+            console.log(data);
+            this.ui.value.text(data.nativesOnly === true ? "不可" : "可");
         }
 
     });

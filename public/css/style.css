@@ -32,8 +32,9 @@
 #event-modal .wysiwyg-editor{margin:0 15px;height:150px}
 #event-modal .wysiwyg-toolbar{margin:0 15px !important}
 #gritter-notice-wrapper{top:50px}
-#external-events>div:hover,.fc-event-container>div:hover{text-decoration:none;-webkit-transition:all 0.2s;transition:all 0.2s;-moz-transform:scale(1.1);-webkit-transform:scale(1.1);-o-transform:scale(1.1);-ms-transform:scale(1.1);transform:scale(1.1);opacity:0.85}
+#external-events>div,.fc-event-container>div{-webkit-transition:all 0.2s;transition:all 0.2s}#external-events>div:hover,.fc-event-container>div:hover{text-decoration:none;-moz-transform:scale(1.1);-webkit-transform:scale(1.1);-o-transform:scale(1.1);-ms-transform:scale(1.1);transform:scale(1.1);opacity:0.85}
 .fc-event-inner{padding:3px 5px}.fc-event-inner .sl-event-memo{padding:10px 15px}
+.job-container .widget-container-span{-webkit-transition:all 0.2s;transition:all 0.2s}.job-container .widget-container-span:hover{text-decoration:none;-moz-transform:scale(1.05);-webkit-transform:scale(1.05);-o-transform:scale(1.05);-ms-transform:scale(1.05);transform:scale(1.05)}
 .page-header{min-height:60px;padding-bottom:7px}.page-header h1{margin-top:10px}
 .page-header input{font-size:1.5em}
 .animated-input-error{display:inline-block;-moz-animation:vertical 2.0s 3 ease 0.5s;-webkit-animation:vertical 2.0s 3 ease 0.5s;-o-animation:vertical 2.0s 3 ease 0.5s;-ms-animation:vertical 2.0s 3 ease 0.5s;animation:vertical 2.0s 3 ease 0.5s}

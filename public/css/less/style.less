@@ -219,9 +219,10 @@
 // expand effect for event on calendar
 #external-events > div,.fc-event-container > div {
 
+  .transition(~"all 0.2s");
+
   &:hover {
     text-decoration:none;
-    .transition(~"all 0.2s");
     .transform(~"scale(1.1)");
     opacity:0.85;
   }
@@ -233,6 +234,17 @@
   .sl-event-memo {
     padding: 10px 15px;
   }
+}
+
+// job index
+.job-container .widget-container-span {
+
+    .transition(~"all 0.2s");
+
+    &:hover {
+      text-decoration:none;
+      .transform(~"scale(1.05)");
+    }
 }
 
 // job create

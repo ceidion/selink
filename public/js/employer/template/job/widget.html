@@ -1,5 +1,5 @@
 <div class="widget-box">
-    <div class="widget-header">
+    <div class="widget-header header-color-blue2">
         <h5 class="bigger lighter"><%- obj.name %></h5>
         <div class="widget-toolbar">
             <a href="#jobEdit/<%= obj._id %>"><i class="icon-pencil"></i></a>
@@ -7,12 +7,50 @@
     </div>
 
     <div class="widget-body">
+
         <div class="widget-main padding-16">
-            <%- obj.address %>
+
+            <ul class="list-unstyled spaced">
+
+                <% if (obj.address) { %>
+                    <li><i class="icon-building bigger-110 blue"></i>&nbsp;作業場所：<%- obj.address %></li>
+                <% } %>
+
+                <% if (obj.startDate || obj.endDate) { %>
+                    <li><i class="icon-calendar bigger-110 blue"></i>&nbsp;期間：<%- obj.startDateInput %>～<%- obj.endDateInput %></li>
+                <% } %>
+
+                <% if (obj.priceBottom || obj.priceTop) { %>
+                    <li><i class="icon-jpy bigger-110 blue"></i>&nbsp;単価：<%- obj.priceBottom %>～<%- obj.priceBottom %></li>
+                <% } %>
+
+                <% if (obj.recruitNum) { %>
+                    <li><i class="icon-bullhorn bigger-110 blue"></i>&nbsp;応募<%- obj.recruitNum %>人</li>
+                <% } %>
+
+                <% if (obj.interviewNum) { %>
+                    <li><i class="icon-user bigger-110 blue"></i>&nbsp;面接<%- obj.interviewNum %>回</li>
+                <% } %>
+
+            </ul>
+
+            <% if (obj.remark) { %>
+                <div class="hr hr8 hr-double"></div>
+                <%= obj.remark %>
+            <% } %>
+
         </div>
 
         <div class="widget-toolbox padding-8 clearfix">
-            <span>作成日：<%- obj.createDateDisplay %></span>
+            <span class="text-warning">
+                <i class="icon-ban-circle bigger-110"></i>&nbsp;応募締日：
+                <%　
+                    if (obj.expiredDate)
+                        print(moment(obj.expiredDate).fromNow());
+                    else
+                        print("なし");
+                %>
+            </span>
         </div>
 
     </div>

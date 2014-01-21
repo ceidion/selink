@@ -53,18 +53,9 @@ define([
             }
         },
 
-        save: function() {
-
-            if (this.model.isNew()) {
-                this.collection.add(this.model.toJSON());
-                // // this.model.save();
-                // console.log(this.model.collection);
-            }
-        },
-
         getData: function() {
             return {
-                interviewNum: this.ui.input.val()
+                interviewNum: Number(this.ui.input.val())
             };
         },
 
@@ -75,7 +66,7 @@ define([
                 return;
             }
 
-            this.ui.value.text(data.interviewNum);
+            this.ui.value.text(data.interviewNum + "回");
         }
 
     });

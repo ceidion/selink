@@ -6,11 +6,11 @@
     <div class="sl-value">
         <%
         if (obj.priceTop && !obj.priceBottom)
-            print("〜" + obj.priceTop);
+            print("〜" + obj.priceTop　+ "万円");
         else if (!obj.priceTop && obj.priceBottom)
-            print(obj.priceBottom + "〜");
+            print(obj.priceBottom + "万円〜");
         else if (obj.priceTop && obj.priceBottom)
-            print(obj.priceBottom + "〜" + obj.priceTop);
+            print(obj.priceBottom + "〜" + obj.priceTop　+ "万円");
         else
             print('<span class="text-muted">クリックして編集</span>');
         %>

@@ -5,8 +5,8 @@
 <div class="profile-info-value">
     <div class="sl-value">
         <%
-            if (obj.nativeOnly)
-                print(obj.nativeOnly);
+            if (obj.nativesOnly)
+                print(obj.nativesOnly ? "不可" : "可");
             else
                 print('<span class="text-muted">クリックして編集</span>');
         %>
