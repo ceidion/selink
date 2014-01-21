@@ -6,6 +6,7 @@ define([], function() {
             "home": "showHomeView",
             "profile": "showProfileView",
             "calendar": "showCalendarView",
+            "timecard": "showTimecardView",
         }
     });
 

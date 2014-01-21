@@ -83,7 +83,7 @@ define([
             success: function() {
 
                 self.profileModel = new ProfileModel(self.userModel.get('profile'), {parse: true});
-                self.eventsModel = new EventsModel(self.userModel.get('events'));
+                self.eventsModel = new EventsModel(self.userModel.get('events'), {parse: true});
                 self.eventsModel.document = self.userModel;
 
                 // make controller
