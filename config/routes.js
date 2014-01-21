@@ -17,8 +17,8 @@ module.exports = function(app) {
     // User Logout
     app.get('/logout', user.logout);
 
-    // Home
-    app.get('/home', checkLoginStatus, function(req, res, next){
+    // SPA bootstrap
+    app.get('/spa', checkLoginStatus, function(req, res, next){
 
         if (req.session.user.type === "admin") {
             console.log("admin");

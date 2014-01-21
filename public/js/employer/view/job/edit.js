@@ -70,7 +70,7 @@ define([
             this.remarkRegion.show(this.remarkItem);
         },
 
-        // resume view handle the click event
+        // profile view handle the click event
         // -- switch component in editor mode to value mode
         // *from x-editable*
         closeEditor: function(e) {

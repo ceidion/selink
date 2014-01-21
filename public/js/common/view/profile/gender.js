@@ -1,11 +1,11 @@
 define([
     'common/view/item-base',
-    'text!common/template/resume/marriage.html'
+    'text!common/template/profile/gender.html'
 ], function(
     BaseView,
     template) {
 
-    var MarriageItem = BaseView.extend({
+    var GenderItem = BaseView.extend({
 
         // template
         template: template,
@@ -24,19 +24,19 @@ define([
             // TODO: this is not right
             if ($target.prop('tagName') == "I")
                 return {
-                    marriage: $target.closest('.btn').find('input').val()
+                    gender: $target.closest('.btn').find('input').val()
                 };
             else
                 return {
-                    marriage: $target.find('input').val()
+                    gender: $target.find('input').val()
                 };
         },
 
         renderValue: function(data) {
-            this.ui.value.text(data.marriage);
+            this.ui.value.text(data.gender);
         }
 
     });
 
-    return MarriageItem;
+    return GenderItem;
 });

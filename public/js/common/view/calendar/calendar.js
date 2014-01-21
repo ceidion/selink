@@ -1,9 +1,9 @@
 define([
-    'text!common/template/timecard/timecard.html',
-    'common/view/timecard/event'
+    'text!common/template/calendar/calendar.html',
+    'common/view/calendar/event'
 ], function(template, EventView) {
 
-    var TimeCardView = Backbone.Marionette.Layout.extend({
+    var CalendarView = Backbone.Marionette.Layout.extend({
 
         // Template
         template: template,
@@ -44,7 +44,7 @@ define([
         onShow: function() {
 
             this.initialDefaultEvent();
-            this.initialTimeCard();
+            this.initialCalendar();
         },
 
         // initialize the external events
@@ -79,7 +79,7 @@ define([
         },
 
         // initialize the calendar
-        initialTimeCard: function() {
+        initialCalendar: function() {
 
             var self = this;
 
@@ -305,5 +305,5 @@ define([
 
     });
 
-    return TimeCardView;
+    return CalendarView;
 });

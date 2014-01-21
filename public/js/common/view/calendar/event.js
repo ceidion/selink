@@ -1,6 +1,6 @@
 define([
     'common/view/item-base',
-    'text!common/template/timecard/event.html'
+    'text!common/template/calendar/event.html'
 ], function(
     BaseView,
     template) {

@@ -1,15 +1,15 @@
 define([
     'common/view/composite-base',
-    'text!common/template/resume/employments.html',
-    'common/view/resume/employment',
-    'common/collection/employments',
+    'text!common/template/profile/educations.html',
+    'common/view/profile/education',
+    'common/collection/educations',
 ], function(
     BaseView,
     template,
     ItemView,
-    EmploymentsModel) {
+    EducationsModel) {
 
-    var EmploymentComposite = BaseView.extend({
+    var EducationComposite = BaseView.extend({
 
         // template
         template: template,
@@ -31,7 +31,7 @@ define([
 
             this.events = _.extend({}, this.events);
 
-            this.collection = new EmploymentsModel(this.model.get('employments'), {parse: true});
+            this.collection = new EducationsModel(this.model.get('educations'), {parse: true});
             this.collection.document = this.model;
         },
 
@@ -39,7 +39,7 @@ define([
 
             this.$el.find('.btn-add').tooltip({
                 placement: 'top',
-                title: "社歴を追加"
+                title: "学歴を追加"
             });
 
             this.$el.find('.btn-sort').tooltip({
@@ -58,5 +58,5 @@ define([
 
     });
 
-    return EmploymentComposite;
+    return EducationComposite;
 });

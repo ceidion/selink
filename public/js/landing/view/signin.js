@@ -125,7 +125,7 @@ define(['text!template/signin.html'], function(template){
 
                 // login success handler
                 success: function(account) {
-                    window.location = '/home';
+                    window.location = '/spa';
                 },
 
                 // login error handler

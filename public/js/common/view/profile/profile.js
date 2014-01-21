@@ -1,23 +1,23 @@
 define([
-    'text!common/template/resume/resume.html',
-    'common/view/resume/photo',
-    'common/view/resume/name',
-    'common/view/resume/birthday',
-    'common/view/resume/gender',
-    'common/view/resume/marriage',
-    'common/view/resume/nationality',
-    'common/view/resume/address',
-    'common/view/resume/nearestSt',
-    'common/view/resume/experience',
-    'common/view/resume/telno',
-    'common/view/resume/email',
-    'common/view/resume/website',
-    'common/view/resume/bio',
-    'common/view/resume/languages',
-    'common/view/resume/skills',
-    'common/view/resume/qualifications',
-    'common/view/resume/educations',
-    'common/view/resume/employments',
+    'text!common/template/profile/profile.html',
+    'common/view/profile/photo',
+    'common/view/profile/name',
+    'common/view/profile/birthday',
+    'common/view/profile/gender',
+    'common/view/profile/marriage',
+    'common/view/profile/nationality',
+    'common/view/profile/address',
+    'common/view/profile/nearestSt',
+    'common/view/profile/experience',
+    'common/view/profile/telno',
+    'common/view/profile/email',
+    'common/view/profile/website',
+    'common/view/profile/bio',
+    'common/view/profile/languages',
+    'common/view/profile/skills',
+    'common/view/profile/qualifications',
+    'common/view/profile/educations',
+    'common/view/profile/employments',
 ], function(
     template,
     PhotoItem,
@@ -40,8 +40,8 @@ define([
     EmploymentComposite
 ) {
 
-    // resume view
-    var ResumeView = Backbone.Marionette.Layout.extend({
+    // profile view
+    var ProfileView = Backbone.Marionette.Layout.extend({
 
         // template
         template: template,
@@ -142,7 +142,7 @@ define([
             // })
         },
 
-        // resume view handle the click event
+        // profile view handle the click event
         // -- switch component in editor mode to value mode
         // *from x-editable*
         closeEditor: function(e) {
@@ -205,5 +205,5 @@ define([
         }
     });
 
-    return ResumeView;
+    return ProfileView;
 });

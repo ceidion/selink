@@ -1,7 +1,7 @@
 define([
     'common/view/composite-base',
-    'text!common/template/resume/languages.html',
-    'common/view/resume/language',
+    'text!common/template/profile/languages.html',
+    'common/view/profile/language',
     'common/collection/languages',
 ], function(
     BaseView,

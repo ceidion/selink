@@ -1,11 +1,11 @@
 define([
     'common/view/item-base',
-    'text!common/template/resume/email.html'
+    'text!common/template/profile/birthday.html'
 ], function(
     BaseView,
     template) {
 
-    var EMailItem = BaseView.extend({
+    var BirthDayItem = BaseView.extend({
 
         // template
         template: template,
@@ -22,22 +22,40 @@ define([
                 'change input': 'updateModel'
             });
 
-            // listen on email property for save
+            // listen on birthDay property for save
             this.modelEvents = {
-                'change:email': 'save'
+                'change:birthDay': 'save'
             };
         },
 
         // after render
         onRender: function() {
+
+            var self = this;
+
+            // append data picker
+            this.ui.input.datepicker({
+                autoclose: true,
+                startView: 2,
+                endDate: new Date(),
+                language: 'ja'
+            });
+
+            // enable mask input
+            this.ui.input.mask('9999/99/99');
+
             // bind validator
             Backbone.Validation.bind(this);
+        },
+
+        onBeforeClose: function() {
+            this.ui.input.datepicker('remove');
         },
 
         // reflect user input on model
         updateModel: function() {
 
-            // clear all error
+            // clear all errors
             this.clearError();
 
             // check input value
@@ -55,21 +73,15 @@ define([
 
         getData: function() {
             return {
-                email: this.ui.input.val()
+                birthDay: moment(this.ui.input.val()).toJSON()
             };
         },
 
         renderValue: function(data) {
-
-            if (!data.email) {
-                this.ui.value.html(this.placeholder);
-                return;
-            }
-
-            this.ui.value.text(data.email);
+            this.ui.value.text(moment(data.birthDay).format('LL'));
         }
 
     });
 
-    return EMailItem;
+    return BirthDayItem;
 });

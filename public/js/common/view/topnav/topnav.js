@@ -12,16 +12,20 @@ define([
 
         modelEvents: {
             'change:photo': 'updatePhoto',
-            'change:events': 'updateEvent'
+        },
+
+        collectionEvents: {
+            'change': 'render'
         },
 
         initialize: function() {
-            var nearestEvents = _.filter(this.model.get('events'), function(event) {
-                return moment(event.start).isAfter(moment());
+
+            var nearestEvents = _.filter(this.collection.models, function(event) {
+                return moment(event.get('start')).isAfter(moment());
             });
 
             nearestEvents = _.sortBy(nearestEvents, function(event) {
-                return moment(event.start).valueOf();
+                return moment(event.get('start')).valueOf();
             });
 
             this.model.set('nearestEvents', nearestEvents.slice(0, 5), {silent:true});
@@ -34,12 +38,10 @@ define([
 
         updatePhoto: function() {
 
-            console.log("photo update");
+            var self = this;
 
-            var self = this,
-                $photo = this.$el.find('.nav-user-photo');
-
-            $photo.addClass('animated rollOut')
+            this.$el.find('.nav-user-photo')
+                .addClass('animated rollOut')
                 .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
                     $(this).attr('src', self.model.get('photo'));
                     $(this).removeClass('rollOut').addClass('rollIn');

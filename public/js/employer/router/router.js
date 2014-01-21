@@ -4,11 +4,11 @@ define([], function() {
 
         appRoutes: {
             'home': 'showHomeView',
-            'resume': 'showResumeView',
+            'profile': 'showProfileView',
             'jobIndex': 'showJobIndexView',
             'jobCreate': 'showJobCreateView',
             'jobEdit/:id': 'showJobEditView',
-            'timecard': 'showTimeCardView',
+            'calendar': 'showCalendarView',
         }
     });
 

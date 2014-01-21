@@ -3,15 +3,15 @@ define([
     'admin/view/common/sidenav',
     'admin/view/home/page',
     'admin/view/data/skill/skills',
-    'common/view/resume/resume',
-    'common/view/timecard/timecard',
+    'common/view/profile/profile',
+    'common/view/calendar/calendar',
 ], function(
     TopNavView,
     SideNavView,
     HomeView,
     SkillsView,
-    ResumeView,
-    TimeCardView
+    ProfileView,
+    CalendarView
 ) {
 
     // Main page controller
@@ -36,7 +36,8 @@ define([
             this.app.sidenavArea.show(this.app.sideNavView);
 
             this.app.topNavView = new TopNavView({
-                model: this.app.userModel
+                model: this.app.profileModel,
+                collection: this.app.eventsModel
             });
             this.app.topnavArea.show(this.app.topNavView);
         },
@@ -55,21 +56,21 @@ define([
             this.app.pageContent.show(this.app.skillsView);
         },
 
-        // show resume
-        showResumeView: function() {
+        // show profile
+        showProfileView: function() {
 
-            // create resume view
-            this.app.resumeView = new ResumeView({
+            // create profile view
+            this.app.profileView = new ProfileView({
                 model: this.app.profileModel
             });
-            // show resume view
-            this.app.pageContent.show(this.app.resumeView);
+            // show profile view
+            this.app.pageContent.show(this.app.profileView);
         },
 
         // show time card
-        showTimeCardView: function() {
+        showCalendarView: function() {
 
-            this.app.timeCardView = new TimeCardView({
+            this.app.timeCardView = new CalendarView({
                 collection: this.app.eventsModel
             });
 

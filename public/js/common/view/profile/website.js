@@ -1,6 +1,6 @@
 define([
     'common/view/item-base',
-    'text!common/template/resume/website.html'
+    'text!common/template/profile/website.html'
 ], function(
     BaseView,
     template) {

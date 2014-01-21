@@ -1,15 +1,15 @@
 define([
     'common/view/composite-base',
-    'text!common/template/resume/educations.html',
-    'common/view/resume/education',
-    'common/collection/educations',
+    'text!common/template/profile/skills.html',
+    'common/view/profile/skill',
+    'common/collection/skills',
 ], function(
     BaseView,
     template,
     ItemView,
-    EducationsModel) {
+    SkillsModel) {
 
-    var EducationComposite = BaseView.extend({
+    var SkillComposite = BaseView.extend({
 
         // template
         template: template,
@@ -24,14 +24,13 @@ define([
         itemView: ItemView,
 
         // max item number
-        itemLimit: 4,
+        itemLimit: 8,
 
         // initializer
         initialize: function() {
-
             this.events = _.extend({}, this.events);
 
-            this.collection = new EducationsModel(this.model.get('educations'), {parse: true});
+            this.collection = new SkillsModel(this.model.get('skills'));
             this.collection.document = this.model;
         },
 
@@ -39,7 +38,7 @@ define([
 
             this.$el.find('.btn-add').tooltip({
                 placement: 'top',
-                title: "学歴を追加"
+                title: "スキルを追加"
             });
 
             this.$el.find('.btn-sort').tooltip({
@@ -51,12 +50,9 @@ define([
                 placement: 'top',
                 title: "ドラグして移動"
             });
-
-            // bind validator
-            Backbone.Validation.bind(this);
         }
 
     });
 
-    return EducationComposite;
+    return SkillComposite;
 });

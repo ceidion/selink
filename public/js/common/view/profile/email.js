@@ -1,11 +1,11 @@
 define([
     'common/view/item-base',
-    'text!common/template/resume/birthday.html'
+    'text!common/template/profile/email.html'
 ], function(
     BaseView,
     template) {
 
-    var BirthDayItem = BaseView.extend({
+    var EMailItem = BaseView.extend({
 
         // template
         template: template,
@@ -22,40 +22,22 @@ define([
                 'change input': 'updateModel'
             });
 
-            // listen on birthDay property for save
+            // listen on email property for save
             this.modelEvents = {
-                'change:birthDay': 'save'
+                'change:email': 'save'
             };
         },
 
         // after render
         onRender: function() {
-
-            var self = this;
-
-            // append data picker
-            this.ui.input.datepicker({
-                autoclose: true,
-                startView: 2,
-                endDate: new Date(),
-                language: 'ja'
-            });
-
-            // enable mask input
-            this.ui.input.mask('9999/99/99');
-
             // bind validator
             Backbone.Validation.bind(this);
-        },
-
-        onBeforeClose: function() {
-            this.ui.input.datepicker('remove');
         },
 
         // reflect user input on model
         updateModel: function() {
 
-            // clear all errors
+            // clear all error
             this.clearError();
 
             // check input value
@@ -73,15 +55,21 @@ define([
 
         getData: function() {
             return {
-                birthDay: moment(this.ui.input.val()).toJSON()
+                email: this.ui.input.val()
             };
         },
 
         renderValue: function(data) {
-            this.ui.value.text(moment(data.birthDay).format('LL'));
+
+            if (!data.email) {
+                this.ui.value.html(this.placeholder);
+                return;
+            }
+
+            this.ui.value.text(data.email);
         }
 
     });
 
-    return BirthDayItem;
+    return EMailItem;
 });

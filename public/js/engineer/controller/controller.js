@@ -2,14 +2,14 @@ define([
     'common/view/topnav/topnav',
     'engineer/view/common/sidenav',
     'engineer/view/home/page',
-    'common/view/resume/resume',
-    'common/view/timecard/timecard',
+    'common/view/profile/profile',
+    'common/view/calendar/calendar',
 ], function(
     TopNavView,
     SideNavView,
     HomeView,
-    ResumeView,
-    TimeCardView
+    ProfileView,
+    CalendarView
 ) {
 
     // Main page controller
@@ -24,6 +24,7 @@ define([
             this.app = options.app;
 
             this.showNavigation();
+            this.showHomeView();
 
         },
 
@@ -34,33 +35,34 @@ define([
             this.app.sidenavArea.show(this.app.sideNavView);
 
             this.app.topNavView = new TopNavView({
-                model: this.app.userModel
+                model: this.app.profileModel,
+                collection: this.app.eventsModel
             });
             this.app.topnavArea.show(this.app.topNavView);
         },
 
         showHomeView: function() {
             // create home view
-            this.homeView = new HomeView();
+            this.app.homeView = new HomeView();
             // show main page
             this.app.pageContent.show(this.app.homeView);
         },
 
-        // show resume
-        showResumeView: function() {
+        // show profile
+        showProfileView: function() {
 
-            // create resume view
-            this.app.resumeView = new ResumeView({
+            // create profile view
+            this.app.profileView = new ProfileView({
                 model: this.app.profileModel
             });
-            // show resume view
-            this.app.pageContent.show(this.app.resumeView);
+            // show profile view
+            this.app.pageContent.show(this.app.profileView);
         },
 
         // show time card
-        showTimeCardView: function() {
+        showCalendarView: function() {
 
-            this.app.timeCardView = new TimeCardView({
+            this.app.timeCardView = new CalendarView({
                 collection: this.app.eventsModel
             });
 

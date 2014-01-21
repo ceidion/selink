@@ -1,15 +1,15 @@
 define([
     'common/view/composite-base',
-    'text!common/template/resume/qualifications.html',
-    'common/view/resume/qualification',
-    'common/collection/qualifications',
+    'text!common/template/profile/employments.html',
+    'common/view/profile/employment',
+    'common/collection/employments',
 ], function(
     BaseView,
     template,
     ItemView,
-    QualificationsModel) {
+    EmploymentsModel) {
 
-    var QualificationComposite = BaseView.extend({
+    var EmploymentComposite = BaseView.extend({
 
         // template
         template: template,
@@ -24,14 +24,14 @@ define([
         itemView: ItemView,
 
         // max item number
-        itemLimit: 6,
+        itemLimit: 4,
 
         // initializer
         initialize: function() {
 
             this.events = _.extend({}, this.events);
 
-            this.collection = new QualificationsModel(this.model.get('qualifications'), {parse: true});
+            this.collection = new EmploymentsModel(this.model.get('employments'), {parse: true});
             this.collection.document = this.model;
         },
 
@@ -39,7 +39,7 @@ define([
 
             this.$el.find('.btn-add').tooltip({
                 placement: 'top',
-                title: "資格を追加"
+                title: "社歴を追加"
             });
 
             this.$el.find('.btn-sort').tooltip({
@@ -58,5 +58,5 @@ define([
 
     });
 
-    return QualificationComposite;
+    return EmploymentComposite;
 });

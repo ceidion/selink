@@ -1,11 +1,11 @@
 define([
     'common/view/item-base',
-    'text!common/template/resume/education.html'
+    'text!common/template/profile/employment.html'
 ], function(
     BaseView,
     template) {
 
-    var EducationItem = BaseView.extend({
+    var EmploymentItem = BaseView.extend({
 
         // template
         template: template,
@@ -16,19 +16,22 @@ define([
         initialize: function() {
 
             this.ui = _.extend({}, this.ui, {
-                'schoolValue': '#school-value',
-                'majorValue': '#major-value',
+                'companyValue': '#company-value',
+                'positionValue': '#position-value',
                 'durationValue': '#duration-value',
-                'school': 'input[name="school"]',
-                'major': 'input[name="major"]',
+                'addressValue': '#address-value',
+                'company': 'input[name="company"]',
+                'address': 'input[name="address"]',
+                'position': 'input[name="position"]',
                 'startDate': 'input[name="startDate"]',
                 'endDate': 'input[name="endDate"]',
                 'remove': '.btn-remove'
             });
 
             this.events = _.extend({}, this.events, {
-                'change input[name="school"]': 'updateModel',
-                'change input[name="major"]': 'updateModel',
+                'change input[name="company"]': 'updateModel',
+                'change input[name="address"]': 'updateModel',
+                'change input[name="position"]': 'updateModel',
                 'change input[name="startDate"]': 'updateModel',
                 'change input[name="endDate"]': 'updateModel',
                 'click .btn-remove': 'removeModel'
@@ -70,7 +73,7 @@ define([
             var errors = this.model.preValidate(inputData) || {};
 
             // check wheter end date is after start date
-            if (this.ui.endDate.val()) {
+            if (this.ui.startDate.val() && this.ui.endDate.val()) {
 
                 // looks very bad, but work
                 var startDate = new Date(this.ui.startDate.val()),
@@ -109,8 +112,9 @@ define([
                 endDate = this.ui.endDate.val() ? moment(this.ui.endDate.val()).toJSON() : "";
 
             return {
-                school: this.ui.school.val(),
-                major: this.ui.major.val(),
+                company: this.ui.company.val(),
+                address: this.ui.address.val(),
+                position: this.ui.position.val(),
                 startDate: startDate,
                 endDate: endDate
             };
@@ -118,15 +122,20 @@ define([
 
         renderValue: function(data) {
 
-            if (data.school)
-                this.ui.schoolValue.text(data.school);
+            if (data.company)
+                this.ui.companyValue.text(data.company);
             else
-                this.ui.schoolValue.html('<span class="text-muted">学校名称</span>');
+                this.ui.companyValue.html('<span class="text-muted">会社名</span>');
 
-            if (data.major)
-                this.ui.majorValue.html('<span class="label label-sm label-success arrowed arrowed-right">' + data.major + '</span>');
+            if (data.position)
+                this.ui.positionValue.html('<span class="label label-sm label-primary arrowed arrowed-right">' + data.position + '</span>');
             else
-                this.ui.majorValue.empty();
+                this.ui.positionValue.empty();
+
+            if (data.address)
+                this.ui.addressValue.text(data.address);
+            else
+                this.ui.addressValue.empty();
 
             if (data.startDate && !data.endDate)
                 this.ui.durationValue.text(moment(data.startDate).format('YYYY年M月') + "〜");
@@ -137,8 +146,7 @@ define([
             else
                 this.ui.durationValue.html('<span class="text-muted">未入力</span>');
         }
-
     });
 
-    return EducationItem;
+    return EmploymentItem;
 });

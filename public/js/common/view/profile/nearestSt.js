@@ -1,6 +1,6 @@
 define([
     'common/view/item-base',
-    'text!common/template/resume/nearestSt.html'
+    'text!common/template/profile/nearestSt.html'
 ], function(
     BaseView,
     template) {

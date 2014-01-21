@@ -1,6 +1,6 @@
 define([
     'common/view/item-base',
-    'text!common/template/resume/telno.html'
+    'text!common/template/profile/telno.html'
 ], function(
     BaseView,
     template) {

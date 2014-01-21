@@ -1,6 +1,6 @@
 define([
     'common/view/item-base',
-    'text!common/template/resume/qualification.html'
+    'text!common/template/profile/qualification.html'
 ], function(
     BaseView,
     template) {
