@@ -35,9 +35,16 @@ define([
         // Initializer
         initialize: function() {
 
-            for (var i=1; i < moment().endOf('month').date(); i++) {
+            var models = [];
 
+            for (var i=1; i <= moment().endOf('month').date(); i++) {
+                models.push({
+                    start: moment().date(i),
+                    end: moment().date(i)
+                });
             }
+
+            this.collection = new Backbone.Collection(models);
         },
 
         // After render
