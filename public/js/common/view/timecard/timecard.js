@@ -1,18 +1,24 @@
 define([
     'text!common/template/timecard/timecard.html',
-    // 'common/view/timecard/event'
-], function(template, EventView) {
+    'common/view/timecard/record'
+], function(template, RecordView) {
 
-    var CalendarView = Backbone.Marionette.Layout.extend({
+    var CalendarView = Backbone.Marionette.CompositeView.extend({
 
         // Template
         template: template,
 
+        // for dnd add class here
+        // className: 'widget-box transparent',
+
+        // item view container
+        itemViewContainer: 'tbody',
+
+        // item view
+        itemView: RecordView,
+
         // ui
         ui: {
-            defaultEvents: '#external-events div.external-event',
-            calendar: '#calendar',
-            eventModal: '#event-modal'
         },
 
         // Events
@@ -26,13 +32,12 @@ define([
             'remove': 'removeEvent',
         },
 
-        // Regions
-        regions: {
-            'eventModal': '#event-modal'
-        },
-
         // Initializer
         initialize: function() {
+
+            for (var i=1; i < moment().endOf('month').date(); i++) {
+
+            }
         },
 
         // After render
@@ -42,46 +47,6 @@ define([
 
         // After show
         onShow: function() {
-
-            this.initialDefaultEvent();
-            this.initialCalendar();
-        },
-
-        // initialize the external events
-        initialDefaultEvent: function() {
-
-            this.ui.defaultEvents.each(function() {
-
-                var $this = $(this);
-
-                // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
-                // it doesn't need to have a start or end
-                var eventObject = {
-                    title: $.trim($this.text()), // use the element's text as the event title
-                    className: $this.data('class'),
-                    allDay: $this.data('allday'),
-                    start: $this.data('start'),
-                    end: $this.data('end')
-                };
-
-                // store the Event Object in the DOM element so we can get to it later
-                $this.data('eventObject', eventObject);
-
-                // make the event draggable using jQuery UI
-                $this.draggable({
-                    zIndex: 999,
-                    revert: true,      // will cause the event to go back to its
-                    revertDuration: 0  //  original position after the drag
-                });
-
-            });
-
-        },
-
-        // initialize the calendar
-        initialCalendar: function() {
-
-            var self = this;
         },
 
         // create new event
@@ -159,7 +124,6 @@ define([
                     self.ui.eventModal.modal('hide');
                 }
             });
-
         }
 
     });
