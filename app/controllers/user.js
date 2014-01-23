@@ -45,6 +45,10 @@ exports.logout = function(req, res, next) {
     res.redirect('/');
 };
 
+// Get user index
+exports.index = function(req, res, next) {
+};
+
 // Get single user
 exports.show = function(req, res, next) {
 
@@ -59,6 +63,29 @@ exports.show = function(req, res, next) {
                 res.json(user);
             });
         }
+    });
+};
+
+exports.introduce = function(req, res, next) {
+
+    var query = User.find()
+                .select('type profile createDate')
+                .sort({createDate:-1})
+                .limit(8);
+
+    query.exec(function(err, users) {
+        if(err) next(err);
+
+        users.forEach(function(user) {
+            // fill the user with profile
+            Profile.populate(users, {
+                path: "profile",
+                select: 'firstName lastName photo'
+            }, function() {
+                // return the user
+                res.json(users);
+            });
+        });
     });
 };
 

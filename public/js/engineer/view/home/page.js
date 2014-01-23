@@ -1,9 +1,10 @@
 define([
-    'text!engineer/template/home/page.html'
-], function(pageTemplate) {
+    'text!engineer/template/home/page.html',
+    'common/collection/introductions'
+], function(pageTemplate, IntroductionCollction) {
 
     // PageView is the biggest frame of the application
-    var PageView = Backbone.Marionette.ItemView.extend({
+    var PageView = Backbone.Marionette.Layout.extend({
 
         // Template
         template: pageTemplate,
@@ -12,27 +13,20 @@ define([
 
         // Events
         events: {
-            'click #logoutBtn': 'onLogout',
-            'click': 'onClick'
         },
 
         // Regions
         regions: {
-            header: '#header',
-            content: '#content',
-            footer: '#footer'
+            introductionRegion: '#introduction',
         },
 
         // Initializer
         initialize: function() {
 
-            // for slide animation effect change the default
-            // behavior of show view on content region
-            // this.content.open = function(view) {
-            //     this.$el.hide();
-            //     this.$el.html(view.el);
-            //     this.$el.fadeIn();
-            // };
+            var intro = new IntroductionCollction();
+            intro.fetch({
+
+            });
         },
 
         // After render

@@ -39,6 +39,9 @@ module.exports = function(app) {
     // Get user's events
     app.get('/user/:id', checkLoginStatus, user.show);
 
+    // Introduce friend
+    app.get('/friend', checkLoginStatus, user.introduce);
+
     // Get single profile
     app.get('/profile/:id', checkLoginStatus, profile.show);
     // Update profile (first-level property)

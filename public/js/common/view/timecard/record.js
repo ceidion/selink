@@ -48,6 +48,14 @@ define([
         // after render
         onRender: function() {
 
+            var dayOfWeek = moment(this.model.get('start')).day();
+
+            if (dayOfWeek === 6) {
+                this.$el.addClass('warning');
+            } else if (dayOfWeek === 0) {
+                this.$el.addClass('success');
+            }
+
             // append time picker
             this.$el.find('input[name="startTime"],input[name="endTime"]').timepicker({
                 minuteStep: 5,

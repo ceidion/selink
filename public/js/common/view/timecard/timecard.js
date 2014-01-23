@@ -1,7 +1,8 @@
 define([
     'text!common/template/timecard/timecard.html',
+    'common/collection/events',
     'common/view/timecard/record'
-], function(template, RecordView) {
+], function(template, EventsModel, RecordView) {
 
     var CalendarView = Backbone.Marionette.CompositeView.extend({
 
@@ -23,6 +24,7 @@ define([
 
         // Events
         events: {
+            'click': 'closeEditor'
         },
 
         // Collection events
@@ -35,16 +37,47 @@ define([
         // Initializer
         initialize: function() {
 
-            var models = [];
+            // here is tricky
+            // make a empty array to create collection
+            var models = [],
+                i = 1;
 
-            for (var i=1; i <= moment().endOf('month').date(); i++) {
-                models.push({
-                    start: moment().date(i),
-                    end: moment().date(i)
-                });
+            // loop through current month
+            for (; i <= moment().endOf('month').date(); i++) {
+
+                // get a single day
+                var date = moment().date(i),
+                    needSlot = true,
+                    j = 0;
+
+                // let the single day loop through the collection
+                for (; j < this.collection.length; j++) {
+
+                    // get a item of collection
+                    var event = this.collection.at(j);
+
+                    // if that single day and the item are same day and the item is "go to job"
+                    if (moment(date).isSame(event.get('start'), 'day') && event.get('title') == "出勤") {
+                        // let the collection item be a member of real collection
+                        models.push(event);
+                        // tell below no need to produce slot
+                        needSlot = false;
+                        break;
+                    }
+                }
+
+                // if we need a slot, push the single empty day
+                if (needSlot)
+                    models.push({
+                        start: date,
+                        end: date
+                    });
             }
 
-            this.collection = new Backbone.Collection(models);
+            // create the real collection
+            this.collection = new EventsModel(models);
+
+            console.log(this.collection);
         },
 
         // After render
@@ -88,15 +121,6 @@ define([
                 // if save success
                 success: function(model, response, options) {
 
-                    var updatedEvent = self.ui.calendar.fullCalendar('clientEvents', function(event) {
-                        if (event._id == model.get('_id'))
-                            return true;
-                    });
-
-                    _.extend(updatedEvent[0], response);
-
-                    self.ui.calendar.fullCalendar('updateEvent', updatedEvent[0]);
-                    self.ui.eventModal.modal('hide');
                 },
 
                 // if other errors happend
@@ -130,6 +154,68 @@ define([
                     });
                     self.ui.eventModal.modal('hide');
                 }
+            });
+        },
+
+        // profile view handle the click event
+        // -- switch component in editor mode to value mode
+        // *from x-editable*
+        closeEditor: function(e) {
+            var $target = $(e.target), i,
+                exclude_classes = ['.editable-container',
+                                   '.ui-datepicker-header',
+                                   '.datepicker', //in inline mode datepicker is rendered into body
+                                   '.modal-backdrop',
+                                   '.bootstrap-wysihtml5-insert-image-modal',
+                                   '.bootstrap-wysihtml5-insert-link-modal'
+                                   ];
+
+            //check if element is detached. It occurs when clicking in bootstrap datepicker
+            if (!$.contains(document.documentElement, e.target)) {
+              return;
+            }
+
+            //for some reason FF 20 generates extra event (click) in select2 widget with e.target = document
+            //we need to filter it via construction below. See https://github.com/vitalets/x-editable/issues/199
+            //Possibly related to http://stackoverflow.com/questions/10119793/why-does-firefox-react-differently-from-webkit-and-ie-to-click-event-on-selec
+            if($target.is(document)) {
+               return;
+            }
+
+            //if click inside one of exclude classes --> no nothing
+            for(i=0; i<exclude_classes.length; i++) {
+                 if($target.is(exclude_classes[i]) || $target.parents(exclude_classes[i]).length) {
+                     return;
+                 }
+            }
+
+            //close all open containers (except one - target)
+            this.closeOthers(e.target);
+        },
+
+        // close all open containers (except one - target)
+        closeOthers: function(element) {
+
+            $('.sl-editor-open').each(function(i, el){
+
+                var $el = $(el);
+
+                //do nothing with passed element and it's children
+                if(el === element || $el.find(element).length) {
+                    return;
+                }
+
+                if($el.find('.form-group').hasClass('has-error')) {
+                    return;
+                }
+
+                // slide up the edit panel
+                $el.find('.sl-editor').slideUp('fast', function() {
+                    // fadeIn view panel
+                    $el.find('.sl-value').fadeIn('fast');
+                });
+
+                $el.removeClass('sl-editor-open');
             });
         }
 

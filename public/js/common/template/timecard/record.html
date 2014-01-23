@@ -1,43 +1,64 @@
-<td>
-    <% print(obj.start.format('M月D日 （dd）')); %>
+<td class="text-center">
+    <% print(moment(obj.start).format('M月D日 （dd）')); %>
 </td>
-<td>
+<td class="text-center">
     <div class="sl-editable">
-        <div class="sl-value">9:00</div>
+        <div class="sl-value">
+            <%
+                if (obj._id && obj.startTime)
+                    print(obj.startTime);
+                else
+                    print("--");
+            %>
+        </div>
+        <div class="sl-editor bootstrap-timepicker">
+            <input type="text" class="input-small text-center" placeholder="出社時刻" name="startTime" value="<%- obj.startTime %>">
+        </div>
+    </div>
+</td>
+<td class="text-center">
+    <div class="sl-editable">
+        <div class="sl-value">
+            <%
+                if (obj._id && obj.endTime)
+                    print(obj.endTime);
+                else
+                    print("--");
+            %>
+        </div>
+        <div class="sl-editor bootstrap-timepicker">
+            <input type="text" class="input-small text-center" placeholder="退社時刻" name="endTime" value="<%- obj.endTime %>">
+        </div>
+    </div>
+</td>
+<td class="text-center">
+    <div class="sl-editable">
+        <div class="sl-value">
+            <%
+                if (obj._id && obj.excludeTime)
+                    print(obj.excludeTime);
+                else
+                    print("--");
+            %>
+        </div>
+        <div class="sl-editor bootstrap-timepicker">
+            <input type="text" class="input-small text-center" placeholder="休憩時間" name="excludeTime" value="<%- obj.excludeTime %>">
+        </div>
+    </div>
+</td>
+<td class="text-center">
+    <div class="sl-editable">
+        <div class="sl-value"><%- obj.fee %></div>
         <div class="sl-editor">
-            <input type="text" class="input-small" placeholder="電話番号" name="telNo" value="<%- obj.telNo %>">
+            <input type="text" class="input-small text-center" placeholder="交通費" name="fee" value="<%- obj.fee %>">
         </div>
     </div>
 </td>
 <td>
     <div class="sl-editable">
-        <div class="sl-value">17:00</div>
+        <div class="sl-value"><%- obj.title %></div>
         <div class="sl-editor">
-            <input type="text" class="input-small" placeholder="電話番号" name="telNo" value="<%- obj.telNo %>">
-        </div>
-    </div>
-</td>
-<td>
-    <div class="sl-editable">
-        <div class="sl-value">1:00</div>
-        <div class="sl-editor">
-            <input type="text" class="input-small" placeholder="電話番号" name="telNo" value="<%- obj.telNo %>">
-        </div>
-    </div>
-</td>
-<td>
-    <div class="sl-editable">
-        <div class="sl-value">190</div>
-        <div class="sl-editor">
-            <input type="text" class="input-small" placeholder="電話番号" name="telNo" value="<%- obj.telNo %>">
-        </div>
-    </div>
-</td>
-<td>
-    <div class="sl-editable">
-        <div class="sl-value">メモ</div>
-        <div class="sl-editor">
-            <input type="text" placeholder="電話番号" name="telNo" value="<%- obj.telNo %>">
+            <input type="text" placeholder="メモ" name="memo" value="<%- obj.title %>">
         </div>
     </div>
 </td>
