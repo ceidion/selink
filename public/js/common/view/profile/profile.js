@@ -2,6 +2,7 @@ define([
     'text!common/template/profile/profile.html',
     'common/view/profile/photo',
     'common/view/profile/name',
+    'common/view/profile/title',
     'common/view/profile/birthday',
     'common/view/profile/gender',
     'common/view/profile/marriage',
@@ -22,6 +23,7 @@ define([
     template,
     PhotoItem,
     NameItem,
+    TitleItem,
     BirthDayItem,
     GenderItem,
     MarriageItem,
@@ -55,6 +57,7 @@ define([
         regions: {
             photoRegion: '#photo-item',
             nameRegion: '#name-item',
+            titleRegion: '#title-item',
             birthdayRegion: '#birthday-item',
             genderRegion: '#gender-item',
             marriageRegion: '#marriage-item',
@@ -78,6 +81,7 @@ define([
             // create component
             this.photoItem = new PhotoItem({model: this.model});
             this.nameItem = new NameItem({model: this.model});
+            this.titleItem = new TitleItem({model: this.model});
             this.birthdayItem = new BirthDayItem({model: this.model});
             this.genderItem = new GenderItem({model: this.model});
             this.marriageItem = new MarriageItem({model: this.model});
@@ -101,6 +105,7 @@ define([
             // show every component
             this.photoRegion.show(this.photoItem);
             this.nameRegion.show(this.nameItem);
+            this.titleRegion.show(this.titleItem);
             this.birthdayRegion.show(this.birthdayItem);
             this.genderRegion.show(this.genderItem);
             this.marriageRegion.show(this.marriageItem);

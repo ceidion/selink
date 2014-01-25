@@ -42,24 +42,30 @@ define([
                 slide: function(event, ui) {
 
                     var slideClass = 'ui-slider',
-                        indecatorClass = 'blue';
+                        indecatorClass = 'blue',
+                        humanize = '';
 
                     // change color by value
                     if (ui.value > 85){
                         slideClass = 'ui-slider-green';
                         indecatorClass = 'green';
+                        humanize = '（マスタ）';
                     } else if (ui.value > 70) {
                         slideClass = 'ui-slider';
                         indecatorClass = 'blue';
+                        humanize = '（シニア）';
                     } else if (ui.value > 50) {
                         slideClass = 'ui-slider-orange';
                         indecatorClass = 'orange';
+                        humanize = '（ジュニア）';
                     } else if (ui.value > 30) {
                         slideClass = 'ui-slider-red';
                         indecatorClass = 'red';
+                        humanize = '（経験あり）';
                     } else {
                         slideClass = 'ui-slider-purple';
                         indecatorClass = 'purple';
+                        humanize = '（知識あり）';
                     }
 
                     self.ui.slider
@@ -70,7 +76,7 @@ define([
                         .removeClass('green orange blue red purple')
                         .addClass(indecatorClass);
 
-                    self.ui.valIndicator.empty().text(ui.value);
+                    self.ui.valIndicator.empty().text(ui.value + 'pt' + humanize);
                 },
                 stop: function(event, ui) {
 
@@ -96,15 +102,37 @@ define([
                         .find('.pull-right').empty().text(ui.value + 'pt');
                 }
             });
+
+            // ?? I did bind on collection....
+            Backbone.Validation.bind(this);
         },
 
         updateModel: function() {
 
-            var skill = this.ui.input.val();
+            // clear all errors
+            this.clearError();
 
-            this.model.set('skill', skill);
-            if (skill)
+            var inputData = {skill: this.ui.input.val()};
+
+            // check input value
+            var errors = this.model.preValidate(inputData);
+
+            // if input has errors
+            if (errors) {
+                console.log(errors)
+                // show error
+                this.showError(errors);
+            } else {
+                // set value on model
+                this.model.set(inputData);
                 this.$el.find('.pull-left').empty().text(skill);
+                // this.renderValue(inputData);
+            }
+
+            // var skill = this.ui.input.val();
+
+            // this.model.set('skill', skill);
+            // if (skill)
         },
 
         removeModel: function() {

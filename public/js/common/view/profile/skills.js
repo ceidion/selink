@@ -50,6 +50,9 @@ define([
                 placement: 'top',
                 title: "ドラグして移動"
             });
+
+            // bind validator
+            Backbone.Validation.bind(this);
         }
 
     });

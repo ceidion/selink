@@ -27,6 +27,12 @@ var Profile = new Schema({
         trim: true,
         validate: validate('len', 0, 20)
     },
+    // Title
+    title: {
+        type: String,
+        trim: true,
+        validate: validate('len', 0, 20)
+    },
     // Photo
     photo: {
         type: String,

@@ -1,0 +1,27 @@
+<%
+    var avatar = './asset/images/no_photo_male.gif';
+
+    if (obj.profile.photo) {
+        avatar = obj.profile.photo;
+    } else if (obj.profile.gender === "女") {
+        avatar = './asset/images/no_photo_female.gif';
+    }
+%>
+
+<a href="<%- avatar %>" title="<%- obj.profile.firstName %>" data-rel="colorbox">
+    <img alt="150x150" src="<%- avatar %>" style="max-height: 150px; max-width: 150px;"/>
+    <div class="tags">
+        <span class="label-holder">
+            <span class="label label-success"><%- obj.profile.firstName %></span>
+        </span>
+        <% if (obj.profile.title) { %>
+        <span class="label-holder">
+            <span class="label label-info arrowed-in"><%- obj.profile.title %></span>
+        </span>
+        <% } %>
+    </div>
+</a>
+<div class="tools">
+    <a href="#"><i class="icon-star-empty orange"></i></a>
+    <a href="#"><i class="icon-paper-clip"></i></a>
+</div>

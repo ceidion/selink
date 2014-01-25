@@ -1,6 +1,6 @@
 define(['text!engineer/template/common/sidenav.html',], function(template) {
 
-    var SideNav = Backbone.Marionette.ItemView.extend({
+    return Backbone.Marionette.ItemView.extend({
 
         template: template,
 
@@ -31,5 +31,4 @@ define(['text!engineer/template/common/sidenav.html',], function(template) {
         }
     });
 
-    return SideNav;
 });

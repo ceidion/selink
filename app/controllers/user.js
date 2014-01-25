@@ -74,18 +74,21 @@ exports.introduce = function(req, res, next) {
                 .limit(8);
 
     query.exec(function(err, users) {
-        if(err) next(err);
+        if (err) next(err);
 
-        users.forEach(function(user) {
+        if (users) {
+
             // fill the user with profile
             Profile.populate(users, {
                 path: "profile",
-                select: 'firstName lastName photo'
-            }, function() {
+                select: 'firstName lastName title gender photo'
+            }, function(err) {
+
+                if (err) next(err);
                 // return the user
                 res.json(users);
             });
-        });
+        }
     });
 };
 

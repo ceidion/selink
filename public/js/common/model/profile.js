@@ -15,6 +15,10 @@ define([], function() {
                 maxLength: 20,
                 msg: "最大20文字までご入力ください"
             },
+            title: {
+                maxLength: 20,
+                msg: "最大20文字までご入力ください"
+            },
             birthDay: {
                 dateJa: true
             },

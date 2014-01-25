@@ -2,27 +2,33 @@
     var length = obj.weight ? obj.weight : 20,
         progressClass = 'progress-bar-purple',
         sliderClass = 'ui-slider-purple',
-        indecatorClass = 'purple';
+        indecatorClass = 'purple',
+        humanize = '（知識あり）';
+
 
     if (obj.weight > 85) {
         progressClass = 'progress-bar-success';
         sliderClass = 'ui-slider-green';
         indecatorClass = 'green';
+        humanize = '（マスタ）';
 
     } else if (obj.weight > 70) {
         progressClass = 'progress-bar';
         sliderClass = 'ui-slider';
         indecatorClass = 'blue';
+        humanize = '（シニア）';
 
     } else if (obj.weight > 50) {
         progressClass = 'progress-bar-warning';
         sliderClass = 'ui-slider-orange';
         indecatorClass = 'orange';
+        humanize = '（ジュニア）';
 
     } else if (obj.weight > 30) {
         progressClass = 'progress-bar-danger';
         sliderClass = 'ui-slider-red';
         indecatorClass = 'red';
+        humanize = '（経験あり）';
     }
 
 %>
@@ -43,13 +49,13 @@
     </div>
 </div>
 <div class="sl-editor row">
-    <div class="col-sm-12 input-group">
-        <span class="input-icon input-icon-right">
-            <input type="text" value="<%- obj.skill %>">
-            <i class="icon-nothing <%= indecatorClass %>"><%= length %>pt</i>
-        </span>
+    <div class="col-xs-12 input-icon input-icon-right form-group">
+        <input type="text" name="skill" placeholder="スキル名" value="<%- obj.skill %>">
+        <i class="icon-nothing <%= indecatorClass %>"><%= length %>pt<%= humanize %></i>
+    </div>
+    <div class="col-xs-12 input-group">
         <span class="input-group-addon">
-            <div class="ui-slider <%= sliderClass %> sl-slider" style="width: 150px;"></div>
+            <div class="ui-slider <%= sliderClass %> sl-slider"></div>
         </span>
         <span class="input-group-btn">
             <button type="button" class="btn btn-danger btn-remove btn-xs"><i class="icon-trash bigger-150"></i></button>

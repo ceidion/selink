@@ -35,7 +35,7 @@ define([
 
             var self = this;
 
-            // enable knob
+            // set up knob
             this.$el.find('.knob').knob({
 
                 // custom draw
