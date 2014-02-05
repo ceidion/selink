@@ -31,7 +31,6 @@ define([
 
         // After render
         onRender: function() {
-            console.log(this.introductionRegion);
             this.introductionRegion.show(this.introductionsView);
         },
 

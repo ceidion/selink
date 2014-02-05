@@ -1,10 +1,12 @@
 define([
-    'text!common/template/topnav/topnav.html'
+    'text!common/template/topnav/topnav.html',
+    'common/view/topnav/event-menu'
 ], function(
-    template
+    template,
+    EventMenu
 ) {
 
-    var TopNav = Backbone.Marionette.ItemView.extend({
+    var TopNav = Backbone.Marionette.Layout.extend({
 
         template: template,
 
@@ -20,6 +22,7 @@ define([
 
         initialize: function() {
 
+
             var nearestEvents = _.filter(this.collection.models, function(event) {
                 return moment(event.get('start')).isAfter(moment());
             });
@@ -34,6 +37,9 @@ define([
 
         onShow: function() {
             // this.$el.addClass('animated fadeInRight');
+            new EventMenu({
+                el: 'body'
+            })
         },
 
         updatePhoto: function() {
