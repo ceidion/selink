@@ -27,27 +27,28 @@ define([
             }
 
             this.ui = _.extend({}, this.ui, {
-                'title': 'input[name="title"]',
-                'allDay': 'input[name="allDay"]',
-                'startDate': 'input[name="startDate"]',
                 'startTime': 'input[name="startTime"]',
-                'endDate': 'input[name="endDate"]',
                 'endTime': 'input[name="endTime"]',
-                'memo': '.wysiwyg-editor',
-                'removeBtn': '.btn-remove',
-                'saveBtn': '.btn-save'
+                'excludeTime': 'input[name="excludeTime"]',
+                'fee': 'input[name="fee"]',
+                'memo': 'input[name="memo"]',
+                'removeBtn': '.btn-remove'
             });
 
             this.events = _.extend({}, this.events, {
-                'change input[name="allDay"]': 'setAllDay',
-                'click .btn-save': 'saveEvent',
-                'click .btn-remove': 'removeEvent'
+                'click': 'createEvent',
+                'change input': 'updateModel',
+                'click .btn-remove': 'removeModel'
             });
         },
 
         // after render
         onRender: function() {
 
+            // ?? I did bind on collection....
+            Backbone.Validation.bind(this);
+
+            // high light Saturday and Sunday
             var dayOfWeek = moment(this.model.get('start')).day();
 
             if (dayOfWeek === 6) {
@@ -56,118 +57,121 @@ define([
                 this.$el.addClass('success');
             }
 
+            // setup timepicker will set the input field (don't know why), that will fire change event,
+            // so I have to stop event delegate temprarly
+            this.undelegateEvents();
+
             // append time picker
-            this.$el.find('input[name="startTime"],input[name="endTime"]').timepicker({
+            this.$el.find('input[name="startTime"],input[name="endTime"],input[name="excludeTime"]').timepicker({
                 minuteStep: 5,
                 showMeridian: false,
                 defaultTime: false
             });
 
+            // enable event delegate again
+            this.delegateEvents();
+
             // enable mask input
-            this.$el.find('input[name="startTime"],input[name="endTime"]').mask('99:99');
+            this.$el.find('input[name="startTime"],input[name="endTime"],input[name="excludeTime"]').mask('99:99');
         },
 
-        onBeforeClose: function() {
-           // this.$el.find('input[name="startDate"],input[name="endDate"]').datepicker('remove');
-        },
+        // create event, when user click on one row in the table, create 'go to work' event
+        createEvent: function() {
 
-        // save event
-        saveEvent: function() {
+            var self = this;
 
-            // if input value checking ok
-            if (this.inputValid()) {
+            // if this model is a new event
+            if (this.model.isNew()) {
+                this.model.save(null, {
+                    success: function() {
 
-                // produce start/end datetime
-                var startDate = new Date(this.ui.startDate.val()),
-                    endDate = new Date(this.ui.endDate.val()),
-                    startTime = this.ui.startTime.val() ? this.ui.startTime.val().split(':') : ["0","0"],
-                    endTime = this.ui.endTime.val() ? this.ui.endTime.val().split(':') : ["0","0"];
+                        self.ui.value.fadeOut('fast', function() {
+                            // slideDown edit panel
+                            self.ui.editor.slideDown('fast');
+                            // mark this editor as opened
+                            self.$el.addClass('sl-editor-open');
 
-                startDate.setHours(Number(startTime[0]));
-                startDate.setMinutes(Number(startTime[1]));
-                endDate.setHours(Number(endTime[0]));
-                endDate.setMinutes(Number(endTime[1]));
-
-                // produce allDay value
-                var allDay = this.ui.allDay.is(':checked') ? true : false;
-
-                // set value to model
-                this.model.set({
-                    title: this.ui.title.val(),
-                    className: this.$el.find('input[name="label"]:checked').val(),
-                    allDay: allDay,
-                    start: startDate,
-                    end: endDate,
-                    memo: this.ui.memo.html()
+                            self.renderValue(self.model.toJSON());
+                        });
+                    }
                 });
-
-                // if this model is a new event
-                if (this.model.isNew()) {
-                    // add it to eventcollection
-                    this.collection.add(this.model.toJSON());
-                }
-            }
+            } else
+                // use the base version action
+                BaseView.prototype.switchToEditor.apply(this);
         },
 
-        // remove event
-        removeEvent: function() {
-            this.collection.remove(this.model);
-        },
+        // update event
+        updateModel: function() {
 
-        // checking input value
-        inputValid: function() {
+            // clear all errors
+            this.clearError();
 
-            // remove all error
-            this.$el.find('input')
-                .removeClass('tooltip-error').tooltip('destroy')
-                .closest('.form-group').removeClass('has-error')
-                .find('i').removeClass('animated-input-error');
+            var inputData = this.getData();
 
             // check input
-            var errors = this.model.preValidate({
-                title: this.ui.title.val(),
-                startDate: this.ui.startDate.val(),
-                endDate: this.ui.endDate.val(),
-            }) || {};
+            var errors = this.model.preValidate(inputData) || {};
 
-            // check wheter end date is after start date
-            if (this.ui.startDate.val() && this.ui.endDate.val()) {
-
-                // looks very bad, but work
-                var startDate = new Date(this.ui.startDate.val()),
-                    endDate = new Date(this.ui.endDate.val()),
-                    startTime = this.ui.startTime.val() ? this.ui.startTime.val().split(':') : ["0","0"],
-                    endTime = this.ui.endTime.val() ? this.ui.endTime.val().split(':') : ["0","0"];
-
-                startDate.setHours(Number(startTime[0]));
-                startDate.setMinutes(Number(startTime[1]));
-                endDate.setHours(Number(endTime[0]));
-                endDate.setMinutes(Number(endTime[1]));
-
-                if (moment(startDate).isAfter(endDate))
-                    errors.endDate = errors.endTime = "開始日より後の時間をご入力ください";
-            }
+            // check wheter end time is after start time
+            if (moment(inputData.start).isAfter(inputData.end))
+                errors.endDate = errors.endTime = "開始日より後の時間をご入力ください";
 
             // if got input error
             if (!_.isEmpty(errors)) {
-
-                // append error message for every input
-                for(var key in errors) {
-                    this.$el.find('input[name="' + key + '"]')
-                    .addClass('tooltip-error').tooltip({
-                        placement: 'bottom',
-                        title: errors[key]
-                    })
-                    .closest('.form-group').addClass('has-error')
-                    .find('i').addClass('animated-input-error');
-                }
-
-                // return not valid
-                return false;
+                // show error
+                this.showError(errors);
             } else {
-                // return valid
-                return true;
+                // set value to model
+                this.model.set(inputData);
+                this.renderValue(inputData);
             }
+        },
+
+        removeModel: function() {
+            this.model.destroy({
+                success: function() {
+
+                }
+            });
+        },
+
+        getData: function() {
+
+            // looks bad, but work
+            var startDate = new Date(this.model.get('start')),
+                endDate = new Date(this.model.get('end')),
+                startTime = this.ui.startTime.val() ? this.ui.startTime.val().split(':') : ["0","0"],
+                endTime = this.ui.endTime.val() ? this.ui.endTime.val().split(':') : ["0","0"];
+
+            startDate.setHours(Number(startTime[0]));
+            startDate.setMinutes(Number(startTime[1]));
+            endDate.setHours(Number(endTime[0]));
+            endDate.setMinutes(Number(endTime[1]));
+
+            var data = {
+                start: startDate,
+                end: endDate,
+            };
+
+            if (this.ui.excludeTime.val())
+                data.exclude = this.ui.excludeTime.val();
+
+            if (this.ui.fee.val())
+                data.fee = Number(this.ui.fee.val());
+
+            if (this.ui.memo.val())
+                data.memo = this.ui.memo.val();
+
+            return data;
+        },
+
+        renderValue: function(data) {
+
+            this.$el.find('#startTime').text(moment(data.start).format('HH:mm'));
+            this.$el.find('#endTime').text(moment(data.end).format('HH:mm'));
+            this.$el.find('#excludeTime').text(data.exclude);
+            this.$el.find('#fee').text(data.fee);
+            this.$el.find('#memo').text(data.memo);
+            this.ui.removeBtn.removeClass('hide');
         }
     });
 

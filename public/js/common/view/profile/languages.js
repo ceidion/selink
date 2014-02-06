@@ -51,7 +51,7 @@ define([
                 placement: 'top',
                 title: "ドラグして移動"
             });
-        }
+        },
 
     });
 

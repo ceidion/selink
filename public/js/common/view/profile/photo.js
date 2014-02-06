@@ -48,6 +48,11 @@ define([
             });
         },
 
+        // after show
+        onShow: function() {
+            this.$el.addClass('animated fadeInLeft');
+        },
+
         updatePhoto: function() {
 
             var self = this;

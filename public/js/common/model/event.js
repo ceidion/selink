@@ -14,6 +14,10 @@ define([], function() {
             },
             endDate: {
                 dateJa: true
+            },
+            fee: {
+                range: [1, 10000],
+                msg: "交通費は10000円以下でご入力ください"
             }
         },
 

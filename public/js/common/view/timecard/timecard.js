@@ -29,9 +29,9 @@ define([
 
         // Collection events
         collectionEvents: {
-            'add': 'createEvent',
+            // 'add': 'createEvent',
             'change': 'updateEvent',
-            'remove': 'removeEvent',
+            // 'remove': 'removeEvent',
         },
 
         // Initializer
@@ -40,6 +40,8 @@ define([
             // here is tricky
             // make a empty array to create collection
             var models = [],
+                totalTime = 0,
+                totalFee = 0,
                 i = 1;
 
             // loop through current month
@@ -58,26 +60,63 @@ define([
 
                     // if that single day and the item are same day and the item is "go to job"
                     if (moment(date).isSame(event.get('start'), 'day') && event.get('title') == "出勤") {
+
                         // let the collection item be a member of real collection
                         models.push(event);
+
+                        // add time to totalTime
+                        var excludeTime = event.get('exclude') ? event.get('exclude').split(':') : ["0","0"];
+
+                        totalTime = totalTime + event.get('end').getHours()*60
+                                    + event.get('end').getMinutes()
+                                    - event.get('start').getHours()*60
+                                    - event.get('start').getMinutes()
+                                    - Number(excludeTime[0])*60
+                                    - Number(excludeTime[1]);
+
+                        // add daily cost to totalFee
+                        if (event.get('fee'))
+                            totalFee = totalFee + event.get('fee');
+
                         // tell below no need to produce slot
                         needSlot = false;
                         break;
                     }
                 }
 
-                // if we need a slot, push the single empty day
-                if (needSlot)
+                // if we need a slot, push the single default day
+                if (needSlot) {
+
+                    // clone this day
+                    var start = moment(date),
+                        end = moment(date);
+
+                    // set default start/end time
+                    start.hour(9);
+                    start.minutes(30);
+                    end.hour(18);
+                    end.minutes(30);
+
                     models.push({
-                        start: date,
-                        end: date
+                        title: "出勤",
+                        className: "label-success",
+                        start: start.toJSON(),
+                        end: end.toJSON(),
+                        exclude: "1:00"
                     });
+                }
             }
 
-            // create the real collection
-            this.collection = new EventsModel(models);
+            this.model = new Backbone.Model({
+                totalTime: totalTime,
+                totalFee: totalFee
+            });
 
-            console.log(this.collection);
+            // create the collection for render
+            var oldEventsModel = this.collection;
+
+            this.collection = new EventsModel(models);
+            this.collection.document = oldEventsModel.document;
         },
 
         // After render
@@ -141,20 +180,9 @@ define([
             });
         },
 
-        // remove event
-        removeEvent: function(model) {
-
-            var self = this;
-
-            model.destroy({
-                success: function() {
-                    self.ui.calendar.fullCalendar('removeEvents', function(event) {
-                        if (event._id == model.get('_id'))
-                            return true;
-                    });
-                    self.ui.eventModal.modal('hide');
-                }
-            });
+        // Merionette composite view will remove subview from dom, not fit here
+        // so I override this method let it do nothing
+        removeChildView: function() {
         },
 
         // profile view handle the click event

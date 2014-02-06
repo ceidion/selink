@@ -53,7 +53,7 @@ define([
 
             // bind validator
             Backbone.Validation.bind(this);
-        }
+        },
 
     });
 

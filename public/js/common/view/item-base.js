@@ -51,7 +51,7 @@ define([], function() {
 
                         self.$el.find('.sl-icon')
                             .addClass('animated flip green')
-                            .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
+                            .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
                                 $(this).removeClass('animated flip green');
                             });
                     },

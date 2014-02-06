@@ -17,29 +17,30 @@ define([
         },
 
         collectionEvents: {
-            'change': 'render'
+            'change': 'reflect'
+        },
+
+        // regions
+        regions: {
+            eventNavRegion: '#event-nav',
         },
 
         initialize: function() {
 
-
-            var nearestEvents = _.filter(this.collection.models, function(event) {
-                return moment(event.get('start')).isAfter(moment());
-            });
-
-            nearestEvents = _.sortBy(nearestEvents, function(event) {
-                return moment(event.get('start')).valueOf();
-            });
-
-            this.model.set('nearestEvents', nearestEvents.slice(0, 5), {silent:true});
-            this.model.set('nearestEventsNum', nearestEvents.length, {silent:true});
+            // create component
+            this.eventNav = new EventMenu({model: this.model, collection: this.collection});
         },
 
         onShow: function() {
-            // this.$el.addClass('animated fadeInRight');
-            new EventMenu({
-                el: 'body'
-            })
+
+            // show every component
+            this.eventNavRegion.show(this.eventNav);
+        },
+
+        reflect: function() {
+
+            this.eventNav = new EventMenu({model: this.model, collection: this.collection});
+            this.eventNavRegion.show(this.eventNav);
         },
 
         updatePhoto: function() {

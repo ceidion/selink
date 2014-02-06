@@ -3,7 +3,7 @@
 </td>
 <td class="text-center">
     <div class="sl-editable">
-        <div class="sl-value">
+        <div id="startTime" class="sl-value">
             <%
                 if (obj._id && obj.startTime)
                     print(obj.startTime);
@@ -11,14 +11,14 @@
                     print("--");
             %>
         </div>
-        <div class="sl-editor bootstrap-timepicker">
+        <div class="sl-editor bootstrap-timepicker form-group">
             <input type="text" class="input-small text-center" placeholder="出社時刻" name="startTime" value="<%- obj.startTime %>">
         </div>
     </div>
 </td>
 <td class="text-center">
     <div class="sl-editable">
-        <div class="sl-value">
+        <div id="endTime" class="sl-value">
             <%
                 if (obj._id && obj.endTime)
                     print(obj.endTime);
@@ -26,39 +26,49 @@
                     print("--");
             %>
         </div>
-        <div class="sl-editor bootstrap-timepicker">
+        <div class="sl-editor bootstrap-timepicker form-group">
             <input type="text" class="input-small text-center" placeholder="退社時刻" name="endTime" value="<%- obj.endTime %>">
         </div>
     </div>
 </td>
 <td class="text-center">
     <div class="sl-editable">
-        <div class="sl-value">
+        <div id="excludeTime" class="sl-value">
             <%
-                if (obj._id && obj.excludeTime)
-                    print(obj.excludeTime);
+                if (obj._id && obj.exclude)
+                    print(obj.exclude);
                 else
                     print("--");
             %>
         </div>
-        <div class="sl-editor bootstrap-timepicker">
-            <input type="text" class="input-small text-center" placeholder="休憩時間" name="excludeTime" value="<%- obj.excludeTime %>">
+        <div class="sl-editor bootstrap-timepicker form-group">
+            <input type="text" class="input-small text-center" placeholder="休憩時間" name="excludeTime" value="<%- obj.exclude %>">
         </div>
     </div>
 </td>
 <td class="text-center">
     <div class="sl-editable">
-        <div class="sl-value"><%- obj.fee %></div>
-        <div class="sl-editor">
+        <div id="fee" class="sl-value">
+            <%
+                if (obj._id && obj.fee)
+                    print(obj.fee);
+                else
+                    print("--");
+            %>
+        </div>
+        <div class="sl-editor form-group">
             <input type="text" class="input-small text-center" placeholder="交通費" name="fee" value="<%- obj.fee %>">
         </div>
     </div>
 </td>
 <td>
-    <div class="sl-editable">
-        <div class="sl-value"><%- obj.title %></div>
-        <div class="sl-editor">
-            <input type="text" placeholder="メモ" name="memo" value="<%- obj.title %>">
+    <div class="sl-editable pull-left">
+        <div id="memo" class="sl-value"><%- obj.memo %></div>
+        <div class="sl-editor form-group">
+            <input type="text" placeholder="メモ" name="memo" value="<%- obj.memo %>">
         </div>
+    </div>
+    <div class="action-buttons pull-right btn-remove <% if (!obj._id) { %> hide <% } %>">
+        <a href="#"><i class="icon-trash red icon-only bigger-130"></i></a>
     </div>
 </td>

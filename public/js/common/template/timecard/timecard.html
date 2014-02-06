@@ -3,7 +3,7 @@
     <div class="widget-box">
 
         <div class="widget-header header-color-blue">
-            <h5 class="bigger lighter"><i class="icon-table"></i> Tables & Colors</h5>
+            <h5 class="bigger lighter"><i class="icon-table"></i> <%= moment().format('YYYY年M月') %></h5>
         </div>
 
         <div class="widget-body">
@@ -15,15 +15,15 @@
                             <th style="width: 108px;" class="text-center"><i class="icon-flag-alt"></i>&nbsp;出社</th>
                             <th style="width: 108px;" class="text-center"><i class="icon-flag-checkered"></i>&nbsp;退社</th>
                             <th style="width: 108px;" class="text-center"><i class="icon-food"></i>&nbsp;休憩</th>
-                            <th style="width: 108px;" class="text-center"><i class="icon-money"></i>&nbsp;交通費</th>
+                            <th style="width: 108px;" class="text-center"><i class="icon-jpy"></i>&nbsp;交通費</th>
                             <th><i class="icon-pencil"></i>&nbsp;メモ</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr class="active red">
                             <td class="text-center"><i class="icon-flag"></i>&nbsp;実働計</td>
-                            <td class="text-center" colspan="3">160</td>
-                            <td class="text-center">180</td>
+                            <td class="text-center" colspan="3"><%= obj.totalTime/60 %>時間</td>
+                            <td class="text-center"><%= obj.totalFee %>円</td>
                             <td>-</td>
                         </tr>
                     </tfoot>

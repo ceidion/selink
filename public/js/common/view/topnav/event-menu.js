@@ -8,51 +8,27 @@ define([
 
         template: template,
 
-        // className: 'navbar-header pull-right',
-
-        modelEvents: {
-            // 'change:photo': 'updatePhoto',
-        },
-
-        collectionEvents: {
-            'change': 'render'
-        },
+        className: 'light-orange',
 
         initialize: function() {
 
-            console.log(this.template)
+            var nearestEvents = _.filter(this.collection.models, function(event) {
+                return moment(event.get('start')).isAfter(moment());
+            });
 
-            // var nearestEvents = _.filter(this.collection.models, function(event) {
-            //     return moment(event.get('start')).isAfter(moment());
-            // });
+            nearestEvents = _.sortBy(nearestEvents, function(event) {
+                return moment(event.get('start')).valueOf();
+            });
 
-            // nearestEvents = _.sortBy(nearestEvents, function(event) {
-            //     return moment(event.get('start')).valueOf();
-            // });
-
-            // this.model.set('nearestEvents', nearestEvents.slice(0, 5), {silent:true});
-            // this.model.set('nearestEventsNum', nearestEvents.length, {silent:true});
+            this.model.set('nearestEvents', nearestEvents.slice(0, 5), {silent:true});
+            this.model.set('nearestEventsNum', nearestEvents.length, {silent:true});
         },
 
         onShow: function() {
-            // this.$el.addClass('animated fadeInRight');
+            if (this.model.get('nearestEventsNum') > 0) {
+                this.$el.find('.icon-bell-alt').addClass('icon-animated-bell');
+            }
         },
-
-        // updatePhoto: function() {
-
-        //     var self = this;
-
-        //     this.$el.find('.nav-user-photo')
-        //         .addClass('animated rollOut')
-        //         .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
-        //             $(this).attr('src', self.model.get('photo'));
-        //             $(this).removeClass('rollOut').addClass('rollIn');
-        //         });
-        // },
-
-        // updateEvent: function() {
-        //     console.log("event changed");
-        // }
 
     });
 

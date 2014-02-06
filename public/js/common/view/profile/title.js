@@ -35,8 +35,9 @@ define([
             Backbone.Validation.bind(this);
         },
 
-        onBeforeClose: function() {
-            this.ui.input.datepicker('remove');
+        // after show
+        onShow: function() {
+            this.$el.addClass('animated fadeInLeft');
         },
 
         // reflect user input on model

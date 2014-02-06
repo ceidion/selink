@@ -25,6 +25,12 @@ var Event = new Schema({
     memo: {
         type: String,
         trim: true
+    },
+    exclude: {
+        type: String,
+    },
+    fee: {
+        type: Number
     }
 });
 

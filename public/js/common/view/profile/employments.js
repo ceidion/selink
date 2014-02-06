@@ -54,7 +54,12 @@ define([
 
             // bind validator
             Backbone.Validation.bind(this);
-        }
+        },
+
+        // after show
+        onShow: function() {
+            this.$el.addClass('animated fadeInRight');
+        },
 
     });
 

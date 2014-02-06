@@ -39,6 +39,11 @@ define([
             Backbone.Validation.bind(this);
         },
 
+        // after show
+        onShow: function() {
+            this.$el.addClass('animated fadeInLeft');
+        },
+
         updateModel: function() {
             // clear all errors
             this.clearError();
