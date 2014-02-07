@@ -10,7 +10,7 @@ define([
         template: template,
 
         // for dnd add class here
-        // className: 'widget-box transparent',
+        className: 'row',
 
         // item view container
         itemViewContainer: 'tbody',
@@ -126,6 +126,10 @@ define([
 
         // After show
         onShow: function() {
+            this.$el.find('.slim-scroll').slimScroll({
+                height: 700,
+                railVisible:true
+            });
         },
 
         // create new event
@@ -185,7 +189,7 @@ define([
         removeChildView: function() {
         },
 
-        // profile view handle the click event
+        // timecard view handle the click event
         // -- switch component in editor mode to value mode
         // *from x-editable*
         closeEditor: function(e) {

@@ -80,17 +80,18 @@ define([
 
             var self = this;
 
-            // if this model is a new event
+            // if this model is a new event (slot)
             if (this.model.isNew()) {
+                // save it
                 this.model.save(null, {
                     success: function() {
-
+                        // open the editor
                         self.ui.value.fadeOut('fast', function() {
                             // slideDown edit panel
                             self.ui.editor.slideDown('fast');
                             // mark this editor as opened
                             self.$el.addClass('sl-editor-open');
-
+                            // render the default value
                             self.renderValue(self.model.toJSON());
                         });
                     }
@@ -100,12 +101,12 @@ define([
                 BaseView.prototype.switchToEditor.apply(this);
         },
 
-        // update event
+        // update model
         updateModel: function() {
 
             // clear all errors
             this.clearError();
-
+            // get user input
             var inputData = this.getData();
 
             // check input
@@ -114,6 +115,8 @@ define([
             // check wheter end time is after start time
             if (moment(inputData.start).isAfter(inputData.end))
                 errors.endDate = errors.endTime = "開始日より後の時間をご入力ください";
+
+            // more addtional check
 
             // if got input error
             if (!_.isEmpty(errors)) {
@@ -126,10 +129,57 @@ define([
             }
         },
 
-        removeModel: function() {
+        // remove model
+        removeModel: function(e) {
+
+            // stop evetn propagation to prevent open editor
+            e.stopPropagation();
+
+            var self = this;
+
+            // clone this day
+            var start = moment(this.model.get('startDate')),
+                end = moment(this.model.get('endDate'));
+
+            // set default start/end time
+            start.hour(9);
+            start.minutes(30);
+            end.hour(18);
+            end.minutes(30);
+
+            var slot = {
+                title: "出勤",
+                className: "label-success",
+                start: start.toJSON(),
+                end: end.toJSON(),
+                exclude: "1:00"
+            };
+
+            var newModel = this.model.collection.add(slot);
+
             this.model.destroy({
+
                 success: function() {
 
+                    self.$el.find('.sl-value,.btn-remove')
+                        .addClass('animated flipOutX')
+                        .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
+
+                            self.$el.find('#startTime').text("--");
+                            self.$el.find('#endTime').text("--");
+                            self.$el.find('#excludeTime').text("--");
+                            self.$el.find('#fee').text("--");
+                            self.$el.find('#memo').text("");
+
+                            self.$el.find('.sl-value')
+                                .removeClass('flipOutX')
+                                .addClass('flipInX')
+                                .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
+                                    $(this).removeClass('animated flipInX');
+                                });
+                        });
+
+                    self.model = newModel;
                 }
             });
         },

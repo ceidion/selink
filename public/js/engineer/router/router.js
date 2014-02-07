@@ -7,6 +7,7 @@ define([], function() {
             "profile": "showProfileView",
             "calendar": "showCalendarView",
             "timecard": "showTimecardView",
+            "mailbox": "showMailBoxView",
         }
     });
 

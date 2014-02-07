@@ -1,7 +1,7 @@
-<td class="text-center">
+<td class="text-center" style="width: 15%;">
     <% print(moment(obj.start).format('M月D日 （dd）')); %>
 </td>
-<td class="text-center">
+<td class="text-center" style="width: 108px;">
     <div class="sl-editable">
         <div id="startTime" class="sl-value">
             <%
@@ -16,7 +16,7 @@
         </div>
     </div>
 </td>
-<td class="text-center">
+<td class="text-center" style="width: 108px;">
     <div class="sl-editable">
         <div id="endTime" class="sl-value">
             <%
@@ -31,7 +31,7 @@
         </div>
     </div>
 </td>
-<td class="text-center">
+<td class="text-center" style="width: 108px;">
     <div class="sl-editable">
         <div id="excludeTime" class="sl-value">
             <%
@@ -46,7 +46,7 @@
         </div>
     </div>
 </td>
-<td class="text-center">
+<td class="text-center" style="width: 108px;">
     <div class="sl-editable">
         <div id="fee" class="sl-value">
             <%
@@ -69,6 +69,6 @@
         </div>
     </div>
     <div class="action-buttons pull-right btn-remove <% if (!obj._id) { %> hide <% } %>">
-        <a href="#"><i class="icon-trash red icon-only bigger-130"></i></a>
+        <a><i class="icon-trash red icon-only bigger-130"></i></a>
     </div>
 </td>

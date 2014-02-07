@@ -1,0 +1,108 @@
+<div class="tabbable">
+
+    <ul id="inbox-tabs" class="inbox-tabs nav nav-tabs padding-16 tab-size-bigger tab-space-1">
+
+        <li class="li-new-mail pull-right">
+            <a data-toggle="tab" href="#write" data-target="write" class="btn-new-mail">
+                <span class="btn bt1n-small btn-purple no-border">
+                    <i class=" icon-envelope bigger-130"></i>
+                    <span class="bigger-110">Write Mail</span>
+                </span>
+            </a>
+        </li>
+
+        <li class="active">
+            <a data-toggle="tab" href="#inbox" data-target="inbox">
+                <i class="blue icon-inbox bigger-130"></i>
+                <span class="bigger-110">Inbox</span>
+            </a>
+        </li>
+
+        <li>
+            <a data-toggle="tab" href="#sent" data-target="sent">
+                <i class="orange icon-location-arrow bigger-130 "></i>
+                <span class="bigger-110">Sent</span>
+            </a>
+        </li>
+
+        <li>
+            <a data-toggle="tab" href="#draft" data-target="draft">
+                <i class="green icon-pencil bigger-130"></i>
+                <span class="bigger-110">Draft</span>
+            </a>
+        </li>
+
+    </ul>
+
+    <div class="tab-content no-border no-padding">
+
+        <div class="tab-pane in active">
+            <div class="message-container">
+                {{> page.navbar}}
+
+                <div class="message-list-container">
+                {{> page.message_list}}
+                </div>
+
+                <div class="message-footer clearfix">
+                    <div class="pull-left">
+                        151 messages total
+                    </div>
+                    <div class="pull-right">
+                        <div class="inline middle">
+                            page 1 of 16
+                        </div>
+                        &nbsp; &nbsp;
+                        <ul class="pagination middle">
+
+                            <li class="disabled">
+                                <span><i class="icon-step-backward middle"></i></span>
+                            </li>
+
+                            <li class="disabled">
+                                <span><i class="icon-caret-left bigger-140 middle"></i></span>
+                            </li>
+
+                            <li>
+                                <span><input value="1" maxlength="3" type="text" /></span>
+                            </li>
+
+                            <li>
+                                <a href="#"><i class="icon-caret-right bigger-140 middle"></i></a>
+                            </li>
+
+                            <li>
+                                <a href="#"><i class="icon-step-forward middle"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+
+                <div class="hide message-footer message-footer-style2 clearfix">
+                    <div class="pull-left">
+                        simpler footer
+                    </div>
+
+                    <div class="pull-right">
+                        <div class="inline middle">
+                            message 1 of 151
+                        </div>
+                        &nbsp; &nbsp;
+                        <ul class="pagination middle">
+                            <li class="disabled">
+                                <span><i class="icon-angle-left bigger-150"></i></span>
+                            </li>
+
+                            <li>
+                                <a href="#"><i class="icon-angle-right bigger-150"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>

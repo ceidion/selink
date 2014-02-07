@@ -1,5 +1,9 @@
 
+html,body{height:100%}
+.main-container{height:90%;min-height:90%}
+.main-container-inner,.main-content,.page-content{height:100%;min-height:100%}
 .sidebar{-webkit-transition:width .5s;transition:width .5s}.sidebar:before{-webkit-transition:width .5s;transition:width .5s}
+.main-content{-webkit-transition:margin .5s;transition:margin .5s}.main-content:before{-webkit-transition:margin .5s;transition:margin .5s}
 .gritter-item{font-size:12px}
 .sl-editable{-webkit-transition:background-color 1s;transition:background-color 1s}.sl-editable:hover{background-color:#EEE;cursor:pointer}
 .sl-editable .form-group{margin-bottom:0px}
@@ -38,7 +42,7 @@
 #event-modal .checkbox{margin-top:4px;margin-bottom:0px}
 #event-modal .wysiwyg-editor{margin:0 15px;height:150px}
 #event-modal .wysiwyg-toolbar{margin:0 15px !important}
-.table-timecard td{line-height:35px !important}
+.table-timecard{margin-bottom:0px}.table-timecard td{line-height:35px !important}
 #gritter-notice-wrapper{top:50px}
 #external-events>div,.fc-event-container>div{-webkit-transition:all 0.2s;transition:all 0.2s}#external-events>div:hover,.fc-event-container>div:hover{text-decoration:none;-moz-transform:scale(1.1);-webkit-transform:scale(1.1);-o-transform:scale(1.1);-ms-transform:scale(1.1);transform:scale(1.1);opacity:0.85}
 .fc-event-inner{padding:3px 5px}.fc-event-inner .sl-event-memo{padding:10px 15px}

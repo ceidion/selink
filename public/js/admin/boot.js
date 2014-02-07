@@ -42,6 +42,7 @@ require.config({
         'wysiwyg': 'lib/bootstrap-wysiwyg.min',
         'hotkeys': 'lib/jquery.hotkeys.min',
         'isotope': 'lib/jquery.isotope',
+        'slim-scroll': 'lib/jquery.slimscroll.min',
         'app': 'admin/admin'
     },
 
@@ -116,6 +117,9 @@ require.config({
         'isotope': {
             deps: ['jquery']
         },
+        'slim-scroll': {
+            deps: ['jquery']
+        },
         'app': {
             deps: [
                 'jquery-ui',
@@ -137,7 +141,8 @@ require.config({
                 'gritter',
                 'knob',
                 'wysiwyg',
-                'isotope'
+                'isotope',
+                'slim-scroll'
             ]
         }
     }

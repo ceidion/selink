@@ -1,17 +1,21 @@
 define([
     'common/view/topnav/topnav',
+    'common/view/shortcuts/shortcuts',
     'engineer/view/common/sidenav',
     'engineer/view/home/page',
     'common/view/profile/profile',
     'common/view/calendar/calendar',
     'common/view/timecard/timecard',
+    'common/view/mailbox/mailbox',
 ], function(
     TopNavView,
+    ShortCutsView,
     SideNavView,
     HomeView,
     ProfileView,
     CalendarView,
-    TimecardView
+    TimecardView,
+    MailBoxView
 ) {
 
     // Main page controller
@@ -35,6 +39,10 @@ define([
         },
 
         showNavigation: function() {
+
+            // setup short cuts
+            this.app.shortCutsView = new ShortCutsView();
+            this.app.shortcutArea.show(this.app.shortCutsView);
 
             // setup side nav
             this.app.sideNavView = new SideNavView();
@@ -87,8 +95,18 @@ define([
             });
             // show timecard view
             this.app.pageContent.show(this.app.timecardView);
-        }
+        },
 
+        // show mailbox
+        showMailBoxView: function() {
+
+            // create mailbox view
+            this.app.mailBoxView = new MailBoxView({
+                collection: this.app.eventsModel
+            });
+            // show mailbox view
+            this.app.pageContent.show(this.app.mailBoxView);
+        }
     });
 
     return Controller;

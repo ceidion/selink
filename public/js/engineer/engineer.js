@@ -19,6 +19,7 @@ define([
     engineer.addRegions({
         pageContent: '.page-content',
         topnavArea: '#topnav-area',
+        shortcutArea: '#shortcuts-area',
         sidenavArea: '#sidenav-area'
     });
 
