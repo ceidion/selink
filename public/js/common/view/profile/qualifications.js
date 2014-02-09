@@ -24,7 +24,7 @@ define([
         itemView: ItemView,
 
         // max item number
-        itemLimit: 6,
+        itemLimit: 4,
 
         // initializer
         initialize: function() {
@@ -33,6 +33,16 @@ define([
 
             this.collection = new QualificationsModel(this.model.get('qualifications'), {parse: true});
             this.collection.document = this.model;
+
+            this.collection.comparator = function(qualification) {
+                if (qualification.get('acquireDate')) {
+                    var date = moment(qualification.get('acquireDate'));
+                    return 0 - Number(date.valueOf());
+                }
+                else 
+                    return 0;
+            };
+            this.collection.sort();
         },
 
         onRender: function() {
@@ -51,6 +61,9 @@ define([
                 placement: 'top',
                 title: "ドラグして移動"
             });
+
+            if (this.collection.length >= this.itemLimit)
+                this.ui.addBtn.hide();
 
             // bind validator
             Backbone.Validation.bind(this);

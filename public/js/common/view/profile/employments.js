@@ -33,6 +33,16 @@ define([
 
             this.collection = new EmploymentsModel(this.model.get('employments'), {parse: true});
             this.collection.document = this.model;
+
+            this.collection.comparator = function(employment) {
+                if (employment.get('startDate')) {
+                    var date = moment(employment.get('startDate'));
+                    return 0 - Number(date.valueOf());
+                }
+                else 
+                    return 0;
+            };
+            this.collection.sort();
         },
 
         onRender: function() {
@@ -51,6 +61,9 @@ define([
                 placement: 'top',
                 title: "ドラグして移動"
             });
+
+            if (this.collection.length >= this.itemLimit)
+                this.ui.addBtn.hide();
 
             // bind validator
             Backbone.Validation.bind(this);

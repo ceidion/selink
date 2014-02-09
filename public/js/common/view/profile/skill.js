@@ -125,7 +125,7 @@ define([
             } else {
                 // set value on model
                 this.model.set(inputData);
-                this.$el.find('.pull-left').empty().text(skill);
+                this.$el.find('.pull-left').empty().text(inputData.skill);
                 // this.renderValue(inputData);
             }
 

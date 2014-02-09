@@ -33,6 +33,16 @@ define([
 
             this.collection = new EducationsModel(this.model.get('educations'), {parse: true});
             this.collection.document = this.model;
+
+            this.collection.comparator = function(education) {
+                if (education.get('startDate')) {
+                    var date = moment(education.get('startDate'));
+                    return 0 - Number(date.valueOf());
+                }
+                else 
+                    return 0;
+            };
+            this.collection.sort();
         },
 
         onRender: function() {
@@ -51,6 +61,9 @@ define([
                 placement: 'top',
                 title: "ドラグして移動"
             });
+
+            if (this.collection.length >= this.itemLimit)
+                this.ui.addBtn.hide();
 
             // bind validator
             Backbone.Validation.bind(this);

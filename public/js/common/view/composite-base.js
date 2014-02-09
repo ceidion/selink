@@ -81,16 +81,6 @@ define(['common/view/composite-empty'], function(EmptyView) {
                 this.ui.addBtn.fadeOut('fast');
         },
 
-        // Delete composite item
-        deleteItem: function(model) {
-            // remove the specified model from collection
-            this.collection.remove(model);
-            // if the number of items fewer than limitation
-            if (this.collection.length < this.itemLimit)
-                // show the add button
-                this.ui.addBtn.fadeIn('fast');
-        },
-
         // Update model
         updateItem: function(model) {
 
@@ -131,6 +121,10 @@ define(['common/view/composite-empty'], function(EmptyView) {
 
                 // if save success
                 success: function() {
+                    // if the number of items fewer than limitation
+                    if (self.collection.length < self.itemLimit)
+                        // show the add button
+                        self.ui.addBtn.fadeIn('fast');
                 },
 
                 // if other errors happend

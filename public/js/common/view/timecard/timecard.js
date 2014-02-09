@@ -132,24 +132,24 @@ define([
             });
         },
 
-        // create new event
-        createEvent: function(event) {
+        // // create new event
+        // createEvent: function(event) {
 
-            var self = this;
+        //     var self = this;
 
-            // safe the event
-            this.collection.create(event, {
+        //     // safe the event
+        //     this.collection.create(event, {
 
-                // event saved successful
-                success: function(model, response, options) {
+        //         // event saved successful
+        //         success: function(model, response, options) {
 
-                },
-                // if error happend
-                error: function(model, xhr, options) {
+        //         },
+        //         // if error happend
+        //         error: function(model, xhr, options) {
 
-                }
-            });
-        },
+        //         }
+        //     });
+        // },
 
         // update event
         updateEvent: function(model) {
@@ -184,7 +184,7 @@ define([
             });
         },
 
-        // Merionette composite view will remove subview from dom, not fit here
+        // Merionette composite view will remove subview(tr) from dom, not fit here
         // so I override this method let it do nothing
         removeChildView: function() {
         },
