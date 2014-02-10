@@ -57,11 +57,10 @@ define([
 
             var self = this;
 
-            this.ui.photo.addClass('animated rollOut')
-                .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
-                    $(this).attr('src', self.model.get('photo'));
-                    $(this).removeClass('rollOut').addClass('rollIn');
-                });
+            this.ui.photo.slRollOut('', function() {
+                $(this).attr('src', self.model.get('photo'));
+                $(this).removeClass('rollOut').addClass('rollIn');
+            });
         }
     });
 

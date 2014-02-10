@@ -87,10 +87,13 @@ define([
         },
 
         // show timecard
-        showTimecardView: function() {
+        showTimecardView: function(date) {
+
+            var month = date ? moment(date, 'YYYYMM') : moment();
 
             // create timecard view
             this.app.timecardView = new TimecardView({
+                model: new Backbone.Model({month: month}),
                 collection: this.app.eventsModel
             });
             // show timecard view
@@ -102,7 +105,7 @@ define([
 
             // create mailbox view
             this.app.mailBoxView = new MailBoxView({
-                collection: this.app.eventsModel
+                model: this.app.userModel
             });
             // show mailbox view
             this.app.pageContent.show(this.app.mailBoxView);

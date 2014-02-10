@@ -47,12 +47,10 @@ define([
 
             var self = this;
 
-            this.$el.find('.nav-user-photo')
-                .addClass('animated rollOut')
-                .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
-                    $(this).attr('src', self.model.get('photo'));
-                    $(this).removeClass('rollOut').addClass('rollIn');
-                });
+            this.$el.find('.nav-user-photo').slRollOut('', function() {
+                $(this).attr('src', self.model.get('photo'));
+                $(this).removeClass('rollOut').addClass('rollIn');
+            });
         },
 
         updateEvent: function() {

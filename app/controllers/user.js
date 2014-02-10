@@ -68,7 +68,7 @@ exports.show = function(req, res, next) {
 
 exports.introduce = function(req, res, next) {
 
-    var query = User.find()
+    var query = User.find({_id: {'$ne': req.session.user._id}})
                 .select('type profile createDate')
                 .sort({createDate:-1})
                 .limit(8);

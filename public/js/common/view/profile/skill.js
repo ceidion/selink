@@ -139,9 +139,7 @@ define([
 
             var self = this;
 
-            this.$el
-                .addClass('animated bounceOut')
-                .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
+            this.$el.slBounceOut('', function(){
                 $(this).removeClass('animated bounceOut');
                 self.model.collection.remove(self.model);
             });

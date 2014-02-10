@@ -48,12 +48,7 @@ define([], function() {
                     success: function(model, response, options) {
 
                         self.renderValue(data);
-
-                        self.$el.find('.sl-icon')
-                            .addClass('animated flip green')
-                            .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function() {
-                                $(this).removeClass('animated flip green');
-                            });
+                        self.$el.find('.sl-icon').slFlip('green');
                     },
 
                     // error handler
@@ -97,12 +92,9 @@ define([], function() {
                 .find('i').removeClass('animated-input-error');
         },
 
+        // swing icon while user hover on
         attention: function(event) {
-            $(event.target).find('.sl-icon')
-                .addClass('animated swing')
-                .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
-                    $(this).removeClass('animated swing');
-                });
+            $(event.target).find('.sl-icon').slSwing();
         },
 
         // subclass should provide these methods

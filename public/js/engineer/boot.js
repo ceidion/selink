@@ -43,6 +43,9 @@ require.config({
         'hotkeys': 'lib/jquery.hotkeys.min',
         'isotope': 'lib/jquery.isotope',
         'slim-scroll': 'lib/jquery.slimscroll.min',
+        'tag': 'lib/bootstrap-tag.min',
+        'typeahead': 'lib/typeahead-bs2.min',
+        'selink': 'lib/selink',
         'app': 'engineer/engineer'
     },
 
@@ -120,6 +123,15 @@ require.config({
         'slim-scroll': {
             deps: ['jquery']
         },
+        'tag': {
+            deps: ['bootstrap']
+        },
+        'typeahead': {
+            deps: ['bootstrap']
+        },
+        'selink': {
+            deps: ['jquery']
+        },
         'app': {
             deps: [
                 'jquery-ui',
@@ -142,7 +154,10 @@ require.config({
                 'knob',
                 'wysiwyg',
                 'isotope',
-                'slim-scroll'
+                'slim-scroll',
+                'tag',
+                'typeahead',
+                'selink'
             ]
         }
     }

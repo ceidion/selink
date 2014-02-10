@@ -1,7 +1,11 @@
 define([
     'text!common/template/mailbox/mailbox.html',
+    'common/collection/messages',
+    'common/view/mailbox/write'
 ], function(
-    template
+    template,
+    MessagesModel,
+    WriteView
 ) {
 
     // mailbox view
@@ -19,16 +23,26 @@ define([
 
         // regions
         regions: {
+            writeRegion: '#write-area',
         },
 
         // initializer
         initialize: function() {
+
+            // create messages model(collection) from user model
+            this.sentsModel = new MessagesModel(this.model.get('messages'), {parse: true});
+            this.sentsModel.document = this.model;
+
             // create component
+            this.writeView = new WriteView({
+                collection: this.sentsModel
+            });
         },
 
         // after render
         onRender: function() {
             // show every component
+            this.writeRegion.show(this.writeView);
         },
 
         // after show

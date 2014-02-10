@@ -1,5 +1,6 @@
 var tag = require('../app/controllers/tag'),
     user = require('../app/controllers/user'),
+    message = require('../app/controllers/message'),
     tempaccount = require('../app/controllers/tempaccount'),
     profile = require('../app/controllers/profile'),
     job = require('../app/controllers/job'),
@@ -63,6 +64,15 @@ module.exports = function(app) {
     app.patch('/user/:id/events/:eventid', checkLoginStatus, user.updateEvent);
     // Update events (remove event)
     app.delete('/user/:id/events/:eventid', checkLoginStatus, user.removeEvent);
+
+    // Get user's messages
+    app.get('/user/:id/messages', checkLoginStatus, message.messages);
+    // Update messages (create new event)
+    app.post('/user/:id/messages', checkLoginStatus, message.createMessage);
+    // Update messages (update event)
+    // app.patch('/user/:id/messages/:eventid', checkLoginStatus, user.updateEvent);
+    // Update messages (remove event)
+    app.delete('/user/:id/messages/:messageid', checkLoginStatus, message.removeMessage);
 
     // Get user's jobs (employer only)
     app.get('/user/:id/jobs', checkLoginStatus, job.index);

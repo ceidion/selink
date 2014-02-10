@@ -44,11 +44,7 @@ define(['common/view/composite-empty'], function(EmptyView) {
                 // append the subview
                 this.$el.find(this.itemViewContainer).append(itemView.el);
 
-                itemView.$el
-                    .addClass('animated bounceIn')
-                    .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd animationend', function() {
-                        $(this).removeClass('animated bounceIn');
-                    });
+                itemView.$el.slBounceIn();
 
                 // show subview's editor panel
                 if (itemView.ui && itemView.ui.editor && itemView.ui.value) {
@@ -64,11 +60,7 @@ define(['common/view/composite-empty'], function(EmptyView) {
         },
 
         attention: function(event) {
-            $(event.target).find('.sl-icon')
-                .addClass('animated swing')
-                .one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
-                    $(this).removeClass('animated swing');
-                });
+            $(event.target).find('.sl-icon').slSwing();
         },
 
         // Add new composite item

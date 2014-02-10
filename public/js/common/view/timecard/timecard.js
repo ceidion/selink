@@ -20,18 +20,20 @@ define([
 
         // ui
         ui: {
+            'nextBtn': '.btn-next',
+            'prevBtn': '.btn-prev'
         },
 
         // Events
         events: {
-            'click': 'closeEditor'
+            'click': 'closeEditor',
+            'click .btn-next': 'showNextMonth',
+            'click .btn-prev': 'showPrevMonth',
         },
 
         // Collection events
         collectionEvents: {
-            // 'add': 'createEvent',
             'change': 'updateEvent',
-            // 'remove': 'removeEvent',
         },
 
         // Initializer
@@ -40,15 +42,13 @@ define([
             // here is tricky
             // make a empty array to create collection
             var models = [],
-                totalTime = 0,
-                totalFee = 0,
                 i = 1;
 
             // loop through current month
-            for (; i <= moment().endOf('month').date(); i++) {
+            for (; i <= this.model.get('month').endOf('month').date(); i++) {
 
                 // get a single day
-                var date = moment().date(i),
+                var date = this.model.get('month').date(i),
                     needSlot = true,
                     j = 0;
 
@@ -63,20 +63,6 @@ define([
 
                         // let the collection item be a member of real collection
                         models.push(event);
-
-                        // add time to totalTime
-                        var excludeTime = event.get('exclude') ? event.get('exclude').split(':') : ["0","0"];
-
-                        totalTime = totalTime + event.get('end').getHours()*60
-                                    + event.get('end').getMinutes()
-                                    - event.get('start').getHours()*60
-                                    - event.get('start').getMinutes()
-                                    - Number(excludeTime[0])*60
-                                    - Number(excludeTime[1]);
-
-                        // add daily cost to totalFee
-                        if (event.get('fee'))
-                            totalFee = totalFee + event.get('fee');
 
                         // tell below no need to produce slot
                         needSlot = false;
@@ -100,23 +86,24 @@ define([
                     models.push({
                         title: "出勤",
                         className: "label-success",
-                        start: start.toJSON(),
-                        end: end.toJSON(),
+                        start: start.toDate(),
+                        end: end.toDate(),
                         exclude: "1:00"
                     });
                 }
             }
-
-            this.model = new Backbone.Model({
-                totalTime: totalTime,
-                totalFee: totalFee
-            });
 
             // create the collection for render
             var oldEventsModel = this.collection;
 
             this.collection = new EventsModel(models);
             this.collection.document = oldEventsModel.document;
+
+            // set the total working time and fee to the model
+            this.model.set({
+                totalTime: this.getTotalTime(),
+                totalFee: this.getTotalFee()
+            });
         },
 
         // After render
@@ -126,33 +113,18 @@ define([
 
         // After show
         onShow: function() {
+            this.$el.addClass('animated fadeInRight');
             this.$el.find('.slim-scroll').slimScroll({
                 height: 700,
                 railVisible:true
             });
         },
 
-        // // create new event
-        // createEvent: function(event) {
-
-        //     var self = this;
-
-        //     // safe the event
-        //     this.collection.create(event, {
-
-        //         // event saved successful
-        //         success: function(model, response, options) {
-
-        //         },
-        //         // if error happend
-        //         error: function(model, xhr, options) {
-
-        //         }
-        //     });
-        // },
-
         // update event
         updateEvent: function(model) {
+
+            this.$el.find('#totalTime').text(this.getTotalTime()).slFlipInX();
+            this.$el.find('#totalFee').text(this.getTotalFee()).slFlipInX();
 
             if (model.isNew()) return;
 
@@ -187,6 +159,55 @@ define([
         // Merionette composite view will remove subview(tr) from dom, not fit here
         // so I override this method let it do nothing
         removeChildView: function() {
+        },
+
+        // move to the next month
+        showNextMonth: function() {
+            window.location = '#timecard/' + this.model.get('month').add('month', 1).format('YYYYMM');
+        },
+
+        // move to the previous month
+        showPrevMonth: function() {
+            window.location = '#timecard/' + this.model.get('month').subtract('month', 1).format('YYYYMM');
+        },
+
+        // calculate total working time
+        getTotalTime: function() {
+
+            var totalTime = 0;
+
+            this.collection.each(function(event) {
+
+                if (!event.isNew()) {
+
+                    // add time to totalTime
+                    var excludeTime = event.get('exclude') ? event.get('exclude').split(':') : ["0","0"];
+
+                    totalTime = totalTime + event.get('end').getHours()*60
+                                + event.get('end').getMinutes()
+                                - event.get('start').getHours()*60
+                                - event.get('start').getMinutes()
+                                - Number(excludeTime[0])*60
+                                - Number(excludeTime[1]);
+                }
+            });
+
+            return totalTime/60;
+        },
+
+        // calculate total expense
+        getTotalFee: function() {
+
+            var totalFee = 0;
+
+            this.collection.each(function(event) {
+
+                // add daily cost to totalFee
+                if (!event.isNew() && event.get('fee'))
+                    totalFee = totalFee + event.get('fee');
+            });
+
+            return totalFee;
         },
 
         // timecard view handle the click event

@@ -24,10 +24,7 @@ define(['text!engineer/template/common/sidenav.html',], function(template) {
         },
 
         attention: function(event) {
-            $(event.target).find('i').addClass('animated wobble');
-            $(event.target).find('i').one('webkitAnimationEnd mozAnimationEnd oAnimationEnd animationEnd', function() {
-                $(this).removeClass('animated wobble');
-            });
+            $(event.target).find('i').slWobble();
         }
     });
 

@@ -7,7 +7,7 @@ define(['common/model/job'], function(JobModel) {
         model: JobModel,
 
         url: function() {
-        	return this.document.url() + '/jobs'
+        	return this.document.url() + '/jobs';
         }
     });
 

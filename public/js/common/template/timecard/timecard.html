@@ -3,10 +3,10 @@
     <div class="widget-box">
 
         <div class="widget-header header-color-blue">
-            <h5 class="bigger lighter"><i class="icon-table"></i> <%= moment().format('YYYY年M月') %></h5>
+            <h5 class="bigger lighter"><i class="icon-table"></i> <%= obj.month.format('YYYY年M月') %></h5>
             <div class="widget-toolbar no-border">
-                <button class="btn btn-xs btn-success bigger"><i class="icon-chevron-left"></i>&nbsp;先月</button>
-                <button class="btn btn-xs btn-success bigger">来月&nbsp;<i class="icon-chevron-right icon-on-right"></i></button>
+                <button class="btn btn-xs btn-success bigger btn-prev"><i class="icon-chevron-left"></i>&nbsp;先月</button>
+                <button class="btn btn-xs btn-success bigger btn-next">来月&nbsp;<i class="icon-chevron-right icon-on-right"></i></button>
             </div>
         </div>
 
@@ -36,8 +36,12 @@
                         <tfoot class="thin-border-bottom red">
                             <tr>
                                 <th style="width: 15%;" class="text-center"><i class="icon-time"></i>&nbsp;実働計</th>
-                                <th style="width: 324px;" class="text-center"><%= obj.totalTime/60 %>時間</th>
-                                <th style="width: 108px;" class="text-center"><%= obj.totalFee %>円</th>
+                                <th style="width: 324px;" class="text-center">
+                                    <span id="totalTime"><%= obj.totalTime %></span>時間
+                                </th>
+                                <th style="width: 108px;" class="text-center">
+                                    <span id="totalFee"><%= obj.totalFee %></span>円
+                                </th>
                                 <th></th>
                             </tr>
                         </tfoot>

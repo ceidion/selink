@@ -31,6 +31,12 @@ var User = new Schema({
 
     events: [Event],
 
+    messages: [Schema.Types.ObjectId],
+
+    sents:[Schema.Types.ObjectId],
+
+    drafts:[Schema.Types.ObjectId],
+
     // Create Date
     createDate: {
         type: Date,
