@@ -42,6 +42,8 @@ html,body{height:100%}
 #event-modal .checkbox{margin-top:4px;margin-bottom:0px}
 #event-modal .wysiwyg-editor{margin:0 15px;height:150px}
 #event-modal .wysiwyg-toolbar{margin:0 15px !important}
+#write-area input{line-height:normal}
+#write-area .row .col-sm-2{line-height:31px}
 .table-timecard{margin-bottom:0px}.table-timecard td{line-height:35px !important}
 #gritter-notice-wrapper{top:50px}
 #external-events>div,.fc-event-container>div{-webkit-transition:all 0.2s;transition:all 0.2s}#external-events>div:hover,.fc-event-container>div:hover{text-decoration:none;-moz-transform:scale(1.1);-webkit-transform:scale(1.1);-o-transform:scale(1.1);-ms-transform:scale(1.1);transform:scale(1.1);opacity:0.85}
@@ -94,3 +96,12 @@ html,body{height:100%}
 .ace-nav>li>div.margin-1{margin-left:1px}
 .ace-nav>li>div.no-border{border:none !important}
 .ace-nav>li>div .dropdown-menu{z-index:1031}
+.tt-dropdown-menu{width:422px;margin-top:12px;padding:8px 0;background-color:#fff;border:1px solid #ccc;border:1px solid rgba(0,0,0,0.2);-webkit-box-shadow:0 5px 10px rgba(0,0,0,0.2);-moz-box-shadow:0 5px 10px rgba(0,0,0,0.2);box-shadow:0 5px 10px rgba(0,0,0,0.2)}
+.tt-suggestion{padding:3px 20px}
+.tt-suggestion.tt-cursor{color:#fff;background-color:#0097cf}
+.tt-suggestion p{margin:0}
+.tt-suggestion{padding:8px 20px}
+.tt-suggestion+.tt-suggestion{border-top:1px solid #ccc}
+.repo-language{float:left;font-style:italic}.repo-language img{max-height:50px}
+.repo-name{font-weight:bold}
+.repo-description{font-size:14px}

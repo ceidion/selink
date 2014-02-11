@@ -86,8 +86,8 @@ module.exports = function(app) {
     // query address
     app.get('/address/:zipcode', checkLoginStatus, address.show);
 
-    // Get StackExcahge Tag Data
-    app.post('/stack', checkLoginStatus, tag.create);
+    app.get('/suggestUser', checkLoginStatus, user.suggest);
+
     // Show tags
     app.get('/tags', checkLoginStatus, tag.index);
     // Update tags (update tag)
@@ -95,6 +95,9 @@ module.exports = function(app) {
     // Update tags (remove tag)
     app.delete('/tags/:id', checkLoginStatus, tag.remove);
 
+    // Get StackExcahge Tag Data
+    app.post('/stack', checkLoginStatus, tag.create);
+    app.post('/import', checkLoginStatus, user.import);
 };
 
 checkLoginStatus = function(req, res, next) {

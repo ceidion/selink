@@ -43,8 +43,8 @@ require.config({
         'hotkeys': 'lib/jquery.hotkeys.min',
         'isotope': 'lib/jquery.isotope',
         'slim-scroll': 'lib/jquery.slimscroll.min',
-        'tag': 'lib/bootstrap-tag.min',
-        'typeahead': 'lib/typeahead-bs2.min',
+        'tag': 'lib/uncompressed/bootstrap-tag',
+        'typeahead': 'lib/uncompressed/typeahead.bundle',
         'selink': 'lib/selink',
         'app': 'engineer/engineer'
     },

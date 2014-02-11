@@ -15,6 +15,11 @@ var Language = require('./profile/language');
 
 var Profile = new Schema({
 
+    // profile owner
+    _owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
     // First Name
     firstName: {
         type: String,

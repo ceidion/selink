@@ -92,6 +92,59 @@ exports.introduce = function(req, res, next) {
     });
 };
 
+exports.suggest = function(req, res, next) {
+
+    console.log(req.session.user);
+
+    var query = Profile.find({_id: {'$ne': req.session.user.profile}})
+                .select('firstName lastName bio photo _owner')
+                .populate('_owner')
+                .limit(8);
+
+    query.exec(function(err, users) {
+        if (err) next(err);
+        else
+        // return the user
+        res.json(users);
+    });
+};
+
+exports.import = function(req, res, next) {
+
+    if (req.body.engineers) {
+
+        req.body.engineers.forEach(function(engineerData) {
+
+
+            var user = new User({
+                email: engineerData.email,
+                password: engineerData.password,
+                type: engineerData.type
+            })
+
+            var profile = new Profile(engineerData.profile);
+            profile._owner = user;
+
+            console.log(profile);
+
+            profile.save(function(err, newpro){
+                if (err) next(err);
+                else {
+                    user.profile = profile._id;
+                    user.save();
+                }
+            });
+
+            // var newTag = new Tag(tagData, false);
+            // newTag.save(function(err) {
+            //     if (err) console.log(err);
+            // });
+        });
+    }
+
+    res.send('got it');
+}
+
 exports.events = function(req, res, next) {
 
     // look up user info

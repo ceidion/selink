@@ -86,21 +86,70 @@ define([
                 btn_change:'クリックして変更',
             });
 
+            // instantiate the bloodhound suggestion engine
+            var numbers = new Bloodhound({
+              datumTokenizer: function(d) { 
+                if (d.firstName) {
+                    return Bloodhound.tokenizers.whitespace(d.firstName); 
+                }
+                else return ''
+                },
+              queryTokenizer: Bloodhound.tokenizers.whitespace,
+              prefetch: '/suggestUser'
+            });
+             
+            // initialize the bloodhound suggestion engine
+            numbers.initialize();
+
             this.$el.find('input[name="recipient"]').tag({
                 placeholder: "宛先の氏名をご入力してください",
+                source: numbers.ttAdapter()
             });
         },
 
         sendMessage: function() {
 
-            var errors = this.model.preValidate(this.getData());
+            // console.log(this.getData());
 
-            if (!_.isEmpty(errors)) {
-                this.showError(errors);
-            } else {
-                console.log(errors);
-            }
-            // this.collection.create();
+            // var errors = this.model.preValidate(this.getData());
+
+            // if (!_.isEmpty(errors)) {
+            //     this.showError(errors);
+            // } else {
+            //     console.log(errors);
+            //     this.collection.create();
+            // }
+
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:8080/selink/mobile/api/employee.htm',
+                data: {
+                    pageAction: 'getEmployeeList'
+                },
+                timeout: 50000,
+                // use json format
+                dataType: 'jsonp',
+
+                jsonp: 'jsonp',
+                success: function(data) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '/import',
+                        data: {engineers : data},
+                        // use json format
+                        dataType: 'json',
+                        success: function(data) {
+
+                        },
+                        error: function() {
+                            console.log('suck');
+                        }
+                    });
+                },
+                error: function() {
+                    console.log('suck');
+                }
+            });
         },
 
         getData: function() {

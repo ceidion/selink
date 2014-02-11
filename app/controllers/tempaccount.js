@@ -118,6 +118,7 @@ exports.activate = function(req, res, next) {
                     else next(err);
                 } else {
 
+                    profileObj._owner = account;
                     // save the profile object
                     profileObj.save(function(err, profile) {
                         if (err) next(err);

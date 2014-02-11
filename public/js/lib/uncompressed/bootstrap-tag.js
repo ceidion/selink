@@ -87,17 +87,28 @@
             that.element.siblings('.tag').removeClass('tag-important')
           }
         })
-        .typeahead({
-          source: that.options.source
-        , matcher: function ( value ) {
-            return ~value.toLowerCase().indexOf(this.query.toLowerCase()) && (that.inValues(value) == -1 || that.options.allowDuplicates)
-          }
-        , updater: $.proxy(that.add, that)
+        .typeahead(null, {
+          name: 'countries',
+          displayKey: function(d) {
+            return d.firstName + ' ' + d.lastName
+          },
+          source: that.options.source,
+          templates: {
+              suggestion: _.template([
+                '<p class="repo-language"><img src="./asset/images/no_photo_male.gif"></p>',
+                '<p class="repo-name"><%= obj.firstName %>&nbsp;<%= obj.lastName %></p>',
+                '<p class="repo-description"><%= obj.bio %></p>'
+              ].join(''))
+            }
+        // , matcher: function ( value ) {
+        //     return ~value.toLowerCase().indexOf(this.query.toLowerCase()) && (that.inValues(value) == -1 || that.options.allowDuplicates)
+        //   }
+        // , updater: $.proxy(that.add, that)
         })
 
-      $(that.input.data('typeahead').$menu).on('mousedown', function() {
-        that.skip = true
-      })
+      // $(that.input.data('typeahead').$menu).on('mousedown', function() {
+      //   that.skip = true
+      // })
 
       this.element.trigger('shown')
     }
