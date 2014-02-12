@@ -117,6 +117,18 @@ define([
                 // show the error to user
             }
         });
+
+        var socket = io.connect('http://localhost:8081');
+        socket.on('message', function(data) {
+            setTimeout(function() {
+                $.gritter.add({
+                    title: data.title,
+                    text: data.msg,
+                    class_name: 'gritter-success'
+                });
+            }, 3000);
+        });
+
     });
 
     return selink;

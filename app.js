@@ -5,7 +5,9 @@ var env = process.env.NODE_ENV || 'development',
     fs = require('fs'),
     config = require('./config/config')[env],
     mongoose = require('mongoose'),
-    express = require('express');
+    express = require('express'),
+    http = require('http'),
+    socket = require('socket.io');
 
 // Connect to database
 mongoose.connect(config.db);
@@ -26,7 +28,30 @@ var app = express();
 require('./config/express')(app, config);
 // config route
 require('./config/routes')(app);
-// start server
-app.listen(app.get('port'), function(){
+
+// Express 3 requires a http.Server to attach socke.io
+var server = http.createServer(app);
+// attach socket.io
+var io = socket.listen(server);
+
+var online = [];
+// socket.io configuration
+io.sockets.on('connection', function(socket) {
+
+    online.push(socket);
+    console.log('online user is: ' + online.length);
+
+    socket.emit('message', {
+        title: "welcome",
+        msg: "welcome to selink"
+    });
+});
+
+server.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
+
+// // start server
+// app.listen(app.get('port'), function(){
+//     console.log('Express server listening on port ' + app.get('port'));
+// });

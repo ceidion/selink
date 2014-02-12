@@ -46,6 +46,7 @@ require.config({
         'tag': 'lib/uncompressed/bootstrap-tag',
         'typeahead': 'lib/uncompressed/typeahead.bundle',
         'selink': 'lib/selink',
+        'socket.io': '../socket.io/socket.io.js',
         'app': 'engineer/engineer'
     },
 
@@ -157,7 +158,8 @@ require.config({
                 'slim-scroll',
                 'tag',
                 'typeahead',
-                'selink'
+                'selink',
+                'socket.io'
             ]
         }
     }
