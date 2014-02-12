@@ -21,17 +21,17 @@ define([
         onRender: function() {
 
             this.$el.find('.btn-friend').tooltip({
-                placement: 'bottom',
+                placement: 'top',
                 title: "＋友達"
             });
 
             this.$el.find('.btn-favorite').tooltip({
-                placement: 'bottom',
+                placement: 'top',
                 title: "気になる"
             });
 
             this.$el.find('.btn-send').tooltip({
-                placement: 'bottom',
+                placement: 'top',
                 title: "送信"
             });
         },
