@@ -26,9 +26,6 @@ define([
 
             var self = this;
 
-            // hold application ref
-            this.app = options.app;
-
             // setup navigation bar
             this.showNavigation();
 
@@ -41,49 +38,51 @@ define([
         showNavigation: function() {
 
             // setup short cuts
-            this.app.shortCutsView = new ShortCutsView();
-            this.app.shortcutArea.show(this.app.shortCutsView);
+            selink.shortCutsView = new ShortCutsView();
+            selink.shortcutArea.show(selink.shortCutsView);
 
             // setup side nav
-            this.app.sideNavView = new SideNavView();
-            this.app.sidenavArea.show(this.app.sideNavView);
+            selink.sideNavView = new SideNavView();
+            selink.sidenavArea.show(selink.sideNavView);
 
             // setup top nav
-            this.app.topNavView = new TopNavView({
-                model: this.app.profileModel,
-                collection: this.app.eventsModel
+            selink.topNavView = new TopNavView({
+                model: selink.profileModel,
+                collection: selink.eventsModel
             });
-            this.app.topnavArea.show(this.app.topNavView);
+            selink.topnavArea.show(selink.topNavView);
         },
 
         showHomeView: function() {
 
             // create home view
-            this.app.homeView = new HomeView();
+            selink.homeView = new HomeView({
+                model: selink.userModel
+            });
             // show main page
-            this.app.pageContent.show(this.app.homeView);
+            selink.pageContent.show(selink.homeView);
         },
 
         // show profile
         showProfileView: function() {
 
             // create profile view
-            this.app.profileView = new ProfileView({
-                model: this.app.profileModel
+            selink.profileView = new ProfileView({
+                model: selink.profileModel
             });
             // show profile view
-            this.app.pageContent.show(this.app.profileView);
+            selink.pageContent.show(selink.profileView);
         },
 
         // show calendar
         showCalendarView: function() {
 
             // create calendar view
-            this.app.calendarView = new CalendarView({
-                collection: this.app.eventsModel
+            selink.calendarView = new CalendarView({
+                collection: selink.eventsModel
             });
             // show calendar view
-            this.app.pageContent.show(this.app.calendarView);
+            selink.pageContent.show(selink.calendarView);
         },
 
         // show timecard
@@ -92,23 +91,23 @@ define([
             var month = date ? moment(date, 'YYYYMM') : moment();
 
             // create timecard view
-            this.app.timecardView = new TimecardView({
+            selink.timecardView = new TimecardView({
                 model: new Backbone.Model({month: month}),
-                collection: this.app.eventsModel
+                collection: selink.eventsModel
             });
             // show timecard view
-            this.app.pageContent.show(this.app.timecardView);
+            selink.pageContent.show(selink.timecardView);
         },
 
         // show mailbox
         showMailBoxView: function() {
 
             // create mailbox view
-            this.app.mailBoxView = new MailBoxView({
-                model: this.app.userModel
+            selink.mailBoxView = new MailBoxView({
+                model: selink.userModel
             });
             // show mailbox view
-            this.app.pageContent.show(this.app.mailBoxView);
+            selink.pageContent.show(selink.mailBoxView);
         }
     });
 

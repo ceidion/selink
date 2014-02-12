@@ -21,7 +21,8 @@ var User = new Schema({
     },
 
     profile: {
-        type: Schema.Types.ObjectId
+        type: Schema.Types.ObjectId,
+        ref: 'Profile'
     },
 
     provider: {
@@ -30,6 +31,11 @@ var User = new Schema({
     },
 
     events: [Event],
+
+    friends: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
 
     messages: [Schema.Types.ObjectId],
 

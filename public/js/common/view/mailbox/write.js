@@ -88,16 +88,16 @@ define([
 
             // instantiate the bloodhound suggestion engine
             var numbers = new Bloodhound({
-              datumTokenizer: function(d) { 
+              datumTokenizer: function(d) {
                 if (d.firstName) {
-                    return Bloodhound.tokenizers.whitespace(d.firstName); 
+                    return Bloodhound.tokenizers.whitespace(d.firstName);
                 }
                 else return ''
                 },
               queryTokenizer: Bloodhound.tokenizers.whitespace,
-              prefetch: '/suggestUser'
+              remote: '/suggestUser?initial=%QUERY'
             });
-             
+
             // initialize the bloodhound suggestion engine
             numbers.initialize();
 

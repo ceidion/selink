@@ -52,51 +52,39 @@ exports.index = function(req, res, next) {
 // Get single user
 exports.show = function(req, res, next) {
 
-    User.findById(req.params.id, '-password', function(err, user) {
-        if (err) next(err);
-        if (user) {
-            // fill the user with profile
-            Profile.populate(user, {
-                path: "profile"
-            }, function() {
-                // return the user
-                res.json(user);
-            });
-        }
-    });
+    User.findById(req.params.id, '-password')
+        .populate('profile')
+        .exec(function(err, user) {
+            if (err) next(err);
+            else res.json(user);
+        });
 };
 
 exports.introduce = function(req, res, next) {
 
-    var query = User.find({_id: {'$ne': req.session.user._id}})
-                .select('type profile createDate')
-                .sort({createDate:-1})
-                .limit(8);
+    User.findById(req.session.user._id, function(err, user) {
 
-    query.exec(function(err, users) {
-        if (err) next(err);
+        var query = User.find({_id: {'$ne': req.session.user._id}})
+                    .select('type profile createDate')
+                    .where('_id').nin(user.friends)
+                    .populate('profile', 'firstName lastName title gender photo')
+                    .sort({createDate:-1});
 
-        if (users) {
-
-            // fill the user with profile
-            Profile.populate(users, {
-                path: "profile",
-                select: 'firstName lastName title gender photo'
-            }, function(err) {
-
-                if (err) next(err);
+        query.exec(function(err, users) {
+            if (err) next(err);
+            else
                 // return the user
                 res.json(users);
-            });
-        }
+        });
     });
 };
 
 exports.suggest = function(req, res, next) {
 
-    console.log(req.session.user);
+    var initial = req.query.initial;
 
     var query = Profile.find({_id: {'$ne': req.session.user.profile}})
+                .or([{firstName: new RegExp(initial, "i")}, {lastName: new RegExp(initial, "i")}])
                 .select('firstName lastName bio photo _owner')
                 .populate('_owner')
                 .limit(8);
@@ -107,6 +95,28 @@ exports.suggest = function(req, res, next) {
         // return the user
         res.json(users);
     });
+};
+
+exports.addFriend = function(req, res, next) {
+
+    User.findById(req.params.id, function(err, user) {
+        user.friends.push(req.body.userid);
+        user.save(function(err, newUser) {
+            if (err) next(err);
+            else {
+                User.findById(req.body.userid, function(err, friend) {
+                    res.json(friend);
+                });
+            }
+        });
+    });
+};
+
+exports.removeFriend = function(req, res, next) {
+
+    console.log(req.params);
+
+    res.json("b");
 };
 
 exports.import = function(req, res, next) {
@@ -120,12 +130,10 @@ exports.import = function(req, res, next) {
                 email: engineerData.email,
                 password: engineerData.password,
                 type: engineerData.type
-            })
+            });
 
             var profile = new Profile(engineerData.profile);
             profile._owner = user;
-
-            console.log(profile);
 
             profile.save(function(err, newpro){
                 if (err) next(err);
@@ -143,7 +151,7 @@ exports.import = function(req, res, next) {
     }
 
     res.send('got it');
-}
+};
 
 exports.events = function(req, res, next) {
 

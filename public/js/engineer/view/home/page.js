@@ -26,7 +26,9 @@ define([
         // Initializer
         initialize: function() {
 
-            this.introductionsView = new IntroductionsView();
+            this.introductionsView = new IntroductionsView({
+                model: this.model
+            });
         },
 
         // After render

@@ -1,15 +1,15 @@
 define([], function() {
 
-    var Languages = Backbone.Collection.extend({
+    var Friends = Backbone.Collection.extend({
 
         idAttribute: "_id",
 
         model: Backbone.Model.extend({idAttribute: "_id"}),
 
         url: function() {
-            return this.document.url() + '/languages';
+            return this.document.url() + '/friends';
         }
     });
 
-    return Languages;
+    return Friends;
 });

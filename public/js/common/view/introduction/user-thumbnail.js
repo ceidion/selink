@@ -8,7 +8,39 @@ define([
 
 		template: template,
 
-		tagName: 'li'
+		tagName: 'li',
 
+        // initializer
+        initialize: function(options) {
+
+            this.events = _.extend({}, this.events, {
+                'click .btn-friend': 'onAddFriend'
+            });
+        },
+
+        onRender: function() {
+
+            this.$el.find('.btn-friend').tooltip({
+                placement: 'bottom',
+                title: "＋友達"
+            });
+
+            this.$el.find('.btn-favorite').tooltip({
+                placement: 'bottom',
+                title: "気になる"
+            });
+
+            this.$el.find('.btn-send').tooltip({
+                placement: 'bottom',
+                title: "送信"
+            });
+        },
+
+        onAddFriend: function() {
+
+            selink.friendsModel.create({
+                userid: this.model.get('_id')
+            });
+        }
 	});
 });

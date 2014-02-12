@@ -56,7 +56,7 @@
         })
         .on('blur', function () {
           if (!that.skip) {
-            that.process()
+            // that.process()
             that.element.parent().removeClass('tags-hover')
             that.element.siblings('.tag').removeClass('tag-important')
           }
@@ -66,7 +66,7 @@
           if ( event.keyCode == 188 || event.keyCode == 13 || event.keyCode == 9 ) {
             if ( $.trim($(this).val()) && ( !that.element.siblings('.typeahead').length || that.element.siblings('.typeahead').is(':hidden') ) ) {
               if ( event.keyCode != 9 ) event.preventDefault()
-              that.process()
+              // that.process()
             } else if ( event.keyCode == 188 ) {
               if ( !that.element.siblings('.typeahead').length || that.element.siblings('.typeahead').is(':hidden') ) {
                 event.preventDefault()
@@ -87,7 +87,7 @@
             that.element.siblings('.tag').removeClass('tag-important')
           }
         })
-        .typeahead(null, {
+        .typeahead({highlight: true}, {
           name: 'countries',
           displayKey: function(d) {
             return d.firstName + ' ' + d.lastName
@@ -95,15 +95,22 @@
           source: that.options.source,
           templates: {
               suggestion: _.template([
-                '<p class="repo-language"><img src="./asset/images/no_photo_male.gif"></p>',
+                '<div>',
+                '<p class="repo-language" style="margin-right: 8px;"><img src="./asset/images/no_photo_male.gif"></p>',
                 '<p class="repo-name"><%= obj.firstName %>&nbsp;<%= obj.lastName %></p>',
-                '<p class="repo-description"><%= obj.bio %></p>'
+                '<p class="repo-description"><%= obj._owner.email %></p>',
+                '<div style="clear: both"></div>',
+                '</div>'
               ].join(''))
             }
         // , matcher: function ( value ) {
         //     return ~value.toLowerCase().indexOf(this.query.toLowerCase()) && (that.inValues(value) == -1 || that.options.allowDuplicates)
         //   }
         // , updater: $.proxy(that.add, that)
+        })
+        .on('typeahead:selected', function() {
+          console.log(arguments)
+          that.process()
         })
 
       // $(that.input.data('typeahead').$menu).on('mousedown', function() {

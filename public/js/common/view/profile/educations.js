@@ -39,7 +39,7 @@ define([
                     var date = moment(education.get('startDate'));
                     return 0 - Number(date.valueOf());
                 }
-                else 
+                else
                     return 0;
             };
             this.collection.sort();

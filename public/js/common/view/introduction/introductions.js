@@ -2,12 +2,19 @@ define([
     'common/view/composite-base',
     'text!common/template/introduction/introductions.html',
     'common/view/introduction/user-thumbnail',
-    'common/collection/introductions'
 ], function(
     BaseView,
     template,
-    ItemView,
-    IntroductionsModel) {
+    ItemView) {
+
+    var Introductions = Backbone.Collection.extend({
+
+        idAttribute: "_id",
+
+        model: Backbone.Model.extend({idAttribute: "_id"}),
+
+        url: '/friends'
+    });
 
     return BaseView.extend({
 
@@ -29,13 +36,14 @@ define([
         // initializer
         initialize: function() {
 
-            var self = this
+            var self = this;
 
             this.events = _.extend({}, this.events);
 
-            this.collection = new IntroductionsModel();
+            this.collection = new Introductions();
             this.collection.fetch({
                 success: function() {
+                    console.log("got " + self.collection.length + " frineds");
                 }
             });
         },

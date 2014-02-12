@@ -40,9 +40,6 @@ module.exports = function(app) {
     // Get user's events
     app.get('/user/:id', checkLoginStatus, user.show);
 
-    // Introduce friend
-    app.get('/friend', checkLoginStatus, user.introduce);
-
     // Get single profile
     app.get('/profile/:id', checkLoginStatus, profile.show);
     // Update profile (first-level property)
@@ -74,6 +71,16 @@ module.exports = function(app) {
     // Update messages (remove event)
     app.delete('/user/:id/messages/:messageid', checkLoginStatus, message.removeMessage);
 
+    // Introduce friend
+    app.get('/friends', checkLoginStatus, user.introduce);
+
+    // Get user's friends
+    app.get('/user/:id/friends', checkLoginStatus, user.addFriend);
+    // Add friend
+    app.post('/user/:id/friends', checkLoginStatus, user.addFriend);
+    // Remove friend
+    app.delete('/user/:id/friends/:friendid', checkLoginStatus, user.removeFriend);
+
     // Get user's jobs (employer only)
     app.get('/user/:id/jobs', checkLoginStatus, job.index);
     // Update jobs (create new job)
@@ -86,6 +93,7 @@ module.exports = function(app) {
     // query address
     app.get('/address/:zipcode', checkLoginStatus, address.show);
 
+    // suggeset user while type ahead
     app.get('/suggestUser', checkLoginStatus, user.suggest);
 
     // Show tags

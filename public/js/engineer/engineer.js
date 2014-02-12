@@ -2,21 +2,23 @@ define([
     'common/model/user',
     'common/model/profile',
     'common/collection/events',
+    'common/collection/friends',
     'engineer/router/router',
     'engineer/controller/controller'
 ], function(
     UserModel,
     ProfileModel,
     EventsModel,
+    FriendsModel,
     Router,
     Controller
 ) {
 
     // create application instance
-    var engineer = new Backbone.Marionette.Application();
+    window.selink = new Backbone.Marionette.Application();
 
     // create regions
-    engineer.addRegions({
+    selink.addRegions({
         pageContent: '.page-content',
         topnavArea: '#topnav-area',
         shortcutArea: '#shortcuts-area',
@@ -24,7 +26,7 @@ define([
     });
 
     // before application initialization, config plug-ins
-    engineer.on('initialize:before', function(options) {
+    selink.on('initialize:before', function(options) {
 
         // THIS IS VITAL, change the default behavior of views load template,
         // or the underscore template won't work
@@ -72,7 +74,7 @@ define([
     });
 
     // initialize application
-    engineer.addInitializer(function(options) {
+    selink.addInitializer(function(options) {
 
         var self = this;
 
@@ -89,14 +91,17 @@ define([
 
                 // create profile model from user model
                 self.profileModel = new ProfileModel(self.userModel.get('profile'), {parse: true});
+
                 // create events model(collection) from user model
                 self.eventsModel = new EventsModel(self.userModel.get('events'), {parse: true});
                 self.eventsModel.document = self.userModel;
 
+                // create friends model(collection) from user model
+                self.friendsModel = new FriendsModel(self.userModel.get('friends'), {parse: true});
+                self.friendsModel.document = self.userModel;
+
                 // make controller
-                var controller = new Controller({
-                    app: self
-                });
+                var controller = new Controller();
 
                 // setup router
                 var router = new Router({
@@ -114,5 +119,5 @@ define([
         });
     });
 
-    return engineer;
+    return selink;
 });
