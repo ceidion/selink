@@ -1,12 +1,14 @@
 var tag = require('../app/controllers/tag'),
     user = require('../app/controllers/user'),
+    userEvent = require('../app/controllers/event'),
+    activity = require('../app/controllers/activity'),
     message = require('../app/controllers/message'),
     tempaccount = require('../app/controllers/tempaccount'),
     profile = require('../app/controllers/profile'),
     job = require('../app/controllers/job'),
     address = require('../app/controllers/address');
 
-module.exports = function(app) {
+module.exports = function(app, sio) {
 
     // Landing
     app.get('/', function(req, res, next){
@@ -37,30 +39,37 @@ module.exports = function(app) {
     app.post('/signup', tempaccount.create);
     // Account activate
     app.get('/activate/:id', tempaccount.activate);
-    // Get user's events
+    // Get user's info
     app.get('/user/:id', checkLoginStatus, user.show);
 
     // Get single profile
-    app.get('/profile/:id', checkLoginStatus, profile.show);
+    app.get('/profile/:id', checkLoginStatus, activity.profileLog, profile.show);
     // Update profile (first-level property)
-    app.patch('/profile/:id', checkLoginStatus, profile.update);
+    app.patch('/profile/:id', checkLoginStatus, activity.profileLog, profile.update);
     // Update profile (create nested collection item)
-    app.post('/profile/:id/:sub', checkLoginStatus, profile.createSubDocument);
+    app.post('/profile/:id/:sub', checkLoginStatus, activity.profileLog, profile.createSubDocument);
     // Update profile (update nested collection item)
-    app.patch('/profile/:id/:sub/:subid', checkLoginStatus, profile.updateSubDocument);
+    app.patch('/profile/:id/:sub/:subid', checkLoginStatus, activity.profileLog, profile.updateSubDocument);
     // Update profile (remove nested collection item)
-    app.delete('/profile/:id/:sub/:subid', checkLoginStatus, profile.removeSubDocument);
+    app.delete('/profile/:id/:sub/:subid', checkLoginStatus, activity.profileLog, profile.removeSubDocument);
     // Upload photo
-    app.put('/profile/:id', checkLoginStatus, profile.update);
+    app.put('/profile/:id', checkLoginStatus, activity.profileLog, profile.update);
+
+    // Get all activities
+    app.get('/activities', checkLoginStatus, activity.index);
+    // Get user's activities
+    app.get('/user/:id/activities', checkLoginStatus, activity.index);
+    // // Update activities (create new activity)
+    // app.post('/user/:id/activities', checkLoginStatus, activity.create);
 
     // Get user's events
-    app.get('/user/:id/events', checkLoginStatus, user.events);
+    app.get('/user/:id/events', checkLoginStatus, userEvent.index);
     // Update events (create new event)
-    app.post('/user/:id/events', checkLoginStatus, user.createEvent);
+    app.post('/user/:id/events', checkLoginStatus, userEvent.create);
     // Update events (update event)
-    app.patch('/user/:id/events/:eventid', checkLoginStatus, user.updateEvent);
+    app.patch('/user/:id/events/:eventid', checkLoginStatus, userEvent.update);
     // Update events (remove event)
-    app.delete('/user/:id/events/:eventid', checkLoginStatus, user.removeEvent);
+    app.delete('/user/:id/events/:eventid', checkLoginStatus, userEvent.remove);
 
     // Get user's messages
     app.get('/user/:id/messages', checkLoginStatus, message.messages);
@@ -74,12 +83,20 @@ module.exports = function(app) {
     // Introduce friend
     app.get('/friends', checkLoginStatus, user.introduce);
 
-    // Get user's friends
-    app.get('/user/:id/friends', checkLoginStatus, user.addFriend);
-    // Add friend
-    app.post('/user/:id/friends', checkLoginStatus, user.addFriend);
-    // Remove friend
-    app.delete('/user/:id/friends/:friendid', checkLoginStatus, user.removeFriend);
+    // // Get user's friends
+    // app.get('/user/:id/friends', checkLoginStatus, user.addFriend);
+    // // Add friend
+    // app.post('/user/:id/friends', checkLoginStatus, function(req, res, next) {
+
+    //     sio.sockets.in(req.body.userid).emit('message', {
+    //         title: "someone add you as a friend",
+    //         msg: "you now be a friend of xxx"
+    //     });
+
+    //     next();
+    // }, user.addFriend);
+    // // Remove friend
+    // app.delete('/user/:id/friends/:friendid', checkLoginStatus, user.removeFriend);
 
     // Get user's jobs (employer only)
     app.get('/user/:id/jobs', checkLoginStatus, job.index);

@@ -1,9 +1,11 @@
 define([
     'text!engineer/template/home/page.html',
-    'common/view/introduction/introductions'
+    'common/view/introduction/introduction',
+    'common/view/timeline/timeline'
 ], function(
     pageTemplate,
-    IntroductionsView
+    IntroductionView,
+    TimelineView
 ) {
 
     // PageView is the biggest frame of the application
@@ -21,24 +23,31 @@ define([
         // Regions
         regions: {
             introductionRegion: '#introduction',
+            timelineRegion: '#timeline',
         },
 
         // Initializer
         initialize: function() {
 
-            this.introductionsView = new IntroductionsView({
+            this.introductionView = new IntroductionView({
+                model: this.model
+            });
+
+            this.timelineView = new TimelineView({
                 model: this.model
             });
         },
 
         // After render
         onRender: function() {
-            this.introductionRegion.show(this.introductionsView);
+            this.introductionRegion.show(this.introductionView);
+            this.timelineRegion.show(this.timelineView);
         },
 
         // After show
         onShow: function() {
         },
+
     });
 
 });

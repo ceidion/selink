@@ -5,9 +5,10 @@ var env = process.env.NODE_ENV || 'development',
     fs = require('fs'),
     config = require('./config/config')[env],
     mongoose = require('mongoose'),
+    connect = require('connect'),
     express = require('express'),
     http = require('http'),
-    socket = require('socket.io');
+    io = require('socket.io');
 
 // Connect to database
 mongoose.connect(config.db);
@@ -22,24 +23,28 @@ fs.readdirSync(models_path).forEach(function (file) {
     if (~file.indexOf('.js')) require(models_path + '/' + file);
 });
 
+// hold cookieParser and sessionStore for SessionSocket
+var cookieParser = express.cookieParser('your secret sauce'),
+    sessionStore = new connect.middleware.session.MemoryStore();
+
 // Set up app server
 var app = express();
 // config server
-require('./config/express')(app, config);
-// config route
-require('./config/routes')(app);
+require('./config/express')(app, config, cookieParser, sessionStore);
 
 // Express 3 requires a http.Server to attach socke.io
 var server = http.createServer(app);
 // attach socket.io
-var io = socket.listen(server);
+var sio = io.listen(server);
+sio.set('log level', 2);
 
-var online = [];
-// socket.io configuration
-io.sockets.on('connection', function(socket) {
+// SessionSocket
+var SessionSockets = require('session.socket.io'),
+    sessionSockets = new SessionSockets(sio, sessionStore, cookieParser);
 
-    online.push(socket);
-    console.log('online user is: ' + online.length);
+sessionSockets.on('connection', function(err, socket, session) {
+
+    socket.join(session.user._id);
 
     socket.emit('message', {
         title: "welcome",
@@ -47,11 +52,23 @@ io.sockets.on('connection', function(socket) {
     });
 });
 
+// config route
+require('./config/routes')(app, sio);
+
+// // socket.io configuration
+// sio.sockets.on('connection', function(socket) {
+
+//     socket.emit('message', {
+//         title: "welcome",
+//         msg: "welcome to selink"
+//     });
+// });
+
+// start server
 server.listen(app.get('port'), function(){
     console.log('Express server listening on port ' + app.get('port'));
 });
 
-// // start server
 // app.listen(app.get('port'), function(){
 //     console.log('Express server listening on port ' + app.get('port'));
 // });

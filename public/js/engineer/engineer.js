@@ -1,6 +1,7 @@
 define([
     'common/model/user',
     'common/model/profile',
+    'common/collection/activities',
     'common/collection/events',
     'common/collection/friends',
     'engineer/router/router',
@@ -8,6 +9,7 @@ define([
 ], function(
     UserModel,
     ProfileModel,
+    ActivitiesModel,
     EventsModel,
     FriendsModel,
     Router,
@@ -118,7 +120,13 @@ define([
             }
         });
 
+        // create user activities model
+        this.userActivitiesModel = new ActivitiesModel();
+        this.userActivitiesModel.document = this.userModel;
+
+        // initiate web socket
         var socket = io.connect('http://localhost:8081');
+        // web socket handler
         socket.on('message', function(data) {
             setTimeout(function() {
                 $.gritter.add({

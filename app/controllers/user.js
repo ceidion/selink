@@ -97,27 +97,27 @@ exports.suggest = function(req, res, next) {
     });
 };
 
-exports.addFriend = function(req, res, next) {
+// exports.addFriend = function(req, res, next) {
 
-    User.findById(req.params.id, function(err, user) {
-        user.friends.push(req.body.userid);
-        user.save(function(err, newUser) {
-            if (err) next(err);
-            else {
-                User.findById(req.body.userid, function(err, friend) {
-                    res.json(friend);
-                });
-            }
-        });
-    });
-};
+//     User.findById(req.params.id, function(err, user) {
+//         user.friends.push(req.body.userid);
+//         user.save(function(err, newUser) {
+//             if (err) next(err);
+//             else {
+//                 User.findById(req.body.userid, function(err, friend) {
+//                     res.json(friend);
+//                 });
+//             }
+//         });
+//     });
+// };
 
-exports.removeFriend = function(req, res, next) {
+// exports.removeFriend = function(req, res, next) {
 
-    console.log(req.params);
+//     console.log(req.params);
 
-    res.json("b");
-};
+//     res.json("b");
+// };
 
 exports.import = function(req, res, next) {
 
@@ -151,93 +151,4 @@ exports.import = function(req, res, next) {
     }
 
     res.send('got it');
-};
-
-exports.events = function(req, res, next) {
-
-    // look up user info
-    User.findById(req.params.id, function(err, user) {
-
-        // pass if error happend
-        if (err) next(err);
-        // if account could be found
-        else {
-            // return user's event
-            res.json(user.events);
-        }
-    });
-};
-
-exports.createEvent = function(req, res, next) {
-
-    // look up user info
-    User.findById(req.params.id, function(err, user) {
-
-        // pass if error happend
-        if (err) next(err);
-        // if account could be found
-        else {
-
-            var length = user.events.push(req.body);
-
-            user.save(function(err, newUser) {
-                if (err) next(err);
-                else res.send(newUser.events[length - 1]);
-            });
-        }
-    });
-};
-
-exports.updateEvent = function(req, res, next) {
-
-    // look up user info
-    User.findById(req.params.id, function(err, user) {
-        if (err) next(err);
-        else {
-
-            var event = user.events.id(req.params.eventid);
-
-            if (event) {
-
-                for(var prop in req.body) {
-                    event[prop] = req.body[prop];
-                }
-
-                user.save(function(err, newUser) {
-                    if (err) next(err);
-                    else res.send(event);
-                });
-            } else {
-                res.status(404).json({
-                    msg: "更新失敗しました"
-                });
-            }
-        }
-    });
-};
-
-exports.removeEvent = function(req, res, next) {
-
-    // look up user info
-    User.findById(req.params.id, function(err, user) {
-        if (err) next(err);
-        else {
-
-            var event = user.events.id(req.params.eventid);
-
-            if (event) {
-
-                var removedEvent = event.remove();
-
-                user.save(function(err, newUser) {
-                    if (err) next(err);
-                    else res.send(removedEvent);
-                });
-            } else {
-                res.status(404).json({
-                    msg: "更新失敗しました"
-                });
-            }
-        }
-    });
 };

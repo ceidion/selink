@@ -1,7 +1,7 @@
 var express = require('express'),
     path = require('path');
 
-module.exports = function(app, config) {
+module.exports = function(app, config, cookieParser, sessionStore) {
 
     // Port number, default is 8081
     app.set('port', process.env.PORT || 8081);
@@ -26,7 +26,7 @@ module.exports = function(app, config) {
     app.use(express.methodOverride());
 
     // Parse cookie before session
-    app.use(express.cookieParser('your secret here'));
+    app.use(cookieParser);
 
     // Parse request body
     app.use(express.bodyParser({
@@ -37,7 +37,7 @@ module.exports = function(app, config) {
     }));
 
     // Memory storage session
-    app.use(express.session());
+    app.use(express.session({ store: sessionStore }));
 
     /* TODO: CSRF support? */
 

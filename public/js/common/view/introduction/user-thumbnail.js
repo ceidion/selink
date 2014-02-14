@@ -38,8 +38,9 @@ define([
 
         onAddFriend: function() {
 
-            selink.friendsModel.create({
-                userid: this.model.get('_id')
+            selink.userActivitiesModel.create({
+                type: 'friendRequest',
+                title: this.model.get('profile').firstName + ' ' + this.model.get('profile').lastName + 'へ友達にするリクエストを送りました'
             });
         }
 	});

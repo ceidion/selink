@@ -66,12 +66,16 @@ define([
         // show profile
         showProfileView: function() {
 
-            // create profile view
-            selink.profileView = new ProfileView({
-                model: selink.profileModel
+            selink.profileModel.fetch({
+                success: function() {
+                    // create profile view
+                    selink.profileView = new ProfileView({
+                        model: selink.profileModel
+                    });
+                    // show profile view
+                    selink.pageContent.show(selink.profileView);
+                }
             });
-            // show profile view
-            selink.pageContent.show(selink.profileView);
         },
 
         // show calendar
