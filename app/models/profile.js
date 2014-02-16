@@ -263,40 +263,4 @@ var Profile = new Schema({
     }
 });
 
-// Virtuals
-Profile.virtual('birthDayStr').get(function() {
-    if (this.birthDay)
-        return moment(new Date(this.birthDay)).format('LL');
-    else
-        return "";
-});
-
-Profile.virtual('availableDateStr').get(function() {
-    if (this.availableDate)
-        return moment(new Date(this.availableDate)).format('LL');
-    else
-        return "";
-});
-
-Profile.virtual('addressStr').get(function() {
-    if (this.zipCode)
-        return '〒' + this.zipCode + '）' + this.address;
-    else
-        return this.address;
-});
-
-Profile.virtual('selfIntroductionStr').get(function() {
-    if (this.selfIntroduction)
-        return markdown.toHTML(this.selfIntroduction);
-    else
-        return "";
-});
-
-Profile.virtual('description').get(function() {
-    if (this.selfIntroduction)
-        return this.selfIntroduction.substr(0, 200);
-    else
-        return "";
-});
-
 mongoose.model('Profile', Profile);

@@ -43,22 +43,22 @@ module.exports = function(app, sio) {
     app.get('/user/:id', checkLoginStatus, user.show);
 
     // Get single profile
-    app.get('/profile/:id', checkLoginStatus, activity.profileLog, profile.show);
+    app.get('/profile/:id', checkLoginStatus, profile.show);
     // Update profile (first-level property)
-    app.patch('/profile/:id', checkLoginStatus, activity.profileLog, profile.update);
+    app.patch('/profile/:id', checkLoginStatus, profile.update);
     // Update profile (create nested collection item)
-    app.post('/profile/:id/:sub', checkLoginStatus, activity.profileLog, profile.createSubDocument);
+    app.post('/profile/:id/:sub', checkLoginStatus, profile.createSubDocument);
     // Update profile (update nested collection item)
-    app.patch('/profile/:id/:sub/:subid', checkLoginStatus, activity.profileLog, profile.updateSubDocument);
+    app.patch('/profile/:id/:sub/:subid', checkLoginStatus, profile.updateSubDocument);
     // Update profile (remove nested collection item)
-    app.delete('/profile/:id/:sub/:subid', checkLoginStatus, activity.profileLog, profile.removeSubDocument);
+    app.delete('/profile/:id/:sub/:subid', checkLoginStatus, profile.removeSubDocument);
     // Upload photo
-    app.put('/profile/:id', checkLoginStatus, activity.profileLog, profile.update);
+    app.put('/profile/:id', checkLoginStatus, profile.update);
 
     // Get all activities
-    app.get('/activities', checkLoginStatus, activity.index);
+    app.get('/activities/:date', checkLoginStatus, activity.index);
     // Get user's activities
-    app.get('/user/:id/activities', checkLoginStatus, activity.index);
+    app.get('/user/:id/activities/:date', checkLoginStatus, activity.index);
     // // Update activities (create new activity)
     // app.post('/user/:id/activities', checkLoginStatus, activity.create);
 

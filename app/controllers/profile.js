@@ -1,7 +1,8 @@
 var util = require('util');
 // Definition of Profile
-var mongoose = require('mongoose');
-var Profile = mongoose.model('Profile');
+var mongoose = require('mongoose'),
+    Profile = mongoose.model('Profile'),
+    Activity = mongoose.model('Activity');
 
 // Index
 exports.index = function(req, res, next) {};
@@ -43,6 +44,7 @@ exports.update = function(req, res, next) {
         req.body.photo = 'http://localhost:8081/upload/' + photoName;
     }
 
+    // update profile
     Profile.findById(req.params.id, function(err, profile) {
         if (err) next(err);
         else {

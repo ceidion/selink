@@ -120,9 +120,9 @@ define([
             }
         });
 
-        // create user activities model
-        this.userActivitiesModel = new ActivitiesModel();
-        this.userActivitiesModel.document = this.userModel;
+        // // create user activities model
+        // this.userActivitiesModel = new ActivitiesModel();
+        // this.userActivitiesModel.document = this.userModel;
 
         // initiate web socket
         var socket = io.connect('http://localhost:8081');

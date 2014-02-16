@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
     User = mongoose.model('User'),
-    Profile = mongoose.model('Profile');
+    Profile = mongoose.model('Profile'),
+    Activity = mongoose.model('Activity');
 
 var msgAuthFailedTitle = "アカウントが存在しません",
     msgAuthFailed = "ユーザIDとパースワードを確かめて、もう一度ご入力ください。",
@@ -68,7 +69,8 @@ exports.introduce = function(req, res, next) {
                     .select('type profile createDate')
                     .where('_id').nin(user.friends)
                     .populate('profile', 'firstName lastName title gender photo')
-                    .sort({createDate:-1});
+                    .sort({createDate:-1})
+                    .limit(20);
 
         query.exec(function(err, users) {
             if (err) next(err);
