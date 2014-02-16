@@ -5,6 +5,40 @@ define([], function() {
         idAttribute: "_id",
 
         urlRoot: '/user',
+        
+        validation: {
+            firstName: {
+                maxLength: 20,
+                msg: "最大20文字までご入力ください"
+            },
+            lastName: {
+                maxLength: 20,
+                msg: "最大20文字までご入力ください"
+            },
+            title: {
+                maxLength: 20,
+                msg: "最大20文字までご入力ください"
+            },
+            birthDay: {
+                dateJa: true
+            },
+            address: {
+                maxLength: 80,
+                msg: "最大80文字までご入力ください"
+            },
+            nearestSt: {
+                maxLength: 30,
+                msg: "最大30文字までご入力ください"
+            },
+            email: {
+                pattern: 'email',
+                msg: "正しいフォーマットでご入力ください"
+            },
+            webSite: {
+                pattern: 'url',
+                msg: "正しいURLフォーマットでご入力ください"
+            }
+        },
 
         // Parse data
         parse: function(response, options) {

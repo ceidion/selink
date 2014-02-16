@@ -1,6 +1,5 @@
 define([
     'common/model/user',
-    'common/model/profile',
     'common/collection/activities',
     'common/collection/events',
     'common/collection/friends',
@@ -8,7 +7,6 @@ define([
     'engineer/controller/controller'
 ], function(
     UserModel,
-    ProfileModel,
     ActivitiesModel,
     EventsModel,
     FriendsModel,
@@ -90,9 +88,6 @@ define([
 
             // on success
             success: function() {
-
-                // create profile model from user model
-                self.profileModel = new ProfileModel(self.userModel.get('profile'), {parse: true});
 
                 // create events model(collection) from user model
                 self.eventsModel = new EventsModel(self.userModel.get('events'), {parse: true});

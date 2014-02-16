@@ -47,7 +47,7 @@ define([
 
             // setup top nav
             selink.topNavView = new TopNavView({
-                model: selink.profileModel,
+                model: selink.userModel,
                 collection: selink.eventsModel
             });
             selink.topnavArea.show(selink.topNavView);
@@ -66,11 +66,11 @@ define([
         // show profile
         showProfileView: function() {
 
-            selink.profileModel.fetch({
+            selink.userModel.fetch({
                 success: function() {
                     // create profile view
                     selink.profileView = new ProfileView({
-                        model: selink.profileModel
+                        model: selink.userModel
                     });
                     // show profile view
                     selink.pageContent.show(selink.profileView);

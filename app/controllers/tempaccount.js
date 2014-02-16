@@ -1,7 +1,6 @@
 var Mailer = require('../mailer/mailer.js'),
     mongoose = require('mongoose'),
     User = mongoose.model('User'),
-    Profile = mongoose.model('Profile'),
     TempAccount = mongoose.model('TempAccount');
 
 exports.index = function(req, res, next) {};
@@ -97,14 +96,10 @@ exports.activate = function(req, res, next) {
         // if the target account was found
         else {
 
-            // create profile object for this account
-            var profileObj = new Profile();
-
             // create real user object and connect it to profile
             var userObj = new User({
                 email: tempAccount.email,
                 password: tempAccount.password,
-                profile: profileObj._id,
                 type: tempAccount.type,
                 provider: 'local'
             }, false);
@@ -117,12 +112,6 @@ exports.activate = function(req, res, next) {
                     if (err.code == 11000) res.status(424).send("This e-mail address already in used, Please use another one.");
                     else next(err);
                 } else {
-
-                    profileObj._owner = account;
-                    // save the profile object
-                    profileObj.save(function(err, profile) {
-                        if (err) next(err);
-                    });
 
                     // remove the temporary account
                     tempAccount.remove();
