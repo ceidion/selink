@@ -9,7 +9,7 @@ define([
     ItemView,
     EducationsModel) {
 
-    var EducationComposite = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -31,10 +31,13 @@ define([
 
             this.events = _.extend({}, this.events);
 
+            // make the collection from user model
             this.collection = new EducationsModel(this.model.get('educations'), {parse: true});
             this.collection.document = this.model;
 
+            // collection comparator
             this.collection.comparator = function(education) {
+                // sort by startDate desc
                 if (education.get('startDate')) {
                     var date = moment(education.get('startDate'));
                     return 0 - Number(date.valueOf());
@@ -42,9 +45,11 @@ define([
                 else
                     return 0;
             };
+            // sort collection
             this.collection.sort();
         },
 
+        // on render
         onRender: function() {
 
             this.$el.find('.btn-add').tooltip({
@@ -62,14 +67,11 @@ define([
                 title: "ドラグして移動"
             });
 
+            // if the collection exceed the limit number
             if (this.collection.length >= this.itemLimit)
+                // hide add button
                 this.ui.addBtn.hide();
-
-            // bind validator
-            Backbone.Validation.bind(this);
         },
 
     });
-
-    return EducationComposite;
 });

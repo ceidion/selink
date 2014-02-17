@@ -5,11 +5,12 @@ define([
     BaseView,
     template) {
 
-    var EducationItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
 
+        // class name
         className: 'sl-editable',
 
         // initializer
@@ -51,19 +52,23 @@ define([
             // enable mask input
             this.$el.find('input[name="startDate"],input[name="endDate"]').mask('9999/99');
 
-            // ?? I did bind on collection....
+            // bind validator
             Backbone.Validation.bind(this);
         },
 
+        // before close
         onBeforeClose: function() {
-           this.$el.find('input[name="startDate"],input[name="endDate"]').datepicker('remove');
+            // close datepicker
+            this.$el.find('input[name="startDate"],input[name="endDate"]').datepicker('remove');
         },
 
+        // update model
         updateModel: function() {
 
             // clear all errors
             this.clearError();
 
+            // get user input data
             var inputData = this.getData();
 
             // check input value
@@ -80,27 +85,32 @@ define([
                     errors.endDate = errors.endTime = "開始日より後の時間をご入力ください";
             }
 
-            // if input has errors
-            if (!_.isEmpty(errors)) {
-                // show error
-                this.showError(errors);
-            } else {
+            // if input has no errors
+            if (_.isEmpty(errors)) {
                 // set value on model
                 this.model.set(inputData);
+                // render view with new value
                 this.renderValue(inputData);
+            } else {
+                // show error
+                this.showError(errors);
             }
         },
 
+        // remove model
         removeModel: function() {
 
             var self = this;
 
+            // hide view first
             this.$el.slBounceOut('', function(){
                 $(this).removeClass('animated bounceOut');
+                // remove model
                 self.model.collection.remove(self.model);
             });
         },
 
+        // get user input data
         getData: function() {
 
             var startDate = this.ui.startDate.val() ? moment(this.ui.startDate.val()).toJSON() : "",
@@ -114,6 +124,7 @@ define([
             };
         },
 
+        // render view with new value
         renderValue: function(data) {
 
             if (data.school)
@@ -137,6 +148,4 @@ define([
         }
 
     });
-
-    return EducationItem;
 });

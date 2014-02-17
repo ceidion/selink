@@ -4,7 +4,6 @@ var tag = require('../app/controllers/tag'),
     activity = require('../app/controllers/activity'),
     message = require('../app/controllers/message'),
     tempaccount = require('../app/controllers/tempaccount'),
-    profile = require('../app/controllers/profile'),
     job = require('../app/controllers/job'),
     address = require('../app/controllers/address');
 
@@ -22,43 +21,32 @@ module.exports = function(app, sio) {
 
     // SPA bootstrap
     app.get('/spa', checkLoginStatus, function(req, res, next){
-
-        if (req.session.user.type === "admin") {
-            console.log("admin");
-            res.render('./admin/index', req.session.user);
-        } else if (req.session.user.type === "employer") {
-            console.log("employer");
-            res.render('./employer/index', req.session.user);
-        } else {
-            console.log("engineer");
-            res.render('./engineer/index', req.session.user);
-        }
+        console.log(req.session.user.type);
+        res.render('./' + req.session.user.type + '/index', req.session.user);
     });
 
     // User sign-up
     app.post('/signup', tempaccount.create);
     // Account activate
     app.get('/activate/:id', tempaccount.activate);
-    // Get user's info
-    app.get('/user/:id', checkLoginStatus, user.show);
 
-    // Get single profile
-    app.get('/profile/:id', checkLoginStatus, profile.show);
-    // Update profile (first-level property)
-    app.patch('/profile/:id', checkLoginStatus, profile.update);
-    // Update profile (create nested collection item)
-    app.post('/profile/:id/:sub', checkLoginStatus, profile.createSubDocument);
-    // Update profile (update nested collection item)
-    app.patch('/profile/:id/:sub/:subid', checkLoginStatus, profile.updateSubDocument);
-    // Update profile (remove nested collection item)
-    app.delete('/profile/:id/:sub/:subid', checkLoginStatus, profile.removeSubDocument);
-    // Upload photo
-    app.put('/profile/:id', checkLoginStatus, profile.update);
+    // Get user info
+    app.get('/user/:id', checkLoginStatus, user.show);
+    // Upload user photo
+    app.put('/user/:id', checkLoginStatus, user.update);
+    // Update user info (first-level property)
+    app.patch('/user/:id', checkLoginStatus, user.update);
+    // Update user info (create nested collection item)
+    app.post('/user/:id/:sub', checkLoginStatus, user.createSubDocument);
+    // Update user info (update nested collection item)
+    app.patch('/user/:id/:sub/:subid', checkLoginStatus, user.updateSubDocument);
+    // Update user info (remove nested collection item)
+    app.delete('/user/:id/:sub/:subid', checkLoginStatus, user.removeSubDocument);
 
     // Get all activities
-    app.get('/activities/:date', checkLoginStatus, activity.index);
+    app.get('/activities', checkLoginStatus, activity.index);
     // Get user's activities
-    app.get('/user/:id/activities/:date', checkLoginStatus, activity.index);
+    app.get('/user/:id/activities', checkLoginStatus, activity.index);
     // // Update activities (create new activity)
     // app.post('/user/:id/activities', checkLoginStatus, activity.create);
 

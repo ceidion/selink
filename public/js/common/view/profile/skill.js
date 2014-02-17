@@ -5,11 +5,12 @@ define([
     BaseView,
     template) {
 
-    var SkillItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
 
+        // class name
         className: 'sl-editable',
 
         // initializer
@@ -27,12 +28,16 @@ define([
                 'change input': 'updateModel',
                 'click .btn-remove': 'removeModel'
             });
+
+            this.listenTo(this, 'slider', this.updateModel);
         },
 
+        // after render
         onRender: function() {
 
             var self = this;
 
+            // attach slider
             this.$el.find('.sl-slider').empty().slider({
                 value: this.model.get('weight'),
                 range: "min",
@@ -80,7 +85,9 @@ define([
                 },
                 stop: function(event, ui) {
 
-                    self.model.set('weight', ui.value);
+                    // self.model.set('weight', ui.value);
+                    self.weight = ui.value;
+                    self.trigger('slider');
 
                     var progressClass = 'progress-bar-purple';
 
@@ -103,49 +110,49 @@ define([
                 }
             });
 
-            // ?? I did bind on collection....
+            // bind validator
             Backbone.Validation.bind(this);
         },
 
+        // update model
         updateModel: function() {
 
             // clear all errors
             this.clearError();
 
-            var inputData = {skill: this.ui.input.val()};
+            // get input data
+            var inputData = {
+                skill: this.ui.input.val(),
+                weight: this.weight
+            };
 
             // check input value
-            var errors = this.model.preValidate(inputData);
+            var errors = this.model.preValidate(inputData) || {};
 
-            // if input has errors
-            if (errors) {
-                console.log(errors)
-                // show error
-                this.showError(errors);
-            } else {
+            // if input has no errors
+            if (_.isEmpty(errors)) {
                 // set value on model
                 this.model.set(inputData);
+                // render view with new value
                 this.$el.find('.pull-left').empty().text(inputData.skill);
-                // this.renderValue(inputData);
+            } else {
+                // show error
+                this.showError(errors);
             }
-
-            // var skill = this.ui.input.val();
-
-            // this.model.set('skill', skill);
-            // if (skill)
         },
 
+        // remove model
         removeModel: function() {
 
             var self = this;
 
+            // hide view first
             this.$el.slBounceOut('', function(){
                 $(this).removeClass('animated bounceOut');
+                // remove model
                 self.model.collection.remove(self.model);
             });
         }
 
     });
-
-    return SkillItem;
 });

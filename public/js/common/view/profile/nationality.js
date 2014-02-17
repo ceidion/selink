@@ -14,7 +14,7 @@ define([
         "オセアニア": ["オーストラリア","キリバス","クック諸島","サモア","ソロモン諸島","ツバル","トンガ","ナウル","ニウエ","ニュージーランド","バヌアツ","パプアニューギニア","パラオ","フィジー","マーシャル諸島","ミクロネシア連邦",],
     };
 
-    var NationalityItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -55,6 +55,4 @@ define([
         }
 
     });
-
-    return NationalityItem;
 });

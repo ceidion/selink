@@ -5,11 +5,12 @@ define([
     BaseView,
     template) {
 
-    var QualificationItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
 
+        // class name
         className: 'sl-editable',
 
         // initializer
@@ -46,45 +47,54 @@ define([
             // enable mask input
             this.ui.date.mask('9999/99');
 
-            // ?? I did bind on collection....
+            // bind validator
             Backbone.Validation.bind(this);
         },
 
+        // before close
         onBeforeClose: function() {
+            // close datepicker
             this.ui.date.datepicker('remove');
         },
 
+        // update model
         updateModel: function() {
 
             // clear all errors
             this.clearError();
 
+            // get input data
             var inputData = this.getData();
 
-            // check input value
-            var errors = this.model.preValidate(inputData);
+            // check input data
+            var errors = this.model.preValidate(inputData) || {};
 
-            // if input has errors
-            if (errors) {
-                // show error
-                this.showError(errors);
-            } else {
+            // if input has no errors
+            if (_.isEmpty(errors)) {
                 // set value on model
                 this.model.set(inputData);
+                // render view with new value
                 this.renderValue(inputData);
+            } else {
+                // show error
+                this.showError(errors);
             }
         },
 
+        // remove model
         removeModel: function() {
 
             var self = this;
 
+            // hide view first
             this.$el.slBounceOut('', function(){
                 $(this).removeClass('animated bounceOut');
+                // remove model
                 self.model.collection.remove(self.model);
             });
         },
 
+        // get user input data
         getData: function() {
 
             var acquireDate = this.ui.date.val() ? moment(this.ui.date.val()).toJSON() : "";
@@ -95,6 +105,7 @@ define([
             };
         },
 
+        // render view with new value
         renderValue: function(data) {
 
             if (data.name)
@@ -108,6 +119,4 @@ define([
                 this.ui.dateValue.html('<span class="text-muted">未入力</span>');
         }
     });
-
-    return QualificationItem;
 });

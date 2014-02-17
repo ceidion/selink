@@ -9,7 +9,7 @@ define([
     ItemView,
     LanguagesModel) {
 
-    var LanguageComposite = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -31,19 +31,23 @@ define([
 
             this.events = _.extend({}, this.events);
 
+            // make the collection from user model
             this.collection = new LanguagesModel(this.model.get('languages'));
-
             this.collection.document = this.model;
 
+            // collection comparator
             this.collection.comparator = function(language) {
+                // sort by weight desc
                 if (language.get('weight'))
                     return 0 - Number(language.get('weight'));
                 else
                     return 0;
             };
+            // sort collection
             this.collection.sort();
         },
 
+        // on render
         onRender: function() {
 
             this.$el.find('.btn-add').tooltip({
@@ -61,11 +65,11 @@ define([
                 title: "ドラグして移動"
             });
 
+            // if the collection exceed the limit number
             if (this.collection.length >= this.itemLimit)
+                // hide add button
                 this.ui.addBtn.hide();
         },
 
     });
-
-    return LanguageComposite;
 });

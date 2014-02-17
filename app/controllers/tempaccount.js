@@ -1,7 +1,8 @@
 var Mailer = require('../mailer/mailer.js'),
     mongoose = require('mongoose'),
     User = mongoose.model('User'),
-    TempAccount = mongoose.model('TempAccount');
+    TempAccount = mongoose.model('TempAccount'),
+    Activity = mongoose.model('Activity');
 
 exports.index = function(req, res, next) {};
 
@@ -100,12 +101,15 @@ exports.activate = function(req, res, next) {
             var userObj = new User({
                 email: tempAccount.email,
                 password: tempAccount.password,
+                firstName: tempAccount.firstName,
+                lastName: tempAccount.lastName,
+                secEmail: tempAccount.email,
                 type: tempAccount.type,
                 provider: 'local'
             }, false);
 
             // save the new user
-            userObj.save(function(err, account) {
+            userObj.save(function(err, user) {
 
                 // handle error
                 if (err) {
@@ -121,6 +125,14 @@ exports.activate = function(req, res, next) {
                     //     if (err) next(err);
                     //     Mailer.sendNewUserActivatedNotification(admins, account);
                     // });
+                    Activity.create({
+                        _owner: user._id,
+                        type: 'user-activated',
+                        title: "SELinkへようこそ！",
+                        content: "SELinkのアカウントを開通しました。"
+                    }, function(err, activity) {
+                        if (err) next(err);
+                    });
 
                     // redirect to home page
                     res.redirect('/');

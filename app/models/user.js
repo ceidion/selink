@@ -171,13 +171,17 @@ var User = new Schema({
     drafts:[Schema.Types.ObjectId],
 
     lastLogin: {
-        type: Date,
-        default: Date.now
+        type: Date
     },
 
     logicDelete: {
         type: Boolean,
         default: false
+    },
+
+    createDate: {
+        type: Date,
+        default: Date.now
     }
 });
 

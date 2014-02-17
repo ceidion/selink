@@ -8,7 +8,7 @@ define([], function() {
         // common events
         events: {
             // Switch to edit-mode when the div was clicked
-            'click': 'switchToEditor',
+            'click': 'openEditor',
             'mouseover': 'attention'
         },
 
@@ -19,7 +19,7 @@ define([], function() {
         },
 
         // Switch sl-editor from view-mode to edit-mode
-        switchToEditor: function() {
+        openEditor: function() {
 
             var self = this;
 

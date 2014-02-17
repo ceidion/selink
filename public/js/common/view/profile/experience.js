@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var ExperienceItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -48,6 +48,4 @@ define([
         }
 
     });
-
-    return ExperienceItem;
 });

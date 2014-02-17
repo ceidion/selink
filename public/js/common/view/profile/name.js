@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var NameEditor = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -79,6 +79,4 @@ define([
         }
 
     });
-
-    return NameEditor;
 });

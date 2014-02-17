@@ -1,6 +1,6 @@
 define(['common/view/composite-empty'], function(EmptyView) {
 
-    var BaseView = Backbone.Marionette.CompositeView.extend({
+    return Backbone.Marionette.CompositeView.extend({
 
         // Empty View
         emptyView: EmptyView,
@@ -12,7 +12,6 @@ define(['common/view/composite-empty'], function(EmptyView) {
 
         // common events
         events: {
-
             // Add a new item when add button clicked
             'click .btn-add': 'addItem',
             'mouseover .widget-header': 'attention'
@@ -30,16 +29,9 @@ define(['common/view/composite-empty'], function(EmptyView) {
             // get subview's model
             var model = itemView.model;
 
-            // this happend on composite initialzation.
-            // if the subview's model has _id attribute, it is a existing model
-            if (model.get('_id')) {
-
-                // just append the subview
-                this.$el.find(this.itemViewContainer).append(itemView.el);
-            }
             // this happend on user click add button
             // subview's model don't have _id attribute, so it's a new model
-            else {
+            if (model.isNew()) {
 
                 // append the subview
                 this.$el.find(this.itemViewContainer).append(itemView.el);
@@ -57,6 +49,12 @@ define(['common/view/composite-empty'], function(EmptyView) {
                     });
                 }
             }
+            // this happend on composite initialzation.
+            // if the subview's model has _id attribute, it is a existing model
+            else {
+                // just append the subview
+                this.$el.find(this.itemViewContainer).append(itemView.el);
+            }
         },
 
         attention: function(event) {
@@ -66,7 +64,7 @@ define(['common/view/composite-empty'], function(EmptyView) {
         // Add new composite item
         addItem: function() {
             // add a new model to composite's collection
-            this.collection.create();
+            this.collection.add({});
             // if the number of items exceed the limitation
             if (this.collection.length >= this.itemLimit)
                 // hide the add button
@@ -97,9 +95,10 @@ define(['common/view/composite-empty'], function(EmptyView) {
                         class_name: 'gritter-error gritter-center',
                     });
                 },
-
                 // use patch
-                patch: true
+                patch: true,
+                // silently sycn with server
+                silent: true
             });
         },
 
@@ -138,6 +137,4 @@ define(['common/view/composite-empty'], function(EmptyView) {
         }
 
     });
-
-    return BaseView;
 });

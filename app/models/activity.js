@@ -45,24 +45,6 @@ var Activity = new Schema({
     createDate: {
         type: Date,
         default: Date.now
-    },
-
-    // Creator
-    createUser: {
-        type: String,
-        trim: true
-    },
-
-    // Modify Date
-    updateDate: {
-        type: Date,
-        default: Date.now
-    },
-
-    // Modifier
-    updateUser: {
-        type: String,
-        trim: true
     }
 });
 

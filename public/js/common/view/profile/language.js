@@ -5,18 +5,21 @@ define([
     BaseView,
     template) {
 
+    // the dropdown list
     var languageList = ["日本語","英語","中国語","韓国語","ヒンディー語","スペイン語","ロシア語","フランス語","アラビア語","ポルトガル語","マレー語","ベンガル語","ドイツ語","ウルドゥー語","イタリア語","ベトナム語","ペルシア語","タガログ語","タイ語","トルコ語"];
 
-    var LanguageItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
 
+        // class name
         className: 'grid3 center sl-editable',
 
         // initializer
         initialize: function() {
 
+            // put the dropdown list to model silently
             this.model.set('languageList', languageList, {silent: true});
 
             this.ui = _.extend({}, this.ui, {
@@ -28,6 +31,9 @@ define([
                 'change select': 'updateModel',
                 'click .btn-remove': 'removeModel'
             });
+
+            // listen to the knob input
+            this.listenTo(this, 'knob', this.updateModel);
         },
 
         // after render
@@ -83,8 +89,11 @@ define([
                     return false;
                 },
                 'release': function(value) {
-                    // self.save();
-                    self.model.set('weight', value);
+                    // self.model.set('weight', value);
+                    // put the value to view
+                    self.weight = value;
+                    // let the view know the knob was moved
+                    self.trigger('knob');
                 }
             });
 
@@ -94,23 +103,46 @@ define([
                 disable_search_threshold: 100
             });
 
+            // bind validator
+            Backbone.Validation.bind(this);
         },
 
+        // remove model
         updateModel: function() {
-            this.model.set('language', this.ui.input.val());
-            this.render();
+
+            // get user input data
+            var inputData = {
+                'language': this.ui.input.val(),
+                'weight': this.weight
+            };
+
+            // check input value
+            var errors = this.model.preValidate(inputData) || {};
+
+            // TODO: chosen wrapped the input, so the defautl showErrors
+            // method won't work, further process is needed
+
+            // if input has no errors
+            if (_.isEmpty(errors)) {
+                // set value on model
+                this.model.set(inputData);
+                // render view with new value
+                this.render();
+            }
         },
 
+        // remove model
         removeModel: function() {
 
             var self = this;
 
+            // hide view first
             this.$el.slBounceOut('', function(){
                 $(this).removeClass('animated bounceOut');
+                // remove model
                 self.model.collection.remove(self.model);
             });
         }
-    });
 
-    return LanguageItem;
+    });
 });

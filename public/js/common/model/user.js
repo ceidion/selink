@@ -5,12 +5,15 @@ define([], function() {
         idAttribute: "_id",
 
         urlRoot: '/user',
-        
+
         validation: {
-            firstName: {
+            firstName: [{
+                required: true,
+                msg: "氏名をご入力ください"
+            },{
                 maxLength: 20,
                 msg: "最大20文字までご入力ください"
-            },
+            }],
             lastName: {
                 maxLength: 20,
                 msg: "最大20文字までご入力ください"
@@ -30,7 +33,7 @@ define([], function() {
                 maxLength: 30,
                 msg: "最大30文字までご入力ください"
             },
-            email: {
+            secEmail: {
                 pattern: 'email',
                 msg: "正しいフォーマットでご入力ください"
             },

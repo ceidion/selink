@@ -9,7 +9,7 @@ define([
     ItemView,
     QualificationsModel) {
 
-    var QualificationComposite = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -31,20 +31,24 @@ define([
 
             this.events = _.extend({}, this.events);
 
+            // make the collection from user model
             this.collection = new QualificationsModel(this.model.get('qualifications'), {parse: true});
             this.collection.document = this.model;
 
+            // collection comparator
             this.collection.comparator = function(qualification) {
+                // sort by acquireDate desc
                 if (qualification.get('acquireDate')) {
                     var date = moment(qualification.get('acquireDate'));
                     return 0 - Number(date.valueOf());
                 }
-                else 
-                    return 0;
+                else return 0;
             };
+            // sort collection
             this.collection.sort();
         },
 
+        // on render
         onRender: function() {
 
             this.$el.find('.btn-add').tooltip({
@@ -62,14 +66,10 @@ define([
                 title: "ドラグして移動"
             });
 
+            // if the collection exceed the limit number
             if (this.collection.length >= this.itemLimit)
+                // hide add button
                 this.ui.addBtn.hide();
-
-            // bind validator
-            Backbone.Validation.bind(this);
-        },
-
+        }
     });
-
-    return QualificationComposite;
 });

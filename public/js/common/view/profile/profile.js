@@ -43,7 +43,7 @@ define([
 ) {
 
     // profile view
-    var ProfileView = Backbone.Marionette.Layout.extend({
+    return Backbone.Marionette.Layout.extend({
 
         // template
         template: template,
@@ -141,10 +141,6 @@ define([
             });
 
             this.$el.addClass('animated fadeInRight');
-
-            // this.$el.find('.portable').isotope({
-            //     itemSelector: '.widget-container-span'
-            // })
         },
 
         // profile view handle the click event
@@ -209,6 +205,4 @@ define([
             });
         }
     });
-
-    return ProfileView;
 });

@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var TitleItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -76,6 +76,4 @@ define([
         }
 
     });
-
-    return TitleItem;
 });

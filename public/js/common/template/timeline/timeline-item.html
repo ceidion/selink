@@ -1,6 +1,15 @@
+<%
+    var labelColor = 'label-yellow';
+
+    if (moment().isSame(moment(obj.date, 'YYYY/MM/DD'), 'day'))
+        labelColor = 'label-success';
+    else if (moment().subtract('days', 1).isSame(moment(obj.date, 'YYYY/MM/DD'), 'day'))
+        labelColor = 'label-primary'
+%>
+
 <div class="timeline-label">
-    <span class="label label-primary arrowed-in-right label-lg">
-        <b><%= obj.date.format('LL') %></b>
+    <span class="label <%= labelColor %> arrowed-in-right label-lg">
+        <b><%= moment(obj.date, 'YYYY/MM/DD').format('LL') %></b>
     </span>
 </div>
 <div class="timeline-items"></div>

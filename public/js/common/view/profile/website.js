@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var WebSiteItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -68,6 +68,4 @@ define([
         }
 
     });
-
-    return WebSiteItem;
 });

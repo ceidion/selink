@@ -12,10 +12,13 @@ define([], function() {
             endDate: {
                 dateJa: true
             },
-            company: {
+            company: [{
+                required: true,
+                msg: "会社名をご入力ください"
+            },{
                 maxLength: 50,
                 msg: "最大50文字までご入力ください"
-            },
+            }],
             address: {
                 maxLength: 50,
                 msg: "最大50文字までご入力ください"

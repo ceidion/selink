@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var EMailItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -24,7 +24,7 @@ define([
 
             // listen on email property for save
             this.modelEvents = {
-                'change:email': 'save'
+                'change:secEmail': 'save'
             };
         },
 
@@ -55,21 +55,19 @@ define([
 
         getData: function() {
             return {
-                email: this.ui.input.val()
+                secEmail: this.ui.input.val()
             };
         },
 
         renderValue: function(data) {
 
-            if (!data.email) {
+            if (!data.secEmail) {
                 this.ui.value.html(this.placeholder);
                 return;
             }
 
-            this.ui.value.text(data.email);
+            this.ui.value.text(data.secEmail);
         }
 
     });
-
-    return EMailItem;
 });

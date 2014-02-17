@@ -9,7 +9,7 @@ define([
     ItemView,
     EmploymentsModel) {
 
-    var EmploymentComposite = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -31,20 +31,25 @@ define([
 
             this.events = _.extend({}, this.events);
 
+            // make the collection from user model
             this.collection = new EmploymentsModel(this.model.get('employments'), {parse: true});
             this.collection.document = this.model;
 
+            // collection comparator
             this.collection.comparator = function(employment) {
+                // sort by startDate desc
                 if (employment.get('startDate')) {
                     var date = moment(employment.get('startDate'));
                     return 0 - Number(date.valueOf());
                 }
-                else 
+                else
                     return 0;
             };
+            // sort collection
             this.collection.sort();
         },
 
+        // on render
         onRender: function() {
 
             this.$el.find('.btn-add').tooltip({
@@ -62,19 +67,11 @@ define([
                 title: "ドラグして移動"
             });
 
+            // if the collection exceed the limit number
             if (this.collection.length >= this.itemLimit)
+                // hide add button
                 this.ui.addBtn.hide();
-
-            // bind validator
-            Backbone.Validation.bind(this);
-        },
-
-        // after show
-        onShow: function() {
-            this.$el.addClass('animated fadeInRight');
-        },
+        }
 
     });
-
-    return EmploymentComposite;
 });

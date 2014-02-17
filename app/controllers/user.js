@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
+    util = require('util'),
     User = mongoose.model('User'),
-    Profile = mongoose.model('Profile'),
     Activity = mongoose.model('Activity');
 
 var msgAuthFailedTitle = "アカウントが存在しません",
@@ -8,6 +8,7 @@ var msgAuthFailedTitle = "アカウントが存在しません",
     msgMissAuthInfoTitle = "アカウント情報を入力してください",
     msgMissAuthInfo = "ログインするには、メールアドレスとパースワード両方ご入力する必要があります。";
 
+// User login
 exports.login = function(req, res, next) {
 
     // do nothing if login info are not enough
@@ -34,6 +35,15 @@ exports.login = function(req, res, next) {
         else {
             // put account into session
             req.session.user = user;
+
+            Activity.create({
+                _owner: user._id,
+                type: 'user-login',
+                title: "SELinkにログインしました。"
+            }, function(err, activity) {
+                if (err) next(err);
+            });
+
             res.json({
                 msg: "welcome!"
             });
@@ -41,7 +51,17 @@ exports.login = function(req, res, next) {
     });
 };
 
+// User logout
 exports.logout = function(req, res, next) {
+
+    Activity.create({
+        _owner: req.session.user._id,
+        type: 'user-logout',
+        title: "SELinkにログアウトしました。"
+    }, function(err, activity) {
+        if (err) next(err);
+    });
+
     req.session.destroy();
     res.redirect('/');
 };
@@ -54,7 +74,6 @@ exports.index = function(req, res, next) {
 exports.show = function(req, res, next) {
 
     User.findById(req.params.id, '-password')
-        .populate('profile')
         .exec(function(err, user) {
             if (err) next(err);
             else res.json(user);
@@ -83,33 +102,25 @@ exports.update = function(req, res, next) {
         req.body.photo = 'http://localhost:8081/upload/' + photoName;
     }
 
-    // update profile
-    Profile.findById(req.params.id, function(err, profile) {
+    // update user info
+    User.findByIdAndUpdate(req.params.id, req.body, function(err, updatedUser) {
         if (err) next(err);
-        else {
-            for(var prop in req.body) {
-                profile[prop] = req.body[prop];
-            }
-            profile.save(function(err, newProfile) {
-                if (err) next(err);
-                else res.send(newProfile);
-            });
-        }
+        else res.send(updatedUser);
     });
 };
 
 // Create new sub document
 exports.createSubDocument = function(req, res, next) {
 
-    Profile.findById(req.params.id, function(err, profile) {
+    User.findById(req.params.id, function(err, user) {
         if (err) next(err);
         else {
 
-            var length = profile[req.params.sub].push(req.body);
+            var length = user[req.params.sub].push(req.body);
 
-            profile.save(function(err, newProfile) {
+            user.save(function(err, updatedUser) {
                 if (err) next(err);
-                else res.send(newProfile[req.params.sub][length - 1]);
+                else res.send(updatedUser[req.params.sub][length - 1]);
             });
         }
     });
@@ -118,11 +129,11 @@ exports.createSubDocument = function(req, res, next) {
 // Edit sub document
 exports.updateSubDocument = function(req, res, next) {
 
-    Profile.findById(req.params.id, function(err, profile) {
+    User.findById(req.params.id, function(err, user) {
         if (err) next(err);
         else {
 
-            var subDoc = profile[req.params.sub].id(req.params.subid);
+            var subDoc = user[req.params.sub].id(req.params.subid);
 
             if (subDoc) {
 
@@ -130,7 +141,7 @@ exports.updateSubDocument = function(req, res, next) {
                     subDoc[prop] = req.body[prop];
                 }
 
-                profile.save(function(err, newProfile) {
+                user.save(function(err, updatedUser) {
                     if (err) next(err);
                     else res.send(subDoc);
                 });
@@ -144,19 +155,20 @@ exports.updateSubDocument = function(req, res, next) {
 
 };
 
+// Remove sub document
 exports.removeSubDocument = function(req, res, next) {
 
-    Profile.findById(req.params.id, function(err, profile) {
+    User.findById(req.params.id, function(err, user) {
         if (err) next(err);
         else {
 
-            var subDoc = profile[req.params.sub].id(req.params.subid);
+            var subDoc = user[req.params.sub].id(req.params.subid);
 
             if (subDoc) {
 
                 var removedDoc = subDoc.remove();
 
-                profile.save(function(err, newProfile) {
+                user.save(function(err, updatedUser) {
                     if (err) next(err);
                     else res.send(removedDoc);
                 });
@@ -174,9 +186,8 @@ exports.introduce = function(req, res, next) {
     User.findById(req.session.user._id, function(err, user) {
 
         var query = User.find({_id: {'$ne': req.session.user._id}})
-                    .select('type profile createDate')
+                    .select('type firstName lastName title gender photo createDate')
                     .where('_id').nin(user.friends)
-                    .populate('profile', 'firstName lastName title gender photo')
                     .sort({createDate:-1})
                     .limit(20);
 
@@ -193,10 +204,9 @@ exports.suggest = function(req, res, next) {
 
     var initial = req.query.initial;
 
-    var query = Profile.find({_id: {'$ne': req.session.user.profile}})
+    var query = User.find({_id: {'$ne': req.session.user._id}})
                 .or([{firstName: new RegExp(initial, "i")}, {lastName: new RegExp(initial, "i")}])
-                .select('firstName lastName bio photo _owner')
-                .populate('_owner')
+                .select('firstName lastName bio photo')
                 .limit(8);
 
     query.exec(function(err, users) {

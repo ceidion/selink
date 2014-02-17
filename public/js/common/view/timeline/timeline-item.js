@@ -7,17 +7,6 @@ define([
     template,
     ItemView) {
 
-    var ActivitiesModel = Backbone.Collection.extend({
-
-        idAttribute: "_id",
-
-        model: Backbone.Model.extend({idAttribute: "_id"}),
-
-        url: function() {
-            return '/activities/' + moment(this.document.get('date')).format('YYYYMMDD');
-        }
-    });
-
     return BaseView.extend({
 
         // template
@@ -36,9 +25,7 @@ define([
 
             this.events = _.extend({}, this.events);
 
-            this.collection = new ActivitiesModel();
-            this.collection.document = this.model;
-            this.collection.fetch();
+            this.collection = new Backbone.Collection(this.model.get('activities'));
         },
 
         onRender: function() {

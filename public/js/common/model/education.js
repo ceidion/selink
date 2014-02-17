@@ -12,10 +12,13 @@ define([], function() {
             endDate: {
                 dateJa: true
             },
-            school: {
+            school: [{
+                required: true,
+                msg: "学校名をご入力ください"
+            },{
                 maxLength: 50,
                 msg: "最大50文字までご入力ください"
-            },
+            }],
             major: {
                 maxLength: 50,
                 msg: "最大50文字までご入力ください"

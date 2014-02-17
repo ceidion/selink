@@ -19,6 +19,18 @@ var TempAccount = new Schema({
         required: true,
         validate: validate('len', 8, 30)
     },
+    // First Name
+    firstName: {
+        type: String,
+        trim: true,
+        validate: validate('len', 0, 20)
+    },
+    // Last Name
+    lastName: {
+        type: String,
+        trim: true,
+        validate: validate('len', 0, 20)
+    },
     // Account Type
     type: {
         type: String,

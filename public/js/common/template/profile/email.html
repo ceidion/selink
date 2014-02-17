@@ -5,8 +5,8 @@
 <div class="profile-info-value">
     <div class="sl-value">
         <%
-            if (obj.email)
-                print(obj.email);
+            if (obj.secEmail)
+                print(obj.secEmail);
             else
                 print('<span class="text-muted">クリックして編集</span>');
         %>
@@ -16,7 +16,7 @@
             <span class="input-group-addon">
                 <i class="icon-envelope-alt bigger-110"></i>
             </span>
-            <input type="text" class="col-xs-12" placeholder="メールアドレス" name="email" value="<%- obj.email %>">
+            <input type="text" class="col-xs-12" placeholder="メールアドレス" name="secEmail" value="<%- obj.secEmail %>">
         </div>
     </div>
 </div>

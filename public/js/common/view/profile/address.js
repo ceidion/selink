@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var AddressItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -120,6 +120,4 @@ define([
         }
 
     });
-
-    return AddressItem;
 });

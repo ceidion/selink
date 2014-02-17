@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var GenderItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -37,6 +37,4 @@ define([
         }
 
     });
-
-    return GenderItem;
 });

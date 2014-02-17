@@ -7,6 +7,15 @@ define([
     template,
     ItemView) {
 
+    var ActivitiesModel = Backbone.Collection.extend({
+
+        idAttribute: "_id",
+
+        model: Backbone.Model.extend({idAttribute: "_id"}),
+
+        url: '/activities/'
+    });
+
     return BaseView.extend({
 
         // template
@@ -26,13 +35,29 @@ define([
 
             this.events = _.extend({}, this.events);
 
-            var models = [
-                new Backbone.Model({date: moment()}),
-                new Backbone.Model({date: moment().subtract('days', 1)}),
-                new Backbone.Model({date: moment().subtract('days', 2)})
-            ];
+            this.collection = new Backbone.Collection();
 
-            this.collection = new Backbone.Collection(models);
+            var self = this;
+
+            var rawData = new ActivitiesModel();
+            rawData.fetch({
+                success: function(collection, response, options) {
+                    var groupData = _.groupBy(response, function(activity) {
+                        return moment(activity.createDate).format('YYYY/MM/DD');
+                    });
+
+                    var models = [];
+
+                    for(var date in groupData) {
+                        models.push({
+                            date: date,
+                            activities: groupData[date]
+                        });
+                    }
+
+                    self.collection.add(models);
+                }
+            });
         },
 
         onRender: function() {

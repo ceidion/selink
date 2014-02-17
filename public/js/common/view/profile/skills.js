@@ -9,7 +9,7 @@ define([
     ItemView,
     SkillsModel) {
 
-    var SkillComposite = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -30,19 +30,23 @@ define([
         initialize: function() {
             this.events = _.extend({}, this.events);
 
+            // make the collection from user model
             this.collection = new SkillsModel(this.model.get('skills'));
-
             this.collection.document = this.model;
 
+            // collection comparator
             this.collection.comparator = function(skill) {
+                // sort by weight desc
                 if (skill.get('weight'))
                     return 0 - Number(skill.get('weight'));
-                else 
+                else
                     return 0;
             };
+            // sort collection
             this.collection.sort();
         },
 
+        // on render
         onRender: function() {
 
             this.$el.find('.btn-add').tooltip({
@@ -59,15 +63,12 @@ define([
                 placement: 'top',
                 title: "ドラグして移動"
             });
-            
-            if (this.collection.length >= this.itemLimit)
-                this.ui.addBtn.hide();
 
-            // bind validator
-            Backbone.Validation.bind(this);
-        },
+            // if the collection exceed the limit number
+            if (this.collection.length >= this.itemLimit)
+                // hide add button
+                this.ui.addBtn.hide();
+        }
 
     });
-
-    return SkillComposite;
 });

@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var PhotoItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -63,6 +63,4 @@ define([
             });
         }
     });
-
-    return PhotoItem;
 });
