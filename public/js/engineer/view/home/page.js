@@ -1,10 +1,10 @@
 define([
     'text!engineer/template/home/page.html',
-    'common/view/introduction/introduction',
+    'common/view/friend/friend',
     'common/view/timeline/timeline'
 ], function(
     pageTemplate,
-    IntroductionView,
+    FriendView,
     TimelineView
 ) {
 
@@ -22,14 +22,14 @@ define([
 
         // Regions
         regions: {
-            introductionRegion: '#introduction',
+            friendRegion: '#friend',
             timelineRegion: '#timeline',
         },
 
         // Initializer
         initialize: function() {
 
-            this.introductionView = new IntroductionView({
+            this.friendView = new FriendView({
                 model: this.model
             });
 
@@ -40,7 +40,7 @@ define([
 
         // After render
         onRender: function() {
-            this.introductionRegion.show(this.introductionView);
+            this.friendRegion.show(this.friendView);
             this.timelineRegion.show(this.timelineView);
         },
 

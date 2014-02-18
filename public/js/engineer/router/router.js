@@ -5,7 +5,8 @@ define([], function() {
         appRoutes: {
             "home": "showHomeView",
             "profile": "showProfileView",
-            "posts": "showPostView",
+            "post": "showPostView",
+            "friend": "showFriendView",
             "calendar": "showCalendarView",
             "timecard": "showTimecardView",
             "timecard/:date": "showTimecardView",

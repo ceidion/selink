@@ -189,7 +189,7 @@ exports.introduce = function(req, res, next) {
                     .select('type firstName lastName title gender photo createDate')
                     .where('_id').nin(user.friends)
                     .sort({createDate:-1})
-                    .limit(20);
+                    .limit(30);
 
         query.exec(function(err, users) {
             if (err) next(err);

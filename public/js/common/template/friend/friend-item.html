@@ -9,19 +9,19 @@
 %>
 
 <a href="<%- avatar %>" title="<%- obj.firstName %>" data-rel="colorbox">
-    <img alt="150x150" src="<%- avatar %>" style="min-width: 150px; max-width: 150px;"/>
+    <img alt="150x150" src="<%- avatar %>" style="min-width: 200px; max-width: 200px; margin: 10px;"/>
     <div class="tags">
         <span class="label-holder">
-            <span class="label label-success"><%- obj.firstName %>&nbsp;<%- obj.lastName %></span>
+            <span class="label label-xlg label-success"><%- obj.firstName %>&nbsp;<%- obj.lastName %></span>
         </span>
         <% if (obj.title) { %>
         <span class="label-holder">
-            <span class="label label-info arrowed-in"><%- obj.title %></span>
+            <span class="label label-xlg label-info arrowed-in"><%- obj.title %></span>
         </span>
         <% } %>
     </div>
 </a>
-<div class="tools tools-bottom">
+<div class="tools tools-top">
     <a href="#"><i class="icon-plus light-green btn-friend tooltip-success"></i></a>
     <a href="#"><i class="icon-star-empty orange2 btn-favorite tooltip-warning"></i></a>
     <a href="#"><i class="icon-envelope-alt light-blue btn-send tooltip-info"></i></a>

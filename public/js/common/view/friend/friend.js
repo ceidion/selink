@@ -1,9 +1,7 @@
 define([
-    'common/view/composite-base',
-    'text!common/template/introduction/introduction.html',
-    'common/view/introduction/user-thumbnail',
+    'text!common/template/friend/friend.html',
+    'common/view/friend/friend-item',
 ], function(
-    BaseView,
     template,
     ItemView) {
 
@@ -16,13 +14,13 @@ define([
         url: '/friends'
     });
 
-    return BaseView.extend({
+    return Backbone.Marionette.CompositeView.extend({
 
         // template
         template: template,
 
         // for dnd add class here
-        className: 'widget-box transparent',
+        // className: 'widget-box transparent',
 
         // item view container
         itemViewContainer: '.ace-thumbnails',
@@ -31,7 +29,7 @@ define([
         itemView: ItemView,
 
         // max item number
-        itemLimit: 6,
+        // itemLimit: 6,
 
         collectionEvents: {
             'sync': 'reIsotope',
@@ -61,7 +59,7 @@ define([
             $('.ace-thumbnails').imagesLoaded(function() {
                 $('.ace-thumbnails').isotope({
                   // options
-                  itemSelector : 'li'
+                  itemSelector : 'li',
                 });
             });
         },

@@ -1,5 +1,5 @@
 define([
-	'text!common/template/introduction/user-thumbnail.html'
+	'text!common/template/friend/friend-item.html'
 ],function(
 	template
 ) {
@@ -21,17 +21,17 @@ define([
         onRender: function() {
 
             this.$el.find('.btn-friend').tooltip({
-                placement: 'top',
+                placement: 'bottom',
                 title: "＋友達"
             });
 
             this.$el.find('.btn-favorite').tooltip({
-                placement: 'top',
+                placement: 'bottom',
                 title: "気になる"
             });
 
             this.$el.find('.btn-send').tooltip({
-                placement: 'top',
+                placement: 'bottom',
                 title: "送信"
             });
         },
