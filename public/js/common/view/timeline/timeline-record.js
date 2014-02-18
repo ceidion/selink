@@ -3,12 +3,14 @@ define([
     'text!common/template/timeline/timeline-user-activated.html',
     'text!common/template/timeline/timeline-user-login.html',
     'text!common/template/timeline/timeline-user-logout.html',
+    'text!common/template/timeline/timeline-user-new-post.html',
     'text!common/template/timeline/timeline-default.html',
 ], function(
     BaseView,
     userActivatedTemplate,
     userLoginTemplate,
     userLogoutTemplate,
+    userNewPostTemplate,
     defaultTemplate) {
 
     return BaseView.extend({
@@ -24,6 +26,8 @@ define([
                 return userLoginTemplate;
             else if (type == "user-logout")
                 return userLogoutTemplate;
+            else if (type == "user-new-post")
+                return userNewPostTemplate;
             else
                 return defaultTemplate;
         },

@@ -1,14 +1,16 @@
 <div class="timeline-info">
-    <i class="timeline-indicator icon-signin btn btn-success"></i>
+    <img alt="" src="<%= obj._owner.photo %>" />
 </div>
 
 <div class="widget-box transparent">
     <div class="widget-header widget-header-small hidden"></div>
     <div class="widget-body">
         <div class="widget-main">
-            <%= obj.title %>
+            <i class="icon-signin bigger-110"></i>&nbsp;
+            <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
+            さんは<%= obj.title %>
             <div class="pull-right">
-                <i class="icon-time bigger-110"></i>&nbsp;<%= moment(obj.createDate).format('HH:mm') %>
+                <i class="icon-time bigger-110"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
             </div>
         </div>
     </div>

@@ -6,14 +6,17 @@ var _ = require('underscore'),
 // Activity index
 exports.index = function(req, res, next) {
 
+    // if the user id was passed
     if (req.params.id) {
 
-        Activity.find()
+        // find the activities of specific user
+        Activity.find({_owner: req.params.id})
             .sort('-createDate')
             .limit(20)
+            .populate('_owner', 'firstName lastName photo')
             .exec(function(err, activities) {
                 if (err) next(err);
-                else res.json(activies);
+                else res.json(activities);
             });
 
     } else {
@@ -24,10 +27,11 @@ exports.index = function(req, res, next) {
         // }, function(err, response, body) {
         //     console.log(body);
         // });
-
+        // find the activities of all users
         Activity.find()
             .sort('-createDate')
             .limit(20)
+            .populate('_owner', 'firstName lastName photo')
             .exec(function(err, activities) {
                 if (err) next(err);
                 else res.json(activities);

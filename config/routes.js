@@ -1,5 +1,6 @@
 var tag = require('../app/controllers/tag'),
     user = require('../app/controllers/user'),
+    post = require('../app/controllers/post'),
     userEvent = require('../app/controllers/event'),
     activity = require('../app/controllers/activity'),
     message = require('../app/controllers/message'),
@@ -30,33 +31,36 @@ module.exports = function(app, sio) {
     // Account activate
     app.get('/activate/:id', tempaccount.activate);
 
+    // Get user's posts
+    app.get('/user/:id/posts', checkLoginStatus, post.index);
+    // Create new post
+    app.post('/user/:id/posts', checkLoginStatus, post.create);
+
     // Get user info
     app.get('/user/:id', checkLoginStatus, user.show);
     // Upload user photo
     app.put('/user/:id', checkLoginStatus, user.update);
     // Update user info (first-level property)
     app.patch('/user/:id', checkLoginStatus, user.update);
-    // Update user info (create nested collection item)
+    // Create nested collection item
     app.post('/user/:id/:sub', checkLoginStatus, user.createSubDocument);
-    // Update user info (update nested collection item)
+    // Update nested collection item
     app.patch('/user/:id/:sub/:subid', checkLoginStatus, user.updateSubDocument);
-    // Update user info (remove nested collection item)
+    // Remove nested collection item
     app.delete('/user/:id/:sub/:subid', checkLoginStatus, user.removeSubDocument);
 
     // Get all activities
     app.get('/activities', checkLoginStatus, activity.index);
     // Get user's activities
     app.get('/user/:id/activities', checkLoginStatus, activity.index);
-    // // Update activities (create new activity)
-    // app.post('/user/:id/activities', checkLoginStatus, activity.create);
 
     // Get user's events
     app.get('/user/:id/events', checkLoginStatus, userEvent.index);
-    // Update events (create new event)
+    // Create new event
     app.post('/user/:id/events', checkLoginStatus, userEvent.create);
-    // Update events (update event)
+    // Update events
     app.patch('/user/:id/events/:eventid', checkLoginStatus, userEvent.update);
-    // Update events (remove event)
+    // Remove event
     app.delete('/user/:id/events/:eventid', checkLoginStatus, userEvent.remove);
 
     // Get user's messages
@@ -110,6 +114,7 @@ module.exports = function(app, sio) {
 
     // Get StackExcahge Tag Data
     app.post('/stack', checkLoginStatus, tag.create);
+    // import dataf from SELink1.0
     app.post('/import', checkLoginStatus, user.import);
 };
 

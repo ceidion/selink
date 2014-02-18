@@ -11,6 +11,7 @@ var Activity = new Schema({
         required: true
     },
 
+    // activity type
     type: {
         type: String,
         trim: true,
@@ -24,6 +25,7 @@ var Activity = new Schema({
         required: true
     },
 
+    // activity content
     content: {
         type: String,
         trim: true,
@@ -33,6 +35,12 @@ var Activity = new Schema({
     link: {
         type: String,
         trim: true,
+    },
+
+    // Publicity of this post
+    publicity: {
+        type: String,
+        trim: true
     },
 
     // Logical Delete flag

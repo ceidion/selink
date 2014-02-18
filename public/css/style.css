@@ -37,6 +37,8 @@ html,body{height:100%}
 #employment-composite blockquote{margin:0px}
 #employment-composite .row{margin-top:5px}#employment-composite .row:first-child{margin-top:0px}
 #employment-composite i{width:14px}
+.post-item img{max-width:100%}
+.post-item .avatar{max-width:100px;max-height:100px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
 #event-modal input{line-height:normal}
 #event-modal .row{margin-top:15px}#event-modal .row:first-child{margin-top:0px}
 #event-modal .checkbox{margin-top:4px;margin-bottom:0px}

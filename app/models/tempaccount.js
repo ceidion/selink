@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var metadata = require('./metadata');
 var validate = require('mongoose-validator').validate;
 var Schema = mongoose.Schema;
 
@@ -36,8 +35,7 @@ var TempAccount = new Schema({
         type: String,
         trim: true,
         required: true,
-        default: 'engineer',
-        enum: metadata.userType_option
+        default: 'engineer'
     },
     // Create Date
     createDate: {

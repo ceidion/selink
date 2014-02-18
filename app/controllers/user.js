@@ -39,7 +39,7 @@ exports.login = function(req, res, next) {
             Activity.create({
                 _owner: user._id,
                 type: 'user-login',
-                title: "SELinkにログインしました。"
+                title: "ログインしました。"
             }, function(err, activity) {
                 if (err) next(err);
             });
@@ -57,7 +57,7 @@ exports.logout = function(req, res, next) {
     Activity.create({
         _owner: req.session.user._id,
         type: 'user-logout',
-        title: "SELinkにログアウトしました。"
+        title: "ログアウトしました。"
     }, function(err, activity) {
         if (err) next(err);
     });

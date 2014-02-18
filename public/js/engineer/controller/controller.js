@@ -4,6 +4,7 @@ define([
     'engineer/view/common/sidenav',
     'engineer/view/home/page',
     'common/view/profile/profile',
+    'common/view/post/post',
     'common/view/calendar/calendar',
     'common/view/timecard/timecard',
     'common/view/mailbox/mailbox',
@@ -13,6 +14,7 @@ define([
     SideNavView,
     HomeView,
     ProfileView,
+    PostView,
     CalendarView,
     TimecardView,
     MailBoxView
@@ -76,6 +78,17 @@ define([
                     selink.pageContent.show(selink.profileView);
                 }
             });
+        },
+
+        // show posts
+        showPostView: function() {
+
+            // create profile view
+            selink.postView = new PostView({
+                model: selink.userModel
+            });
+            // show profile view
+            selink.pageContent.show(selink.postView);
         },
 
         // show calendar
