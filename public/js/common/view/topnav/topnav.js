@@ -1,9 +1,11 @@
 define([
     'text!common/template/topnav/topnav.html',
-    'common/view/topnav/event-menu'
+    'common/view/topnav/event-menu',
+    'common/view/topnav/notification-menu',
 ], function(
     template,
-    EventMenu
+    EventMenu,
+    NotificationMenu
 ) {
 
     var TopNav = Backbone.Marionette.Layout.extend({
@@ -16,32 +18,42 @@ define([
             'change:photo': 'updatePhoto',
         },
 
-        collectionEvents: {
-            'change': 'reflect'
-        },
+        // collectionEvents: {
+        //     'change': 'reflect'
+        // },
 
         // regions
         regions: {
             eventNavRegion: '#event-nav',
+            notificationNavRegion: '#notification-nav',
         },
 
         initialize: function() {
 
             // create component
-            this.eventNav = new EventMenu({model: this.model, collection: this.collection});
+            this.eventNav = new EventMenu({
+                model: this.model,
+                collection: selink.eventsModel
+            });
+
+            this.notificationNav = new NotificationMenu({
+                model: this.model,
+                collection: selink.notificationsModel
+            });
         },
 
         onShow: function() {
 
             // show every component
             this.eventNavRegion.show(this.eventNav);
+            this.notificationNavRegion.show(this.notificationNav);
         },
 
-        reflect: function() {
+        // reflect: function() {
 
-            this.eventNav = new EventMenu({model: this.model, collection: this.collection});
-            this.eventNavRegion.show(this.eventNav);
-        },
+        //     this.eventNav = new EventMenu({model: this.model, collection: this.collection});
+        //     this.eventNavRegion.show(this.eventNav);
+        // },
 
         updatePhoto: function() {
 
@@ -53,9 +65,9 @@ define([
             });
         },
 
-        updateEvent: function() {
-            console.log("event changed");
-        }
+        // updateEvent: function() {
+        //     console.log("event changed");
+        // }
 
     });
 

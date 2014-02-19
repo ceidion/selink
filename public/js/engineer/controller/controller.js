@@ -51,8 +51,7 @@ define([
 
             // setup top nav
             selink.topNavView = new TopNavView({
-                model: selink.userModel,
-                collection: selink.eventsModel
+                model: selink.userModel
             });
             selink.topnavArea.show(selink.topNavView);
         },

@@ -4,11 +4,15 @@ define([
     template
 ) {
 
-    var TopNav = Backbone.Marionette.ItemView.extend({
+    return Backbone.Marionette.ItemView.extend({
 
         template: template,
 
         className: 'light-blue2',
+
+        collectionEvents: {
+            'change': 'reflect'
+        },
 
         initialize: function() {
 
@@ -21,16 +25,19 @@ define([
             });
 
             this.model.set('nearestEvents', nearestEvents.slice(0, 5), {silent:true});
-            this.model.set('nearestEventsNum', nearestEvents.length, {silent:true});
+            this.model.set('eventsNum', nearestEvents.length, {silent:true});
         },
 
         onShow: function() {
-            if (this.model.get('nearestEventsNum') > 0) {
+            if (this.model.get('eventsNum') > 0) {
                 this.$el.find('.icon-bell-alt').addClass('icon-animated-bell');
             }
         },
 
-    });
+        reflect: function() {
+            console.log("reflect");
+            this.render();
+        }
 
-    return TopNav;
+    });
 });

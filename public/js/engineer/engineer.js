@@ -2,6 +2,7 @@ define([
     'common/model/user',
     'common/collection/activities',
     'common/collection/events',
+    'common/collection/notifications',
     'common/collection/friends',
     'engineer/router/router',
     'engineer/controller/controller'
@@ -9,6 +10,7 @@ define([
     UserModel,
     ActivitiesModel,
     EventsModel,
+    NotificationsModel,
     FriendsModel,
     Router,
     Controller
@@ -92,6 +94,10 @@ define([
                 // create events model(collection) from user model
                 self.eventsModel = new EventsModel(self.userModel.get('events'), {parse: true});
                 self.eventsModel.document = self.userModel;
+
+                // create notifications model(collection) from user model
+                self.notificationsModel = new NotificationsModel(self.userModel.get('notifications'), {parse: true});
+                self.notificationsModel.document = self.userModel;
 
                 // create friends model(collection) from user model
                 self.friendsModel = new FriendsModel(self.userModel.get('friends'), {parse: true});
