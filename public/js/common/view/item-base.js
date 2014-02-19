@@ -42,7 +42,7 @@ define([], function() {
                     data = this.getData(event);
 
                 // save model
-                this.model.save(data, _.extend({
+                this.model.save(data, {
 
                     // success handler
                     success: function(model, response, options) {
@@ -67,7 +67,7 @@ define([], function() {
                     // use patch
                     patch: true
 
-                }, this.saveOpt));
+                });
             }
         },
 

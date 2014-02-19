@@ -1,12 +1,12 @@
 <a class="dropdown-toggle" href="/#" data-toggle="dropdown">
-    <span class="icon-bell-alt"></span>
+    <span class="icon-tasks"></span>
     <% if (obj.nearestEventsNum > 0) { %>
-    <span class="badge badge-danger"><%- obj.nearestEventsNum %></span>
+    <span class="badge badge-primary"><%- obj.nearestEventsNum %></span>
     <% } %>
 </a>
-<ul class="pull-right dropdown-navbar navbar-pink dropdown-menu dropdown-caret">
+<ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret">
     <li class="dropdown-header">
-        <i class="icon-bell"></i>&nbsp;イベント（<%- obj.nearestEventsNum %>件）
+        <i class="icon-tasks"></i>&nbsp;イベント（<%- obj.nearestEventsNum %>件）
     </li>
     <% _.each(obj.nearestEvents, function(event){ %>
         <li>

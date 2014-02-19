@@ -43,6 +43,7 @@ require.config({
         'hotkeys': 'lib/jquery.hotkeys.min',
         'isotope': 'lib/jquery.isotope',
         'slim-scroll': 'lib/jquery.slimscroll.min',
+        'infinite-scroll': 'lib/jquery.infinitescroll.min',
         'tag': 'lib/uncompressed/bootstrap-tag',
         'typeahead': 'lib/uncompressed/typeahead.bundle',
         'selink': 'lib/selink',
@@ -124,6 +125,9 @@ require.config({
         'slim-scroll': {
             deps: ['jquery']
         },
+        'infinite-scroll': {
+            deps: ['jquery']
+        },
         'tag': {
             deps: ['bootstrap']
         },
@@ -156,6 +160,7 @@ require.config({
                 'wysiwyg',
                 'isotope',
                 'slim-scroll',
+                'infinite-scroll',
                 'tag',
                 'typeahead',
                 'selink',

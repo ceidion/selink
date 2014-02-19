@@ -8,7 +8,8 @@ var Skill = require('./profile/skill'),
     Education = require('./profile/education'),
     Qualification = require('./profile/qualification'),
     Language = require('./profile/language'),
-    Event = require('./event');
+    Event = require('./event'),
+    Notification = require('./notification');
 
 var User = new Schema({
 
@@ -157,12 +158,22 @@ var User = new Schema({
     // Skill
     skills: [Skill],
 
+    // Event
     events: [Event],
 
+    // Friend
     friends: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
+
+    // Friend waiting for approve
+    waitApprove: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
+    notifications: [Notification],
 
     messages: [Schema.Types.ObjectId],
 

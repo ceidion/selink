@@ -35,7 +35,7 @@ require('./config/express')(app, config, cookieParser, sessionStore);
 // Express 3 requires a http.Server to attach socke.io
 var server = http.createServer(app);
 // attach socket.io
-var sio = io.listen(server);
+GLOBAL.sio = io.listen(server);
 sio.set('log level', 2);
 
 // SessionSocket

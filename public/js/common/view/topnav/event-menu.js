@@ -8,7 +8,7 @@ define([
 
         template: template,
 
-        className: 'light-orange',
+        className: 'light-blue2',
 
         initialize: function() {
 

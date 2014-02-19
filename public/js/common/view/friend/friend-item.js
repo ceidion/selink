@@ -38,9 +38,10 @@ define([
 
         onAddFriend: function() {
 
-            selink.userActivitiesModel.create({
-                type: 'friendRequest',
-                title: this.model.get('profile').firstName + ' ' + this.model.get('profile').lastName + 'へ友達にするリクエストを送りました'
+            this.$el.find('.btn-friend').fadeOut();
+
+            selink.waitApproveModel.create({
+                friendId: this.model.get('_id')
             });
         }
 	});

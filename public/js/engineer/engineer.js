@@ -97,6 +97,9 @@ define([
                 self.friendsModel = new FriendsModel(self.userModel.get('friends'), {parse: true});
                 self.friendsModel.document = self.userModel;
 
+                self.waitApproveModel = new FriendsModel(self.userModel.get('waitApprove'), {parse: true});
+                self.waitApproveModel.document = self.userModel;
+
                 // make controller
                 var controller = new Controller();
 
@@ -128,6 +131,16 @@ define([
                     title: data.title,
                     text: data.msg,
                     class_name: 'gritter-success'
+                });
+            }, 3000);
+        });
+
+        socket.on('notification', function(data) {
+            setTimeout(function() {
+                $.gritter.add({
+                    title: data.title,
+                    text: data.content,
+                    class_name: 'gritter-warning'
                 });
             }, 3000);
         });

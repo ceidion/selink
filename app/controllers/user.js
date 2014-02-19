@@ -183,20 +183,60 @@ exports.removeSubDocument = function(req, res, next) {
 
 exports.introduce = function(req, res, next) {
 
+    var page = req.query.page || 0;
+
     User.findById(req.session.user._id, function(err, user) {
 
-        var query = User.find({_id: {'$ne': req.session.user._id}})
-                    .select('type firstName lastName title gender photo createDate')
-                    .where('_id').nin(user.friends)
-                    .sort({createDate:-1})
-                    .limit(30);
+        User.find({_id: {'$ne': req.session.user._id}})
+            .where('_id').nin(user.friends).nin(user.waitApprove)
+            .select('type firstName lastName title gender photo createDate')
+            .skip(20*page)
+            .limit(20)
+            .sort({createDate:-1})
+            .exec(function(err, users) {
+                if (err) next(err);
+                else
+                    // return the user
+                    res.json(users);
+            });
+    });
+};
 
-        query.exec(function(err, users) {
-            if (err) next(err);
-            else
-                // return the user
-                res.json(users);
-        });
+exports.addFriend = function(req, res, next) {
+
+    // update user info
+    User.findByIdAndUpdate(req.params.id, {'$addToSet': {'waitApprove': req.body.friendId}}, function(err, requestUser) {
+        if (err) next(err);
+        else {
+
+            User.findById(req.body.friendId, function(err, friend) {
+                if (err) next(err);
+                else {
+
+                    Activity.create({
+                        _owner: requestUser.id,
+                        type: 'user-add-friend',
+                        title: friend.firstName + ' ' + friend.lastName + "さんに友達リクエストを送りました。"
+                    }, function(err, activity) {
+                        if (err) next(err);
+                    });
+
+                    var notification = {
+                        type: 'friend-request',
+                        title: "友達リクエスト",
+                        content: requestUser.firstName + ' ' + requestUser.lastName + "さんから友達になるリクエストが届きました。"
+                    };
+
+                    friend.notifications.push(notification);
+                    friend.save(function(err) {
+                        if (err) next(err);
+                        else sio.sockets.in(friend.id).emit('notification', notification);
+                    });
+
+                    res.json(friend);
+                }
+            });
+        }
     });
 };
 
@@ -204,17 +244,16 @@ exports.suggest = function(req, res, next) {
 
     var initial = req.query.initial;
 
-    var query = User.find({_id: {'$ne': req.session.user._id}})
-                .or([{firstName: new RegExp(initial, "i")}, {lastName: new RegExp(initial, "i")}])
-                .select('firstName lastName bio photo')
-                .limit(8);
-
-    query.exec(function(err, users) {
-        if (err) next(err);
-        else
-        // return the user
-        res.json(users);
-    });
+    User.find({_id: {'$ne': req.session.user._id}})
+        .or([{firstName: new RegExp(initial, "i")}, {lastName: new RegExp(initial, "i")}])
+        .select('firstName lastName bio photo')
+        .limit(8)
+        .exec(function(err, users) {
+            if (err) next(err);
+            else
+            // return the user
+            res.json(users);
+        });
 };
 
 exports.import = function(req, res, next) {

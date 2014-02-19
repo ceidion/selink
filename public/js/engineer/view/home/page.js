@@ -1,10 +1,8 @@
 define([
     'text!engineer/template/home/page.html',
-    'common/view/friend/friend',
     'common/view/timeline/timeline'
 ], function(
     pageTemplate,
-    FriendView,
     TimelineView
 ) {
 
@@ -29,10 +27,6 @@ define([
         // Initializer
         initialize: function() {
 
-            this.friendView = new FriendView({
-                model: this.model
-            });
-
             this.timelineView = new TimelineView({
                 model: this.model
             });
@@ -40,7 +34,6 @@ define([
 
         // After render
         onRender: function() {
-            this.friendRegion.show(this.friendView);
             this.timelineRegion.show(this.timelineView);
         },
 

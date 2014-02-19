@@ -3,6 +3,7 @@ var validate = require('mongoose-validator').validate;
 var Schema = mongoose.Schema;
 
 var Event = new Schema({
+
     title: {
         type: String,
         trim: true,

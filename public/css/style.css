@@ -60,6 +60,7 @@ html,body{height:100%}
 .isotope{-webkit-transition-property:height, width;-moz-transition-property:height, width;-ms-transition-property:height, width;-o-transition-property:height, width;transition-property:height, width}
 .isotope .isotope-item{-webkit-transition-property:-webkit-transform,opacity;-moz-transition-property:-moz-transform,opacity;-ms-transition-property:-ms-transform,opacity;-o-transition-property:-o-transform,opacity;transition-property:transform, opacity}
 .isotope.no-transition,.isotope.no-transition .isotope-item,.isotope .isotope-item.no-transition{-webkit-transition-duration:0s;-moz-transition-duration:0s;-ms-transition-duration:0s;-o-transition-duration:0s;transition-duration:0s}
+#infscr-loading{position:fixed;text-align:center;bottom:30px;left:42%;z-index:100;background-color:#dff0d8;border:2px solid #d6e9c6;padding:15px;color:#468847;font-size:15px;font-weight:bold}
 .ace-nav>li>div{line-height:45px;height:45px;border-left:1px solid #DDD;padding:0;position:relative;float:left !important;}.ace-nav>li>div:first-child{border-left:none}
 .ace-nav>li>div>a{background-color:#2e6589;color:#FFF;display:block;line-height:inherit;text-align:center;text-decoration:none;height:100%;width:auto;min-width:50px;padding:0 8px;position:relative}.ace-nav>li>div>a>[class*="icon-"]{font-size:16px;color:#FFF;display:inline-block;width:20px;text-align:center}
 .ace-nav>li>div>a>.badge{position:relative;top:-4px;left:2px;padding-right:5px;padding-left:5px}

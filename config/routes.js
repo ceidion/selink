@@ -1,9 +1,9 @@
 var tag = require('../app/controllers/tag'),
     user = require('../app/controllers/user'),
     post = require('../app/controllers/post'),
-    userEvent = require('../app/controllers/event'),
+    // userEvent = require('../app/controllers/event'),
     activity = require('../app/controllers/activity'),
-    message = require('../app/controllers/message'),
+    // message = require('../app/controllers/message'),
     tempaccount = require('../app/controllers/tempaccount'),
     job = require('../app/controllers/job'),
     address = require('../app/controllers/address');
@@ -22,7 +22,6 @@ module.exports = function(app, sio) {
 
     // SPA bootstrap
     app.get('/spa', checkLoginStatus, function(req, res, next){
-        console.log(req.session.user.type);
         res.render('./' + req.session.user.type + '/index', req.session.user);
     });
 
@@ -35,6 +34,9 @@ module.exports = function(app, sio) {
     app.get('/user/:id/posts', checkLoginStatus, post.index);
     // Create new post
     app.post('/user/:id/posts', checkLoginStatus, post.create);
+
+    // Request new friend
+    app.post('/user/:id/friends', checkLoginStatus, user.addFriend);
 
     // Get user info
     app.get('/user/:id', checkLoginStatus, user.show);
@@ -54,23 +56,23 @@ module.exports = function(app, sio) {
     // Get user's activities
     app.get('/user/:id/activities', checkLoginStatus, activity.index);
 
-    // Get user's events
-    app.get('/user/:id/events', checkLoginStatus, userEvent.index);
-    // Create new event
-    app.post('/user/:id/events', checkLoginStatus, userEvent.create);
-    // Update events
-    app.patch('/user/:id/events/:eventid', checkLoginStatus, userEvent.update);
-    // Remove event
-    app.delete('/user/:id/events/:eventid', checkLoginStatus, userEvent.remove);
+    // // Get user's events
+    // app.get('/user/:id/events', checkLoginStatus, userEvent.index);
+    // // Create new event
+    // app.post('/user/:id/events', checkLoginStatus, userEvent.create);
+    // // Update events
+    // app.patch('/user/:id/events/:eventid', checkLoginStatus, userEvent.update);
+    // // Remove event
+    // app.delete('/user/:id/events/:eventid', checkLoginStatus, userEvent.remove);
 
-    // Get user's messages
-    app.get('/user/:id/messages', checkLoginStatus, message.messages);
-    // Update messages (create new event)
-    app.post('/user/:id/messages', checkLoginStatus, message.createMessage);
+    // // Get user's messages
+    // app.get('/user/:id/messages', checkLoginStatus, message.messages);
+    // // Update messages (create new event)
+    // app.post('/user/:id/messages', checkLoginStatus, message.createMessage);
     // Update messages (update event)
     // app.patch('/user/:id/messages/:eventid', checkLoginStatus, user.updateEvent);
-    // Update messages (remove event)
-    app.delete('/user/:id/messages/:messageid', checkLoginStatus, message.removeMessage);
+    // // Update messages (remove event)
+    // app.delete('/user/:id/messages/:messageid', checkLoginStatus, message.removeMessage);
 
     // Introduce friend
     app.get('/friends', checkLoginStatus, user.introduce);
