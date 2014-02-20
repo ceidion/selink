@@ -74,6 +74,7 @@ exports.index = function(req, res, next) {
 exports.show = function(req, res, next) {
 
     User.findById(req.params.id, '-password')
+        .populate('notifications._from', '_id firstName lastName photo')
         .exec(function(err, user) {
             if (err) next(err);
             else res.json(user);
@@ -222,15 +223,24 @@ exports.addFriend = function(req, res, next) {
                     });
 
                     var notification = {
+                        _from: requestUser.id,
                         type: 'friend-request',
                         title: "友達リクエスト",
-                        content: requestUser.firstName + ' ' + requestUser.lastName + "さんから友達になるリクエストが届きました。"
+                        content: "友達になるリクエストが届きました。",
+                        createDate: Date.now()
                     };
 
                     friend.notifications.push(notification);
                     friend.save(function(err) {
                         if (err) next(err);
-                        else sio.sockets.in(friend.id).emit('notification', notification);
+                        else {
+                            notification._from = {
+                                firstName: requestUser.firstName,
+                                lastName: requestUser.lastName,
+                                photo: requestUser.photo
+                            };
+                            sio.sockets.in(friend.id).emit('notification', notification);
+                        }
                     });
 
                     res.json(friend);

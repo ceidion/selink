@@ -1,0 +1,17 @@
+<a class="dropdown-toggle" href="/#" data-toggle="dropdown">
+    <span class="icon-tasks"></span>
+    <% if (obj.eventsNum > 0) { %>
+    <span class="badge badge-primary"><%- obj.eventsNum %></span>
+    <% } %>
+</a>
+<ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret">
+    <li class="dropdown-header">
+        <i class="icon-tasks"></i>&nbsp;イベント（<%- obj.eventsNum %>件）
+    </li>
+    <li class="dropdown-footer">
+        <a href="#calendar">
+            予定表へ
+            <i class="icon-arrow-right"></i>
+        </a>
+    </li>
+</ul>

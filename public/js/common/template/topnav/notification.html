@@ -1,0 +1,17 @@
+<a class="dropdown-toggle" href="/#" data-toggle="dropdown">
+    <span class="icon-bell-alt"></span>
+    <% if (obj.notificationsNum > 0) { %>
+    <span class="badge badge-danger"><%- obj.notificationsNum %></span>
+    <% } %>
+</a>
+<ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret navbar-pink">
+    <li class="dropdown-header">
+        <i class="icon-bell"></i>&nbsp;通知（<%- obj.notificationsNum %>件）
+    </li>
+    <li class="dropdown-footer">
+        <a href="#calendar">
+            全通知へ
+            <i class="icon-arrow-right"></i>
+        </a>
+    </li>
+</ul>

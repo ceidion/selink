@@ -92,11 +92,23 @@ define([
             success: function() {
 
                 // create events model(collection) from user model
-                self.eventsModel = new EventsModel(self.userModel.get('events'), {parse: true});
+                self.eventsModel = new EventsModel(self.userModel.get('events'), {
+                    parse: true,
+                    comparator: function(event) {
+                        // sort by start desc
+                        return Number(event.get('start').valueOf());
+                    }
+                });
                 self.eventsModel.document = self.userModel;
 
                 // create notifications model(collection) from user model
-                self.notificationsModel = new NotificationsModel(self.userModel.get('notifications'), {parse: true});
+                self.notificationsModel = new NotificationsModel(self.userModel.get('notifications'), {
+                    parse: true,
+                    comparator: function(notification) {
+                        // sort by start asc
+                        return 0 - Number(moment(notification.get('createDate')).valueOf());
+                    }
+                });
                 self.notificationsModel.document = self.userModel;
 
                 // create friends model(collection) from user model
@@ -142,13 +154,15 @@ define([
         });
 
         socket.on('notification', function(data) {
-            setTimeout(function() {
-                $.gritter.add({
-                    title: data.title,
-                    text: data.content,
-                    class_name: 'gritter-warning'
-                });
-            }, 3000);
+            $.gritter.add({
+                title: data.title,
+                text: data.content,
+                image: data._from.photo,
+                time: 8000,
+                class_name: 'gritter-warning'
+            });
+
+            selink.notificationsModel.add(data);
         });
 
     });

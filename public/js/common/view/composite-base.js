@@ -26,12 +26,9 @@ define(['common/view/composite-empty'], function(EmptyView) {
         // SubView append behavior
         appendHtml: function(collectionView, itemView, index) {
 
-            // get subview's model
-            var model = itemView.model;
-
             // this happend on user click add button
             // subview's model don't have _id attribute, so it's a new model
-            if (model.isNew()) {
+            if (itemView.model.isNew()) {
 
                 // append the subview
                 this.$el.find(this.itemViewContainer).append(itemView.el);

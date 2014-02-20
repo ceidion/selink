@@ -4,6 +4,13 @@ var Schema = mongoose.Schema;
 
 var Notification = new Schema({
 
+    // request sender
+    _from: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+
     // activity type
     type: {
         type: String,
