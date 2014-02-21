@@ -190,9 +190,9 @@ exports.introduce = function(req, res, next) {
 
         User.find({_id: {'$ne': req.session.user._id}})
             .where('_id').nin(user.friends).nin(user.waitApprove)
-            .select('type firstName lastName title gender photo createDate')
-            .skip(20*page)
-            .limit(20)
+            .select('type firstName lastName title gender bio photo createDate')
+            .skip(30*page)
+            .limit(30)
             .sort({createDate:-1})
             .exec(function(err, users) {
                 if (err) next(err);
@@ -200,6 +200,36 @@ exports.introduce = function(req, res, next) {
                     // return the user
                     res.json(users);
             });
+    });
+};
+
+exports.showFriend = function(req, res, next) {
+
+    User.findById(req.params.id, function(err, user) {
+        if (err) next(err);
+        else
+            User.find({'_id': {'$in': user.friends}})
+                .select('_id firstName lastName photo')
+                .exec(function(err, friends) {
+                    if (err) next(err);
+                    else
+                        res.json(friends);
+                });
+    });
+};
+
+exports.showRequestedFriend = function(req, res, next) {
+
+    User.findById(req.params.id, function(err, user) {
+        if (err) next(err);
+        else
+            User.find({'_id': {'$in': user.waitApprove}})
+                .select('_id firstName lastName photo')
+                .exec(function(err, friends) {
+                    if (err) next(err);
+                    else
+                        res.json(friends);
+                });
     });
 };
 

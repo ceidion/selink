@@ -19,7 +19,8 @@ define([
 
         // collection events
         collectionEvents: {
-            'change': 'updateBadge'
+            'add': 'updateBadge',
+            'remove': 'updateBadge'
         },
 
         // override appendHtml
@@ -65,13 +66,31 @@ define([
 
         // update the number badge when collection changed
         updateBadge: function() {
+
             // filter out the past events
             var futureEvents = _.filter(this.collection.models, function(event) {
-                return moment(event.get('start')).isAfter(moment());
-            });
-            // update badge
-            // TODO: add some animation
-            this.$el.find('.dropdown-toggle .badge').empty().text(futureEvents.length);
+                    return moment(event.get('start')).isAfter(moment());
+                }).length;
+
+            // badge
+            var $badge = this.$el.find('.dropdown-toggle .badge');
+
+            // if no more events
+            if (futureEvents === 0)
+                // remove the badge
+                $badge.slFlipOutY().remove();
+            // if badge not exists
+            else if ($badge.length === 0)
+                // create badge and show it
+                $('<span class="badge badge-primary">' + futureEvents + '</span>')
+                    .appendTo(this.$el.find('.dropdown-toggle')).slFlipInY();
+            // or
+            else
+                // update badge
+                $badge.slFlipOutY(null, function() {
+                    $badge.empty().text(futureEvents).removeClass('flipOutY').slFlipInY();
+                });
+
         }
     });
 });

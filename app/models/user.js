@@ -161,6 +161,8 @@ var User = new Schema({
     // Event
     events: [Event],
 
+    notifications: [Notification],
+
     // Friend
     friends: [{
         type: Schema.Types.ObjectId,
@@ -173,7 +175,10 @@ var User = new Schema({
         ref: 'User'
     }],
 
-    notifications: [Notification],
+    posts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+    }],
 
     messages: [Schema.Types.ObjectId],
 

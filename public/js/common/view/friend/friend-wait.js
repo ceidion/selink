@@ -1,20 +1,18 @@
 define([
-    'text!common/template/friend/friend.html',
-    'common/view/friend/empty',
+    'text!common/template/friend/friend-wait.html',
     'common/view/friend/friend-item',
 ], function(
     template,
-    EmptyView,
     ItemView) {
 
-    var Friends = Backbone.Collection.extend({
+    var WaitApprove = Backbone.Collection.extend({
 
         idAttribute: "_id",
 
         model: Backbone.Model.extend({idAttribute: "_id"}),
 
         url: function() {
-            return this.document.url() + '/friends';
+            return this.document.url() + '/wait-approve';
         }
     });
 
@@ -28,9 +26,6 @@ define([
 
         // item view
         itemView: ItemView,
-
-        // empty view
-        emptyView: EmptyView,
 
         // ui
         ui: {
@@ -46,7 +41,7 @@ define([
         initialize: function() {
 
             // create collection
-            this.collection = new Friends();
+            this.collection = new WaitApprove();
             this.collection.document = this.model;
             this.collection.fetch();
         },
@@ -57,9 +52,6 @@ define([
         },
 
         reIsotope: function() {
-
-            if (this.collection.length === 0)
-                return;
 
             var self = this;
 

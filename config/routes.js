@@ -35,6 +35,10 @@ module.exports = function(app, sio) {
     // Create new post
     app.post('/user/:id/posts', checkLoginStatus, post.create);
 
+    // Get user's friends
+    app.get('/user/:id/friends', checkLoginStatus, user.showFriend);
+    // Get user's friends request
+    app.get('/user/:id/wait-approve', checkLoginStatus, user.showRequestedFriend);
     // Request new friend
     app.post('/user/:id/friends', checkLoginStatus, user.addFriend);
 

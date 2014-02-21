@@ -1,43 +1,51 @@
 (function($){
 
     $.fn.slFlip = function(color, callback) {
-        $(this).slAnimated('flip', color, callback);
+        return $(this).slAnimated('flip', color, callback);
     };
 
     $.fn.slSwing = function(color, callback) {
-        $(this).slAnimated('swing', color, callback);
+        return $(this).slAnimated('swing', color, callback);
     };
 
     $.fn.slWobble = function(color, callback) {
-        $(this).slAnimated('wobble', color, callback);
+        return $(this).slAnimated('wobble', color, callback);
     };
 
     $.fn.slBounceOut = function(color, callback) {
-        $(this).slAnimated('bounceOut', color, callback);
+        return $(this).slAnimated('bounceOut', color, callback);
     };
 
     $.fn.slBounceIn = function(color, callback) {
-        $(this).slAnimated('bounceIn', color, callback);
+        return $(this).slAnimated('bounceIn', color, callback);
     };
 
     $.fn.slRollOut = function(color, callback) {
-        $(this).slAnimated('rollOut', color, callback);
+        return $(this).slAnimated('rollOut', color, callback);
     };
 
     $.fn.slRollIn = function(color, callback) {
-        $(this).slAnimated('rollIn', color, callback);
+        return $(this).slAnimated('rollIn', color, callback);
     };
 
     $.fn.slFlipOutX = function(color, callback) {
-        $(this).slAnimated('flipOutX', color, callback);
+        return $(this).slAnimated('flipOutX', color, callback);
     };
 
     $.fn.slFlipInX = function(color, callback) {
-        $(this).slAnimated('flipInX', color, callback);
+        return $(this).slAnimated('flipInX', color, callback);
+    };
+
+    $.fn.slFlipOutY = function(color, callback) {
+        return $(this).slAnimated('flipOutY', color, callback);
+    };
+
+    $.fn.slFlipInY = function(color, callback) {
+        return $(this).slAnimated('flipInY', color, callback);
     };
 
     $.fn.slPulse = function(color, callback) {
-        $(this).slAnimated('pulse', color, callback);
+        return $(this).slAnimated('pulse', color, callback);
     };
 
     $.fn.slAnimated = function(effect, color, callback) {
@@ -50,6 +58,8 @@
             };
 
         $(this).addClass(effectString).one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', callback);
+
+        return $(this);
     };
 
 })(jQuery);

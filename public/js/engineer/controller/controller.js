@@ -5,7 +5,8 @@ define([
     'engineer/view/home/page',
     'common/view/profile/profile',
     'common/view/post/post',
-    'common/view/friend/friend',
+    'common/view/friend/main',
+    'common/view/friend/friend-unknow',
     'common/view/calendar/calendar',
     'common/view/timecard/timecard',
     'common/view/mailbox/mailbox',
@@ -17,6 +18,7 @@ define([
     ProfileView,
     PostView,
     FriendView,
+    SearchFriendView,
     CalendarView,
     TimecardView,
     MailBoxView
@@ -96,11 +98,17 @@ define([
         showFriendView: function() {
 
             // create friend view
-            selink.friendView = new FriendView({
-                model: selink.userModel
-            });
+            selink.friendView = new FriendView();
             // show friend view
             selink.pageContent.show(selink.friendView);
+        },
+
+        // show search friend
+        showSearchFriendView: function() {
+            // create search friend view
+            selink.searchFriendView = new SearchFriendView();
+            // show search friend view
+            selink.pageContent.show(selink.searchFriendView);
         },
 
         // show calendar
