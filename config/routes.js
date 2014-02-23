@@ -41,6 +41,8 @@ module.exports = function(app, sio) {
     app.get('/user/:id/wait-approve', checkLoginStatus, user.showRequestedFriend);
     // Request new friend
     app.post('/user/:id/friends', checkLoginStatus, user.addFriend);
+    // update friend request
+    app.post('/user/:id/friends/:friendId', checkLoginStatus, user.addFriend);
 
     // Get user info
     app.get('/user/:id', checkLoginStatus, user.show);

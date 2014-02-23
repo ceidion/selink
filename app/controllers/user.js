@@ -100,7 +100,7 @@ exports.update = function(req, res, next) {
         }
 
         var photoName = /.*[\/|\\](.*)$/.exec(photoPath)[1];
-        req.body.photo = 'http://localhost:8081/upload/' + photoName;
+        req.body.photo = './upload/' + photoName;
     }
 
     // update user info
@@ -233,25 +233,29 @@ exports.showRequestedFriend = function(req, res, next) {
     });
 };
 
+// send new friend request
 exports.addFriend = function(req, res, next) {
 
-    // update user info
+    // add the friend's id into user's waitApprove list
     User.findByIdAndUpdate(req.params.id, {'$addToSet': {'waitApprove': req.body.friendId}}, function(err, requestUser) {
         if (err) next(err);
         else {
 
+            // log user's activity
+            Activity.create({
+                _owner: requestUser.id,
+                type: 'user-add-friend',
+                title: friend.firstName + ' ' + friend.lastName + "さんに友達リクエストを送りました。"
+            }, function(err, activity) {
+                if (err) next(err);
+            });
+
+            // find the requested user
             User.findById(req.body.friendId, function(err, friend) {
                 if (err) next(err);
                 else {
 
-                    Activity.create({
-                        _owner: requestUser.id,
-                        type: 'user-add-friend',
-                        title: friend.firstName + ' ' + friend.lastName + "さんに友達リクエストを送りました。"
-                    }, function(err, activity) {
-                        if (err) next(err);
-                    });
-
+                    // create notification
                     var notification = {
                         _from: requestUser.id,
                         type: 'friend-request',
@@ -260,24 +264,47 @@ exports.addFriend = function(req, res, next) {
                         createDate: Date.now()
                     };
 
+                    // give the requested user the notification
                     friend.notifications.push(notification);
                     friend.save(function(err) {
                         if (err) next(err);
                         else {
+                            // populate the notification with request sender's info
                             notification._from = {
                                 firstName: requestUser.firstName,
                                 lastName: requestUser.lastName,
                                 photo: requestUser.photo
                             };
+                            // send real time message
                             sio.sockets.in(friend.id).emit('notification', notification);
                         }
                     });
 
+                    // send back requested user's info
                     res.json(friend);
                 }
             });
         }
     });
+};
+
+// approve new friend request
+exports.approveFriend = function(req, res, next) {
+
+    // remove the notification from user
+
+    // remove the request sender's id from user's waitApprove list
+    // (in case they send request to each other)
+
+    // add the request sender's id into user's friend list
+
+    // move the user's id from request sender's waitApprove list
+    // to the friend list
+
+    // log user's activity
+
+    // send sio message to inform the request sender
+
 };
 
 exports.suggest = function(req, res, next) {
