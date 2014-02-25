@@ -4,7 +4,7 @@ define([], function() {
 
         idAttribute: "_id",
 
-        urlRoot: '/user',
+        urlRoot: '/users',
 
         validation: {
             firstName: [{

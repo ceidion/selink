@@ -12,7 +12,7 @@ define([
         model: Backbone.Model.extend({idAttribute: "_id"}),
 
         url: function() {
-            return this.document.url() + '/wait-approve';
+            return this.document.url() + '/friends?type=requested';
         }
     });
 

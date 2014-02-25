@@ -205,31 +205,36 @@ exports.introduce = function(req, res, next) {
 
 exports.showFriend = function(req, res, next) {
 
+    // type of request
+    var type = req.query.type || null;
+
+    // find user info
     User.findById(req.params.id, function(err, user) {
         if (err) next(err);
-        else
-            User.find({'_id': {'$in': user.friends}})
+        else {
+
+            // default query condition
+            var queryOpts = {
+                '_id': {'$in': user.friends}
+            };
+
+            // if requested for 'requeseted' friend
+            if (type == "requested") {
+                // change the query condition
+                queryOpts = {
+                    '_id': {'$in': user.waitApprove}
+                };
+            }
+
+            // get friends
+            User.find(queryOpts)
                 .select('_id firstName lastName photo')
                 .exec(function(err, friends) {
                     if (err) next(err);
                     else
                         res.json(friends);
                 });
-    });
-};
-
-exports.showRequestedFriend = function(req, res, next) {
-
-    User.findById(req.params.id, function(err, user) {
-        if (err) next(err);
-        else
-            User.find({'_id': {'$in': user.waitApprove}})
-                .select('_id firstName lastName photo')
-                .exec(function(err, friends) {
-                    if (err) next(err);
-                    else
-                        res.json(friends);
-                });
+        }
     });
 };
 

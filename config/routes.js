@@ -31,62 +31,60 @@ module.exports = function(app, sio) {
     app.get('/activate/:id', tempaccount.activate);
 
     // Get user's posts
-    app.get('/user/:id/posts', checkLoginStatus, post.index);
+    app.get('/users/:id/posts', checkLoginStatus, post.index);
     // Create new post
-    app.post('/user/:id/posts', checkLoginStatus, post.create);
+    app.post('/users/:id/posts', checkLoginStatus, post.create);
 
     // Get user's friends
-    app.get('/user/:id/friends', checkLoginStatus, user.showFriend);
-    // Get user's friends request
-    app.get('/user/:id/wait-approve', checkLoginStatus, user.showRequestedFriend);
+    app.get('/users/:id/friends', checkLoginStatus, user.showFriend);
     // Request new friend
-    app.post('/user/:id/friends', checkLoginStatus, user.addFriend);
+    app.post('/users/:id/friends', checkLoginStatus, user.addFriend);
     // update friend request
-    app.post('/user/:id/friends/:friendId', checkLoginStatus, user.addFriend);
+    app.post('/users/:id/friends/:friendId', checkLoginStatus, user.addFriend);
 
     // Get user info
-    app.get('/user/:id', checkLoginStatus, user.show);
+    app.get('/users/:id', checkLoginStatus, user.show);
     // Upload user photo
-    app.put('/user/:id', checkLoginStatus, user.update);
+    app.put('/users/:id', checkLoginStatus, user.update);
     // Update user info (first-level property)
-    app.patch('/user/:id', checkLoginStatus, user.update);
+    app.patch('/users/:id', checkLoginStatus, user.update);
     // Create nested collection item
-    app.post('/user/:id/:sub', checkLoginStatus, user.createSubDocument);
+    app.post('/users/:id/:sub', checkLoginStatus, user.createSubDocument);
     // Update nested collection item
-    app.patch('/user/:id/:sub/:subid', checkLoginStatus, user.updateSubDocument);
+    app.patch('/users/:id/:sub/:subid', checkLoginStatus, user.updateSubDocument);
     // Remove nested collection item
-    app.delete('/user/:id/:sub/:subid', checkLoginStatus, user.removeSubDocument);
+    app.delete('/users/:id/:sub/:subid', checkLoginStatus, user.removeSubDocument);
 
     // Get all activities
     app.get('/activities', checkLoginStatus, activity.index);
     // Get user's activities
-    app.get('/user/:id/activities', checkLoginStatus, activity.index);
+    app.get('/users/:id/activities', checkLoginStatus, activity.index);
 
     // // Get user's events
-    // app.get('/user/:id/events', checkLoginStatus, userEvent.index);
+    // app.get('/users/:id/events', checkLoginStatus, userEvent.index);
     // // Create new event
-    // app.post('/user/:id/events', checkLoginStatus, userEvent.create);
+    // app.post('/users/:id/events', checkLoginStatus, userEvent.create);
     // // Update events
-    // app.patch('/user/:id/events/:eventid', checkLoginStatus, userEvent.update);
+    // app.patch('/users/:id/events/:eventid', checkLoginStatus, userEvent.update);
     // // Remove event
-    // app.delete('/user/:id/events/:eventid', checkLoginStatus, userEvent.remove);
+    // app.delete('/users/:id/events/:eventid', checkLoginStatus, userEvent.remove);
 
     // // Get user's messages
-    // app.get('/user/:id/messages', checkLoginStatus, message.messages);
+    // app.get('/users/:id/messages', checkLoginStatus, message.messages);
     // // Update messages (create new event)
-    // app.post('/user/:id/messages', checkLoginStatus, message.createMessage);
+    // app.post('/users/:id/messages', checkLoginStatus, message.createMessage);
     // Update messages (update event)
-    // app.patch('/user/:id/messages/:eventid', checkLoginStatus, user.updateEvent);
+    // app.patch('/users/:id/messages/:eventid', checkLoginStatus, user.updateEvent);
     // // Update messages (remove event)
-    // app.delete('/user/:id/messages/:messageid', checkLoginStatus, message.removeMessage);
+    // app.delete('/users/:id/messages/:messageid', checkLoginStatus, message.removeMessage);
 
     // Introduce friend
     app.get('/friends', checkLoginStatus, user.introduce);
 
     // // Get user's friends
-    // app.get('/user/:id/friends', checkLoginStatus, user.addFriend);
+    // app.get('/users/:id/friends', checkLoginStatus, user.addFriend);
     // // Add friend
-    // app.post('/user/:id/friends', checkLoginStatus, function(req, res, next) {
+    // app.post('/users/:id/friends', checkLoginStatus, function(req, res, next) {
 
     //     sio.sockets.in(req.body.userid).emit('message', {
     //         title: "someone add you as a friend",
@@ -96,16 +94,16 @@ module.exports = function(app, sio) {
     //     next();
     // }, user.addFriend);
     // // Remove friend
-    // app.delete('/user/:id/friends/:friendid', checkLoginStatus, user.removeFriend);
+    // app.delete('/users/:id/friends/:friendid', checkLoginStatus, user.removeFriend);
 
     // Get user's jobs (employer only)
-    app.get('/user/:id/jobs', checkLoginStatus, job.index);
+    app.get('/users/:id/jobs', checkLoginStatus, job.index);
     // Update jobs (create new job)
-    app.post('/user/:id/jobs', checkLoginStatus, job.create);
+    app.post('/users/:id/jobs', checkLoginStatus, job.create);
     // Update jobs (update job)
-    app.patch('/user/:id/jobs/:jobid', checkLoginStatus, job.update);
+    app.patch('/users/:id/jobs/:jobid', checkLoginStatus, job.update);
     // Update jobs (remove job)
-    app.delete('/user/:id/jobs/:jobid', checkLoginStatus, job.remove);
+    app.delete('/users/:id/jobs/:jobid', checkLoginStatus, job.remove);
 
     // query address
     app.get('/address/:zipcode', checkLoginStatus, address.show);

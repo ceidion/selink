@@ -4,24 +4,28 @@ define([
     'engineer/view/common/sidenav',
     'engineer/view/home/page',
     'common/view/profile/profile',
+    'common/view/people/main',
     'common/view/post/post',
     'common/view/friend/main',
     'common/view/friend/friend-unknow',
     'common/view/calendar/calendar',
     'common/view/timecard/timecard',
     'common/view/mailbox/mailbox',
+    'common/model/user'
 ], function(
     TopNavView,
     ShortCutsView,
     SideNavView,
     HomeView,
     ProfileView,
+    PeopleView,
     PostView,
     FriendView,
     SearchFriendView,
     CalendarView,
     TimecardView,
-    MailBoxView
+    MailBoxView,
+    UserModel
 ) {
 
     // Main page controller
@@ -69,18 +73,34 @@ define([
         },
 
         // show profile
-        showProfileView: function() {
+        showProfileView: function(id) {
 
-            selink.userModel.fetch({
-                success: function() {
-                    // create profile view
-                    selink.profileView = new ProfileView({
-                        model: selink.userModel
-                    });
-                    // show profile view
-                    selink.pageContent.show(selink.profileView);
-                }
-            });
+            if (!id) {
+
+                selink.userModel.fetch({
+                    success: function() {
+                        // create profile view
+                        selink.profileView = new ProfileView({
+                            model: selink.userModel
+                        });
+                        // show profile view
+                        selink.pageContent.show(selink.profileView);
+                    }
+                });
+            } else {
+
+                var people = new UserModel({
+                    _id: id
+                });
+                people.fetch({
+                    success: function() {
+                        selink.peopleView = new PeopleView({
+                            model: people
+                        });
+                        selink.pageContent.show(selink.peopleView);
+                    }
+                });
+            }
         },
 
         // show posts
