@@ -1,5 +1,7 @@
 var express = require('express'),
-    path = require('path');
+    path = require('path'),
+    mongoose = require('mongoose'),
+    User = mongoose.model('User');
 
 module.exports = function(app, config, cookieParser, sessionStore) {
 
@@ -57,6 +59,21 @@ module.exports = function(app, config, cookieParser, sessionStore) {
     if ('development' == app.get('env')) {
         app.use(express.errorHandler());
     }
+
+    // Load user info on request
+    app.param('user', function(req, res, next, id){
+
+        User.findById(id, function(err, user){
+            if (err) {
+                next(err);
+            } else if (user) {
+                req.user = user;
+                next();
+            } else {
+                next(new Error('failed to load user'));
+            }
+        });
+    });
 
     // Routes
     app.use(app.router);

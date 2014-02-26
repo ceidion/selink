@@ -8,6 +8,11 @@ define([
 
         tagName: 'li',
 
+        events: {
+            'click .btn-approve': 'onApproveClick',
+            'click .btn-decline': 'onDeclineClick'
+        },
+
         // template
         getTemplate: function(){
 
@@ -24,6 +29,14 @@ define([
             //     return userNewPostTemplate;
             // else
             //     return defaultTemplate;
+        },
+
+        onApproveClick: function() {
+            this.model.save();
+        },
+
+        onDeclineClick: function() {
+
         }
 
     });

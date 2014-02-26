@@ -52,6 +52,12 @@ define([
 
         // after show
         onShow: function() {
+
+            // keep dropdown menu open when click on the menu items.
+            this.$el.find('.dropdown-menu').on('click', function(e){
+                e.stopPropagation();
+            });
+
             // if there are unread notifications
             if (this.model.get('notificationsNum') > 0) {
                 // let the icon swing

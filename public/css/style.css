@@ -15,6 +15,7 @@ html,body{height:100%}
 #sl-basic-info .sl-editable{min-height:48px}#sl-basic-info .sl-editable .profile-info-name,#sl-basic-info .sl-editable .sl-value{line-height:33px}
 .sl-avatar{border:0px !important;float:none !important}
 #name-item,#title-item{padding:7px}
+#bio-item img{max-width:100%}
 #zipCodeArea{margin-bottom:10px}
 #language-composite .grid2,#language-composite .grid3,#language-composite .grid4{min-height:127px;margin-bottom:6px;padding-top:6px;border-left:none}#language-composite .grid2 input[readonly],#language-composite .grid3 input[readonly],#language-composite .grid4 input[readonly]{background:transparent !important}
 #language-composite .grid2 .sl-value,#language-composite .grid3 .sl-value,#language-composite .grid4 .sl-value{margin-top:-10px}

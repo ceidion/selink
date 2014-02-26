@@ -246,19 +246,19 @@ exports.addFriend = function(req, res, next) {
         if (err) next(err);
         else {
 
-            // log user's activity
-            Activity.create({
-                _owner: requestUser.id,
-                type: 'user-add-friend',
-                title: friend.firstName + ' ' + friend.lastName + "さんに友達リクエストを送りました。"
-            }, function(err, activity) {
-                if (err) next(err);
-            });
-
             // find the requested user
             User.findById(req.body.friendId, function(err, friend) {
                 if (err) next(err);
                 else {
+
+                    // log user's activity
+                    Activity.create({
+                        _owner: requestUser.id,
+                        type: 'user-add-friend',
+                        title: friend.firstName + ' ' + friend.lastName + "さんに友達リクエストを送りました。"
+                    }, function(err, activity) {
+                        if (err) next(err);
+                    });
 
                     // create notification
                     var notification = {
@@ -296,20 +296,70 @@ exports.addFriend = function(req, res, next) {
 // approve new friend request
 exports.approveFriend = function(req, res, next) {
 
-    // remove the notification from user
+    User.findById(req.params.id, function(err, user) {
+        if (err) next(err);
+        else {
 
-    // remove the request sender's id from user's waitApprove list
-    // (in case they send request to each other)
+            var notification = user.notifications.id(req.params.notificationId);
 
-    // add the request sender's id into user's friend list
+            if (notification) {
 
-    // move the user's id from request sender's waitApprove list
-    // to the friend list
+                // remove the notification from user
+                var removedNotification = notification.remove();
 
-    // log user's activity
+                // remove the request sender's id from user's waitApprove list
+                // (in case they send request to each other)
+                user.waitApprove.pull(removedNotification._from);
 
-    // send sio message to inform the request sender
+                // add the request sender's id into user's friend list
+                user.friends.push(removedNotification._from);
 
+                // find request sender
+                User.findById(removedNotification._from, function(err, requestUser){
+
+                    if (err) next(err);
+                    else {
+                        // move the user's id from request sender's waitApprove list
+                        // to the friend list
+                        requestUser.waitApprove.pull(user._id);
+                        requestUser.friends.push(user._id);
+                        requestUser.save(function(err, updatedRequestUesr) {
+
+                            // log user's activity
+                            Activity.create({
+                                _owner: user.id,
+                                type: 'user-friend-approved',
+                                title: updatedRequestUesr.firstName + ' ' + updatedRequestUesr.lastName + "さんの友達リクエストを承認しました。"
+                            }, function(err, activity) {
+                                if (err) next(err);
+                            });
+
+                            // create notification
+                            var notification = {
+                                _from: user.id,
+                                type: 'friend-approved',
+                                title: "友達リクエストが承認しました",
+                                // content: "友達になるリクエストが届きました。",
+                                createDate: Date.now()
+                            };
+
+                            // send sio message to inform the request sender
+                            sio.sockets.in(updatedRequestUesr.id).emit('notification', notification);
+
+                            user.save(function(err, updatedUser) {
+                                if (err) next(err);
+                                else res.send(updatedRequestUesr);
+                            });
+                        });
+                    }
+                });
+            } else {
+                res.status(404).json({
+                    msg: "更新失敗しました"
+                });
+            }
+        }
+    });
 };
 
 exports.suggest = function(req, res, next) {

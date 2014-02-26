@@ -31,16 +31,17 @@ module.exports = function(app, sio) {
     app.get('/activate/:id', tempaccount.activate);
 
     // Get user's posts
-    app.get('/users/:id/posts', checkLoginStatus, post.index);
+    app.get('/users/:user/posts', checkLoginStatus, post.index);
     // Create new post
-    app.post('/users/:id/posts', checkLoginStatus, post.create);
+    app.post('/users/:user/posts', checkLoginStatus, post.create);
 
     // Get user's friends
     app.get('/users/:id/friends', checkLoginStatus, user.showFriend);
     // Request new friend
     app.post('/users/:id/friends', checkLoginStatus, user.addFriend);
+
     // update friend request
-    app.post('/users/:id/friends/:friendId', checkLoginStatus, user.addFriend);
+    app.put('/users/:id/notifications/:notificationId', checkLoginStatus, user.approveFriend);
 
     // Get user info
     app.get('/users/:id', checkLoginStatus, user.show);

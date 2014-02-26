@@ -10,46 +10,98 @@
 <div id="sl-basic-info" class="row">
 
     <div class="col-xs-12 col-md-3 center">
-
         <!-- photo -->
         <div class="profile-picture ace-thumbnails">
             <img class="img-responsive" src="<%- avatar %>">
         </div>
+    </div>
+
+    <div class="col-xs-12 col-md-9 row">
 
         <!-- name -->
-        <div class="bigger-150">
+        <div class="col-xs-12 bigger-150">
             <%= obj.firstName %>&nbsp;<%= obj.lastName %>
+
+            <!-- title -->
+            <% if (obj.title) { %>
+                <div class="label label-xlg label-primary arrowed-in arrowed-in-right sl-title">
+                    <span><%= obj.title %></span>
+                </div>
+            <% } %>
         </div>
 
-        <!-- title -->
-        <% if (obj.title) { %>
-            <div class="label label-xlg label-primary arrowed-in arrowed-in-right sl-title">
-                <span><%= obj.title %></span>
-            </div>
-        <% } %>
 
-        <!-- birth day -->
+        <!-- bio -->
         <% if (obj.birthDayDisplay) { %>
             <div class="col-xs-12">
-                <i class="icon-calendar sl-icon"></i>&nbsp;生年月日：<%= obj.birthDayDisplay%>
+                <!-- <h4 class="lighter"><i class="icon-quote-left"></i></h4> -->
+                <%= obj.bio %>
             </div>
         <% } %>
-
-    </div>
-    <div class="col-xs-12 col-md-9 row">
-        <div id="marriage-item" class="col-xs-12 col-md-6 sl-editable"></div>
+        <!-- <div id="marriage-item" class="col-xs-12 col-md-6 sl-editable"></div>
         <div id="nationality-item" class="col-xs-12 col-md-6 sl-editable"></div>
         <div id="address-item" class="col-xs-12 col-md-6 sl-editable"></div>
         <div id="nearestst-item" class="col-xs-12 col-md-6 sl-editable"></div>
         <div id="experience-item" class="col-xs-12 col-md-6 sl-editable"></div>
         <div id="telno-item" class="col-xs-12 col-md-6 sl-editable"></div>
         <div id="email-item" class="col-xs-12 col-md-6 sl-editable"></div>
-        <div id="website-item" class="col-xs-12 col-md-6 sl-editable"></div>
+        <div id="website-item" class="col-xs-12 col-md-6 sl-editable"></div> -->
     </div>
 </div>
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-xs-12 col-md-3 center">
+
+        <!-- telNo -->
+        <% if (obj.telNo) { %>
+            <div class="row" style="min-height: 40px; line-height: 40px;">
+                <div class="col-xs-3 align-right"><i class="icon-phone bigger-120 pink"></i></div>
+                <div class="col-xs-9 align-left"><%= obj.telNo%></div>
+            </div>
+        <% } %>
+
+        <!-- email -->
+        <% if (obj.email) { %>
+            <div class="row" style="min-height: 40px; line-height: 40px;">
+                <div class="col-xs-3 align-right"><i class="icon-envelope bigger-120 green"></i></div>
+                <div class="col-xs-9 align-left"><%= obj.email%></div>
+            </div>
+        <% } %>
+
+        <!-- website -->
+        <% if (obj.webSite) { %>
+            <div class="row" style="min-height: 40px; line-height: 40px;">
+                <div class="col-xs-3 align-right"><i class="icon-globe bigger-120 blue"></i></div>
+                <div class="col-xs-9 align-left"><%= obj.webSite%></div>
+            </div>
+        <% } %>
+
+        <!-- address -->
+        <% if (obj.address) { %>
+            <div class="row" style="min-height: 40px; line-height: 40px;">
+                <div class="col-xs-3 align-right"><i class="icon-map-marker bigger-120 orange"></i></div>
+                <div class="col-xs-9 align-left"><%= obj.address%></div>
+            </div>
+        <% } %>
+
+        <!-- birth day -->
+        <% if (obj.birthDayDisplay) { %>
+            <div class="row" style="min-height: 40px; line-height: 40px;">
+                <div class="col-xs-3 align-right"><i class="icon-calendar bigger-120"></i></div>
+                <div class="col-xs-9 align-left"><%= obj.birthDayDisplay%></div>
+            </div>
+        <% } %>
+
+        <!-- nationality -->
+        <% if (obj.nationality) { %>
+            <div class="row" style="min-height: 40px; line-height: 40px;">
+                <div class="col-xs-3 align-right"><i class="icon-flag bigger-120"></i></div>
+                <div class="col-xs-9 align-left"><%= obj.nationality%></div>
+            </div>
+        <% } %>
+
+    </div>
+<!--     <div class="col-md-6">
         <div id="bio-item" class="widget-container-span"></div>
         <div id="language-composite" class="widget-container-span"></div>
         <div id="skill-composite" class="widget-container-span"></div>
@@ -58,5 +110,5 @@
         <div id="qualification-composite" class="widget-container-span"></div>
         <div id="education-composite" class="widget-container-span"></div>
         <div id="employment-composite" class="widget-container-span"></div>
-    </div>
+    </div> -->
 </div>
