@@ -100,6 +100,22 @@ html,body{height:100%}
 .ace-nav>li>div.margin-1{margin-left:1px}
 .ace-nav>li>div.no-border{border:none !important}
 .ace-nav>li>div .dropdown-menu{z-index:1031}
+.dropdown-body{border-color:#bcd4e5}.dropdown-body>li{padding:0 8px;background-color:#FFFFFF}.dropdown-body>li>[class*="icon-"],.dropdown-body>li>a>[class*="icon-"]{margin-right:5px !important;color:#555;font-size:14px}
+.dropdown-body>li>a{padding:10px 2px;margin:0;border-bottom:1px solid;font-size:12px;line-height:16px;color:#555;display:block;clear:both;font-weight:normal;white-space:nowrap;text-decoration:none}.dropdown-body>li>a:active,.dropdown-body>li>a:hover,.dropdown-body>li>a:focus{background-color:transparent !important;color:#555}
+.dropdown-body>li>a .progress{margin-bottom:0;margin-top:4px}
+.dropdown-body>li>a .badge{line-height:16px;padding-right:4px;padding-left:4px;font-size:12px}
+.dropdown-body>li:hover{background-color:#f4f9fc !important}
+.dropdown-body>li.dropdown-header{background-color:#ecf2f7 !important;color:#8090a0;border-bottom-color:#bcd4e5}.dropdown-body>li.dropdown-header>[class*="icon-"]{color:#8090a0}
+.dropdown-body>li>a{border-bottom-color:#e4ecf3}
+.dropdown-body.navbar-pink{border-color:#e5bcd4}.dropdown-body.navbar-pink>li:hover{background-color:#fcf4f9 !important}
+.dropdown-body.navbar-pink>li.dropdown-header{background-color:#f7ecf2 !important;color:#b471a0;border-bottom-color:#e5bcd4}.dropdown-body.navbar-pink>li.dropdown-header>[class*="icon-"]{color:#c06090}
+.dropdown-body.navbar-pink>li>a{border-bottom-color:#f3e4ec}
+.dropdown-body.navbar-grey{border-color:#e5e5e5}.dropdown-body.navbar-grey>li:hover{background-color:#f8f8f8 !important}
+.dropdown-body.navbar-grey>li.dropdown-header{background-color:#f2f2f2 !important;color:#3a87ad;border-bottom-color:#e5e5e5}.dropdown-body.navbar-grey>li.dropdown-header>[class*="icon-"]{color:#3a87ad}
+.dropdown-body.navbar-grey>li>a{border-bottom-color:#eee}
+.dropdown-body.navbar-green{border-color:#b4d5ac}.dropdown-body.navbar-green>li:hover{background-color:#f4f9ef !important}
+.dropdown-body.navbar-green>li.dropdown-header{background-color:#ebf7e4 !important;color:#8a6;border-bottom-color:#b4d5ac}.dropdown-body.navbar-green>li.dropdown-header>[class*="icon-"]{color:#90c060}
+.dropdown-body.navbar-green>li>a{border-bottom-color:#ecf3e4}
 .tags{width:auto}
 .ace-thumbnails>li{border:none}
 .twitter-typeahead{display:block !important}

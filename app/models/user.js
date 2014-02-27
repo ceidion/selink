@@ -161,30 +161,17 @@ var User = new Schema({
     // Event
     events: [Event],
 
-    notifications: [Notification],
-
     // Friend
     friends: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
 
-    // Friend waiting for approve
-    waitApprove: [{
+    // Invited Friend
+    invited: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
-
-    posts: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Post'
-    }],
-
-    messages: [Schema.Types.ObjectId],
-
-    sents:[Schema.Types.ObjectId],
-
-    drafts:[Schema.Types.ObjectId],
 
     // Last login date
     lastLogin: {

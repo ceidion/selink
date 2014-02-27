@@ -1,5 +1,4 @@
-var _ = require('underscore'),
-    request = require('request'),
+var request = require('request'),
     mongoose = require('mongoose'),
     Activity = mongoose.model('Activity');
 

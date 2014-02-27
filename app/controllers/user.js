@@ -33,11 +33,12 @@ exports.login = function(req, res, next) {
         }
         // if account could be found
         else {
-            // put account into session
-            req.session.user = user;
+            // put user's id into session
+            req.session.userId = user.id;
 
+            // create activity
             Activity.create({
-                _owner: user._id,
+                _owner: user.id,
                 type: 'user-login',
                 title: "ログインしました。"
             }, function(err, activity) {
@@ -55,7 +56,7 @@ exports.login = function(req, res, next) {
 exports.logout = function(req, res, next) {
 
     Activity.create({
-        _owner: req.session.user._id,
+        _owner: req.session.userId,
         type: 'user-logout',
         title: "ログアウトしました。"
     }, function(err, activity) {
@@ -180,202 +181,6 @@ exports.removeSubDocument = function(req, res, next) {
             }
         }
     });
-};
-
-exports.introduce = function(req, res, next) {
-
-    var page = req.query.page || 0;
-
-    User.findById(req.session.user._id, function(err, user) {
-
-        User.find({_id: {'$ne': req.session.user._id}})
-            .where('_id').nin(user.friends).nin(user.waitApprove)
-            .select('type firstName lastName title gender bio photo createDate')
-            .skip(30*page)
-            .limit(30)
-            .sort({createDate:-1})
-            .exec(function(err, users) {
-                if (err) next(err);
-                else
-                    // return the user
-                    res.json(users);
-            });
-    });
-};
-
-exports.showFriend = function(req, res, next) {
-
-    // type of request
-    var type = req.query.type || null;
-
-    // find user info
-    User.findById(req.params.id, function(err, user) {
-        if (err) next(err);
-        else {
-
-            // default query condition
-            var queryOpts = {
-                '_id': {'$in': user.friends}
-            };
-
-            // if requested for 'requeseted' friend
-            if (type == "requested") {
-                // change the query condition
-                queryOpts = {
-                    '_id': {'$in': user.waitApprove}
-                };
-            }
-
-            // get friends
-            User.find(queryOpts)
-                .select('_id firstName lastName photo')
-                .exec(function(err, friends) {
-                    if (err) next(err);
-                    else
-                        res.json(friends);
-                });
-        }
-    });
-};
-
-// send new friend request
-exports.addFriend = function(req, res, next) {
-
-    // add the friend's id into user's waitApprove list
-    User.findByIdAndUpdate(req.params.id, {'$addToSet': {'waitApprove': req.body.friendId}}, function(err, requestUser) {
-        if (err) next(err);
-        else {
-
-            // find the requested user
-            User.findById(req.body.friendId, function(err, friend) {
-                if (err) next(err);
-                else {
-
-                    // log user's activity
-                    Activity.create({
-                        _owner: requestUser.id,
-                        type: 'user-add-friend',
-                        title: friend.firstName + ' ' + friend.lastName + "さんに友達リクエストを送りました。"
-                    }, function(err, activity) {
-                        if (err) next(err);
-                    });
-
-                    // create notification
-                    var notification = {
-                        _from: requestUser.id,
-                        type: 'friend-request',
-                        title: "友達リクエスト",
-                        content: "友達になるリクエストが届きました。",
-                        createDate: Date.now()
-                    };
-
-                    // give the requested user the notification
-                    friend.notifications.push(notification);
-                    friend.save(function(err) {
-                        if (err) next(err);
-                        else {
-                            // populate the notification with request sender's info
-                            notification._from = {
-                                firstName: requestUser.firstName,
-                                lastName: requestUser.lastName,
-                                photo: requestUser.photo
-                            };
-                            // send real time message
-                            sio.sockets.in(friend.id).emit('notification', notification);
-                        }
-                    });
-
-                    // send back requested user's info
-                    res.json(friend);
-                }
-            });
-        }
-    });
-};
-
-// approve new friend request
-exports.approveFriend = function(req, res, next) {
-
-    User.findById(req.params.id, function(err, user) {
-        if (err) next(err);
-        else {
-
-            var notification = user.notifications.id(req.params.notificationId);
-
-            if (notification) {
-
-                // remove the notification from user
-                var removedNotification = notification.remove();
-
-                // remove the request sender's id from user's waitApprove list
-                // (in case they send request to each other)
-                user.waitApprove.pull(removedNotification._from);
-
-                // add the request sender's id into user's friend list
-                user.friends.push(removedNotification._from);
-
-                // find request sender
-                User.findById(removedNotification._from, function(err, requestUser){
-
-                    if (err) next(err);
-                    else {
-                        // move the user's id from request sender's waitApprove list
-                        // to the friend list
-                        requestUser.waitApprove.pull(user._id);
-                        requestUser.friends.push(user._id);
-                        requestUser.save(function(err, updatedRequestUesr) {
-
-                            // log user's activity
-                            Activity.create({
-                                _owner: user.id,
-                                type: 'user-friend-approved',
-                                title: updatedRequestUesr.firstName + ' ' + updatedRequestUesr.lastName + "さんの友達リクエストを承認しました。"
-                            }, function(err, activity) {
-                                if (err) next(err);
-                            });
-
-                            // create notification
-                            var notification = {
-                                _from: user.id,
-                                type: 'friend-approved',
-                                title: "友達リクエストが承認しました",
-                                // content: "友達になるリクエストが届きました。",
-                                createDate: Date.now()
-                            };
-
-                            // send sio message to inform the request sender
-                            sio.sockets.in(updatedRequestUesr.id).emit('notification', notification);
-
-                            user.save(function(err, updatedUser) {
-                                if (err) next(err);
-                                else res.send(updatedRequestUesr);
-                            });
-                        });
-                    }
-                });
-            } else {
-                res.status(404).json({
-                    msg: "更新失敗しました"
-                });
-            }
-        }
-    });
-};
-
-exports.suggest = function(req, res, next) {
-
-    var initial = req.query.initial;
-
-    User.find({_id: {'$ne': req.session.user._id}})
-        .or([{firstName: new RegExp(initial, "i")}, {lastName: new RegExp(initial, "i")}])
-        .select('firstName lastName bio photo')
-        .limit(8)
-        .exec(function(err, users) {
-            if (err) next(err);
-            else
-            // return the user
-            res.json(users);
-        });
 };
 
 exports.import = function(req, res, next) {

@@ -44,7 +44,7 @@ var SessionSockets = require('session.socket.io'),
 
 sessionSockets.on('connection', function(err, socket, session) {
 
-    socket.join(session.user._id);
+    socket.join(session.userId);
 
     socket.emit('message', {
         title: "welcome",

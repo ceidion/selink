@@ -38,8 +38,7 @@ define([
 
             // create notification menu
             this.notificationNav = new NotificationMenu({
-                model: this.model,
-                collection: selink.notificationsModel
+                model: this.model
             });
         },
 

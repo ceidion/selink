@@ -32,7 +32,16 @@ define([
         },
 
         onApproveClick: function() {
-            this.model.save();
+
+            var self = this;
+
+            this.model.save(null, {
+                success: function() {
+                    self.$el.slideUp(function() {
+                        self.model.collection.remove(self.model);
+                    });
+                }
+            });
         },
 
         onDeclineClick: function() {

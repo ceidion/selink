@@ -4,14 +4,21 @@ var Schema = mongoose.Schema;
 
 var Notification = new Schema({
 
-    // request sender
+    // notification owner
+    _owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+
+    // notification sender
     _from: {
         type: Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
 
-    // activity type
+    // notification type
     type: {
         type: String,
         trim: true,
@@ -25,7 +32,7 @@ var Notification = new Schema({
         required: true
     },
 
-    // activity content
+    // notification content
     content: {
         type: String,
         trim: true,
@@ -35,6 +42,12 @@ var Notification = new Schema({
     link: {
         type: String,
         trim: true,
+    },
+
+    // notification confirmed
+    confirmed: {
+        type: Boolean,
+        default: false
     },
 
     // Logical Delete flag
@@ -50,4 +63,4 @@ var Notification = new Schema({
     }
 });
 
-module.exports = Notification;
+mongoose.model('Notification', Notification);

@@ -1,16 +1,12 @@
 define([
     'common/model/user',
-    'common/collection/activities',
     'common/collection/events',
-    'common/collection/notifications',
     'common/collection/friends',
     'engineer/router/router',
     'engineer/controller/controller'
 ], function(
     UserModel,
-    ActivitiesModel,
     EventsModel,
-    NotificationsModel,
     FriendsModel,
     Router,
     Controller
@@ -101,16 +97,6 @@ define([
                 });
                 self.eventsModel.document = self.userModel;
 
-                // create notifications model(collection) from user model
-                self.notificationsModel = new NotificationsModel(self.userModel.get('notifications'), {
-                    parse: true,
-                    comparator: function(notification) {
-                        // sort by start asc
-                        return 0 - Number(moment(notification.get('createDate')).valueOf());
-                    }
-                });
-                self.notificationsModel.document = self.userModel;
-
                 // create friends model(collection) from user model
                 self.friendsModel = new FriendsModel(self.userModel.get('friends'), {parse: true});
                 self.friendsModel.document = self.userModel;
@@ -136,14 +122,10 @@ define([
             }
         });
 
-        // // create user activities model
-        // this.userActivitiesModel = new ActivitiesModel();
-        // this.userActivitiesModel.document = this.userModel;
-
         // initiate web socket
-        var socket = io.connect('http://localhost:8081');
+        this.socket = io.connect('http://localhost:8081');
         // web socket handler
-        socket.on('message', function(data) {
+        this.socket.on('message', function(data) {
             setTimeout(function() {
                 $.gritter.add({
                     title: data.title,
@@ -151,18 +133,6 @@ define([
                     class_name: 'gritter-success'
                 });
             }, 3000);
-        });
-
-        socket.on('notification', function(data) {
-            $.gritter.add({
-                title: data.title,
-                text: data.content,
-                image: data._from.photo,
-                time: 8000,
-                class_name: 'gritter-warning'
-            });
-
-            selink.notificationsModel.add(data);
         });
 
     });

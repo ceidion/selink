@@ -105,6 +105,7 @@ exports.activate = function(req, res, next) {
                 lastName: tempAccount.lastName,
                 secEmail: tempAccount.email,
                 type: tempAccount.type,
+                photo: './asset/images/no_photo_male.gif',
                 provider: 'local'
             }, false);
 

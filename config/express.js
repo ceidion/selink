@@ -61,18 +61,27 @@ module.exports = function(app, config, cookieParser, sessionStore) {
     }
 
     // Load user info on request
-    app.param('user', function(req, res, next, id){
+    app.use(function(req, res, next){
 
-        User.findById(id, function(err, user){
-            if (err) {
-                next(err);
-            } else if (user) {
-                req.user = user;
-                next();
-            } else {
-                next(new Error('failed to load user'));
-            }
-        });
+        // if user's id exists in sessin (logged in user)
+        if (req.session && req.session.userId) {
+
+            // find user by his id
+            User.findById(req.session.userId, function(err, user){
+
+                if (!err && user) {
+                    // associate user with request
+                    req.user = user;
+                    next();
+                } else {
+                    next(new Error('Could not restore User from Session.'));
+                }
+            });
+
+        // user not login yet
+        } else {
+            next();
+        }
     });
 
     // Routes

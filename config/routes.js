@@ -1,8 +1,10 @@
 var tag = require('../app/controllers/tag'),
     user = require('../app/controllers/user'),
+    friend = require('../app/controllers/friend'),
     post = require('../app/controllers/post'),
     // userEvent = require('../app/controllers/event'),
     activity = require('../app/controllers/activity'),
+    notification = require('../app/controllers/notification'),
     // message = require('../app/controllers/message'),
     tempaccount = require('../app/controllers/tempaccount'),
     job = require('../app/controllers/job'),
@@ -22,7 +24,7 @@ module.exports = function(app, sio) {
 
     // SPA bootstrap
     app.get('/spa', checkLoginStatus, function(req, res, next){
-        res.render('./' + req.session.user.type + '/index', req.session.user);
+        res.render('./' + req.user.type + '/index', req.user);
     });
 
     // User sign-up
@@ -30,18 +32,21 @@ module.exports = function(app, sio) {
     // Account activate
     app.get('/activate/:id', tempaccount.activate);
 
+    // Get user's notification
+    app.get('/users/:user/notifications', checkLoginStatus, notification.index);
+
     // Get user's posts
     app.get('/users/:user/posts', checkLoginStatus, post.index);
     // Create new post
     app.post('/users/:user/posts', checkLoginStatus, post.create);
 
     // Get user's friends
-    app.get('/users/:id/friends', checkLoginStatus, user.showFriend);
+    app.get('/users/:id/friends', checkLoginStatus, friend.showFriend);
     // Request new friend
-    app.post('/users/:id/friends', checkLoginStatus, user.addFriend);
+    app.post('/users/:id/friends', checkLoginStatus, friend.addFriend);
 
     // update friend request
-    app.put('/users/:id/notifications/:notificationId', checkLoginStatus, user.approveFriend);
+    app.put('/users/:id/notifications/:notificationId', checkLoginStatus, friend.approveFriend);
 
     // Get user info
     app.get('/users/:id', checkLoginStatus, user.show);
@@ -80,7 +85,7 @@ module.exports = function(app, sio) {
     // app.delete('/users/:id/messages/:messageid', checkLoginStatus, message.removeMessage);
 
     // Introduce friend
-    app.get('/friends', checkLoginStatus, user.introduce);
+    app.get('/friends', checkLoginStatus, friend.introduce);
 
     // // Get user's friends
     // app.get('/users/:id/friends', checkLoginStatus, user.addFriend);
@@ -110,7 +115,7 @@ module.exports = function(app, sio) {
     app.get('/address/:zipcode', checkLoginStatus, address.show);
 
     // suggeset user while type ahead
-    app.get('/suggestUser', checkLoginStatus, user.suggest);
+    app.get('/suggestUser', checkLoginStatus, friend.suggest);
 
     // Show tags
     app.get('/tags', checkLoginStatus, tag.index);
@@ -126,7 +131,7 @@ module.exports = function(app, sio) {
 };
 
 checkLoginStatus = function(req, res, next) {
-    if (!req.session.user) {
+    if (!req.session.userId) {
         if (req.xhr) {
             res.status(401).json({
                 title: "セッションの有効期限が切りました。",

@@ -1,8 +1,10 @@
 define([
     'text!common/template/topnav/notification.html',
+    'common/collection/notifications',
     'common/view/topnav/notification-item'
 ], function(
     template,
+    NotificationsModel,
     ItemView
 ) {
 
@@ -28,26 +30,44 @@ define([
 
             // event menu has max 5 items, so the menu
             // itself should has no more than 7 items (include header + footer)
-            if (this.$el.find('.dropdown-menu').children().size() >= 7)
-                return;
+            // if (this.$el.find('.dropdown-menu').children().size() >= 7)
+            //     return;
 
             // event menu only display the future events
             // if (moment(itemView.model.get('start')).isBefore(moment()))
             //     return;
 
             // insert sub view before dropdown menu's footer (this is imply a order of items)
-            this.$el.find('.dropdown-footer').before(itemView.el);
+            this.$el.find('.dropdown-body').append(itemView.el);
         },
 
         // initializer
         initialize: function() {
 
-            // filter out the opened notification
-            // var nearestNotifications = _.filter(this.collection.models, function(event) {
-            //     return moment(event.get('start')).isAfter(moment());
-            // });
-            // set the number of unread notifications in the model
-            this.model.set('notificationsNum', this.collection.length, {silent:true});
+            var self = this;
+
+            // create notifications model(collection)
+            this.collection = new NotificationsModel([], {
+                comparator: function(notification) {
+                    // sort by start asc
+                    return Number(moment(notification.get('createDate')).valueOf());
+                }
+            });
+            this.collection.document = this.model;
+
+            this.collection.fetch();
+
+            selink.socket.on('notification', function(data) {
+                $.gritter.add({
+                    title: data.title,
+                    text: data.content,
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-warning'
+                });
+
+                self.collection.add(data);
+            });
         },
 
         // after show
@@ -63,6 +83,11 @@ define([
                 // let the icon swing
                 this.$el.find('.icon-bell-alt').addClass('icon-animated-bell');
             }
+
+            this.$el.find('.dropdown-body').slimScroll({
+                height: 300,
+                railVisible:true
+            });
         },
 
         // update the number badge when collection changed
