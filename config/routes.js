@@ -32,21 +32,25 @@ module.exports = function(app, sio) {
     // Account activate
     app.get('/activate/:id', tempaccount.activate);
 
+    // Get user's activities
+    app.get('/users/:user/activities', checkLoginStatus, activity.index);
+
     // Get user's notification
     app.get('/users/:user/notifications', checkLoginStatus, notification.index);
+    // update notification
+    app.patch('/users/:user/notifications/:notification', checkLoginStatus, notification.update);
 
     // Get user's posts
     app.get('/users/:user/posts', checkLoginStatus, post.index);
     // Create new post
     app.post('/users/:user/posts', checkLoginStatus, post.create);
 
+    // Introduce friend
+    app.get('/friends', checkLoginStatus, friend.introduce);
     // Get user's friends
-    app.get('/users/:id/friends', checkLoginStatus, friend.showFriend);
+    app.get('/users/:user/friends', checkLoginStatus, friend.index);
     // Request new friend
-    app.post('/users/:id/friends', checkLoginStatus, friend.addFriend);
-
-    // update friend request
-    app.put('/users/:id/notifications/:notificationId', checkLoginStatus, friend.approveFriend);
+    app.post('/users/:user/friends', checkLoginStatus, friend.create);
 
     // Get user info
     app.get('/users/:id', checkLoginStatus, user.show);
@@ -61,11 +65,6 @@ module.exports = function(app, sio) {
     // Remove nested collection item
     app.delete('/users/:id/:sub/:subid', checkLoginStatus, user.removeSubDocument);
 
-    // Get all activities
-    app.get('/activities', checkLoginStatus, activity.index);
-    // Get user's activities
-    app.get('/users/:id/activities', checkLoginStatus, activity.index);
-
     // // Get user's events
     // app.get('/users/:id/events', checkLoginStatus, userEvent.index);
     // // Create new event
@@ -74,33 +73,6 @@ module.exports = function(app, sio) {
     // app.patch('/users/:id/events/:eventid', checkLoginStatus, userEvent.update);
     // // Remove event
     // app.delete('/users/:id/events/:eventid', checkLoginStatus, userEvent.remove);
-
-    // // Get user's messages
-    // app.get('/users/:id/messages', checkLoginStatus, message.messages);
-    // // Update messages (create new event)
-    // app.post('/users/:id/messages', checkLoginStatus, message.createMessage);
-    // Update messages (update event)
-    // app.patch('/users/:id/messages/:eventid', checkLoginStatus, user.updateEvent);
-    // // Update messages (remove event)
-    // app.delete('/users/:id/messages/:messageid', checkLoginStatus, message.removeMessage);
-
-    // Introduce friend
-    app.get('/friends', checkLoginStatus, friend.introduce);
-
-    // // Get user's friends
-    // app.get('/users/:id/friends', checkLoginStatus, user.addFriend);
-    // // Add friend
-    // app.post('/users/:id/friends', checkLoginStatus, function(req, res, next) {
-
-    //     sio.sockets.in(req.body.userid).emit('message', {
-    //         title: "someone add you as a friend",
-    //         msg: "you now be a friend of xxx"
-    //     });
-
-    //     next();
-    // }, user.addFriend);
-    // // Remove friend
-    // app.delete('/users/:id/friends/:friendid', checkLoginStatus, user.removeFriend);
 
     // Get user's jobs (employer only)
     app.get('/users/:id/jobs', checkLoginStatus, job.index);

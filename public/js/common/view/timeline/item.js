@@ -1,19 +1,19 @@
 define([
-    'common/view/item-base',
-    'text!common/template/timeline/timeline-user-activated.html',
-    'text!common/template/timeline/timeline-user-login.html',
-    'text!common/template/timeline/timeline-user-logout.html',
-    'text!common/template/timeline/timeline-user-new-post.html',
-    'text!common/template/timeline/timeline-default.html',
+    'text!common/template/timeline/item/user-activated.html',
+    'text!common/template/timeline/item/user-login.html',
+    'text!common/template/timeline/item/user-logout.html',
+    'text!common/template/timeline/item/user-post.html',
+    'text!common/template/timeline/item/user-friend-invited.html',
+    'text!common/template/timeline/item/default.html',
 ], function(
-    BaseView,
     userActivatedTemplate,
     userLoginTemplate,
     userLogoutTemplate,
-    userNewPostTemplate,
+    userPostTemplate,
+    userFriendInvitedTemplate,
     defaultTemplate) {
 
-    return BaseView.extend({
+    return Backbone.Marionette.ItemView.extend({
 
         // template
         getTemplate: function(){
@@ -26,8 +26,10 @@ define([
                 return userLoginTemplate;
             else if (type == "user-logout")
                 return userLogoutTemplate;
-            else if (type == "user-new-post")
-                return userNewPostTemplate;
+            else if (type == "user-post")
+                return userPostTemplate;
+            else if (type == "user-friend-invited" || type == "user-friend-approved")
+                return userFriendInvitedTemplate;
             else
                 return defaultTemplate;
         },

@@ -1,7 +1,7 @@
 define([
     'text!common/template/topnav/topnav.html',
     'common/view/topnav/event',
-    'common/view/topnav/notification',
+    'common/view/topnav/notification/main',
 ], function(
     template,
     EventMenu,

@@ -1,9 +1,7 @@
 define([
-    'common/view/composite-base',
-    'text!common/template/timeline/timeline.html',
-    'common/view/timeline/timeline-item'
+    'text!common/template/timeline/main.html',
+    'common/view/timeline/item-day'
 ], function(
-    BaseView,
     template,
     ItemView) {
 
@@ -13,10 +11,12 @@ define([
 
         model: Backbone.Model.extend({idAttribute: "_id"}),
 
-        url: '/activities/'
+        url: function() {
+            return this.document.url() + '/activities';
+        }
     });
 
-    return BaseView.extend({
+    return Backbone.Marionette.CompositeView.extend({
 
         // template
         template: template,
@@ -33,13 +33,13 @@ define([
         // initializer
         initialize: function() {
 
-            this.events = _.extend({}, this.events);
+            var self = this;
 
             this.collection = new Backbone.Collection();
 
-            var self = this;
-
             var rawData = new ActivitiesModel();
+            rawData.document = this.model;
+
             rawData.fetch({
                 success: function(collection, response, options) {
                     var groupData = _.groupBy(response, function(activity) {

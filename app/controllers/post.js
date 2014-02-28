@@ -38,7 +38,7 @@ exports.create = function(req, res, next) {
 
     // create post
     Post.create({
-        _owner: req.params.id,
+        _owner: req.user.id,
         content: req.body.content,
     }, function(err, newPost) {
         if (err) next(err);
@@ -55,8 +55,8 @@ exports.create = function(req, res, next) {
 
             // create activity
             Activity.create({
-                _owner: req.params.id,
-                type: 'user-new-post',
+                _owner: req.user.id,
+                type: 'user-post',
                 title: "新しい記事を投稿しました。",
                 content: contentStripTag,
                 link: 'user/' + req.params.id + '/posts/' + newPost._id

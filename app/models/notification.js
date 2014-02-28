@@ -28,26 +28,31 @@ var Notification = new Schema({
     // title
     title: {
         type: String,
-        trim: true,
-        required: true
+        trim: true
     },
 
     // notification content
     content: {
         type: String,
-        trim: true,
+        trim: true
     },
 
     // link
     link: {
         type: String,
-        trim: true,
+        trim: true
     },
 
     // notification confirmed
     confirmed: {
         type: Boolean,
         default: false
+    },
+
+    // result of user reaction
+    result: {
+        type: String,
+        trim: true
     },
 
     // Logical Delete flag

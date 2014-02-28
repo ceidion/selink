@@ -1,4 +1,4 @@
-<a href="#">
+<a href="#profile/<%= obj._from._id %>">
     <img src="<%= obj._from.photo %>" class="msg-photo" alt="">
     <span class="msg-body">
         <span class="msg-title">
@@ -6,7 +6,7 @@
                 <%= obj._from.firstName %>&nbsp;
                 <%= obj._from.lastName %>&nbsp;
             </span>
-            <%= obj.title %>
+            さんから友達になるリクエスト
         </span>
         <span class="msg-time">
             <i class="icon-time"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>

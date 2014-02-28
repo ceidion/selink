@@ -1,11 +1,13 @@
 define([
-    'text!common/template/topnav/notification.html',
+    'text!common/template/topnav/notification/main.html',
     'common/collection/notifications',
-    'common/view/topnav/notification-item'
+    'common/view/topnav/notification/item',
+    'common/view/topnav/notification/empty'
 ], function(
     template,
     NotificationsModel,
-    ItemView
+    ItemView,
+    EmptyView
 ) {
 
     return Backbone.Marionette.CompositeView.extend({
@@ -18,6 +20,10 @@ define([
 
         // item view
         itemView: ItemView,
+
+        itemViewContainer: '.dropdown-body',
+
+        emptyView: EmptyView,
 
         // collection events
         collectionEvents: {
@@ -33,12 +39,8 @@ define([
             // if (this.$el.find('.dropdown-menu').children().size() >= 7)
             //     return;
 
-            // event menu only display the future events
-            // if (moment(itemView.model.get('start')).isBefore(moment()))
-            //     return;
-
             // insert sub view before dropdown menu's footer (this is imply a order of items)
-            this.$el.find('.dropdown-body').append(itemView.el);
+            this.$el.find('.dropdown-body').prepend(itemView.el);
         },
 
         // initializer
@@ -47,25 +49,46 @@ define([
             var self = this;
 
             // create notifications model(collection)
-            this.collection = new NotificationsModel([], {
-                comparator: function(notification) {
-                    // sort by start asc
-                    return Number(moment(notification.get('createDate')).valueOf());
-                }
-            });
+            this.collection = new NotificationsModel();
             this.collection.document = this.model;
 
+            // retrive user's notification
             this.collection.fetch();
 
-            selink.socket.on('notification', function(data) {
+            // accept notification real-time
+            selink.socket.on('user-friend-invited', function(data) {
                 $.gritter.add({
-                    title: data.title,
-                    text: data.content,
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: data._from.firstName + ' ' + data._from.lastName + 'さんから友達になるリクエストが届きました。',
                     image: data._from.photo,
                     time: 8000,
                     class_name: 'gritter-warning'
                 });
+                // add the notification to collection
+                self.collection.add(data);
+            });
 
+            selink.socket.on('user-friend-approved', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: data._from.firstName + ' ' + data._from.lastName + 'さんはあなたの友達リクエストを承認しました。',
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-success'
+                });
+                // add the notification to collection
+                self.collection.add(data);
+            });
+
+            selink.socket.on('user-friend-declined', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: data._from.firstName + ' ' + data._from.lastName + 'さんはあなたの友達リクエストを拒否しました。',
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-info'
+                });
+                // add the notification to collection
                 self.collection.add(data);
             });
         },
@@ -78,12 +101,7 @@ define([
                 e.stopPropagation();
             });
 
-            // if there are unread notifications
-            if (this.model.get('notificationsNum') > 0) {
-                // let the icon swing
-                this.$el.find('.icon-bell-alt').addClass('icon-animated-bell');
-            }
-
+            // make dropdown menu scrollable
             this.$el.find('.dropdown-body').slimScroll({
                 height: 300,
                 railVisible:true
@@ -114,6 +132,12 @@ define([
                     $badge.empty().text(notyNum).removeClass('flipOutY').slFlipInY();
                 });
 
+            // update notification number on title
+            this.$el.find('.title-num').empty().text(notyNum);
+
+            if (notyNum > 0)
+                // let the icon swing
+                this.$el.find('.icon-bell-alt').addClass('icon-animated-bell');
         }
     });
 });

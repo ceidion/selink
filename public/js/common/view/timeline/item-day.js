@@ -1,13 +1,11 @@
 define([
-    'common/view/composite-base',
-    'text!common/template/timeline/timeline-item.html',
-    'common/view/timeline/timeline-record'
+    'text!common/template/timeline/item-day.html',
+    'common/view/timeline/item'
 ], function(
-    BaseView,
     template,
     ItemView) {
 
-    return BaseView.extend({
+    return Backbone.Marionette.CompositeView.extend({
 
         // template
         template: template,
@@ -22,8 +20,6 @@ define([
 
         // initializer
         initialize: function() {
-
-            this.events = _.extend({}, this.events);
 
             this.collection = new Backbone.Collection(this.model.get('activities'));
         },
