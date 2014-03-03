@@ -1,7 +1,7 @@
 define([
-    'text!common/template/post/post.html',
+    'text!common/template/post/main.html',
     'common/collection/posts',
-    'common/view/post/post-item'
+    'common/view/post/item'
 ], function(
     template,
     PostsModel,

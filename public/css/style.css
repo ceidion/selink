@@ -38,7 +38,7 @@ html,body{height:100%}
 #employment-composite blockquote{margin:0px}
 #employment-composite .row{margin-top:5px}#employment-composite .row:first-child{margin-top:0px}
 #employment-composite i{width:14px}
-.post-item img,.friend-item img{max-width:100%}
+.post-item img,.friend-item img,.post-item div,.friend-item div{max-width:100%}
 .post-item .avatar,.friend-item .avatar{max-width:100px;max-height:100px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
 .post-item .btn-block,.friend-item .btn-block{-webkit-transition:all 1s;transition:all 1s}
 #event-modal input{line-height:normal}

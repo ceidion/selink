@@ -53,7 +53,11 @@ define([
 
         // after show
         onShow: function() {
-
+            // make container scrollable
+            this.ui.container.slimScroll({
+                height: 300,
+                railVisible:true
+            });
         },
 
         reIsotope: function() {

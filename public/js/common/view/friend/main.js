@@ -2,11 +2,29 @@ define([
     'text!common/template/friend/main.html',
     'common/view/friend/invited',
     'common/view/friend/friend',
+    'common/view/post/item'
 ], function(
     pageTemplate,
     InvitedView,
-    FriendsView
+    FriendsView,
+    ItemView
 ) {
+
+    var PostsCollection = define(['common/model/post'], function(PostModel) {
+
+        var Posts = Backbone.Collection.extend({
+
+            idAttribute: "_id",
+
+            model: PostModel,
+
+            url: function() {
+                return this.document.url() + '/posts';
+            }
+        });
+
+        return Posts;
+    });
 
     return Backbone.Marionette.Layout.extend({
 
@@ -41,12 +59,6 @@ define([
         // After show
         onShow: function() {
             // this.$el.addClass('animated fadeInRight');
-
-            // make scrollable
-            this.$el.find('#invited').slimScroll({
-                height: 300,
-                railVisible:true
-            });
         }
     });
 

@@ -4,7 +4,7 @@ define([
     'engineer/view/common/sidenav',
     'engineer/view/home/page',
     'common/view/profile/profile',
-    'common/view/post/post',
+    'common/view/post/main',
     'common/view/friend/main',
     'common/view/people/main',
     'common/view/people/detail',
