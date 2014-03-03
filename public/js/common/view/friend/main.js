@@ -1,10 +1,10 @@
 define([
     'text!common/template/friend/main.html',
-    'common/view/friend/friend-wait',
+    'common/view/friend/invited',
     'common/view/friend/friend',
 ], function(
     pageTemplate,
-    WaitApproveView,
+    InvitedView,
     FriendsView
 ) {
 
@@ -18,13 +18,13 @@ define([
 
         // Regions
         regions: {
-            waitApproveRegion: '#wait-approve',
+            invitedRegion: '#invited',
             friendsRegion: '#friends'
         },
 
         // Initializer
         initialize: function() {
-            this.waitApproveView = new WaitApproveView({
+            this.invitedView = new InvitedView({
                 model: selink.userModel
             });
             this.friendsView = new FriendsView({
@@ -34,13 +34,19 @@ define([
 
         // After render
         onRender: function() {
-            this.waitApproveRegion.show(this.waitApproveView);
+            this.invitedRegion.show(this.invitedView);
             this.friendsRegion.show(this.friendsView);
         },
 
         // After show
         onShow: function() {
             // this.$el.addClass('animated fadeInRight');
+
+            // make scrollable
+            this.$el.find('#invited').slimScroll({
+                height: 300,
+                railVisible:true
+            });
         }
     });
 

@@ -1,89 +1,108 @@
 define([
-    'text!common/template/people/main.html'
+    'text!common/template/people/main.html',
+    'common/view/people/item',
 ], function(
-    template
-) {
+    template,
+    ItemView) {
 
-    // profile view
-    return Backbone.Marionette.Layout.extend({
+    var Introductions = Backbone.Collection.extend({
+
+        idAttribute: "_id",
+
+        model: Backbone.Model.extend({idAttribute: "_id"}),
+
+        url: '/friends'
+    });
+
+    return Backbone.Marionette.CompositeView.extend({
 
         // template
         template: template,
 
-        // regions
-        regions: {
-            // photoRegion: '#photo-item',
-            // nameRegion: '#name-item',
-            // titleRegion: '#title-item',
-            // birthdayRegion: '#birthday-item',
-            // genderRegion: '#gender-item',
-            // marriageRegion: '#marriage-item',
-            // nationalityRegion: '#nationality-item',
-            // addressRegion: '#address-item',
-            // nearestStRegion: '#nearestst-item',
-            // experienceRegion: '#experience-item',
-            // telNoRegion: '#telno-item',
-            // emailRegion: '#email-item',
-            // webSiteRegion: '#website-item',
-            // bioRegion: '#bio-item',
-            // languageRegion: '#language-composite',
-            // skillRegion: '#skill-composite',
-            // qualificationRegion: '#qualification-composite',
-            // educationRegion: '#education-composite',
-            // employmentRegion: '#employment-composite',
+        // item view container
+        itemViewContainer: '.ace-thumbnails',
+
+        // item view
+        itemView: ItemView,
+
+        // isotope after collection populated
+        collectionEvents: {
+            'sync': 'reIsotope',
         },
 
         // initializer
         initialize: function() {
-            // create component
-            // this.photoItem = new PhotoItem({model: this.model});
-            // this.nameItem = new NameItem({model: this.model});
-            // this.titleItem = new TitleItem({model: this.model});
-            // this.birthdayItem = new BirthDayItem({model: this.model});
-            // this.genderItem = new GenderItem({model: this.model});
-            // this.marriageItem = new MarriageItem({model: this.model});
-            // this.nationalityItem = new NationalityItem({model: this.model});
-            // this.addressItem = new AddressItem({model: this.model});
-            // this.nearestStItem = new NearestStItem({model: this.model});
-            // this.experienceItem = new ExperienceItem({model: this.model});
-            // this.telNoItem = new TelNoItem({model: this.model});
-            // this.emailItem = new EMailItem({model: this.model});
-            // this.webSiteItem = new WebSiteItem({model: this.model});
-            // this.bioItem = new BioItem({model: this.model});
-            // this.languageComposite = new LanguageComposite({model: this.model});
-            // this.skillComposite = new SkillComposite({model: this.model});
-            // this.qualificationComposite = new QualificationComposite({model: this.model});
-            // this.educationComposite = new EducationComposite({model: this.model});
-            // this.employmentComposite = new EmploymentComposite({model: this.model});
-        },
 
-        // after render
-        onRender: function() {
-            // show every component
-            // this.photoRegion.show(this.photoItem);
-            // this.nameRegion.show(this.nameItem);
-            // this.titleRegion.show(this.titleItem);
-            // this.birthdayRegion.show(this.birthdayItem);
-            // this.genderRegion.show(this.genderItem);
-            // this.marriageRegion.show(this.marriageItem);
-            // this.nationalityRegion.show(this.nationalityItem);
-            // this.addressRegion.show(this.addressItem);
-            // this.nearestStRegion.show(this.nearestStItem);
-            // this.experienceRegion.show(this.experienceItem);
-            // this.telNoRegion.show(this.telNoItem);
-            // this.emailRegion.show(this.emailItem);
-            // this.webSiteRegion.show(this.webSiteItem);
-            // this.bioRegion.show(this.bioItem);
-            // this.languageRegion.show(this.languageComposite);
-            // this.skillRegion.show(this.skillComposite);
-            // this.qualificationRegion.show(this.qualificationComposite);
-            // this.educationRegion.show(this.educationComposite);
-            // this.employmentRegion.show(this.employmentComposite);
+            var self = this;
+
+            this.events = _.extend({}, this.events);
+
+            // create collection
+            this.collection = new Introductions();
+            this.collection.fetch({
+                // after initialize the collection
+                success: function() {
+                    // change the behavior of add sub view
+                    self.appendHtml = function(collectionView, itemView, index) {
+                        $('.ace-thumbnails').imagesLoaded(function() {
+                            // prepend new post and reIsotope
+                            $('.ace-thumbnails').append(itemView.$el).isotope('appended', itemView.$el);
+                        });
+                    };
+                }
+            });
         },
 
         // after show
         onShow: function() {
-            this.$el.addClass('animated fadeInRight');
-        }
+
+            var self = this;
+
+            // attach infinite scroll
+            $('.ace-thumbnails').infinitescroll({
+                navSelector  : '#page_nav',
+                nextSelector : '#page_nav a',
+                dataType: 'json',
+                appendCallback: false,
+                loading: {
+                    msgText: '<em>友達情報をもっと読込み中・・・</em>',
+                    finishedMsg: 'No more pages to load.',
+                    img: 'http://i.imgur.com/qkKy8.gif',
+                    speed: 'slow',
+                },
+                state: {
+                    currPage: 0
+                }
+            }, function(json, opts) {
+                // no more data
+                if (json.length === 0){
+                    // destroy infinite scroll, or it will affect other page
+                    $('.ace-thumbnails').infinitescroll('destroy');
+                    $('.ace-thumbnails').data('infinitescroll', null);
+                } else
+                    // add data to collection
+                    // this will trigger 'add' event and will call on
+                    // the appendHtml method that changed on initialization
+                    self.collection.add(json);
+            });
+        },
+
+        // before close
+        beforeClose: function() {
+            // destroy infinite scroll, or it will affect other page
+            $('.ace-thumbnails').infinitescroll('destroy');
+            $('.ace-thumbnails').data('infinitescroll', null);
+        },
+
+        reIsotope: function() {
+
+            $('.ace-thumbnails').imagesLoaded(function() {
+                $('.ace-thumbnails').isotope({
+                  // options
+                  itemSelector : 'li',
+                });
+            });
+        },
     });
+
 });

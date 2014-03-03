@@ -1,6 +1,6 @@
 define([
-    'text!common/template/friend/friend-wait.html',
-    'common/view/friend/friend-item',
+    'text!common/template/friend/invited.html',
+    'common/view/friend/item',
 ], function(
     template,
     ItemView) {

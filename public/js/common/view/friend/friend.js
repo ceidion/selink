@@ -1,7 +1,7 @@
 define([
     'text!common/template/friend/friend.html',
     'common/view/friend/empty',
-    'common/view/friend/friend-item',
+    'common/view/friend/item',
 ], function(
     template,
     EmptyView,

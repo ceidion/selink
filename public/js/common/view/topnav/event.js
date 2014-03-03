@@ -89,13 +89,15 @@ define([
             else if ($badge.length === 0)
                 // create badge and show it
                 $('<span class="badge badge-primary">' + futureEvents + '</span>')
-                    .appendTo(this.$el.find('.dropdown-toggle')).slFlipInY();
+                    .appendTo(this.$el.find('.dropdown-toggle')).slFlip();
             // or
-            else
+            else{
+                $badge.empty().text(futureEvents);
                 // update badge
-                $badge.slFlipOutY(null, function() {
-                    $badge.empty().text(futureEvents).removeClass('flipOutY').slFlipInY();
+                $badge.slFlip(null, function() {
+                    $badge.removeClass('flip');
                 });
+            }
 
         }
     });

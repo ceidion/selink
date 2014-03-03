@@ -8,7 +8,7 @@ define([], function() {
             "profile/:id": "showProfileView",
             "post": "showPostView",
             "friend": "showFriendView",
-            "search-friend": "showSearchFriendView",
+            "people": "showPeopleView",
             "calendar": "showCalendarView",
             "timecard": "showTimecardView",
             "timecard/:date": "showTimecardView",

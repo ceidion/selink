@@ -28,6 +28,10 @@
         return $(this).slAnimated('rollIn', color, callback);
     };
 
+    $.fn.slFlip = function(color, callback) {
+        return $(this).slAnimated('flip', color, callback);
+    };
+
     $.fn.slFlipOutX = function(color, callback) {
         return $(this).slAnimated('flipOutX', color, callback);
     };

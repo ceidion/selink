@@ -4,10 +4,10 @@ define([
     'engineer/view/common/sidenav',
     'engineer/view/home/page',
     'common/view/profile/profile',
-    'common/view/people/main',
     'common/view/post/post',
     'common/view/friend/main',
-    'common/view/friend/friend-unknow',
+    'common/view/people/main',
+    'common/view/people/detail',
     'common/view/calendar/calendar',
     'common/view/timecard/timecard',
     'common/view/mailbox/mailbox',
@@ -18,10 +18,10 @@ define([
     SideNavView,
     HomeView,
     ProfileView,
-    PeopleView,
     PostView,
     FriendView,
-    SearchFriendView,
+    PeopleView,
+    PeopleDetailView,
     CalendarView,
     TimecardView,
     MailBoxView,
@@ -94,10 +94,10 @@ define([
                 });
                 people.fetch({
                     success: function() {
-                        selink.peopleView = new PeopleView({
+                        selink.peopleDetailView = new PeopleDetailView({
                             model: people
                         });
-                        selink.pageContent.show(selink.peopleView);
+                        selink.pageContent.show(selink.peopleDetailView);
                     }
                 });
             }
@@ -123,12 +123,12 @@ define([
             selink.pageContent.show(selink.friendView);
         },
 
-        // show search friend
-        showSearchFriendView: function() {
-            // create search friend view
-            selink.searchFriendView = new SearchFriendView();
-            // show search friend view
-            selink.pageContent.show(selink.searchFriendView);
+        // show people
+        showPeopleView: function() {
+            // create people view
+            selink.peopleView = new PeopleView();
+            // show people view
+            selink.pageContent.show(selink.peopleView);
         },
 
         // show calendar

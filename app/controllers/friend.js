@@ -13,9 +13,9 @@ exports.introduce = function(req, res, next) {
     User.find()
         .where('_id')
         .ne(req.user._id)  // not himself
-        .nin(req.user.friends)  // not his friend
-        .nin(req.user.invited)  // haven't been invited by him
-        .select('type firstName lastName title gender bio photo createDate')
+        .nin(req.user.friends.concat(req.user.invited))  // not his friend and haven't been invited by him
+        // .nin(req.user.invited)
+        .select('type firstName lastName title gender bio photo employments educations createDate')
         .skip(30*page)  // skip n page
         .limit(30)  // 30 user per page
         .sort({createDate:-1})  // sort by createDate desc
@@ -46,7 +46,7 @@ exports.index = function(req, res, next) {
     User.find()
         .where('_id')
         .in(friendIdList)
-        .select('_id firstName lastName photo')
+        .select('type firstName lastName title gender bio photo employments educations createDate')
         .exec(function(err, friends) {
             if (err) next(err);
             else
@@ -81,7 +81,7 @@ exports.create = function(req, res, next) {
                         if (err) next(err);
                         else {
                             // populate the notification with request sender's info
-                            notification.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
+                            notification.populate({path:'_from', select: 'firstName lastName photo'}, function(err, noty) {
 
                                 if(err) next(err);
                                 // send real time message
