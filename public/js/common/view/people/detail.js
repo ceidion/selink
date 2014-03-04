@@ -35,6 +35,12 @@ define([
 
         // initializer
         initialize: function() {
+
+            if (_.indexOf(selink.userModel.get('friends'), this.model.get('_id')) >= 0)
+                this.model.set('isFriend', true, {silent:true});
+            else if (_.indexOf(selink.userModel.get('invited'), this.model.get('_id')) >= 0)
+                this.model.set('isInvited', true, {silent:true});
+
             // create component
             // this.photoItem = new PhotoItem({model: this.model});
             // this.nameItem = new NameItem({model: this.model});

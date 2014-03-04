@@ -1,6 +1,6 @@
 <div class="widget-box" style="width: 380px;">
     <div class="widget-header widget-header-flat">
-        <img class="avatar" src="<%= obj._owner.photo %>">
+        <a href="#profile/<%= obj._owner._id %>" title="<%- obj._owner.firstName %>"><img class="avatar" src="<%= obj._owner.photo %>"></a>
         <h5 class="smaller">
             <i class="icon-edit bigger-110"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
         </h5>

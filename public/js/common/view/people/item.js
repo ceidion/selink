@@ -55,6 +55,7 @@ define([
                             .addClass('btn-success')
                             .empty()
                             .html('<i class="icon-ok light-green"></i>&nbsp;友達リクエスト送信済み');
+                    selink.userModel.get('invited').push(self.model.get('_id'));
                 }
             });
         }

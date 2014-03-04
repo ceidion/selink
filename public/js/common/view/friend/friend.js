@@ -54,7 +54,7 @@ define([
         // after show
         onShow: function() {
             // make container scrollable
-            this.ui.container.slimScroll({
+            this.$el.find('.widget-main').slimScroll({
                 height: 300,
                 railVisible:true
             });

@@ -57,6 +57,8 @@ exports.index = function(req, res, next) {
 // send new friend request
 exports.create = function(req, res, next) {
 
+    // TODO: check friend id is already in the 'friend' or 'invited' list
+
     // add the friend's id into user's invited list
     req.user.invited.addToSet(req.body.friendId);
 

@@ -78,6 +78,8 @@ define([
                 });
                 // add the notification to collection
                 self.collection.add(data);
+                // TODO: sync with local user model
+                // selink.userModel.get('friend').push(data._from._id);
             });
 
             selink.socket.on('user-friend-declined', function(data) {

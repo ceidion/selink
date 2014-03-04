@@ -7,7 +7,7 @@ define(['common/model/post'], function(PostModel) {
         model: PostModel,
 
         url: function() {
-            return this.document.url() + '/posts';
+            return this.document.url() + '/posts?category=me';
         }
     });
 

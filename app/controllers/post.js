@@ -9,28 +9,29 @@ var _ = require('underscore'),
 // Post index
 exports.index = function(req, res, next) {
 
-    if (req.params.id) {
+    // category of request
+    var category = req.query.category || null;
 
-        Post.find({_owner: req.params.id})
-            .sort('-createDate')
-            .limit(20)
-            .populate('_owner', 'firstName lastName photo')
-            .exec(function(err, posts) {
-                if (err) next(err);
-                else res.json(posts);
-            });
+    var query = Post.find();
 
-    } else {
+    // if requested for 'my' post
+    if (category == "me") {
 
-        Post.find()
-            .sort('-createDate')
-            .limit(20)
-            .populate('_owner', 'firstName lastName photo')
-            .exec(function(err, posts) {
-                if (err) next(err);
-                else res.json(posts);
-            });
+        query.where('_owner').equals(req.user.id);
+
+    // if requested for 'my friends' post
+    } else if (category == "friend") {
+
+        query.where('_owner').in(req.user.friends);
     }
+
+    query.sort('-createDate')
+        .limit(20)
+        .populate('_owner', 'firstName lastName photo')
+        .exec(function(err, posts) {
+            if (err) next(err);
+            else res.json(posts);
+        });
 };
 
 // Create post
