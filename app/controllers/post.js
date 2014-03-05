@@ -14,20 +14,27 @@ exports.index = function(req, res, next) {
 
     var query = Post.find();
 
-    // if requested for 'my' post
-    if (category == "me") {
-
-        query.where('_owner').equals(req.user.id);
-
-    // if requested for 'my friends' post
-    } else if (category == "friend") {
+    // if requested for 'my friends' posts
+    if (category == "friend") {
 
         query.where('_owner').in(req.user.friends);
+        query.populate('_owner', 'firstName lastName photo');
+
+    // if requested for 'my' posts
+    } else if (req.params.user == req.user.id){
+
+        // not populate owner, cause client have
+        query.where('_owner').equals(req.user.id);
+
+    // or it requested for "someone's" posts
+    } else {
+
+        query.where('_owner').equals(req.params.user);
+        query.populate('_owner', 'firstName lastName photo');
     }
 
     query.sort('-createDate')
-        .limit(20)
-        .populate('_owner', 'firstName lastName photo')
+        // .limit(20)
         .exec(function(err, posts) {
             if (err) next(err);
             else res.json(posts);

@@ -1,0 +1,22 @@
+<div class="widget-box" style="width: 380px;">
+    <div class="widget-header widget-header-flat">
+        <img class="avatar" src="<%= obj._owner.photo %>">
+        <h5 class="smaller">
+            <i class="icon-edit bigger-110"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
+        </h5>
+        <h5>
+            <i class="icon-calendar">&nbsp;</i><%= moment(obj.createDate).format('LL') %>
+            <i class="icon-time">&nbsp;</i><%= moment(obj.createDate).format('HH:mm') %>
+        </h5>
+        <h5>
+            <i class="icon-heart-empty red"></i>
+            <i class="icon-comment-alt blue bigger-110"></i>
+            <i class="icon-star-empty orange bigger-110"></i>
+        </h5>
+        <div class="clearfix"></div>
+    </div>
+
+    <div class="widget-body">
+        <div class="widget-main"><%= obj.content %></div>
+    </div>
+</div>

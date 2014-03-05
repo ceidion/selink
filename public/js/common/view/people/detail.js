@@ -1,36 +1,36 @@
 define([
-    'text!common/template/people/detail.html'
+    'text!common/template/people/detail.html',
+    'common/view/post/item'
 ], function(
-    template
+    template,
+    ItemView
 ) {
 
+    var PostsCollection = Backbone.Collection.extend({
+
+        idAttribute: "_id",
+
+        model: Backbone.Model.extend({idAttribute: "_id"}),
+
+        url: function() {
+            return this.document.url() + '/posts';
+        }
+    });
+
     // profile view
-    return Backbone.Marionette.Layout.extend({
+    return Backbone.Marionette.CompositeView.extend({
 
         // template
         template: template,
 
-        // regions
-        regions: {
-            // photoRegion: '#photo-item',
-            // nameRegion: '#name-item',
-            // titleRegion: '#title-item',
-            // birthdayRegion: '#birthday-item',
-            // genderRegion: '#gender-item',
-            // marriageRegion: '#marriage-item',
-            // nationalityRegion: '#nationality-item',
-            // addressRegion: '#address-item',
-            // nearestStRegion: '#nearestst-item',
-            // experienceRegion: '#experience-item',
-            // telNoRegion: '#telno-item',
-            // emailRegion: '#email-item',
-            // webSiteRegion: '#website-item',
-            // bioRegion: '#bio-item',
-            // languageRegion: '#language-composite',
-            // skillRegion: '#skill-composite',
-            // qualificationRegion: '#qualification-composite',
-            // educationRegion: '#education-composite',
-            // employmentRegion: '#employment-composite',
+        // item view container
+        itemViewContainer: this.$el,
+
+        // item view
+        itemView: ItemView,
+
+        collectionEvents: {
+            'sync': 'reIsotope',
         },
 
         // initializer
@@ -41,6 +41,19 @@ define([
             else if (_.indexOf(selink.userModel.get('invited'), this.model.get('_id')) >= 0)
                 this.model.set('isInvited', true, {silent:true});
 
+            this.collection = new PostsCollection();
+            this.collection.document = this.model;
+
+            this.collection.fetch({
+                // after initialize the collection
+                success: function() {
+                    // change the behavior of add sub view
+                    self.appendHtml = function(collectionView, itemView, index) {
+                        // prepend new post and reIsotope
+                        this.$el.find(this.itemViewContainer).prepend(itemView.$el).isotope('reloadItems');
+                    };
+                }
+            });
             // create component
             // this.photoItem = new PhotoItem({model: this.model});
             // this.nameItem = new NameItem({model: this.model});
@@ -90,6 +103,21 @@ define([
         // after show
         onShow: function() {
             this.$el.addClass('animated fadeInRight');
-        }
+        },
+
+        reIsotope: function() {
+
+            var self = this;
+
+            this.$el.imagesLoaded(function() {
+                self.$el.isotope({
+                    // options
+                    itemSelector : '.post-item, .isotop-item',
+                    masonry: {
+                      columnWidth: 410
+                    },
+                });
+            });
+        },
     });
 });
