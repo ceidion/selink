@@ -24,7 +24,7 @@ define([
         template: template,
 
         // item view container
-        itemViewContainer: this.$el,
+        itemViewContainer: '.board',
 
         // item view
         itemView: ItemView,
@@ -41,6 +41,8 @@ define([
             else if (_.indexOf(selink.userModel.get('invited'), this.model.get('_id')) >= 0)
                 this.model.set('isInvited', true, {silent:true});
 
+            var self = this;
+
             this.collection = new PostsCollection();
             this.collection.document = this.model;
 
@@ -50,7 +52,7 @@ define([
                     // change the behavior of add sub view
                     self.appendHtml = function(collectionView, itemView, index) {
                         // prepend new post and reIsotope
-                        this.$el.find(this.itemViewContainer).prepend(itemView.$el).isotope('reloadItems');
+                        self.$el.find('.board').prepend(itemView.$el).isotope('reloadItems');
                     };
                 }
             });
@@ -109,10 +111,10 @@ define([
 
             var self = this;
 
-            this.$el.imagesLoaded(function() {
-                self.$el.isotope({
+            this.$el.find('.board').imagesLoaded(function() {
+                self.$el.find('.board').isotope({
                     // options
-                    itemSelector : '.post-item, .isotop-item',
+                    itemSelector : '.basic-info, .post-item',
                     masonry: {
                       columnWidth: 410
                     },

@@ -74,12 +74,23 @@ exports.index = function(req, res, next) {
 // Get single user
 exports.show = function(req, res, next) {
 
-    User.findById(req.params.id, '-password')
-        .populate('notifications._from', '_id firstName lastName photo')
-        .exec(function(err, user) {
-            if (err) next(err);
-            else res.json(user);
-        });
+    var query = User.findById(req.params.user, '-password');
+
+    // if requested for 'my' info
+    if (req.params.user == req.user.id){
+
+        query.populate('notifications._from', '_id firstName lastName photo');
+
+    // others info
+    } else {
+
+        query.populate('friends', 'type firstName lastName title photo createDate');
+    }
+
+    query.exec(function(err, user) {
+        if (err) next(err);
+        else res.json(user);
+    });
 };
 
 // Edit Profile

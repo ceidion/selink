@@ -1,7 +1,10 @@
-<div class="isotop-item">
-    <!-- photo -->
-    <div class="profile-picture ace-thumbnails center">
-        <img class="img-responsive" src="<%= obj.photo %>">
+<div class="row">
+
+    <div class="col-md-3 center">
+        <!-- photo -->
+        <div class="profile-picture ace-thumbnails">
+            <img class="img-responsive" src="<%= obj.photo %>">
+        </div>
         <% if (obj.isFriend) { %>
             <button class="btn btn-danger btn-block btn-break"
                     data-loading-text="<i class='icon-spinner icon-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
@@ -20,13 +23,12 @@
         <% } %>
     </div>
 
-</div>
+    <div class="col-md-8">
 
-<div class="isotope-item">
-
-    <!-- name -->
-    <div class="col-xs-12 bigger-150">
-        <%= obj.firstName %>&nbsp;<%= obj.lastName %>
+        <!-- name -->
+        <div class="bigger-150">
+            <%= obj.firstName %>&nbsp;<%= obj.lastName %>
+        </div>
 
         <!-- title -->
         <% if (obj.title) { %>
@@ -34,73 +36,87 @@
                 <span><%= obj.title %></span>
             </div>
         <% } %>
+
+        <!-- bio -->
+        <% if (obj.birthDayDisplay) { %>
+            <div>
+                <!-- <h4 class="lighter"><i class="icon-quote-left"></i></h4> -->
+                <%= obj.bio %>
+            </div>
+        <% } %>
+
     </div>
 
-    <!-- bio -->
-    <% if (obj.birthDayDisplay) { %>
-        <div class="col-xs-12">
-            <!-- <h4 class="lighter"><i class="icon-quote-left"></i></h4> -->
-            <%= obj.bio %>
-        </div>
-    <% } %>
-    <!-- <div id="marriage-item" class="col-xs-12 col-md-6 sl-editable"></div>
-    <div id="nationality-item" class="col-xs-12 col-md-6 sl-editable"></div>
-    <div id="address-item" class="col-xs-12 col-md-6 sl-editable"></div>
-    <div id="nearestst-item" class="col-xs-12 col-md-6 sl-editable"></div>
-    <div id="experience-item" class="col-xs-12 col-md-6 sl-editable"></div>
-    <div id="telno-item" class="col-xs-12 col-md-6 sl-editable"></div>
-    <div id="email-item" class="col-xs-12 col-md-6 sl-editable"></div>
-    <div id="website-item" class="col-xs-12 col-md-6 sl-editable"></div> -->
 </div>
 
-<div class="isotope-item">
+<div class="board">
 
-    <!-- telNo -->
-    <% if (obj.telNo) { %>
-        <div class="row" style="min-height: 40px; line-height: 40px;">
-            <div class="col-xs-3 align-right"><i class="icon-phone bigger-120 pink"></i></div>
-            <div class="col-xs-9 align-left"><%= obj.telNo%></div>
-        </div>
-    <% } %>
+    <div class="widget-box basic-info" style="width: 380px;">
 
-    <!-- email -->
-    <% if (obj.email) { %>
-        <div class="row" style="min-height: 40px; line-height: 40px;">
-            <div class="col-xs-3 align-right"><i class="icon-envelope bigger-120 green"></i></div>
-            <div class="col-xs-9 align-left"><%= obj.email%></div>
+        <div class="widget-header">
+            <h5>基本情報</h5>
         </div>
-    <% } %>
 
-    <!-- website -->
-    <% if (obj.webSite) { %>
-        <div class="row" style="min-height: 40px; line-height: 40px;">
-            <div class="col-xs-3 align-right"><i class="icon-globe bigger-120 blue"></i></div>
-            <div class="col-xs-9 align-left"><%= obj.webSite%></div>
-        </div>
-    <% } %>
+        <div class="widget-body">
+            <div class="widget-main">
 
-    <!-- address -->
-    <% if (obj.address) { %>
-        <div class="row" style="min-height: 40px; line-height: 40px;">
-            <div class="col-xs-3 align-right"><i class="icon-map-marker bigger-120 orange"></i></div>
-            <div class="col-xs-9 align-left"><%= obj.address%></div>
-        </div>
-    <% } %>
+                <!-- telNo -->
+                <% if (obj.telNo) { %>
+                    <div class="row" style="min-height: 40px; line-height: 40px;">
+                        <div class="col-xs-4 align-right"><i class="icon-phone bigger-120 pink"></i>&nbsp;Tel.</div>
+                        <div class="col-xs-8 align-left"><%= obj.telNo%></div>
+                    </div>
+                <% } %>
 
-    <!-- birth day -->
-    <% if (obj.birthDayDisplay) { %>
-        <div class="row" style="min-height: 40px; line-height: 40px;">
-            <div class="col-xs-3 align-right"><i class="icon-calendar bigger-120"></i></div>
-            <div class="col-xs-9 align-left"><%= obj.birthDayDisplay%></div>
-        </div>
-    <% } %>
+                <!-- email -->
+                <% if (obj.email) { %>
+                    <div class="row" style="min-height: 40px; line-height: 40px;">
+                        <div class="col-xs-4 align-right"><i class="icon-envelope bigger-120 green"></i>&nbsp;E-Mail</div>
+                        <div class="col-xs-8 align-left"><%= obj.email%></div>
+                    </div>
+                <% } %>
 
-    <!-- nationality -->
-    <% if (obj.nationality) { %>
-        <div class="row" style="min-height: 40px; line-height: 40px;">
-            <div class="col-xs-3 align-right"><i class="icon-flag bigger-120"></i></div>
-            <div class="col-xs-9 align-left"><%= obj.nationality%></div>
+                <!-- website -->
+                <% if (obj.webSite) { %>
+                    <div class="row" style="min-height: 40px; line-height: 40px;">
+                        <div class="col-xs-4 align-right"><i class="icon-globe bigger-120 blue"></i>&nbsp;個人サイト</div>
+                        <div class="col-xs-8 align-left"><%= obj.webSite%></div>
+                    </div>
+                <% } %>
+
+                <!-- address -->
+                <% if (obj.address) { %>
+                    <div class="row" style="min-height: 40px; line-height: 40px;">
+                        <div class="col-xs-4 align-right"><i class="icon-map-marker bigger-120 orange"></i>&nbsp;住所</div>
+                        <div class="col-xs-8 align-left"><%= obj.address%></div>
+                    </div>
+                <% } %>
+
+                <!-- station -->
+                <% if (obj.nearestSt) { %>
+                    <div class="row" style="min-height: 40px; line-height: 40px;">
+                        <div class="col-xs-4 align-right"><i class="icon-road bigger-120 orange"></i>&nbsp;最寄駅</div>
+                        <div class="col-xs-8 align-left"><%= obj.nearestSt%></div>
+                    </div>
+                <% } %>
+
+                <!-- birth day -->
+                <% if (obj.birthDayDisplay) { %>
+                    <div class="row" style="min-height: 40px; line-height: 40px;">
+                        <div class="col-xs-4 align-right"><i class="icon-calendar bigger-120"></i>&nbsp;生年月日</div>
+                        <div class="col-xs-8 align-left"><%= obj.birthDayDisplay%></div>
+                    </div>
+                <% } %>
+
+                <!-- nationality -->
+                <% if (obj.nationality) { %>
+                    <div class="row" style="min-height: 40px; line-height: 40px;">
+                        <div class="col-xs-4 align-right"><i class="icon-flag bigger-120"></i>&nbsp;国籍</div>
+                        <div class="col-xs-8 align-left"><%= obj.nationality%></div>
+                    </div>
+                <% } %>
+            </div>
         </div>
-    <% } %>
+    </div>
 
 </div>

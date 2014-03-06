@@ -46,7 +46,7 @@ exports.index = function(req, res, next) {
     User.find()
         .where('_id')
         .in(friendIdList)
-        .select('type firstName lastName title gender bio photo employments educations createDate')
+        .select('type firstName lastName title photo createDate')
         .exec(function(err, friends) {
             if (err) next(err);
             else

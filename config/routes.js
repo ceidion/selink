@@ -53,7 +53,7 @@ module.exports = function(app, sio) {
     app.post('/users/:user/friends', checkLoginStatus, friend.create);
 
     // Get user info
-    app.get('/users/:id', checkLoginStatus, user.show);
+    app.get('/users/:user', checkLoginStatus, user.show);
     // Upload user photo
     app.put('/users/:id', checkLoginStatus, user.update);
     // Update user info (first-level property)
