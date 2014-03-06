@@ -79,8 +79,6 @@ exports.show = function(req, res, next) {
     // if requested for 'my' info
     if (req.params.user == req.user.id){
 
-        query.populate('notifications._from', '_id firstName lastName photo');
-
     // others info
     } else {
 

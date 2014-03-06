@@ -36,6 +36,10 @@ define([
         // initializer
         initialize: function() {
 
+            this.events = _.extend({}, this.events, {
+                'click .btn-friend': 'onAddFriend'
+            });
+
             if (_.indexOf(selink.userModel.get('friends'), this.model.get('_id')) >= 0)
                 this.model.set('isFriend', true, {silent:true});
             else if (_.indexOf(selink.userModel.get('invited'), this.model.get('_id')) >= 0)
@@ -105,6 +109,21 @@ define([
         // after show
         onShow: function() {
             this.$el.addClass('animated fadeInRight');
+
+            $('.easy-pie-chart.percentage').each(function(){
+                var barColor = $(this).data('color') || '#555';
+                var trackColor = '#E2E2E2';
+                var size = parseInt($(this).data('size')) || 72;
+                $(this).easyPieChart({
+                    barColor: barColor,
+                    trackColor: trackColor,
+                    scaleColor: false,
+                    lineCap: 'butt',
+                    lineWidth: parseInt(size/10),
+                    animate:false,
+                    size: size
+                }).css('color', barColor);
+            });
         },
 
         reIsotope: function() {
@@ -121,5 +140,26 @@ define([
                 });
             });
         },
+
+        onAddFriend: function() {
+
+            var self = this;
+
+            this.$el.find('.btn-friend').button('loading');
+
+            selink.waitApproveModel.create({
+                friendId: this.model.get('_id')
+            }, {
+                success: function() {
+                    // self.$el.find('.btn-friend').button('reset');
+                    self.$el.find('.btn-friend')
+                            .removeClass('btn-info btn-friend')
+                            .addClass('btn-success')
+                            .empty()
+                            .html('<i class="icon-ok light-green"></i>&nbsp;友達リクエスト送信済み');
+                    selink.userModel.get('invited').push(self.model.get('_id'));
+                }
+            });
+        }
     });
 });

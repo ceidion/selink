@@ -16,7 +16,6 @@ define([
         initialize: function(options) {
 
             this.events = _.extend({}, this.events, {
-                'mouseover': 'expandDisplay',
                 'click .btn-friend': 'onAddFriend'
             });
         },
