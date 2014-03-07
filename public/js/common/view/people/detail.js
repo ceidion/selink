@@ -37,7 +37,8 @@ define([
         initialize: function() {
 
             this.events = _.extend({}, this.events, {
-                'click .btn-friend': 'onAddFriend'
+                'click .btn-friend': 'onAddFriend',
+                'click .btn-break': 'onBreakFriend'
             });
 
             if (_.indexOf(selink.userModel.get('friends'), this.model.get('_id')) >= 0)
@@ -158,6 +159,26 @@ define([
                             .empty()
                             .html('<i class="icon-ok light-green"></i>&nbsp;友達リクエスト送信済み');
                     selink.userModel.get('invited').push(self.model.get('_id'));
+                }
+            });
+        },
+
+        onBreakFriend: function() {
+
+            var self = this;
+
+            this.$el.find('.btn-break').button('loading');
+
+            selink.friendsModel.remove(this.model.get('_id'));
+            this.model.remove({
+                success: function() {
+                    // self.$el.find('.btn-break').button('reset');
+                    self.$el.find('.btn-break')
+                            .removeClass('btn-info btn-break')
+                            .addClass('btn-grey')
+                            .empty()
+                            .html('<i class="icon-ok light-green"></i>&nbsp;友達解除しました');
+                    selink.userModel.get('friends').pull(self.model.get('_id'));
                 }
             });
         }

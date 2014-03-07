@@ -5,7 +5,7 @@ define([
     template,
     ItemView) {
 
-    var WaitApprove = Backbone.Collection.extend({
+    var Invited = Backbone.Collection.extend({
 
         idAttribute: "_id",
 
@@ -41,7 +41,7 @@ define([
         initialize: function() {
 
             // create collection
-            this.collection = new WaitApprove();
+            this.collection = new Invited();
             this.collection.document = this.model;
             this.collection.fetch();
         },

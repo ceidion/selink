@@ -93,6 +93,21 @@ define([
                 // add the notification to collection
                 self.collection.add(data);
             });
+
+
+            selink.socket.on('user-friend-break', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: data._from.firstName + ' ' + data._from.lastName + 'さんはあなたと友達を解除しました。',
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-error'
+                });
+                // add the notification to collection
+                self.collection.add(data);
+                // TODO: sync with local user model
+                // selink.userModel.get('friend').pull(data._from._id);
+            });
         },
 
         // after show

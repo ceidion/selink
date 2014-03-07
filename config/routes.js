@@ -51,6 +51,8 @@ module.exports = function(app, sio) {
     app.get('/users/:user/friends', checkLoginStatus, friend.index);
     // Request new friend
     app.post('/users/:user/friends', checkLoginStatus, friend.create);
+    // Remove friend
+    app.delete('/users/:user/friends/:friend', checkLoginStatus, friend.remove);
 
     // Get user info
     app.get('/users/:user', checkLoginStatus, user.show);

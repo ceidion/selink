@@ -1,11 +1,13 @@
 define([
-    'text!common/template/topnav/notification/item-user-friend-invited.html',
-    'text!common/template/topnav/notification/item-user-friend-approved.html',
-    'text!common/template/topnav/notification/item-user-friend-declined.html',
+    'text!common/template/topnav/notification/item/user-friend-invited.html',
+    'text!common/template/topnav/notification/item/user-friend-approved.html',
+    'text!common/template/topnav/notification/item/user-friend-declined.html',
+    'text!common/template/topnav/notification/item/user-friend-break.html',
 ], function(
     friendInvitedTemplate,
     friendApprovedTemplate,
-    friendDeclinedTemplate
+    friendDeclinedTemplate,
+    friendBreakTemplate
 ) {
 
     return Backbone.Marionette.ItemView.extend({
@@ -29,6 +31,8 @@ define([
                 return friendApprovedTemplate;
             else if (type == "user-friend-declined")
                 return friendDeclinedTemplate;
+            else if (type == "user-friend-break")
+                return friendBreakTemplate;
         },
 
         onApproveClick: function(e) {
