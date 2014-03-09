@@ -1,13 +1,11 @@
 define([
     'common/model/user',
     'common/collection/events',
-    'common/collection/friends',
     'engineer/router/router',
     'engineer/controller/controller'
 ], function(
     UserModel,
     EventsModel,
-    FriendsModel,
     Router,
     Controller
 ) {
@@ -96,13 +94,6 @@ define([
                     }
                 });
                 self.eventsModel.document = self.userModel;
-
-                // create friends model(collection) from user model
-                self.friendsModel = new FriendsModel(self.userModel.get('friends'), {parse: true});
-                self.friendsModel.document = self.userModel;
-
-                self.waitApproveModel = new FriendsModel(self.userModel.get('waitApprove'), {parse: true});
-                self.waitApproveModel.document = self.userModel;
 
                 // make controller
                 var controller = new Controller();

@@ -3,11 +3,13 @@ define([
     'text!common/template/topnav/notification/item/user-friend-approved.html',
     'text!common/template/topnav/notification/item/user-friend-declined.html',
     'text!common/template/topnav/notification/item/user-friend-break.html',
+    'text!common/template/topnav/notification/item/user-post.html',
 ], function(
     friendInvitedTemplate,
     friendApprovedTemplate,
     friendDeclinedTemplate,
-    friendBreakTemplate
+    friendBreakTemplate,
+    postTemplate
 ) {
 
     return Backbone.Marionette.ItemView.extend({
@@ -33,6 +35,8 @@ define([
                 return friendDeclinedTemplate;
             else if (type == "user-friend-break")
                 return friendBreakTemplate;
+            else if (type == "user-post")
+                return postTemplate;
         },
 
         onApproveClick: function(e) {

@@ -1,13 +1,11 @@
 define([
-    'common/view/item-base',
     'text!common/template/post/item.html',
     'text!common/template/post/item-my-post.html'
 ], function(
-    BaseView,
     defaultTemplate,
     myPostTemplate) {
 
-    return BaseView.extend({
+    return Backbone.Marionette.ItemView.extend({
 
         className: 'post-item',
 
@@ -18,6 +16,10 @@ define([
                 return myPostTemplate;
             else
                 return defaultTemplate;
+        },
+
+        events: {
+            'click .btn-like': 'onLike',
         },
 
         // initializer
@@ -35,7 +37,17 @@ define([
             }
         },
 
-        onRender: function() {
+        onLike: function() {
+
+            this.model.save({
+                likedBy: selink.userModel.get('_id')
+            }, {
+                url: this.model.url() + '/like',
+                success: function() {
+
+                },
+                patch: true
+            })
         }
     });
 

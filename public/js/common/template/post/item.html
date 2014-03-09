@@ -8,15 +8,18 @@
             <i class="icon-calendar">&nbsp;</i><%= moment(obj.createDate).format('LL') %>
             <i class="icon-time">&nbsp;</i><%= moment(obj.createDate).format('HH:mm') %>
         </h5>
-        <h5>
-            <i class="icon-heart-empty red"></i>
-            <i class="icon-comment-alt blue bigger-110"></i>
-            <i class="icon-star-empty orange bigger-110"></i>
-        </h5>
+        <div class="action-buttons">
+            <a class="btn-like red"><i class="icon-heart-empty bigger-110"></i>&nbsp;<%= obj.liked.length %></a>
+            <a class="btn-comment blue"><i class="icon-comment-alt bigger-110"></i>15</a>
+            <a class="btn-favorite orange"><i class="icon-star-empty bigger-110"></i>3</a>
+        </div>
         <div class="clearfix"></div>
     </div>
 
     <div class="widget-body">
         <div class="widget-main"><%= obj.content %></div>
+        <div class="widget-toolbox padding-4 clearfix">
+            <input placeholder="Type your message here ..." type="text" class="form-control" name="message" />
+        </div>
     </div>
 </div>

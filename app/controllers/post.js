@@ -4,7 +4,8 @@ var _ = require('underscore'),
     mongoose = require('mongoose'),
     Post = mongoose.model('Post'),
     User = mongoose.model('User'),
-    Activity = mongoose.model('Activity');
+    Activity = mongoose.model('Activity'),
+    Notification = mongoose.model('Notification');
 
 // Post index
 exports.index = function(req, res, next) {
@@ -26,7 +27,7 @@ exports.index = function(req, res, next) {
         // not populate owner, cause client have
         query.where('_owner').equals(req.user.id);
 
-    // or it requested for "someone's" posts
+    // or requested for "someone's" posts
     } else {
 
         query.where('_owner').equals(req.params.user);
@@ -72,6 +73,15 @@ exports.create = function(req, res, next) {
                 if (err) next(err);
             });
 
+            Notification.create({
+                _owner: req.user.friends,
+                _from: req.user.id,
+                type: 'user-post',
+                content: contentStripTag
+            }, function(err, notification) {
+                if (err) next(err);
+            });
+
             // return the crearted post
             newPost.populate({
                 path: '_owner',
@@ -79,6 +89,22 @@ exports.create = function(req, res, next) {
             }, function(err, post) {
                 if (err) next(err);
                 else res.json(post);
+            });
+        }
+    });
+};
+
+exports.liked = function(req, res, next){
+
+    Post.findById(req.params.post, function(err, post) {
+
+        if (err) next(err);
+        else {
+            post.liked.addToSet(req.body.id);
+            post.save(function(err, newPost) {
+
+                if (err) next(err);
+                else res.json(newPost);
             });
         }
     });

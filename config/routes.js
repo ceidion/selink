@@ -44,13 +44,15 @@ module.exports = function(app, sio) {
     app.get('/users/:user/posts', checkLoginStatus, post.index);
     // Create new post
     app.post('/users/:user/posts', checkLoginStatus, post.create);
+    // Like a post
+    app.patch('/users/:user/posts/:post/like', checkLoginStatus, post.liked);
 
     // Introduce friend
     app.get('/friends', checkLoginStatus, friend.introduce);
     // Get user's friends
     app.get('/users/:user/friends', checkLoginStatus, friend.index);
     // Request new friend
-    app.post('/users/:user/friends', checkLoginStatus, friend.create);
+    app.patch('/users/:user/friends', checkLoginStatus, friend.create);
     // Remove friend
     app.delete('/users/:user/friends/:friend', checkLoginStatus, friend.remove);
 

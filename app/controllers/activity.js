@@ -2,13 +2,15 @@ var request = require('request'),
     mongoose = require('mongoose'),
     Activity = mongoose.model('Activity');
 
-/* Activity Type:
+/* 
+    Activity Type:
     1. user-login
     2. user-logout
     3. user-friend-invited
     4. user-friend-approved
     5. user-friend-declined
-    6. user-post
+    6. user-friend-break
+    7. user-post
 */
 
 // Activity index

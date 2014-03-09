@@ -52,6 +52,42 @@
 
     <div class="col-md-4">
 
+        <div id="history"></div>
+
+        <div class="widget-box basic-info">
+
+            <div class="widget-header">
+                <h5>スキル</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main">
+                    <div class="clearfix">
+                    <% _.each(obj.languages, function(language){ %>
+                        <div class="grid3 center">
+                            <div class="easy-pie-chart percentage" data-percent="<%= language.weight %>" data-color="#CA5952">
+                                <span class="percent"><%= language.weight %></span>%
+                            </div>
+                            <div class="space-2"></div>
+                            <%= language.language %>
+                        </div>
+                    <% }); %>
+                    </div>
+                    <div class="hr hr-16"></div>
+                    <div class="profile-skills">
+                    <% _.each(obj.skills, function(skill){ %>
+                        <div class="progress">
+                            <div class="progress-bar" style="width:<%= skill.weight %>%">
+                                <span class="pull-left"><%= skill.skill %></span>
+                                <span class="pull-right"><%= skill.weight %></span>
+                            </div>
+                        </div>
+                    <% }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="widget-box basic-info">
 
             <div class="widget-header">
@@ -116,40 +152,6 @@
                             <div class="col-xs-8 align-left"><%= obj.nationality%></div>
                         </div>
                     <% } %>
-                </div>
-            </div>
-        </div>
-
-        <div class="widget-box basic-info">
-
-            <div class="widget-header">
-                <h5>スキル</h5>
-            </div>
-
-            <div class="widget-body">
-                <div class="widget-main">
-                    <div class="clearfix">
-                    <% _.each(obj.languages, function(language){ %>
-                        <div class="grid3 center">
-                            <div class="easy-pie-chart percentage" data-percent="<%= language.weight %>" data-color="#CA5952">
-                                <span class="percent"><%= language.weight %></span>%
-                            </div>
-                            <div class="space-2"></div>
-                            <%= language.language %>
-                        </div>
-                    <% }); %>
-                    </div>
-                    <div class="hr hr-16"></div>
-                    <div class="profile-skills">
-                    <% _.each(obj.skills, function(skill){ %>
-                        <div class="progress">
-                            <div class="progress-bar" style="width:<%= skill.weight %>%">
-                                <span class="pull-left"><%= skill.skill %></span>
-                                <span class="pull-right"><%= skill.weight %></span>
-                            </div>
-                        </div>
-                    <% }); %>
-                    </div>
                 </div>
             </div>
         </div>

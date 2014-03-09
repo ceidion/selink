@@ -44,9 +44,12 @@ define([
 
             this.$el.find('.btn-friend').button('loading');
 
-            selink.waitApproveModel.create({
-                friendId: this.model.get('_id')
+            this.model.save({
+                _id: this.model.get('_id'),
+                firstName: this.model.get('firstName'),
+                lastName: this.model.get('lastName')
             }, {
+                url: './users/' + selink.userModel.id + '/friends',
                 success: function() {
                     // self.$el.find('.btn-friend').button('reset');
                     self.$el.find('.btn-friend')
@@ -55,8 +58,23 @@ define([
                             .empty()
                             .html('<i class="icon-ok light-green"></i>&nbsp;友達リクエスト送信済み');
                     selink.userModel.get('invited').push(self.model.get('_id'));
-                }
+                },
+                patch: true
             });
+
+            // selink.waitApproveModel.create({
+            //     friendId: this.model.get('_id')
+            // }, {
+            //     success: function() {
+            //         // self.$el.find('.btn-friend').button('reset');
+            //         self.$el.find('.btn-friend')
+            //                 .removeClass('btn-info btn-friend')
+            //                 .addClass('btn-success')
+            //                 .empty()
+            //                 .html('<i class="icon-ok light-green"></i>&nbsp;友達リクエスト送信済み');
+            //         selink.userModel.get('invited').push(self.model.get('_id'));
+            //     }
+            // });
         }
 	});
 });

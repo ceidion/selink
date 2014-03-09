@@ -60,48 +60,40 @@ exports.create = function(req, res, next) {
     // TODO: check friend id is already in the 'friend' or 'invited' list
 
     // add the friend's id into user's invited list
-    req.user.invited.addToSet(req.body.friendId);
+    req.user.invited.addToSet(req.body._id);
 
     // update user
     req.user.save(function(err, user) {
 
         if (err) next(err);
         else {
-
-            // find the requested user
-            User.findById(req.body.friendId, function(err, friend) {
+            // create notification
+            Notification.create({
+                _owner: [req.body._id],
+                _from: user.id,
+                type: 'user-friend-invited'
+            }, function(err, notification) {
 
                 if (err) next(err);
                 else {
-                    // create notification
-                    Notification.create({
-                        _owner: friend.id,
-                        _from: user.id,
-                        type: 'user-friend-invited'
-                    }, function(err, notification) {
+                    // populate the notification with request sender's info
+                    notification.populate({path:'_from', select: 'firstName lastName photo'}, function(err, noty) {
+
+                        if(err) next(err);
+                        // send real time message
+                        sio.sockets.in(req.body._id).emit('user-friend-invited', noty);
+                    });
+
+                    // log user's activity
+                    Activity.create({
+                        _owner: user.id,
+                        type: 'user-friend-invited',
+                        title: req.body.firstName + ' ' + req.body.lastName + "さんに友達リクエストを送りました。"
+                    }, function(err, activity) {
 
                         if (err) next(err);
-                        else {
-                            // populate the notification with request sender's info
-                            notification.populate({path:'_from', select: 'firstName lastName photo'}, function(err, noty) {
-
-                                if(err) next(err);
-                                // send real time message
-                                sio.sockets.in(friend.id).emit('user-friend-invited', noty);
-                            });
-
-                            // log user's activity
-                            Activity.create({
-                                _owner: user.id,
-                                type: 'user-friend-invited',
-                                title: friend.firstName + ' ' + friend.lastName + "さんに友達リクエストを送りました。"
-                            }, function(err, activity) {
-
-                                if (err) next(err);
-                                // send back requested user's info
-                                else res.json(friend);
-                            });
-                        }
+                        // send back requested user's info
+                        else res.json(req.body);
                     });
                 }
             });
@@ -128,7 +120,7 @@ exports.remove = function(req, res, next) {
                 else {
                     // create notification
                     Notification.create({
-                        _owner: friend.id,
+                        _owner: [friend.id],
                         _from: user.id,
                         type: 'user-friend-break'
                     }, function(err, notification) {

@@ -5,11 +5,10 @@ var Schema = mongoose.Schema;
 var Notification = new Schema({
 
     // notification owner
-    _owner: {
+    _owner: [{
         type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
+        ref: 'User'
+    }],
 
     // notification sender
     _from: {
@@ -44,10 +43,10 @@ var Notification = new Schema({
     },
 
     // notification confirmed
-    confirmed: {
-        type: Boolean,
-        default: false
-    },
+    confirmed: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
 
     // result of user reaction
     result: {

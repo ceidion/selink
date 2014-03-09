@@ -4,17 +4,19 @@ var request = require('request'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
 
-/* Notification Type:
+/* 
+    Notification Type:
     1. user-friend-invited
     2. user-friend-approved
     3. user-friend-declined
+    4. user-friend-break
 */
 
 // Notification index
 exports.index = function(req, res, next) {
 
     // find the notifications of specific user
-    Notification.find({_owner: req.user.id, confirmed: false})
+    Notification.find({_owner: req.user.id, confirmed: {'$ne': req.user.id}})
         .limit(20)
         .populate('_from', 'firstName lastName photo')
         .exec(function(err, notifications) {
@@ -30,7 +32,7 @@ exports.update = function(req, res, next) {
     Notification.findOne({
         _id: req.params.notification,
         _owner: req.user.id,  // ensure notification owner is current user
-        confirmed: false  // only the unconfirmed notification
+        confirmed: {'$ne': req.user.id}  // only the unconfirmed notification
     }, function(err, notification) {
 
         // if error exist
@@ -88,7 +90,7 @@ approve = function(req, res, next, notification) {
 
                     // create respond notification
                     Notification.create({
-                        _owner: updatedFriend.id,
+                        _owner: [updatedFriend.id],
                         _from: req.user.id,
                         type: 'user-friend-approved'
                     }, function(err, respond) {
@@ -107,7 +109,7 @@ approve = function(req, res, next, notification) {
 
                     // mark the notification as confirmed
                     notification.result = req.body.result;
-                    notification.confirmed = true;
+                    notification.confirmed.addToSet(req.user.id);
                     notification.save(function(err, confirmedNotification) {
                         if (err) next(err);
                         else res.json(confirmedNotification);
@@ -140,7 +142,7 @@ decline = function(req, res, next, notification) {
 
             // create respond notification
             Notification.create({
-                _owner: updatedFriend.id,
+                _owner: [updatedFriend.id],
                 _from: req.user.id,
                 type: 'user-friend-declined'
             }, function(err, respond) {
@@ -159,7 +161,7 @@ decline = function(req, res, next, notification) {
 
             // mark the notification as confirmed
             notification.result = req.body.result;
-            notification.confirmed = true;
+            notification.confirmed.addToSet(req.user.id);
             notification.save(function(err, confirmedNotification) {
                 if (err) next(err);
                 else res.json(confirmedNotification);
@@ -181,7 +183,7 @@ acknowledge = function(req, res, next, notification) {
 
     // mark the notification as confirmed
     notification.result = req.body.result;
-    notification.confirmed = true;
+    notification.confirmed.addToSet(req.user.id);
     notification.save(function(err, confirmedNotification) {
         if (err) next(err);
         else res.json(confirmedNotification);
