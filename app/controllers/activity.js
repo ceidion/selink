@@ -12,6 +12,7 @@ var request = require('request'),
     6. user-friend-break
     7. user-post
     8. user-post-liked
+    9. user-post-commented
 */
 
 // Activity index

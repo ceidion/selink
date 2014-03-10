@@ -22,6 +22,38 @@
     </div>
 
     <div class="widget-body">
-        <div class="widget-main"><%= obj.content %></div>
+        <div class="widget-main">
+            <%= obj.content %>
+            <% if (obj.comment.length) { %>
+            <hr>
+            <div class="dialogs">
+                <% _.each(obj.comment, function(comment){ %>
+                <div class="itemdiv dialogdiv">
+                    <div class="user">
+                        <img alt="" src="<%= comment._owner.photo%>" />
+                    </div>
+
+                    <div class="body">
+                        <div class="time">
+                            <i class="icon-time"></i>
+                            <span class="{{time-color}}"><%= moment(comment.createDate).fromNow() %></span>
+                        </div>
+                        <div class="name">
+                            <a href="#profile/<%= comment._owner._id %>">
+                                <%= comment._owner.firstName %>&nbsp;<%= comment._owner.lastName %>
+                            </a>
+                        </div>
+                        <div class="text"><%= comment.content %></div>
+                        
+                        <div class="tools">
+                            <i class="icon-only icon-heart-empty red"></i>
+                            <i class="icon-only icon-share-alt blue"></i>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+            <% }%>
+        </div>
     </div>
 </div>

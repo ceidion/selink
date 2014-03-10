@@ -1,6 +1,8 @@
 <div class="widget-box" style="width: 380px;">
     <div class="widget-header widget-header-flat">
-        <a href="#profile/<%= obj._owner._id %>" title="<%- obj._owner.firstName %>"><img class="avatar" src="<%= obj._owner.photo %>"></a>
+        <a href="#profile/<%= obj._owner._id %>" title="<%- obj._owner.firstName %>">
+            <img class="avatar" src="<%= obj._owner.photo %>">
+        </a>
         <h5 class="smaller">
             <i class="icon-edit bigger-110"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
         </h5>
@@ -29,9 +31,57 @@
     </div>
 
     <div class="widget-body">
-        <div class="widget-main"><%= obj.content %></div>
+        <div class="widget-main">
+
+            <%= obj.content %>
+
+            <% if (obj.comment.length) { %>
+            <hr>
+            <div class="dialogs">
+                <% _.each(obj.comment, function(comment){ %>
+                <div class="itemdiv dialogdiv">
+                    <div class="user">
+                        <img alt="" src="<%= comment._owner.photo%>" />
+                    </div>
+
+                    <div class="body">
+                        <div class="time">
+                            <i class="icon-time"></i>
+                            <span class="{{time-color}}"><%= moment(comment.createDate).fromNow() %></span>
+                        </div>
+                        <div class="name">
+                            <a href="#profile/<%= comment._owner._id %>">
+                                <%= comment._owner.firstName %>&nbsp;<%= comment._owner.lastName %>
+                            </a>
+                        </div>
+                        <div class="text"><%= comment.content %></div>
+                        
+                        <div class="tools">
+                            <i class="icon-only icon-heart-empty red"></i>
+                            <i class="icon-only icon-share-alt blue"></i>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+            <% }%>
+
+        </div>
         <div class="widget-toolbox padding-4 clearfix">
-            <input placeholder="コメントを書く" type="text" class="form-control" name="message" />
+
+            <img class="photo-area pull-left" src="<%= selink.userModel.get('photo') %>" style="max-width: 56px; display: none;">
+            <div class="comment-area">
+                <textarea name="comment" placeholder="コメントを書く" style="width: 100%"/></textarea>
+            </div>
+            <div class="btn-area pull-right" style="margin-top: 4px; display: none;">
+                <button class="btn btn-sm btn-success btn-comment">
+                    <i class="icon-comment bigger-125"></i>&nbsp;コメントする
+                </button>
+                <button class="btn btn-sm btn-inverse btm-cancel">
+                    <i class="icon-off bigger-125"></i>&nbsp;取消
+                </button>
+            </div>
+
         </div>
     </div>
 </div>

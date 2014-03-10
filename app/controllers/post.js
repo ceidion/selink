@@ -34,7 +34,8 @@ exports.index = function(req, res, next) {
         query.populate('_owner', 'firstName lastName photo');
     }
 
-    query.sort('-createDate')
+    query.populate('comment._owner', 'firstName lastName photo')
+        .sort('-createDate')
         // .limit(20)
         .exec(function(err, posts) {
             if (err) next(err);
@@ -94,18 +95,27 @@ exports.create = function(req, res, next) {
     });
 };
 
-exports.liked = function(req, res, next){
+exports.update = function(req, res, next){
+
+    if (req.body.liked) {
+        liked(req, res, next);
+    } else if (req.body.content) {
+        comment(req, res, next);
+    }
+};
+
+liked = function(req, res, next){
 
     Post.findById(req.params.post, function(err, post) {
 
         if (err) next(err);
         else {
-            post.liked.addToSet(req.body.likedBy);
+            post.liked.addToSet(req.body.liked);
             post.save(function(err, newPost) {
 
                 // create activity
                 Activity.create({
-                    _owner: req.body.likedBy,
+                    _owner: req.body.liked,
                     type: 'user-post-liked',
                     title: "いいね！しました。",
                     link: 'user/' + newPost._owner + '/posts/' + newPost._id
@@ -116,7 +126,7 @@ exports.liked = function(req, res, next){
                 // create notification for post owner
                 Notification.create({
                     _owner: [newPost._owner],
-                    _from: req.body.likedBy,
+                    _from: req.body.liked,
                     type: 'user-post-liked'
                 }, function(err, notification) {
 
@@ -128,6 +138,51 @@ exports.liked = function(req, res, next){
                             if(err) next(err);
                             // send real time message
                             sio.sockets.in(newPost._owner).emit('user-post-liked', noty);
+                        });
+                    }
+                });
+
+                if (err) next(err);
+                else res.json(newPost);
+            });
+        }
+    });
+};
+
+comment = function(req, res, next) {
+
+    Post.findById(req.params.post, function(err, post) {
+
+        if (err) next(err);
+        else {
+            post.comment.push(req.body);
+            post.save(function(err, newPost) {
+
+                // create activity
+                Activity.create({
+                    _owner: req.body._owner,
+                    type: 'user-post-commented',
+                    title: "コメントしました。",
+                    link: 'user/' + newPost._owner + '/posts/' + newPost._id
+                }, function(err, activity) {
+                    if (err) next(err);
+                });
+
+                // create notification for post owner
+                Notification.create({
+                    _owner: [newPost._owner],
+                    _from: req.body._owner,
+                    type: 'user-post-commented'
+                }, function(err, notification) {
+
+                    if (err) next(err);
+                    else {
+                        // populate the respond notification with user's info
+                        notification.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
+
+                            if(err) next(err);
+                            // send real time message
+                            sio.sockets.in(newPost._owner).emit('user-post-commented', noty);
                         });
                     }
                 });

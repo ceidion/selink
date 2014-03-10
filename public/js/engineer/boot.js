@@ -35,6 +35,7 @@ require.config({
         'fileupload': 'lib/jquery.fileupload',
         // input mask
         'maskedinput': "lib/jquery.maskedinput.min",
+        'autosize': "lib/jquery.autosize.min",
         'chosen': 'lib/chosen.jquery.min',
         'gritter': 'lib/jquery.gritter.min',
         'colorbox': 'lib/jquery.colorbox-min',
@@ -102,6 +103,9 @@ require.config({
         'maskedinput': {
             deps: ['jquery']
         },
+        'autosize': {
+            deps: ['jquery']
+        },
         'chosen': {
             deps: ['jquery']
         },
@@ -157,6 +161,7 @@ require.config({
                 'moment',
                 'fileupload',
                 'maskedinput',
+                'autosize',
                 'chosen',
                 'colorbox',
                 'flippant',

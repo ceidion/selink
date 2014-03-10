@@ -20,6 +20,8 @@ define([
 
         events: {
             'click .btn-like': 'onLike',
+            'focusin textarea': 'openComment',
+            'click .btn-comment': 'onComment'
         },
 
         // initializer
@@ -41,14 +43,19 @@ define([
             }
         },
 
+        onRender: function() {
+
+            this.$el.find('textarea').autosize({append: "\n"});
+        },
+
         onLike: function() {
 
             var self = this;
 
             this.model.save({
-                likedBy: selink.userModel.get('_id')
+                liked: selink.userModel.get('_id')
             }, {
-                url: '/posts/' + this.model.get('_id') + '/like',
+                url: '/posts/' + this.model.get('_id'),
                 success: function() {
                     self.$el.find('.btn-like')
                         .find('span')
@@ -62,6 +69,30 @@ define([
                         .slFlip();
 
                     self.$el.find('.btn-like').removeClass('btn-like');
+                },
+                patch: true,
+                wait: true,
+                silent: true // supress the sync event
+            });
+        },
+
+        openComment: function() {
+            this.$el.find('.comment-area').css('margin-left', '60px');
+            this.$el.find('.photo-area').show().slFadeInLeft();
+            this.$el.find('.btn-area').slideDown();
+        },
+
+        onComment: function() {
+
+            var self = this;
+
+            this.model.save({
+                _owner: selink.userModel.get('_id'),
+                content: this.$el.find('textarea').val()
+            }, {
+                url: '/posts/' + this.model.get('_id'),
+                success: function() {
+
                 },
                 patch: true,
                 wait: true,

@@ -2,6 +2,8 @@ var mongoose = require('mongoose'),
     validate = require('mongoose-validator').validate,
     Schema = mongoose.Schema;
 
+var Comment = require('./comment');
+
 var Post = new Schema({
 
     // Post owner
@@ -22,6 +24,9 @@ var Post = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
+
+    // Comment
+    comment: [Comment],
 
     // Publicity of this post
     publicity: {

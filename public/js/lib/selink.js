@@ -52,6 +52,10 @@
         return $(this).slAnimated('pulse', color, callback);
     };
 
+    $.fn.slFadeInLeft = function(color, callback) {
+        return $(this).slAnimated('fadeInLeft', color, callback);
+    };
+
     $.fn.slAnimated = function(effect, color, callback) {
 
         var effectString = 'animated ' + effect + (color ? ' ' + color : '');

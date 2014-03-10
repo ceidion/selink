@@ -75,7 +75,7 @@ define([
         // show profile
         showProfileView: function(id) {
 
-            if (!id) {
+            if (!id || id === selink.userModel.get('_id')) {
 
                 selink.userModel.fetch({
                     success: function() {
