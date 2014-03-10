@@ -29,17 +29,17 @@ define([
         // item view
         itemView: ItemView,
 
+        events: {
+            'click .btn-friend': 'onAddFriend',
+            'click .btn-break': 'onBreakFriend'
+        },
+
         collectionEvents: {
             'sync': 'reIsotope',
         },
 
         // initializer
         initialize: function() {
-
-            this.events = _.extend({}, this.events, {
-                'click .btn-friend': 'onAddFriend',
-                'click .btn-break': 'onBreakFriend'
-            });
 
             if (_.indexOf(selink.userModel.get('friends'), this.model.get('_id')) >= 0)
                 this.model.set('isFriend', true, {silent:true});
@@ -66,7 +66,7 @@ define([
 
             var filterHistory = _.filter(unionHistory, function(history) {
                 return history.startDate || history.acquireDate;
-            })
+            });
 
             var groupHistory = _.groupBy(filterHistory, function(history) {
                 if (history.startDate)

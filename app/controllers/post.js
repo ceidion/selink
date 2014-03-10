@@ -100,8 +100,37 @@ exports.liked = function(req, res, next){
 
         if (err) next(err);
         else {
-            post.liked.addToSet(req.body.id);
+            post.liked.addToSet(req.body.likedBy);
             post.save(function(err, newPost) {
+
+                // create activity
+                Activity.create({
+                    _owner: req.body.likedBy,
+                    type: 'user-post-liked',
+                    title: "いいね！しました。",
+                    link: 'user/' + newPost._owner + '/posts/' + newPost._id
+                }, function(err, activity) {
+                    if (err) next(err);
+                });
+
+                // create notification for post owner
+                Notification.create({
+                    _owner: [newPost._owner],
+                    _from: req.body.likedBy,
+                    type: 'user-post-liked'
+                }, function(err, notification) {
+
+                    if (err) next(err);
+                    else {
+                        // populate the respond notification with user's info
+                        notification.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
+
+                            if(err) next(err);
+                            // send real time message
+                            sio.sockets.in(newPost._owner).emit('user-post-liked', noty);
+                        });
+                    }
+                });
 
                 if (err) next(err);
                 else res.json(newPost);

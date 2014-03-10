@@ -59,7 +59,7 @@ define([
             selink.socket.on('user-friend-invited', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
-                    text: data._from.firstName + ' ' + data._from.lastName + 'さんから友達になるリクエストが届きました。',
+                    text: '友達になるリクエストが届きました。',
                     image: data._from.photo,
                     time: 8000,
                     class_name: 'gritter-warning'
@@ -71,7 +71,7 @@ define([
             selink.socket.on('user-friend-approved', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
-                    text: data._from.firstName + ' ' + data._from.lastName + 'さんはあなたの友達リクエストを承認しました。',
+                    text: 'あなたの友達リクエストを承認しました。',
                     image: data._from.photo,
                     time: 8000,
                     class_name: 'gritter-success'
@@ -85,7 +85,7 @@ define([
             selink.socket.on('user-friend-declined', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
-                    text: data._from.firstName + ' ' + data._from.lastName + 'さんはあなたの友達リクエストを拒否しました。',
+                    text: 'あなたの友達リクエストを拒否しました。',
                     image: data._from.photo,
                     time: 8000,
                     class_name: 'gritter-info'
@@ -94,11 +94,10 @@ define([
                 self.collection.add(data);
             });
 
-
             selink.socket.on('user-friend-break', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
-                    text: data._from.firstName + ' ' + data._from.lastName + 'さんはあなたと友達を解除しました。',
+                    text: 'あなたと友達を解除しました。',
                     image: data._from.photo,
                     time: 8000,
                     class_name: 'gritter-error'
@@ -107,6 +106,18 @@ define([
                 self.collection.add(data);
                 // TODO: sync with local user model
                 // selink.userModel.get('friend').pull(data._from._id);
+            });
+
+            selink.socket.on('user-post-liked', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: 'あなたの投稿にいいね！しました。',
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-success'
+                });
+                // add the notification to collection
+                self.collection.add(data);
             });
         },
 

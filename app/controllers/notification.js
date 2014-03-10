@@ -4,12 +4,14 @@ var request = require('request'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
 
-/* 
+/*
     Notification Type:
     1. user-friend-invited
     2. user-friend-approved
     3. user-friend-declined
     4. user-friend-break
+    5. user-post
+    6. user-post-liked
 */
 
 // Notification index
