@@ -30,28 +30,41 @@ exports.introduce = function(req, res, next) {
 // friend list
 exports.index = function(req, res, next) {
 
-    // type of request
-    var type = req.query.type || null;
+    // if requested for 'my' friend
+    if (req.params.user == req.user.id) {
 
-    // default to show user's friends
-    var friendIdList = req.user.friends;
+        // type of request
+        var type = req.query.type || null;
 
-    // if requested for 'invited' friend
-    if (type == "requested") {
-        // change the query condition
-        friendIdList = req.user.invited;
-    }
+        // default to show user's friends
+        var friendIdList = req.user.friends;
 
-    // get friends
-    User.find()
-        .where('_id')
-        .in(friendIdList)
-        .select('type firstName lastName title photo createDate')
-        .exec(function(err, friends) {
-            if (err) next(err);
-            else
-                res.json(friends);
+        // if requested for 'invited' friend
+        if (type == "requested") {
+            // change the query condition
+            friendIdList = req.user.invited;
+        }
+
+        // get friends
+        User.find()
+            .where('_id')
+            .in(friendIdList)
+            .select('type firstName lastName title photo createDate')
+            .exec(function(err, friends) {
+                if (err) next(err);
+                else
+                    res.json(friends);
+            });
+
+    } else {
+
+        User.findById(req.params.user, function(err, user) {
+            user.populate('friends', 'type firstName lastName title photo createDate', function(err, populateUser) {
+                if (err) next(err);
+                else res.json(populateUser.friends);
+            });
         });
+    }
 };
 
 // Create Friend
