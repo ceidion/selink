@@ -10,7 +10,7 @@ define([
 
 		tagName: 'li',
 
-        className: 'friend-item',
+        className: 'friend-item col-xs-12 col-sm-6 col-md-4',
 
         // initializer
         initialize: function(options) {

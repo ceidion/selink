@@ -49,7 +49,8 @@ require.config({
         'tag': 'lib/uncompressed/bootstrap-tag',
         'typeahead': 'lib/uncompressed/typeahead.bundle',
         'selink': 'lib/selink',
-        'socket.io': '../socket.io/socket.io.js',
+        // 'socket.io': '../socket.io/socket.io.js',
+        'socket.io': 'lib/socket.io',
         'app': 'engineer/engineer'
     },
 
@@ -186,6 +187,7 @@ require([
     'moment',
     'backbone.validation',
     'fileupload',
+    'autosize',
     'app'
 ], function(
     deepModel,
@@ -193,6 +195,7 @@ require([
     moment,
     validation,
     fileupload,
+    autosize,
     engineer
 ) {
     engineer.start();
