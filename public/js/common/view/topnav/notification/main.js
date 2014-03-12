@@ -15,6 +15,8 @@ define([
         // template
         template: template,
 
+        tagName: 'li',
+
         // class name
         className: 'light-orange',
 

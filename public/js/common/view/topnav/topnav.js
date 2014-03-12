@@ -8,6 +8,15 @@ define([
     NotificationMenu
 ) {
 
+    var ReplaceRegion = Backbone.Marionette.Region.extend({
+
+        open: function(view) {
+            this.$el.hide();
+            this.$el.replaceWith(view.el);
+            this.$el.slideDown("fast");
+        }
+    });
+
     return Backbone.Marionette.Layout.extend({
 
         // template
@@ -23,8 +32,14 @@ define([
 
         // regions
         regions: {
-            eventNavRegion: '#event-nav',
-            notificationNavRegion: '#notification-nav',
+            eventNavRegion: {
+                selector: '#event-nav',
+                regionType: ReplaceRegion
+            },
+            notificationNavRegion: {
+                selector: '#notification-nav',
+                regionType: ReplaceRegion
+            }
         },
 
         // initializer
