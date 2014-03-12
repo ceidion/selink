@@ -94,43 +94,18 @@ define([
 
         reIsotope: function() {
 
-            var windowWidth = $(window).width();
-            var width = 768;
-
-            if (windowWidth >= (992))
-                width = Math.round((windowWidth - 190 - 40)/3);
-            else if (windowWidth >= (768))
-                width = Math.round((windowWidth - 40)/2);
-            else
-                width = windowWidth - 40 ;
-
             $('.ace-thumbnails').imagesLoaded(function() {
                 $('.ace-thumbnails').isotope({
-                  // options
-                  itemSelector : 'li',
-                  resizable: false,
-                  masonry: { columnWidth: width }
+                    layoutMode: 'selinkMasonry',
+                    itemSelector : 'li',
+                    resizable: false
                 });
             });
 
             $(window).smartresize(function(){
-
-                var windowWidth = $(window).width();
-                var width = 768;
-
-                if (windowWidth >= (992))
-                    width = Math.round((windowWidth - 190 - 40)/3);
-                else if (windowWidth >= (768))
-                    width = Math.round((windowWidth - 40)/2);
-                else
-                    width = windowWidth - 40;
-
-                console.log(windowWidth + " -> " + width);
-
-              $('.ace-thumbnails').isotope({
-                // update columnWidth to a percentage of container width
-                masonry: { columnWidth: width }
-              });
+                $('.ace-thumbnails').isotope({
+                    layoutMode: 'selinkMasonry',
+                });
             });
         },
     });

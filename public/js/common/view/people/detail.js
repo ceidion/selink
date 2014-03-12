@@ -31,28 +31,37 @@ define([
         // item view
         itemView: ItemView,
 
+        // event
         events: {
             'click .btn-friend': 'onAddFriend',
             'click .btn-break': 'onBreakFriend'
         },
 
+        // collection event
         collectionEvents: {
+            // isotope this page after collection get sync
             'sync': 'reIsotope',
         },
 
         // initializer
         initialize: function() {
 
-            if (_.indexOf(selink.userModel.get('friends'), this.model.get('_id')) >= 0)
-                this.model.set('isFriend', true, {silent:true});
-            else if (_.indexOf(selink.userModel.get('invited'), this.model.get('_id')) >= 0)
-                this.model.set('isInvited', true, {silent:true});
-
             var self = this;
 
-            this.collection = new PostsCollection();
-            this.collection.document = this.model;
+            // if this person's id in user's friends list
+            if (_.indexOf(selink.userModel.get('friends'), this.model.get('_id')) >= 0)
+                // mark him as user's friend
+                this.model.set('isFriend', true, {silent:true});
+            // or if this person's id in user's invitaion list
+            else if (_.indexOf(selink.userModel.get('invited'), this.model.get('_id')) >= 0)
+                // mark him as user's invited friend
+                this.model.set('isInvited', true, {silent:true});
 
+            // create post collection
+            this.collection = new PostsCollection();
+            // relate post collection with this person
+            this.collection.document = this.model;
+            // get his posts
             this.collection.fetch({
                 // after initialize the collection
                 success: function() {
@@ -64,136 +73,55 @@ define([
                 }
             });
 
+            // for create this person's timeline, combine his employments, educations, qulification together
             var unionHistory = _.union(this.model.get('employments'), this.model.get('educations'), this.model.get('qualifications'));
-
+            // filter out the item which do not have time information
             var filterHistory = _.filter(unionHistory, function(history) {
                 return history.startDate || history.acquireDate;
             });
+            // if this person have history item
+            if (filterHistory.length) {
 
-            var groupHistory = _.groupBy(filterHistory, function(history) {
-                if (history.startDate)
-                    return moment(history.startDate).format('YYYY/MM');
-                else if (history.acquireDate)
-                    return moment(history.acquireDate).format('YYYY/MM');
-            });
-
-            var historyModels = [];
-
-            for(var date in groupHistory) {
-                historyModels.push({
-                    date: date,
-                    history: groupHistory[date]
+                // group his history item by year-month
+                var groupHistory = _.groupBy(filterHistory, function(history) {
+                    if (history.startDate)
+                        return moment(history.startDate).format('YYYY/MM');
+                    else if (history.acquireDate)
+                        return moment(history.acquireDate).format('YYYY/MM');
+                });
+                // create array hold the model for history timeline
+                var historyModels = [];
+                // fill the array
+                for(var date in groupHistory) {
+                    historyModels.push({
+                        date: date,
+                        history: groupHistory[date]
+                    });
+                }
+                // create history timeline view the model above
+                this.historyView = new HistoryView({
+                    // sort items
+                    collection: new Backbone.Collection(historyModels, {
+                        comparator: function(history) {
+                            // by date desc
+                            return 0 - Number(moment(history.get('date'), 'YYYY/MM').toDate().valueOf());
+                        }
+                    })
                 });
             }
 
-            this.historyView = new HistoryView({
-                collection: new Backbone.Collection(historyModels, {
-                    comparator: function(history) {
-                        return 0 - Number(moment(history.get('date'), 'YYYY/MM').toDate().valueOf());
-                    }
-                })
-            });
-
-            this.friendsView = new FriendsView({
-                model: this.model
-            });
-
-             $.Isotope.prototype._masonryColumnShiftReset = function() {
-               // layout-specific props
-               var props = this.masonryColumnShift = {
-                 columnBricks: []
-               };
-               // FIXME shouldn't have to call this again
-               this._getSegments();
-               var i = props.cols;
-               props.colYs = [];
-               while (i--) {
-                 props.colYs.push( 0 );
-                 // push an array, for bricks in each column
-                 props.columnBricks.push([])
-               }
-             };
-
-             $.Isotope.prototype._masonryColumnShiftLayout = function( $elems ) {
-               var instance = this,
-                   props = instance.masonryColumnShift;
-               $elems.each(function(){
-                 var $brick  = $(this);
-                 var setY = props.colYs;
-
-                 // get the minimum Y value from the columns
-                 var minimumY = Math.min.apply( Math, setY ),
-                     shortCol = 0;
-
-                 // Find index of short column, the first from the left
-                 for (var i=0, len = setY.length; i < len; i++) {
-                   if ( setY[i] === minimumY ) {
-                     shortCol = i;
-                     break;
-                   }
-                 }
-
-                 // position the brick
-                 var x = props.columnWidth * shortCol,
-                     y = minimumY;
-                 instance._pushPosition( $brick, x, y );
-                 // keep track of columnIndex
-                 $.data( this, 'masonryColumnIndex', i );
-                 props.columnBricks[i].push( this );
-
-                 // apply setHeight to necessary columns
-                 var setHeight = minimumY + $brick.outerHeight(true),
-                     setSpan = props.cols + 1 - len;
-                 for ( i=0; i < setSpan; i++ ) {
-                   props.colYs[ shortCol + i ] = setHeight;
-                 }
-
-               });
-             };
-
-            $.Isotope.prototype._masonryColumnShiftGetContainerSize = function() {
-               var containerHeight = Math.max.apply( Math, this.masonryColumnShift.colYs );
-               return { height: containerHeight };
-             };
-
-             $.Isotope.prototype._masonryColumnShiftResizeChanged = function() {
-               return this._checkIfSegmentsChanged();
-             };
-
-             $.Isotope.prototype.shiftColumnOfItem = function( itemElem, callback ) {
-
-               var columnIndex = $.data( itemElem, 'masonryColumnIndex' );
-
-               // don't proceed if no columnIndex
-               if ( !isFinite(columnIndex) ) {
-                 return;
-               }
-
-               var props = this.masonryColumnShift;
-               var columnBricks = props.columnBricks[ columnIndex ];
-               var $brick;
-               var x = props.columnWidth * columnIndex;
-               var y = 0;
-               for (var i=0, len = columnBricks.length; i < len; i++) {
-                 $brick = $( columnBricks[i] );
-                 this._pushPosition( $brick, x, y );
-                 y += $brick.outerHeight(true);
-               }
-
-               // set the size of the container
-               if ( this.options.resizesContainer ) {
-                 var containerStyle = this._masonryColumnShiftGetContainerSize();
-                 containerStyle.height = Math.max( y, containerStyle.height );
-                 this.styleQueue.push({ $el: this.element, style: containerStyle });
-               }
-
-               this._processStyleQueue( $(columnBricks), callback )
-
-             };
+            // if this person have friends
+            if (this.model.get('friends').length) {
+                // show his friends info
+                this.friendsView = new FriendsView({
+                    model: this.model
+                });
+            }
         },
 
         // after render
         onRender: function() {
+            // inject a region manager, so this composite view will have Layout view's power
             this.rm = new Backbone.Marionette.RegionManager();
             this.regions = this.rm.addRegions({
                 historyRegion: '#history',
@@ -204,11 +132,18 @@ define([
         // after show
         onShow: function() {
 
+            // some effect
             this.$el.addClass('animated fadeInRight');
 
-            this.regions.friendsRegion.show(this.friendsView);
-            this.regions.historyRegion.show(this.historyView);
+            // show friends view
+            if (this.friendsView)
+                this.regions.friendsRegion.show(this.friendsView);
 
+            // show history view
+            if (this.historyView)
+                this.regions.historyRegion.show(this.historyView);
+
+            // decorate pie chart
             $('.easy-pie-chart.percentage').each(function(){
                 var barColor = $(this).data('color') || '#555';
                 var trackColor = '#E2E2E2';
@@ -225,40 +160,53 @@ define([
             });
         },
 
+        // before close
+        onBeforeClose: function() {
+            // close region manager manually
+            this.rm.close();
+        },
+
+        // isotope
         reIsotope: function() {
 
             var self = this;
 
             this.$el.find('.board').imagesLoaded(function() {
                 self.$el.find('.board').isotope({
-                    // options
-                    itemSelector : '.basic-info, .post-item',
-                    layoutMode: 'masonryColumnShift',
-                    masonryColumnShift: {
-                      columnWidth: 410
-                    },
+                    layoutMode: 'selinkMasonry',
+                    itemSelector : '.info-item, .post-item',
+                    resizable: false
+                });
+            });
+
+            $(window).smartresize(function(){
+                 self.$el.find('.board').isotope({
+                    layoutMode: 'selinkMasonry',
                 });
             });
 
             this.$el.find('.post-item').hover(
-              function() {
-                $(this).css({ height: "+=100" });
-                // note that element is passed in, not jQuery object
-                self.$el.find('.board').isotope( 'shiftColumnOfItem', this );
-              },
-              function() {
-                $(this).css({ height: "-=100" });
-                self.$el.find('.board').isotope( 'shiftColumnOfItem', this );
-              }
+                function() {
+                    $(this).css({ height: "+=100" });
+                    // note that element is passed in, not jQuery object
+                    self.$el.find('.board').isotope( 'selinkShiftColumn', this );
+                },
+                function() {
+                    $(this).css({ height: "-=100" });
+                    self.$el.find('.board').isotope( 'selinkShiftColumn', this );
+                }
             );
         },
 
+        // add this person as friend
         onAddFriend: function() {
 
             var self = this;
 
+            // show loading icon, and prevent user click twice
             this.$el.find('.btn-friend').button('loading');
 
+            // post this person's info for friend creation
             this.model.save({
                 _id: this.model.get('_id'),
                 firstName: this.model.get('firstName'),
@@ -266,31 +214,38 @@ define([
             }, {
                 url: './users/' + selink.userModel.id + '/friends',
                 success: function() {
+                    // change the button for success info, but won't enable it
                     self.$el.find('.btn-friend')
                             .removeClass('btn-info btn-friend')
                             .addClass('btn-success')
                             .empty()
                             .html('<i class="icon-ok light-green"></i>&nbsp;友達リクエスト送信済み');
+                    // put him into invited list
                     selink.userModel.get('invited').push(self.model.get('_id'));
                 },
                 patch: true
             });
         },
 
+        // break up with this person
         onBreakFriend: function() {
 
             var self = this;
 
+            // show loading icon, and prevent user click twice
             this.$el.find('.btn-break').button('loading');
 
+            // post this person's id for break up
             this.model.destroy({
                 url: './users/' + selink.userModel.id + '/friends/' + this.model.get('_id'),
                 success: function() {
+                    // change the button for success info, but won't enable it
                     self.$el.find('.btn-break')
                             .removeClass('btn-info btn-break')
                             .addClass('btn-grey')
                             .empty()
                             .html('<i class="icon-ok light-green"></i>&nbsp;友達解除しました');
+                    // remove him from friends list
                     var index = selink.userModel.get('friends').indexOf(self.model.get('_id'));
                     if (index > -1) {
                         selink.userModel.get('friends').splice(index, 1);

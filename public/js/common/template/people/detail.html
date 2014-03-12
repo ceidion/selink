@@ -22,7 +22,7 @@
         <% } %>
     </div>
 
-    <div class="col-md-8">
+    <div class="col-md-5">
 
         <!-- name -->
         <div class="bigger-150">
@@ -46,50 +46,8 @@
 
     </div>
 
-</div>
-
-<div class="row">
-
     <div class="col-md-4">
-
-        <div id="friends"></div>
-        <div id="history"></div>
-
-        <div class="widget-box basic-info">
-
-            <div class="widget-header">
-                <h5>スキル</h5>
-            </div>
-
-            <div class="widget-body">
-                <div class="widget-main">
-                    <div class="clearfix">
-                    <% _.each(obj.languages, function(language){ %>
-                        <div class="grid3 center">
-                            <div class="easy-pie-chart percentage" data-percent="<%= language.weight %>" data-color="#CA5952">
-                                <span class="percent"><%= language.weight %></span>%
-                            </div>
-                            <div class="space-2"></div>
-                            <%= language.language %>
-                        </div>
-                    <% }); %>
-                    </div>
-                    <div class="hr hr-16"></div>
-                    <div class="profile-skills">
-                    <% _.each(obj.skills, function(skill){ %>
-                        <div class="progress">
-                            <div class="progress-bar" style="width:<%= skill.weight %>%">
-                                <span class="pull-left"><%= skill.skill %></span>
-                                <span class="pull-right"><%= skill.weight %></span>
-                            </div>
-                        </div>
-                    <% }); %>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="widget-box basic-info">
+        <div class="widget-box transparent">
 
             <div class="widget-header">
                 <h5>基本情報</h5>
@@ -156,10 +114,49 @@
                 </div>
             </div>
         </div>
-
     </div>
 
-    <div class="col-md-8 board">
+</div>
 
+<div class="row board">
+
+    <div id="friends" class="info-item col-xs-12 col-sm-6 col-lg-4"></div>
+    <div id="history" class="info-item col-xs-12 col-sm-6 col-lg-4"></div>
+
+    <div class="info-item col-xs-12 col-sm-6 col-lg-4">
+        <div class="widget-box transparent">
+
+            <div class="widget-header">
+                <h5>スキル</h5>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main">
+                    <div class="clearfix">
+                    <% _.each(obj.languages, function(language){ %>
+                        <div class="grid3 center">
+                            <div class="easy-pie-chart percentage" data-percent="<%= language.weight %>" data-color="#CA5952">
+                                <span class="percent"><%= language.weight %></span>%
+                            </div>
+                            <div class="space-2"></div>
+                            <%= language.language %>
+                        </div>
+                    <% }); %>
+                    </div>
+                    <div class="hr hr-16"></div>
+                    <div class="profile-skills">
+                    <% _.each(obj.skills, function(skill){ %>
+                        <div class="progress">
+                            <div class="progress-bar" style="width:<%= skill.weight %>%">
+                                <span class="pull-left"><%= skill.skill %></span>
+                                <span class="pull-right"><%= skill.weight %></span>
+                            </div>
+                        </div>
+                    <% }); %>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
 </div>

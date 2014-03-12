@@ -43,31 +43,6 @@ define([
         // Initializer
         initialize: function() {
 
-            $.Isotope.prototype._masonryResizeChanged = function() {
-                return true;
-            };
-
-            $.Isotope.prototype._masonryReset = function() {
-                // layout-specific props
-                this.masonry = {};
-                this._getSegments();
-                var i = this.masonry.cols;
-                this.masonry.colYs = [];
-                while (i--) {
-                    this.masonry.colYs.push( 0 );
-                }
-
-                if ( this.options.masonry && this.options.masonry.cornerStampSelector ) {
-                    var $cornerStamp = this.element.find( this.options.masonry.cornerStampSelector ),
-                    stampWidth = $cornerStamp.outerWidth(true) - ( this.element.width() % this.masonry.columnWidth ),
-                    cornerCols = Math.ceil( stampWidth / this.masonry.columnWidth ),
-                    cornerStampHeight = $cornerStamp.outerHeight(true);
-                    for ( i = Math.max( this.masonry.cols - cornerCols, cornerCols ); i < this.masonry.cols; i++ ) {
-                        this.masonry.colYs[i] = cornerStampHeight;
-                    }
-                }
-            };
-
             this.invitedView = new InvitedView({
                 model: selink.userModel
             });
@@ -120,10 +95,19 @@ define([
 
             this.$el.imagesLoaded(function() {
                 self.$el.isotope({
-                    // options
+                    layoutMode: 'selinkMasonry',
                     itemSelector : '.post-item',
-                    masonry: {
-                      columnWidth: 410,
+                    resizable: false,
+                    selinkMasonry: {
+                      cornerStampSelector: '.corner-stamp'
+                    },
+                });
+            });
+
+            $(window).smartresize(function(){
+                self.$el.isotope({
+                    layoutMode: 'selinkMasonry',
+                    selinkMasonry: {
                       cornerStampSelector: '.corner-stamp'
                     },
                 });

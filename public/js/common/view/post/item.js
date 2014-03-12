@@ -7,7 +7,7 @@ define([
 
     return Backbone.Marionette.ItemView.extend({
 
-        className: 'post-item',
+        className: 'post-item col-xs-12 col-sm-6 col-lg-4',
 
         // template
         getTemplate: function(){

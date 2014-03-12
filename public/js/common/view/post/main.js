@@ -133,11 +133,15 @@ define([
         reIsotope: function() {
             $('.post-container').imagesLoaded(function() {
                 $('.post-container').isotope({
-                    // options
+                    layoutMode: 'selinkMasonry',
                     itemSelector : '.post-item',
-                    masonry: {
-                      columnWidth: 410
-                    },
+                    resizable: false
+                });
+            });
+
+            $(window).smartresize(function(){
+                $('.post-container').isotope({
+                    layoutMode: 'selinkMasonry',
                 });
             });
         }

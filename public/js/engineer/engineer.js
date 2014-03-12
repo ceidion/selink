@@ -67,6 +67,203 @@ define([
                     return false;
             },
         });
+
+        /*********************************************************
+            Extend isotope, add selinkMasonry.
+            It should be:
+                1, bootstrap grid compatible mansory
+                2, column shift
+                3, optional corner stamp
+            all combined together
+        *********************************************************/
+        $.extend( $.Isotope.prototype, {
+
+            _selinkMasonryReset: function() {
+                this.selinkMasonry = {};
+                // Reset do nothing, cause isotope take the first item's width as column width, and that not fit here
+                // for simulate bootstrap grid system, all process was delayed until Layout method
+            },
+
+            _selinkMasonryDelayReset: function() {
+
+                // customize: get the body width
+                var bodyWidth = $('body').width(),
+                    width;
+
+                // bootstrap grid: determine the column width
+                // the "190" is the left side navbar
+                // the "40" is the left and right padding of page body
+                if (bodyWidth >= 1200)
+                    width = (bodyWidth - 190 - 40)/3;
+                else if (bodyWidth >= 990)
+                    width = (bodyWidth - 190 - 40)/2;
+                else if (bodyWidth >= 768)
+                    width = (bodyWidth - 40)/2;
+                else
+                    width = bodyWidth - 40;
+
+                // column width determined
+                this.selinkMasonry.columnWidth = width;
+
+                var containerSize = this.element.width(),
+                    segments = Math.floor( containerSize / width );
+
+                segments = Math.max( segments, 1 );
+
+                // column number determined
+                this.selinkMasonry.cols = segments;
+
+                var i = this.selinkMasonry.cols;
+
+                this.selinkMasonry.colYs = [];
+                this.selinkMasonry.columnBricks = [];
+
+                while (i--) {
+                    this.selinkMasonry.colYs.push(0);
+                    // cloumn shift: push an array, for bricks in each column
+                    this.selinkMasonry.columnBricks.push([]);
+                }
+
+                // corner stamp
+                if ( this.options.selinkMasonry && this.options.selinkMasonry.cornerStampSelector ) {
+
+                    var $cornerStamp = this.element.find( this.options.selinkMasonry.cornerStampSelector ),
+
+                    stampWidth = $cornerStamp.outerWidth(true) - ( this.element.width() % this.selinkMasonry.columnWidth ),
+                    cornerCols = Math.ceil( stampWidth / this.selinkMasonry.columnWidth ),
+                    cornerStampHeight = $cornerStamp.outerHeight(true);
+
+                    for ( i = Math.max( this.selinkMasonry.cols - cornerCols, cornerCols ); i < this.selinkMasonry.cols; i++ ) {
+                        this.selinkMasonry.colYs[i] = cornerStampHeight;
+                    }
+                }
+            },
+
+            _selinkMasonryLayout: function( $elems ) {
+
+                // call delayed reset method, calulate the column setting
+                this._selinkMasonryDelayReset();
+
+                var instance = this,
+                    props = instance.selinkMasonry;
+
+                    console.log(props);
+
+                $elems.each(function(){
+
+                    var $this  = $(this),
+
+                    //colSpan = Math.ceil( $this.outerWidth(true) / props.columnWidth );
+                    // boostrap grid: how many columns does this brick span
+                    colSpan = Math.floor($this.outerWidth(true)/props.columnWidth);
+                    if (colSpan < 1) colSpan = 1;
+                    colSpan = Math.min(colSpan, props.cols);
+
+                    console.log("outerWidth:" + $this.outerWidth(true) + " -> columnWidth: " + props.columnWidth + " -> colspan: " + colSpan);
+
+                    if (colSpan === 1) {
+                        // if brick spans only one column, just like singleMode
+                        instance._selinkMasonryPlaceBrick($this, props.colYs);
+                    } else {
+                        // brick spans more than one column
+                        // how many different places could this brick fit horizontally
+                        var groupCount = props.cols + 1 - colSpan,
+                        groupY = [],
+                        groupColY,
+                        i;
+
+                        // for each group potential horizontal position
+                        for (i=0; i < groupCount; i++) {
+                            // make an array of colY values for that one group
+                            groupColY = props.colYs.slice(i, i+colSpan);
+                            // and get the max value of the array
+                            groupY[i] = Math.max.apply(Math, groupColY);
+                        }
+
+                        instance._selinkMasonryPlaceBrick($this, groupY);
+                    }
+                });
+            },
+
+            // worker method that places brick in the columnSet
+            //   with the the minY
+            _selinkMasonryPlaceBrick: function( $brick, setY ) {
+                // get the minimum Y value from the columns
+                var minimumY = Math.min.apply( Math, setY ),
+                    shortCol = 0;
+
+                // Find index of short column, the first from the left
+                for (var i=0, len = setY.length; i < len; i++) {
+                    if ( setY[i] === minimumY ) {
+                        shortCol = i;
+                        break;
+                    }
+                }
+
+                // position the brick
+                var x = this.selinkMasonry.columnWidth * shortCol,
+                y = minimumY;
+
+                console.log("placement X: " + x + ", Y: " + y);
+
+                this._pushPosition( $brick, x, y );
+
+                // column shift: keep track of columnIndex
+                $brick.data( 'selinkMasonryColumnIndex', i );
+                this.selinkMasonry.columnBricks[i].push( $brick );
+
+                // apply setHeight to necessary columns
+                var setHeight = minimumY + $brick.outerHeight(true),
+                setSpan = this.selinkMasonry.cols + 1 - len;
+                for ( i=0; i < setSpan; i++ ) {
+                    this.selinkMasonry.colYs[ shortCol + i ] = setHeight;
+                }
+            },
+
+            _selinkMasonryGetContainerSize: function() {
+                var containerHeight = Math.max.apply( Math, this.selinkMasonry.colYs );
+                return { height: containerHeight };
+            },
+
+            _selinkMasonryResizeChanged: function() {
+                return this._checkIfSegmentsChanged();
+            },
+
+            selinkShiftColumn: function( itemElem, callback ) {
+
+                var columnIndex = $.data( itemElem, 'selinkMasonryColumnIndex' );
+
+                // don't proceed if no columnIndex
+                if ( !isFinite(columnIndex) ) {
+                    return;
+                }
+
+                var props = this.selinkMasonry;
+                var columnBricks = props.columnBricks[ columnIndex ];
+                var $brick;
+                var x = props.columnWidth * columnIndex;
+                var y = 0;
+                for (var i=0, len = columnBricks.length; i < len; i++) {
+                    $brick = $( columnBricks[i] );
+                    this._pushPosition( $brick, x, y );
+                    y += $brick.outerHeight(true);
+                }
+
+                // set the size of the container
+                if ( this.options.resizesContainer ) {
+                    var containerStyle = this._selinkMasonryGetContainerSize();
+                    containerStyle.height = Math.max( y, containerStyle.height );
+                    this.styleQueue.push({ $el: this.element, style: containerStyle });
+                }
+
+                this._processStyleQueue( $(columnBricks), callback );
+            }
+
+        });
+        /*********************************************************
+            Extend isotope, add selinkMasonry -- end
+        *********************************************************/
+
     });
 
     // initialize application
