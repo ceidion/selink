@@ -1,5 +1,5 @@
 define([
-    'text!common/template/profile/profile.html',
+    'text!common/template/profile/main.html',
     'common/view/profile/photo',
     'common/view/profile/name',
     'common/view/profile/title',

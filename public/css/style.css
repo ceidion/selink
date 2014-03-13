@@ -4,14 +4,14 @@ html,body{height:100%}
 .main-container-inner,.main-content,.page-content{height:100%;min-height:100%}
 .sidebar{-webkit-transition:width .5s;transition:width .5s}.sidebar:before{-webkit-transition:width .5s;transition:width .5s}
 .main-content{-webkit-transition:margin .5s;transition:margin .5s}.main-content:before{-webkit-transition:margin .5s;transition:margin .5s}
-.sl-editable{-webkit-transition:background-color 1s;transition:background-color 1s}.sl-editable:hover{background-color:#EEE;cursor:pointer}
+.sl-editable{-webkit-transition:background-color .5s;transition:background-color .5s}.sl-editable:hover{background-color:#EEE;cursor:pointer}
 .sl-editable .form-group{margin-bottom:0px}
 .sl-editable .sl-editor{display:none}.sl-editable .sl-editor input{line-height:normal}
 .label{line-height:1.4}
 .badge{top:-2px !important;padding-top:3px;padding-bottom:1px}
 .icon-nothing{font-family:inherit}
 .sl-title{line-height:1.3 !important}
-#sl-basic-info .sl-editable{min-height:48px}#sl-basic-info .sl-editable .profile-info-name,#sl-basic-info .sl-editable .sl-value{line-height:33px}
+#sl-basic-info .sl-editable{padding:10px;line-height:33px}#sl-basic-info .sl-editable .align-right{padding:0px}
 .sl-avatar{border:0px !important;float:none !important}
 #name-item,#title-item{padding:7px}
 #bio-item img{max-width:100%}

@@ -38,7 +38,7 @@ html,body {
 .sl-editable {
 
     // highlight the editable
-    .transition(background-color 1s);
+    .transition(background-color 0.5s);
 
     &:hover {
         background-color: #EEE;
@@ -81,11 +81,17 @@ html,body {
 
 #sl-basic-info .sl-editable {
 
-  min-height: 48px;
+  padding: 10px;
+  line-height: 33px;
 
-  .profile-info-name,.sl-value {
-      line-height: 33px;
+  .align-right {
+    padding: 0px;
   }
+  // min-height: 46px;
+
+  // .sl-info-name,.sl-value {
+  //     line-height: 46px;
+  // }
 }
 
 // profile photo, cancel the float for FF
