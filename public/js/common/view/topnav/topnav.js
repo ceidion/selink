@@ -47,8 +47,7 @@ define([
 
             // create event menu
             this.eventNav = new EventMenu({
-                model: this.model,
-                collection: selink.eventsModel
+                model: this.model
             });
 
             // create notification menu

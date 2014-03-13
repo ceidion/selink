@@ -10,8 +10,8 @@ define([], function() {
             "friend": "showFriendView",
             "people": "showPeopleView",
             "calendar": "showCalendarView",
-            "timecard": "showTimecardView",
-            "timecard/:date": "showTimecardView",
+            // "timecard": "showTimecardView",
+            // "timecard/:date": "showTimecardView",
             "mailbox": "showMailBoxView",
         }
     });

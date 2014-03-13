@@ -1,11 +1,9 @@
 define([
     'common/model/user',
-    'common/collection/events',
     'engineer/router/router',
     'engineer/controller/controller'
 ], function(
     UserModel,
-    EventsModel,
     Router,
     Controller
 ) {
@@ -281,16 +279,6 @@ define([
 
             // on success
             success: function() {
-
-                // create events model(collection) from user model
-                self.eventsModel = new EventsModel(self.userModel.get('events'), {
-                    parse: true,
-                    comparator: function(event) {
-                        // sort by start desc
-                        return Number(event.get('start').valueOf());
-                    }
-                });
-                self.eventsModel.document = self.userModel;
 
                 // make controller
                 var controller = new Controller();

@@ -2,7 +2,7 @@ var tag = require('../app/controllers/tag'),
     user = require('../app/controllers/user'),
     friend = require('../app/controllers/friend'),
     post = require('../app/controllers/post'),
-    // userEvent = require('../app/controllers/event'),
+    userEvent = require('../app/controllers/event'),
     activity = require('../app/controllers/activity'),
     notification = require('../app/controllers/notification'),
     // message = require('../app/controllers/message'),
@@ -57,6 +57,15 @@ module.exports = function(app, sio) {
     // Remove friend
     app.delete('/users/:user/friends/:friend', checkLoginStatus, friend.remove);
 
+    // Get user's events
+    app.get('/users/:user/events', checkLoginStatus, userEvent.index);
+    // Create new event
+    app.post('/users/:user/events', checkLoginStatus, userEvent.create);
+    // Update events
+    app.patch('/users/:user/events/:event', checkLoginStatus, userEvent.update);
+    // Remove event
+    app.delete('/users/:user/events/:event', checkLoginStatus, userEvent.remove);
+
     // Get user info
     app.get('/users/:user', checkLoginStatus, user.show);
     // Upload user photo
@@ -69,15 +78,6 @@ module.exports = function(app, sio) {
     app.patch('/users/:id/:sub/:subid', checkLoginStatus, user.updateSubDocument);
     // Remove nested collection item
     app.delete('/users/:id/:sub/:subid', checkLoginStatus, user.removeSubDocument);
-
-    // // Get user's events
-    // app.get('/users/:id/events', checkLoginStatus, userEvent.index);
-    // // Create new event
-    // app.post('/users/:id/events', checkLoginStatus, userEvent.create);
-    // // Update events
-    // app.patch('/users/:id/events/:eventid', checkLoginStatus, userEvent.update);
-    // // Remove event
-    // app.delete('/users/:id/events/:eventid', checkLoginStatus, userEvent.remove);
 
     // Get user's jobs (employer only)
     app.get('/users/:id/jobs', checkLoginStatus, job.index);

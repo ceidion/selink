@@ -124,7 +124,7 @@ define([
             this.setAllDay();
 
             // if this is a new event
-            if (this.model.isNew())
+            // if (this.model.isNew())
                 // bind validation on it (already exists event are binded on collecion)
                 Backbone.Validation.bind(this);
         },

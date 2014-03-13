@@ -1,9 +1,28 @@
 define([
-    'text!common/template/calendar/calendar.html',
+    'text!common/template/calendar/main.html',
+    'common/model/event',
     'common/view/calendar/event'
-], function(template, EventView) {
+], function(
+    template,
+    EventModel,
+    EventView
+) {
 
-    var CalendarView = Backbone.Marionette.Layout.extend({
+    var EventsCollection = Backbone.Collection.extend({
+
+        model: EventModel,
+
+        url:  function() {
+            return this.document.url() + '/events';
+        },
+
+        comparator: function(event) {
+            // sort by start desc
+            return Number(event.get('start').valueOf());
+        }
+    });
+
+    return Backbone.Marionette.Layout.extend({
 
         // Template
         template: template,
@@ -21,8 +40,8 @@ define([
 
         // Collection events
         collectionEvents: {
-            'add': 'createEvent',
-            'change': 'updateEvent',
+            // 'add': 'createEvent',
+            // 'change': 'updateEvent',
             'remove': 'removeEvent',
         },
 
@@ -33,6 +52,10 @@ define([
 
         // Initializer
         initialize: function() {
+
+            // create events model(collection) from user model
+            this.collection = new EventsCollection();
+            this.collection.document = this.model;
         },
 
         // After render
@@ -43,8 +66,16 @@ define([
         // After show
         onShow: function() {
 
-            this.initialDefaultEvent();
-            this.initialCalendar();
+            var self = this;
+
+            this.collection.fetch({
+                success: function() {
+                    self.initialDefaultEvent();
+                    self.initialCalendar();
+                    self.listenTo(self.collection, 'change', self.updateEvent);
+                    self.listenTo(self.collection, 'add', self.createEvent);
+                }
+            });
         },
 
         // initialize the external events
@@ -240,7 +271,8 @@ define([
                 // if error happend
                 error: function(model, xhr, options) {
 
-                }
+                },
+                silent: true
             });
         },
 
@@ -304,6 +336,4 @@ define([
         }
 
     });
-
-    return CalendarView;
 });

@@ -6,6 +6,15 @@ define([
     ItemView
 ) {
 
+    var EventsCollection = Backbone.Collection.extend({
+
+        model: Backbone.Model.extend({idAttribute: "_id"}),
+
+        url:  function() {
+            return this.document.url() + '/events';
+        }
+    });
+
     return Backbone.Marionette.CompositeView.extend({
 
         // template
@@ -48,13 +57,23 @@ define([
         // initializer
         initialize: function() {
 
-            // filter out the past events
-            var futureEvents = _.filter(this.collection.models, function(event) {
-                return moment(event.get('start')).isAfter(moment());
+            var self = this;
+
+            this.collection = new EventsCollection();
+            this.collection.document = this.model;
+
+            this.collection.fetch({
+                success: function() {
+                    // filter out the past events
+                    var futureEvents = _.filter(self.collection.models, function(event) {
+                        return moment(event.get('start')).isAfter(moment());
+                    });
+
+                    // set the number of future events in the model
+                    self.model.set('eventsNum', futureEvents.length, {silent:true});
+                }
             });
 
-            // set the number of future events in the model
-            this.model.set('eventsNum', futureEvents.length, {silent:true});
         },
 
         // after show

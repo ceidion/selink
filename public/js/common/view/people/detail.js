@@ -43,6 +43,11 @@ define([
             'sync': 'reIsotope',
         },
 
+        itemEvents: {
+            'comment:opened': 'shiftColumn',
+            'comment:closed': 'shiftColumn'
+        },
+
         // initializer
         initialize: function() {
 
@@ -185,17 +190,17 @@ define([
                 });
             });
 
-            this.$el.find('.post-item').hover(
-                function() {
-                    $(this).css({ height: "+=100" });
-                    // note that element is passed in, not jQuery object
-                    self.$el.find('.board').isotope( 'selinkShiftColumn', this );
-                },
-                function() {
-                    $(this).css({ height: "-=100" });
-                    self.$el.find('.board').isotope( 'selinkShiftColumn', this );
-                }
-            );
+            // this.$el.find('.post-item').hover(
+            //     function() {
+            //         $(this).css({ height: "+=100" });
+            //         // note that element is passed in, not jQuery object
+            //         self.$el.find('.board').isotope( 'selinkShiftColumn', this );
+            //     },
+            //     function() {
+            //         $(this).css({ height: "-=100" });
+            //         self.$el.find('.board').isotope( 'selinkShiftColumn', this );
+            //     }
+            // );
         },
 
         // add this person as friend
@@ -252,6 +257,10 @@ define([
                     }
                 }
             });
+        },
+
+        shiftColumn: function(event, view) {
+            this.$el.find('.board').isotope('selinkShiftColumn', view.el);
         }
     });
 });

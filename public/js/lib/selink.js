@@ -56,6 +56,10 @@
         return $(this).slAnimated('fadeInLeft', color, callback);
     };
 
+    $.fn.slFadeOutLeft = function(color, callback) {
+        return $(this).slAnimated('fadeOutLeft', color, callback);
+    };
+
     $.fn.slAnimated = function(effect, color, callback) {
 
         var effectString = 'animated ' + effect + (color ? ' ' + color : '');

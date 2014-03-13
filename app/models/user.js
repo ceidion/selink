@@ -158,9 +158,6 @@ var User = new Schema({
     // Skill
     skills: [Skill],
 
-    // Event
-    events: [Event],
-
     // Friend
     friends: [{
         type: Schema.Types.ObjectId,

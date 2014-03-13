@@ -36,6 +36,11 @@ define([
             'sync': 'reIsotope',
         },
 
+        itemEvents: {
+            'comment:opened': 'shiftColumn',
+            'comment:closed': 'shiftColumn'
+        },
+
         // initializer
         initialize: function() {
 
@@ -144,6 +149,11 @@ define([
                     layoutMode: 'selinkMasonry',
                 });
             });
+        },
+
+        shiftColumn: function(view) {
+            console.log("shift");
+            console.log(arguments);
         }
     });
 });

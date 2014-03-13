@@ -8,8 +8,8 @@ define([
     'common/view/friend/main',
     'common/view/people/main',
     'common/view/people/detail',
-    'common/view/calendar/calendar',
-    'common/view/timecard/timecard',
+    'common/view/calendar/main',
+    // 'common/view/timecard/timecard',
     'common/view/mailbox/mailbox',
     'common/model/user'
 ], function(
@@ -23,13 +23,13 @@ define([
     PeopleView,
     PeopleDetailView,
     CalendarView,
-    TimecardView,
+    // TimecardView,
     MailBoxView,
     UserModel
 ) {
 
     // Main page controller
-    var Controller = Backbone.Marionette.Controller.extend({
+    return Backbone.Marionette.Controller.extend({
 
         // Initializer of main page controller
         initialize: function(options) {
@@ -136,25 +136,25 @@ define([
 
             // create calendar view
             selink.calendarView = new CalendarView({
-                collection: selink.eventsModel
+                model: selink.userModel
             });
             // show calendar view
             selink.pageContent.show(selink.calendarView);
         },
 
-        // show timecard
-        showTimecardView: function(date) {
+        // // show timecard
+        // showTimecardView: function(date) {
 
-            var month = date ? moment(date, 'YYYYMM') : moment();
+        //     var month = date ? moment(date, 'YYYYMM') : moment();
 
-            // create timecard view
-            selink.timecardView = new TimecardView({
-                model: new Backbone.Model({month: month}),
-                collection: selink.eventsModel
-            });
-            // show timecard view
-            selink.pageContent.show(selink.timecardView);
-        },
+        //     // create timecard view
+        //     selink.timecardView = new TimecardView({
+        //         model: new Backbone.Model({month: month}),
+        //         collection: selink.eventsModel
+        //     });
+        //     // show timecard view
+        //     selink.pageContent.show(selink.timecardView);
+        // },
 
         // show mailbox
         showMailBoxView: function() {
@@ -167,6 +167,4 @@ define([
             selink.pageContent.show(selink.mailBoxView);
         }
     });
-
-    return Controller;
 });

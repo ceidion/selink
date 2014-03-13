@@ -86,7 +86,7 @@ define([
         },
 
         // before close
-        beforeClose: function() {
+        onBeforeClose: function() {
             // destroy infinite scroll, or it will affect other page
             $('.ace-thumbnails').infinitescroll('destroy');
             $('.ace-thumbnails').data('infinitescroll', null);
