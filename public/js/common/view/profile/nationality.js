@@ -19,6 +19,8 @@ define([
         // template
         template: template,
 
+        className: 'row',
+
         // initializer
         initialize: function() {
 

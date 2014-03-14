@@ -10,6 +10,8 @@ define([
         // template
         template: template,
 
+        className: 'row',
+
         // initializer
         initialize: function() {
 
@@ -36,13 +38,18 @@ define([
             // append data picker
             this.ui.input.datepicker({
                 autoclose: true,
+                forceParse: false,
                 startView: 2,
                 endDate: new Date(),
                 language: 'ja'
             });
 
-            // enable mask input
-            this.ui.input.mask('9999/99/99');
+            // // enable mask input
+            // this.ui.input.mask('9999/99/99', {
+            //     completed: function() {
+            //         console.log(this.val());
+            //     }
+            // });
 
             // bind validator
             Backbone.Validation.bind(this);
@@ -72,13 +79,17 @@ define([
         },
 
         getData: function() {
+
             return {
                 birthDay: moment(this.ui.input.val()).toJSON()
             };
         },
 
         renderValue: function(data) {
-            this.ui.value.text(moment(data.birthDay).format('LL'));
+
+            if (!data.birthDay) {
+                this.ui.value.text(moment(data.birthDay).format('LL'));
+            }
         }
 
     });

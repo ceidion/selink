@@ -11,7 +11,7 @@ define([
         template: template,
 
         // class name
-        className: 'sl-editable col-sm-6',
+        className: 'sl-editable',
 
         // initializer
         initialize: function() {

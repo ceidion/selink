@@ -26,7 +26,7 @@ require.config({
         'google-calendar': "lib/gcal",
         // date time
         'datepicker-locale': "lib/date-time/locales/bootstrap-datepicker.ja",
-        'datepicker': "lib/date-time/bootstrap-datepicker.min",
+        'datepicker': "lib/date-time/bootstrap-datepicker",
         'timepicker': "lib/date-time/bootstrap-timepicker.min",
         'moment': "lib/date-time/moment-with-langs.min",
         // file upload

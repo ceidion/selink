@@ -10,6 +10,8 @@ define([
         // template
         template: template,
 
+        className: 'row',
+
         // initializer
         initialize: function() {
             this.events = _.extend({}, this.events, {

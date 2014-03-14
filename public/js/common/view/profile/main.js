@@ -48,11 +48,6 @@ define([
         // template
         template: template,
 
-        // events
-        events: {
-            'click': 'closeEditor'
-        },
-
         // regions
         regions: {
             photoRegion: '#photo-item',
@@ -126,83 +121,7 @@ define([
 
         // after show
         onShow: function() {
-
-            // Portlets (boxes)
-            $('.widget-container-span').sortable({
-                connectWith: '.widget-container-span',
-                items:'> .widget-box',
-                opacity:0.8,
-                revert:true,
-                forceHelperSize:true,
-                placeholder: 'widget-placeholder',
-                forcePlaceholderSize:true,
-                tolerance:'pointer',
-                handle: '.btn-handle'
-            });
-
             this.$el.addClass('animated fadeInRight');
-        },
-
-        // profile view handle the click event
-        // -- switch component in editor mode to value mode
-        // *from x-editable*
-        closeEditor: function(e) {
-            var $target = $(e.target), i,
-                exclude_classes = ['.editable-container',
-                                   '.ui-datepicker-header',
-                                   '.datepicker', //in inline mode datepicker is rendered into body
-                                   '.modal-backdrop',
-                                   '.bootstrap-wysihtml5-insert-image-modal',
-                                   '.bootstrap-wysihtml5-insert-link-modal'
-                                   ];
-
-            //check if element is detached. It occurs when clicking in bootstrap datepicker
-            if (!$.contains(document.documentElement, e.target)) {
-              return;
-            }
-
-            //for some reason FF 20 generates extra event (click) in select2 widget with e.target = document
-            //we need to filter it via construction below. See https://github.com/vitalets/x-editable/issues/199
-            //Possibly related to http://stackoverflow.com/questions/10119793/why-does-firefox-react-differently-from-webkit-and-ie-to-click-event-on-selec
-            if($target.is(document)) {
-               return;
-            }
-
-            //if click inside one of exclude classes --> no nothing
-            for(i=0; i<exclude_classes.length; i++) {
-                 if($target.is(exclude_classes[i]) || $target.parents(exclude_classes[i]).length) {
-                     return;
-                 }
-            }
-
-            //close all open containers (except one - target)
-            this.closeOthers(e.target);
-        },
-
-        // close all open containers (except one - target)
-        closeOthers: function(element) {
-
-            $('.sl-editor-open').each(function(i, el){
-
-                var $el = $(el);
-
-                //do nothing with passed element and it's children
-                if(el === element || $el.find(element).length) {
-                    return;
-                }
-
-                if($el.find('.form-group').hasClass('has-error')) {
-                    return;
-                }
-
-                // slide up the edit panel
-                $el.find('.sl-editor').slideUp('fast', function() {
-                    // fadeIn view panel
-                    $el.find('.sl-value').fadeIn('fast');
-                });
-
-                $el.removeClass('sl-editor-open');
-            });
         }
     });
 });

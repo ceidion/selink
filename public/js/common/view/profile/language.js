@@ -14,7 +14,7 @@ define([
         template: template,
 
         // class name
-        className: 'grid4 center sl-editable',
+        className: 'grid3 center sl-editable',
 
         // initializer
         initialize: function() {
