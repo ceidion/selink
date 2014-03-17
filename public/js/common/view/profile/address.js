@@ -10,6 +10,7 @@ define([
         // template
         template: template,
 
+        // className
         className: 'row',
 
         // initializer
@@ -36,14 +37,11 @@ define([
 
         // after render
         onRender: function() {
-
             // enable mask input
             this.ui.zipCode.mask('999-9999');
-
-            // bind validator
-            Backbone.Validation.bind(this);
         },
 
+        // query address by zipcode
         getAddress: function() {
 
             var self = this;
@@ -84,7 +82,9 @@ define([
             });
         },
 
+        // reflect user input on model
         updateModel: function() {
+
             // clear all errors
             this.clearError();
 
@@ -101,6 +101,7 @@ define([
             }
         },
 
+        // get user input data
         getData: function() {
             return {
                 zipCode: this.ui.zipCode.val(),
@@ -108,13 +109,15 @@ define([
             };
         },
 
+        // render value by user input data
         renderValue: function(data) {
-
+            // if user input is nothing
             if (!data.zipCode && !data.address) {
+                // draw placehodler
                 this.ui.value.html(this.placeholder);
                 return;
             }
-
+            // or draw the new value
             if (data.zipCode)
                 this.ui.value.text("（〒 " + data.zipCode + "）" + data.address);
             else

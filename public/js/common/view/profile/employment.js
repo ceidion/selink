@@ -17,10 +17,10 @@ define([
         initialize: function() {
 
             this.ui = _.extend({}, this.ui, {
-                'companyValue': '#company-value',
-                'positionValue': '#position-value',
-                'durationValue': '#duration-value',
-                'addressValue': '#address-value',
+                'companyValue': '.company-value',
+                'positionValue': '.position-value',
+                'durationValue': '.duration-value',
+                'addressValue': '.address-value',
                 'company': 'input[name="company"]',
                 'address': 'input[name="address"]',
                 'position': 'input[name="position"]',
@@ -51,9 +51,6 @@ define([
                 format: 'yyyy/mm',
                 language: 'ja'
             });
-
-            // enable mask input
-            this.$el.find('input[name="startDate"],input[name="endDate"]').mask('9999/99');
 
             // bind validator
             Backbone.Validation.bind(this);
@@ -141,19 +138,26 @@ define([
             else
                 this.ui.positionValue.empty();
 
-            if (data.address)
-                this.ui.addressValue.text(data.address);
-            else
-                this.ui.addressValue.empty();
+            this.$el.find('.address-value').remove();
 
-            if (data.startDate && !data.endDate)
-                this.ui.durationValue.text(moment(data.startDate).format('YYYY年M月') + "〜");
-            else if (!data.startDate && data.endDate)
-                this.ui.durationValue.text("〜" + moment(data.endDate).format('YYYY年M月'));
-            else if (data.startDate && data.endDate)
-                this.ui.durationValue.text(moment(data.startDate).format('YYYY年M月') + "〜" + moment(data.endDate).format('YYYY年M月'));
-            else
-                this.ui.durationValue.html('<span class="text-muted">未入力</span>');
+            if (data.address)
+                this.$el.find('blockquote').append('<small class="address-value"> ' + data.address + '</small>');
+
+            this.$el.find('.duration-value').remove();
+
+            if (data.startDate || data.endDate) {
+
+                var duration = "";
+
+                if (data.startDate && !data.endDate)
+                    duration = moment(data.startDate).format('YYYY年M月') + "〜";
+                else if (!data.startDate && data.endDate)
+                    duration = "〜" + moment(data.endDate).format('YYYY年M月');
+                else if (data.startDate && data.endDate)
+                    duration = moment(data.startDate).format('YYYY年M月') + "〜" + moment(data.endDate).format('YYYY年M月');
+
+                this.$el.find('blockquote p').after('<small class="duration-value"> ' + duration + '</small>');
+            }
         }
     });
 });

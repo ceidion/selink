@@ -8,8 +8,7 @@ define([], function() {
         // common events
         events: {
             // Switch to edit-mode when the div was clicked
-            'click': 'openEditor',
-            'mouseover': 'attention'
+            'click': 'openEditor'
         },
 
         // common ui
@@ -92,14 +91,12 @@ define([], function() {
                 .find('i').removeClass('animated-input-error');
         },
 
-        // swing icon while user hover on
-        attention: function(event) {
-            $(event.target).find('.sl-icon').slSwing();
-        },
-
         // subclass should provide these methods
+
+        // get user input data
         getData: function() {},
 
+        // render value by user input data
         renderValue: function(data) {}
     });
 

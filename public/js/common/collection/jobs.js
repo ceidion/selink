@@ -1,15 +1,11 @@
 define(['common/model/job'], function(JobModel) {
 
-    var Jobs = Backbone.Collection.extend({
-
-        idAttribute: "_id",
+    return Backbone.Collection.extend({
 
         model: JobModel,
 
         url: function() {
-        	return this.document.url() + '/jobs';
+            return this.document.url() + '/jobs';
         }
     });
-
-    return Jobs;
 });

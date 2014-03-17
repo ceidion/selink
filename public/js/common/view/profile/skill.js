@@ -37,6 +37,30 @@ define([
 
             var self = this;
 
+            this.ui.input.typeahead({
+                source: function(query, process) {
+                    $.ajax({
+
+                        // page url
+                        url: 'http://api.stackoverflow.com/1.1/tags?filter=' + query,
+
+                        // method is post
+                        type: 'GET',
+
+                        // use json format
+                        dataType: 'jsonp',
+
+                        jsonp: 'jsonp',
+
+                        // login success handler
+                        success: function(data) {
+                            var ahead = _.pluck(data.tags, 'name');
+                            process(ahead);
+                        }
+                    });
+                }
+            });
+
             // attach slider
             this.$el.find('.sl-slider').empty().slider({
                 value: this.model.get('weight'),

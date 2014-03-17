@@ -2,19 +2,38 @@ define([
     'common/view/composite-base',
     'text!common/template/profile/educations.html',
     'common/view/profile/education',
-    'common/collection/educations',
+    'common/model/education',
 ], function(
     BaseView,
     template,
     ItemView,
-    EducationsModel) {
+    Education) {
+
+    var Educations = Backbone.Collection.extend({
+
+        model: Education,
+
+        url:  function() {
+            return this.document.url() + '/educations';
+        },
+
+        comparator: function(education) {
+            // sort by startDate desc
+            if (education.get('startDate')) {
+                var date = moment(education.get('startDate'));
+                return 0 - Number(date.valueOf());
+            }
+            else
+                return 0;
+        }
+    });
 
     return BaseView.extend({
 
         // template
         template: template,
 
-        // for dnd add class here
+        // className
         className: 'widget-box transparent',
 
         // item view container
@@ -29,42 +48,18 @@ define([
         // initializer
         initialize: function() {
 
-            this.events = _.extend({}, this.events);
-
             // make the collection from user model
-            this.collection = new EducationsModel(this.model.get('educations'), {parse: true});
+            this.collection = new Educations(this.model.get('educations'), {parse: true});
             this.collection.document = this.model;
-
-            // collection comparator
-            this.collection.comparator = function(education) {
-                // sort by startDate desc
-                if (education.get('startDate')) {
-                    var date = moment(education.get('startDate'));
-                    return 0 - Number(date.valueOf());
-                }
-                else
-                    return 0;
-            };
-            // sort collection
-            this.collection.sort();
         },
 
         // on render
         onRender: function() {
 
+            // add tooltip on add button
             this.$el.find('.btn-add').tooltip({
                 placement: 'top',
                 title: "学歴を追加"
-            });
-
-            this.$el.find('.btn-sort').tooltip({
-                placement: 'top',
-                title: "並び替え"
-            });
-
-            this.$el.find('.btn-handle').tooltip({
-                placement: 'top',
-                title: "ドラグして移動"
             });
 
             // if the collection exceed the limit number

@@ -9,15 +9,11 @@
             %>
             </span>
         </p>
-        <small>
-            取得日：
-            <span id="date-value">
-            <%
-                if (obj.acquireDate) print(obj.acquireDateDisplay);
-                else print('<span class="text-muted">未入力</span>');
-            %>
-            </span>
-        </small>
+        <% if (obj.acquireDate) { %>
+            <small>
+                取得日： <%= moment(obj.acquireDate).format('YYYY年M月') %>
+            </small>
+        <% } %>
     </blockquote>
 </div>
 <div class="sl-editor">
@@ -37,7 +33,8 @@
             <span class="input-group-addon">
                 <i class="icon-calendar bigger-110"></i>
             </span>
-            <input type="text" placeholder="取得年月" name="acquireDate" value="<%- obj.acquireDateInput %>">
+            <input type="text" placeholder="取得年月" name="acquireDate"
+                value="<% if (obj.acquireDate) print(moment(obj.acquireDate).format('YYYY/MM')); %>">
         </div>
     </div>
 </div>

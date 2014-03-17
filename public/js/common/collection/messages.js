@@ -1,8 +1,6 @@
 define(['common/model/message'], function(MessageModel) {
 
-    var Messages = Backbone.Collection.extend({
-
-        idAttribute: "_id",
+    return Backbone.Collection.extend({
 
         model: MessageModel,
 
@@ -10,6 +8,4 @@ define(['common/model/message'], function(MessageModel) {
             return this.document.url() + '/messages';
         }
     });
-
-    return Messages;
 });

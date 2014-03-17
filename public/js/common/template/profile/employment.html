@@ -2,35 +2,33 @@
     <blockquote>
         <p>
             <i class="icon-building sl-icon bigger-110 blue"></i>&nbsp;
-            <span id="company-value">
+            <span class="company-value">
             <%
                 if (obj.company) print(obj.company);
                 else print('<span class="text-muted">会社名</span>');
             %>
             </span>
-            <span id="position-value">
+            <span class="position-value">
             <%
                 if (obj.position) print('<span class="label label-sm label-primary arrowed arrowed-right">' + obj.position + '</span>');
             %>
             </span>
         </p>
-        <small id="duration-value">
-            <%
-                if (obj.startDate && !obj.endDate)
-                    print(obj.startDateDisplay + "〜");
-                else if (!obj.startDate && obj.endDate)
-                    print("〜" + obj.endDateDisplay);
-                else if (obj.startDate && obj.endDate)
-                    print(obj.startDateDisplay + "〜" + obj.endDateDisplay);
-                else
-                    print('<span class="text-muted">未入力</span>');
-            %>
-        </small>
-        <small id="address-value">
-            <%
-                if (obj.address) print(obj.address);
-            %>
-        </small>
+        <% if (obj.startDate || obj.endDate) { %>
+            <small class="duration-value">
+                <%
+                    if (obj.startDate && !obj.endDate)
+                        print(obj.startDateDisplay + "〜");
+                    else if (!obj.startDate && obj.endDate)
+                        print("〜" + obj.endDateDisplay);
+                    else if (obj.startDate && obj.endDate)
+                        print(obj.startDateDisplay + "〜" + obj.endDateDisplay);
+                %>
+            </small>
+        <% } %>
+        <% if (obj.address) { %>
+            <small class="address-value"> <%= obj.address %></small>
+        <% } %>
     </blockquote>
 </div>
 <div class="sl-editor">

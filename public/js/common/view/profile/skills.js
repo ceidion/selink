@@ -2,19 +2,36 @@ define([
     'common/view/composite-base',
     'text!common/template/profile/skills.html',
     'common/view/profile/skill',
-    'common/collection/skills',
+    'common/model/skill',
 ], function(
     BaseView,
     template,
     ItemView,
-    SkillsModel) {
+    Skill) {
+
+    var Skills = Backbone.Collection.extend({
+
+        model: Skill,
+
+        url:  function() {
+            return this.document.url() + '/skills';
+        },
+
+        comparator: function(skill) {
+            // sort by weight desc
+            if (skill.get('weight'))
+                return 0 - Number(skill.get('weight'));
+            else
+                return 0;
+        }
+    });
 
     return BaseView.extend({
 
         // template
         template: template,
 
-        // for dnd add class here
+        // className
         className: 'widget-box transparent',
 
         // item view container
@@ -28,40 +45,19 @@ define([
 
         // initializer
         initialize: function() {
-            this.events = _.extend({}, this.events);
 
             // make the collection from user model
-            this.collection = new SkillsModel(this.model.get('skills'));
+            this.collection = new Skills(this.model.get('skills'));
             this.collection.document = this.model;
-
-            // collection comparator
-            this.collection.comparator = function(skill) {
-                // sort by weight desc
-                if (skill.get('weight'))
-                    return 0 - Number(skill.get('weight'));
-                else
-                    return 0;
-            };
-            // sort collection
-            this.collection.sort();
         },
 
         // on render
         onRender: function() {
 
+            // add tooltip on add button
             this.$el.find('.btn-add').tooltip({
                 placement: 'top',
                 title: "スキルを追加"
-            });
-
-            this.$el.find('.btn-sort').tooltip({
-                placement: 'top',
-                title: "並び替え"
-            });
-
-            this.$el.find('.btn-handle').tooltip({
-                placement: 'top',
-                title: "ドラグして移動"
             });
 
             // if the collection exceed the limit number

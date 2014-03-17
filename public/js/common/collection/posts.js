@@ -1,8 +1,6 @@
 define(['common/model/post'], function(PostModel) {
 
-    var Posts = Backbone.Collection.extend({
-
-        idAttribute: "_id",
+    return Backbone.Collection.extend({
 
         model: PostModel,
 
@@ -10,6 +8,4 @@ define(['common/model/post'], function(PostModel) {
             return this.document.url() + '/posts';
         }
     });
-
-    return Posts;
 });

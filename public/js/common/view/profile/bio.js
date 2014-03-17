@@ -13,6 +13,7 @@ define([
         // for dnd add class here
         className: 'widget-box transparent',
 
+        // place holder
         placeholder: '<div class="text-muted bigger-125 center">登録していません</div>',
 
         // initializer
@@ -67,19 +68,22 @@ define([
             }).prev().addClass('wysiwyg-style3');
         },
 
+        // get user input data
         getData: function() {
             return {
                 bio: this.$el.find('.wysiwyg-editor').html()
             };
         },
 
+        // render value by user input data
         renderValue: function(data) {
-
+            // if user input is nothing
             if (!data.bio) {
+                // draw placehodler
                 this.ui.value.html(this.placeholder);
                 return;
             }
-
+            // or draw the new value
             this.ui.value.empty().html(data.bio);
         }
 

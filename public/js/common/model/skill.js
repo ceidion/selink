@@ -1,6 +1,6 @@
 define([], function() {
 
-    var Skill = Backbone.DeepModel.extend({
+    return Backbone.DeepModel.extend({
 
         idAttribute: "_id",
 
@@ -15,6 +15,4 @@ define([], function() {
             }]
         }
     });
-
-    return Skill;
 });

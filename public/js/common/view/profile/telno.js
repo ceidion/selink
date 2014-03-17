@@ -10,6 +10,7 @@ define([
         // template
         template: template,
 
+        // className
         className: 'row',
 
         // initializer
@@ -26,26 +27,27 @@ define([
 
         // after render
         onRender: function() {
-
-            var self = this;
-
             // enable mask input
             this.ui.input.mask('(999)9999-9999');
         },
 
+        // get user input data
         getData: function() {
             return {
                 telNo: this.ui.input.val()
             };
         },
 
+        // render value by user input data
         renderValue: function(data) {
 
+            // if user input nothing
             if (!data.telNo) {
+                // draw placehodler
                 this.ui.value.html(this.placeholder);
                 return;
             }
-
+            // or draw the new value
             this.ui.value.text(data.telNo);
         }
 

@@ -1,6 +1,6 @@
 define([], function() {
 
-    var Profile = Backbone.DeepModel.extend({
+    return Backbone.DeepModel.extend({
 
         idAttribute: "_id",
 
@@ -52,7 +52,4 @@ define([], function() {
             return response;
         }
     });
-
-    return Profile;
-
 });

@@ -1,6 +1,6 @@
 define([], function() {
 
-    var Profile = Backbone.DeepModel.extend({
+    return Backbone.DeepModel.extend({
 
         idAttribute: "_id",
 
@@ -23,21 +23,26 @@ define([], function() {
                 msg: "最大20文字までご入力ください"
             },
             birthDay: {
+                required: false,
                 dateJa: true
             },
             address: {
+                required: false,
                 maxLength: 80,
                 msg: "最大80文字までご入力ください"
             },
             nearestSt: {
+                required: false,
                 maxLength: 30,
                 msg: "最大30文字までご入力ください"
             },
             secEmail: {
+                required: false,
                 pattern: 'email',
                 msg: "正しいフォーマットでご入力ください"
             },
             webSite: {
+                required: false,
                 pattern: 'url',
                 msg: "正しいURLフォーマットでご入力ください"
             }
@@ -55,7 +60,4 @@ define([], function() {
             return response;
         }
     });
-
-    return Profile;
-
 });

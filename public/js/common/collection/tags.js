@@ -1,13 +1,9 @@
 define([], function() {
 
-    var Tags = Backbone.Collection.extend({
-
-        idAttribute: "_id",
+    return Backbone.Collection.extend({
 
         model: Backbone.Model.extend({idAttribute: "_id"}),
 
         url:  '/tags'
     });
-
-    return Tags;
 });

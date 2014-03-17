@@ -88,11 +88,6 @@ html,body {
     padding: 0px;
     color: #667e99;
   }
-  // min-height: 46px;
-
-  // .sl-info-name,.sl-value {
-  //     line-height: 46px;
-  // }
 }
 
 // profile photo, cancel the float for FF
@@ -102,11 +97,12 @@ html,body {
 }
 
 // add some space for address input
-#name-item, #title-item {
-  padding: 7px;
+#name, #title {
+  padding: 5px 7px !important;
+  min-height: 43px;
 }
 
-#bio-item {
+#bio {
   img {
     max-width: 100%;
   }
@@ -116,7 +112,7 @@ html,body {
   margin-bottom: 10px;
 }
 
-#language-composite {
+#languages {
 
   .grid2, .grid3, .grid4 {
 
@@ -147,7 +143,7 @@ html,body {
   }
 }
 
-#skill-composite {
+#skills {
 
   .sl-editable {
     min-height: 40px;
@@ -177,11 +173,11 @@ html,body {
   }
 }
 
-#qualification-composite {
+#qualifications {
 
   .sl-editable {
     padding: 7px;
-    min-height: 85px;
+    min-height: 42px;
   }
 
   blockquote {
@@ -201,11 +197,11 @@ html,body {
   }
 }
 
-#education-composite {
+#educations {
 
   .sl-editable {
     padding: 7px;
-    min-height: 85px;
+    min-height: 42px;
   }
 
   blockquote {
@@ -225,11 +221,11 @@ html,body {
   }
 }
 
-#employment-composite {
+#employments {
 
   .sl-editable {
     padding: 7px;
-    min-height: 100px;
+    min-height: 42px;
   }
 
   blockquote {
@@ -274,7 +270,7 @@ html,body {
 #event-modal {
 
   input {
-      line-height: normal;
+    line-height: normal;
   }
 
   .row {
@@ -323,7 +319,7 @@ html,body {
 /* the norm */
 // adjust font for japanese
 .gritter-item {
-    font-size: 12px;
+  font-size: 12px;
 }
 
 .gritter-image {
@@ -357,12 +353,12 @@ html,body {
 // job index
 .job-container .widget-container-span {
 
-    .transition(~"all 0.2s");
+  .transition(~"all 0.2s");
 
-    &:hover {
-      text-decoration:none;
-      .transform(~"scale(1.05)");
-    }
+  &:hover {
+    text-decoration:none;
+    .transform(~"scale(1.05)");
+  }
 }
 
 // job create

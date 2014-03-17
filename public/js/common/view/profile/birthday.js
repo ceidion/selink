@@ -10,6 +10,7 @@ define([
         // template
         template: template,
 
+        // className
         className: 'row',
 
         // initializer
@@ -33,8 +34,6 @@ define([
         // after render
         onRender: function() {
 
-            var self = this;
-
             // append data picker
             this.ui.input.datepicker({
                 autoclose: true,
@@ -52,9 +51,10 @@ define([
             // });
 
             // bind validator
-            Backbone.Validation.bind(this);
+            // Backbone.Validation.bind(this);
         },
 
+        // remove the datepicker before close
         onBeforeClose: function() {
             this.ui.input.datepicker('remove');
         },
@@ -78,18 +78,30 @@ define([
             }
         },
 
+        // get user input data
         getData: function() {
 
-            return {
-                birthDay: moment(this.ui.input.val()).toJSON()
-            };
+            if (!_.isEmpty(this.ui.input.val()))
+                return {
+                    birthDay: moment(this.ui.input.val()).toJSON()
+                };
+            else
+                return {
+                    birthDay: null
+                };
         },
 
+        // render value by user input data
         renderValue: function(data) {
 
+            // if user input nothing
             if (!data.birthDay) {
-                this.ui.value.text(moment(data.birthDay).format('LL'));
+                // draw placehodler
+                this.ui.value.html(this.placeholder);
+                return;
             }
+            // or draw the new value by local format
+            this.ui.value.text(moment(data.birthDay).format('LL'));
         }
 
     });

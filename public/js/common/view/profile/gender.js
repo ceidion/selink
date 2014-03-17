@@ -10,6 +10,7 @@ define([
         // template
         template: template,
 
+        // className
         className: 'row',
 
         // initializer
@@ -19,11 +20,12 @@ define([
             });
         },
 
+        // get user input data
         getData: function(event) {
 
             $target = $(event.target);
 
-            // TODO: this is not right
+            // TODO: this is not right, but working :)
             if ($target.prop('tagName') == "I")
                 return {
                     gender: $target.closest('.btn').find('input').val()
@@ -34,6 +36,7 @@ define([
                 };
         },
 
+        // render value by user input data
         renderValue: function(data) {
             this.ui.value.text(data.gender);
         }

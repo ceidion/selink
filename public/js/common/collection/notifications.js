@@ -1,8 +1,6 @@
 define([], function() {
 
-    var Notifications = Backbone.Collection.extend({
-
-        idAttribute: "_id",
+    return Backbone.Collection.extend({
 
         model: Backbone.Model.extend({idAttribute: "_id"}),
 
@@ -10,6 +8,4 @@ define([], function() {
             return this.document.url() + '/notifications';
         }
     });
-
-    return Notifications;
 });

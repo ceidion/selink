@@ -19,6 +19,7 @@ define([
         // template
         template: template,
 
+        // className
         className: 'row',
 
         // initializer
@@ -46,12 +47,14 @@ define([
             });
         },
 
+        // get user input data
         getData: function() {
             return {
                 nationality: this.ui.input.val()
             };
         },
 
+        // render value by user input data
         renderValue: function(data) {
             this.ui.value.text(data.nationality);
         }

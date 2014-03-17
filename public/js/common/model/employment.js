@@ -1,6 +1,6 @@
 define([], function() {
 
-    var Employment = Backbone.DeepModel.extend({
+    return Backbone.DeepModel.extend({
 
         idAttribute: "_id",
 
@@ -46,6 +46,4 @@ define([], function() {
             return response;
         }
     });
-
-    return Employment;
 });

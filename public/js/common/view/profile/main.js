@@ -50,25 +50,25 @@ define([
 
         // regions
         regions: {
-            photoRegion: '#photo-item',
-            nameRegion: '#name-item',
-            titleRegion: '#title-item',
-            birthdayRegion: '#birthday-item',
-            genderRegion: '#gender-item',
-            marriageRegion: '#marriage-item',
-            nationalityRegion: '#nationality-item',
-            addressRegion: '#address-item',
-            nearestStRegion: '#nearestst-item',
-            experienceRegion: '#experience-item',
-            telNoRegion: '#telno-item',
-            emailRegion: '#email-item',
-            webSiteRegion: '#website-item',
-            bioRegion: '#bio-item',
-            languageRegion: '#language-composite',
-            skillRegion: '#skill-composite',
-            qualificationRegion: '#qualification-composite',
-            educationRegion: '#education-composite',
-            employmentRegion: '#employment-composite',
+            photoRegion: '#photo',
+            nameRegion: '#name',
+            titleRegion: '#title',
+            birthdayRegion: '#birthday',
+            genderRegion: '#gender',
+            marriageRegion: '#marriage',
+            nationalityRegion: '#nationality',
+            addressRegion: '#address',
+            nearestStRegion: '#nearestst',
+            experienceRegion: '#experience',
+            telNoRegion: '#telno',
+            emailRegion: '#email',
+            webSiteRegion: '#website',
+            bioRegion: '#bio',
+            languageRegion: '#languages',
+            skillRegion: '#skills',
+            qualificationRegion: '#qualifications',
+            educationRegion: '#educations',
+            employmentRegion: '#employments',
         },
 
         // initializer
@@ -117,6 +117,8 @@ define([
             this.qualificationRegion.show(this.qualificationComposite);
             this.educationRegion.show(this.educationComposite);
             this.employmentRegion.show(this.employmentComposite);
+
+            Backbone.Validation.bind(this);
         },
 
         // after show

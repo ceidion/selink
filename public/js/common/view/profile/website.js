@@ -10,6 +10,7 @@ define([
         // template
         template: template,
 
+        // className
         className: 'row',
 
         // initializer
@@ -30,13 +31,9 @@ define([
             };
         },
 
-        // after render
-        onRender: function() {
-            // bind validator
-            Backbone.Validation.bind(this);
-        },
-
+        // reflect user input on model
         updateModel: function() {
+
             // clear all errors
             this.clearError();
 
@@ -53,19 +50,22 @@ define([
             }
         },
 
+        // get user input data
         getData: function() {
             return {
                 webSite: this.ui.input.val()
             };
         },
 
+        // render value by user input data
         renderValue: function(data) {
-
+            // if user input nothing
             if (!data.webSite) {
+                // draw placehodler
                 this.ui.value.html(this.placeholder);
                 return;
             }
-
+            // or draw the new value
             this.ui.value.text(data.webSite);
         }
 

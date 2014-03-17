@@ -17,8 +17,7 @@ define([
         initialize: function() {
 
             this.ui = _.extend({}, this.ui, {
-                'dateValue': '#date-value',
-                'nameValue': '#name-value',
+                'nameValue': '.name-value',
                 'date': 'input[name="acquireDate"]',
                 'name': 'input[name="name"]',
                 'remove': '.btn-remove'
@@ -43,9 +42,6 @@ define([
                 format: 'yyyy/mm',
                 language: 'ja'
             });
-
-            // enable mask input
-            this.ui.date.mask('9999/99');
 
             // bind validator
             Backbone.Validation.bind(this);
@@ -113,10 +109,10 @@ define([
             else
                 this.ui.nameValue.html('<span class="text-muted">資格名称</span>');
 
+            this.$el.find('small').remove();
+
             if (data.acquireDate)
-                this.ui.dateValue.text(moment(data.acquireDate).format('YYYY年M月'));
-            else
-                this.ui.dateValue.html('<span class="text-muted">未入力</span>');
+                this.$el.find('blockquote').append('<small>取得日： ' + moment(data.acquireDate).format('YYYY年M月') + '</small>');
         }
     });
 });
