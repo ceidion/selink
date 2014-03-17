@@ -58,6 +58,70 @@ define([], function() {
             }
 
             return response;
+        },
+
+        completeness: function() {
+
+            var completeness = 0;
+
+            if (this.get('photo') && this.get('photo') != "./asset/images/no_photo_male.gif")
+                completeness += 10;
+
+            if (this.get('firstName'))
+                completeness += 5;
+
+            if (this.get('lastName'))
+                completeness += 5;
+
+            if (this.get('birthDay'))
+                completeness += 5;
+
+            if (this.get('gender'))
+                completeness += 5;
+
+            if (this.get('nationality'))
+                completeness += 5;
+
+            if (this.get('marriage'))
+                completeness += 5;
+
+            if (this.get('experience'))
+                completeness += 5;
+
+            if (this.get('telNo'))
+                completeness += 5;
+
+            if (this.get('secEmail'))
+                completeness += 5;
+
+            if (this.get('webSite'))
+                completeness += 5;
+
+            if (this.get('nearestSt'))
+                completeness += 5;
+
+            if (this.get('address'))
+                completeness += 5;
+
+            if (this.get('bio'))
+                completeness += 5;
+
+            if (this.get('qualifications').length)
+                completeness += 5;
+
+            if (this.get('languages').length)
+                completeness += 5;
+
+            if (this.get('skills').length)
+                completeness += 5;
+
+            if (this.get('educations').length)
+                completeness += 5;
+
+            if (this.get('employments').length)
+                completeness += 5;
+
+            return completeness;
         }
     });
 });

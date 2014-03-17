@@ -14,9 +14,11 @@ html,body{height:100%}
 #sl-basic-info .sl-editable{padding:10px;line-height:33px}#sl-basic-info .sl-editable .align-right{padding:0px;color:#667e99}
 .sl-avatar{border:0px !important;float:none !important}
 #name,#title{padding:5px 7px !important;min-height:43px}
+#completeness .progress[data-percent]:after{line-height:normal}
 #bio img{max-width:100%}
 #zipCodeArea{margin-bottom:10px}
-#languages .grid2,#languages .grid3,#languages .grid4{min-height:127px;margin-bottom:6px;padding-top:6px;border-left:none}#languages .grid2 input[readonly],#languages .grid3 input[readonly],#languages .grid4 input[readonly]{background:transparent !important}
+.empty-view{border:2px dashed #eee;padding:25px}
+#languages .grid2,#languages .grid3,#languages .grid4{min-height:127px;margin-bottom:6px;padding-top:6px;border-left:none}#languages .grid2 input[type="text"],#languages .grid3 input[type="text"],#languages .grid4 input[type="text"]{-webkit-transition-duration:0;transition-duration:0}
 #languages .grid2 .sl-value,#languages .grid3 .sl-value,#languages .grid4 .sl-value{margin-top:-10px}
 #languages .grid2 .sl-editor,#languages .grid3 .sl-editor,#languages .grid4 .sl-editor{margin-top:-5px}
 #languages .grid2 .input-group-btn .btn,#languages .grid3 .input-group-btn .btn,#languages .grid4 .input-group-btn .btn{min-height:30px;margin-left:-2px}

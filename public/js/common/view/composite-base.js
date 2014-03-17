@@ -28,7 +28,7 @@ define(['common/view/composite-empty'], function(EmptyView) {
 
             // this happend on user click add button
             // subview's model don't have _id attribute, so it's a new model
-            if (itemView.model.isNew()) {
+            if (itemView.model.isNew() && !itemView.$el.find('.empty-view').length) {
 
                 // append the subview
                 this.$el.find(this.itemViewContainer).append(itemView.el);
@@ -77,7 +77,16 @@ define(['common/view/composite-empty'], function(EmptyView) {
             model.save(null , {
 
                 // if save success
-                success: function() {
+                success: function(model, response, options) {
+
+                    var currentItems = self.collection.document.get(self.itemName),
+                        updatedItem = _.find(currentItems, function(item) {
+                            return item._id == response._id;
+                        });
+
+                    if (!updatedItem)
+                        self.collection.document.set(self.itemName, _.union(currentItems, response));
+
                 },
 
                 // if other errors happend
@@ -108,11 +117,18 @@ define(['common/view/composite-empty'], function(EmptyView) {
             model.destroy({
 
                 // if save success
-                success: function() {
+                success: function(model, response) {
                     // if the number of items fewer than limitation
                     if (self.collection.length < self.itemLimit)
                         // show the add button
                         self.ui.addBtn.fadeIn('fast');
+
+                    var currentItems = self.collection.document.get(self.itemName),
+                        newItems = _.reject(currentItems, function(item) {
+                            return item._id == response._id;
+                        });
+
+                    self.collection.document.set(self.itemName, newItems);
                 },
 
                 // if other errors happend

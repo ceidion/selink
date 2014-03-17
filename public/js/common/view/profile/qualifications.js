@@ -38,6 +38,8 @@ define([
         // item view container
         itemViewContainer: '.widget-main',
 
+        itemName: 'qualifications',
+
         // item view
         itemView: ItemView,
 

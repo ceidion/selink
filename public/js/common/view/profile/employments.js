@@ -39,6 +39,8 @@ define([
         // item view container
         itemViewContainer: '.widget-main',
 
+        itemName: 'employments',
+
         // item view
         itemView: ItemView,
 

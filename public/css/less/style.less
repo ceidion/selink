@@ -102,6 +102,12 @@ html,body {
   min-height: 43px;
 }
 
+#completeness {
+  .progress[data-percent]:after {
+    line-height: normal;
+  }
+}
+
 #bio {
   img {
     max-width: 100%;
@@ -110,6 +116,11 @@ html,body {
 
 #zipCodeArea {
   margin-bottom: 10px;
+}
+
+.empty-view {
+  border: 2px dashed #eee;
+  padding: 25px;
 }
 
 #languages {
@@ -123,8 +134,8 @@ html,body {
 
     border-left: none;
 
-    input[readonly] {
-      background: transparent !important;
+    input[type="text"] {
+      .transition-duration(0);
     }
 
     .sl-value {

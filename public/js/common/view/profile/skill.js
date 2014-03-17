@@ -158,7 +158,7 @@ define([
                 // set value on model
                 this.model.set(inputData);
                 // render view with new value
-                this.$el.find('.pull-left').empty().text(inputData.skill);
+                this.$el.find('.pull-left').empty().html('<i class="icon-gear sl-icon"></i>&nbsp;' + inputData.skill);
             } else {
                 // show error
                 this.showError(errors);

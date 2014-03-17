@@ -42,16 +42,6 @@ define([
                 endDate: new Date(),
                 language: 'ja'
             });
-
-            // // enable mask input
-            // this.ui.input.mask('9999/99/99', {
-            //     completed: function() {
-            //         console.log(this.val());
-            //     }
-            // });
-
-            // bind validator
-            // Backbone.Validation.bind(this);
         },
 
         // remove the datepicker before close

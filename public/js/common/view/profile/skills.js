@@ -37,6 +37,8 @@ define([
         // item view container
         itemViewContainer: '.widget-main',
 
+        itemName: 'skills',
+
         // item view
         itemView: ItemView,
 

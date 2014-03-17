@@ -14,7 +14,7 @@ define([
         className: 'widget-box transparent',
 
         // place holder
-        placeholder: '<div class="text-muted bigger-125 center">登録していません</div>',
+        placeholder: '<div class="empty-view text-muted bigger-125 center">自己紹介はまだ登録していません<br/>ここをクリックして編集できます</div>',
 
         // initializer
         initialize: function() {
