@@ -45,8 +45,10 @@ module.exports = function(app, sio) {
     // Create new post
     app.post('/users/:user/posts', checkLoginStatus, post.create);
 
-    // update a post
-    app.patch('/posts/:post', checkLoginStatus, post.update);
+    // like a post
+    app.patch('/posts/:post/like', checkLoginStatus, post.like);
+    // comment a post
+    app.post('/posts/:post/comments', checkLoginStatus, post.comment);
 
     // Introduce friend
     app.get('/friends', checkLoginStatus, friend.introduce);

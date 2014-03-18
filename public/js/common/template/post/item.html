@@ -17,12 +17,12 @@
                     <span><%= obj.liked.length %></span>
                 </div>
             <% } else { %>
-                <div class="inline btn-like red">
+                <div class="inline btn-like red tooltip-error">
                     <i class="icon-heart-empty bigger-110"></i>
                     <span><%= obj.liked.length %></span>
                 </div>
             <% } %>
-            <div class="inline btn-favorite orange">
+            <div class="inline btn-favorite orange tooltip-warning">
                 <i class="icon-star-empty bigger-110"></i>
                 <span><%= obj.liked.length %></span>
             </div>
@@ -35,35 +35,14 @@
 
             <%= obj.content %>
 
-            <% if (obj.comment.length) { %>
-            <hr>
-            <div class="dialogs">
-                <% _.each(obj.comment, function(comment){ %>
-                <div class="itemdiv dialogdiv">
-                    <div class="user">
-                        <img alt="" src="<%= comment._owner.photo%>" />
-                    </div>
+            <% if (obj.comments.length) { %>
+                <hr>
+            <% }%>
 
-                    <div class="body">
-                        <div class="time">
-                            <i class="icon-time"></i>
-                            <span class="{{time-color}}"><%= moment(comment.createDate).fromNow() %></span>
-                        </div>
-                        <div class="name">
-                            <a href="#profile/<%= comment._owner._id %>">
-                                <%= comment._owner.firstName %>&nbsp;<%= comment._owner.lastName %>
-                            </a>
-                        </div>
-                        <div class="text"><%= comment.content %></div>
+            <div class="dialogs"></div>
 
-                        <div class="tools">
-                            <i class="icon-only icon-heart-empty red"></i>
-                            <i class="icon-only icon-share-alt blue"></i>
-                        </div>
-                    </div>
-                </div>
-                <% }); %>
-            </div>
+            <% if (obj.comments.length > 3) { %>
+                <button class="btn btn-xs btn-info btn-block btn-show">もっと見る</button>
             <% }%>
 
         </div>

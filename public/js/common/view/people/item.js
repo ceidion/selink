@@ -1,14 +1,14 @@
 define([
-	'text!common/template/people/item.html'
+    'text!common/template/people/item.html'
 ],function(
-	template
+    template
 ) {
 
-	return Backbone.Marionette.ItemView.extend({
+    return Backbone.Marionette.ItemView.extend({
 
-		template: template,
+        template: template,
 
-		tagName: 'li',
+        tagName: 'li',
 
         className: 'friend-item col-xs-12 col-sm-6 col-lg-4',
 
@@ -45,5 +45,5 @@ define([
             });
         },
 
-	});
+    });
 });

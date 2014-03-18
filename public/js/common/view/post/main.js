@@ -38,8 +38,7 @@ define([
 
         // item view events
         itemEvents: {
-            'comment:opened': 'shiftColumn',
-            'comment:closed': 'shiftColumn'
+            'comment:change': 'shiftColumn'
         },
 
         // initializer
@@ -154,9 +153,8 @@ define([
             });
         },
 
-        shiftColumn: function(view) {
-            console.log("shift");
-            console.log(arguments);
+        shiftColumn: function(event, view) {
+            $('.post-container').isotope('selinkShiftColumn', view.el);
         }
     });
 });

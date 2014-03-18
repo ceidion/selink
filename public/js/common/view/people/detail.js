@@ -45,8 +45,7 @@ define([
 
         // item view events
         itemEvents: {
-            'comment:opened': 'shiftColumn',
-            'comment:closed': 'shiftColumn'
+            'comment:change': 'shiftColumn'
         },
 
         // initializer

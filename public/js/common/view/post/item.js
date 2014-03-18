@@ -1,11 +1,28 @@
 define([
     'text!common/template/post/item.html',
-    'text!common/template/post/item-my-post.html'
+    'text!common/template/post/item-my-post.html',
+    'common/view/post/comment'
 ], function(
     defaultTemplate,
-    myPostTemplate) {
+    myPostTemplate,
+    ItemView) {
 
-    return Backbone.Marionette.ItemView.extend({
+    var CommentsCollection = Backbone.Collection.extend({
+
+        model: Backbone.Model.extend({idAttribute: "_id"}),
+
+        url: function() {
+            return '/posts/' + this.document.id + '/comments';
+        },
+
+        comparator: function(comment) {
+            // sort by createDate
+            var date = moment(comment.get('createDate'));
+            return Number(date.valueOf());
+        }
+    });
+
+    return Backbone.Marionette.CompositeView.extend({
 
         className: 'post-item col-xs-12 col-sm-6 col-lg-4',
 
@@ -18,12 +35,29 @@ define([
                 return defaultTemplate;
         },
 
+        // item view container
+        itemViewContainer: '.dialogs',
+
+        // item view
+        itemView: ItemView,
+
         // events
         events: {
             'click .btn-like': 'onLike',
             'click .btn-comment': 'onComment',
             'click .btn-cancel': 'closeComment',
             'focusin textarea': 'openComment',
+            'click .btn-show': 'showAllComment'
+        },
+
+        // override appendHtml
+        appendHtml: function(collectionView, itemView, index) {
+
+            if (index < this.collection.length - 3) 
+                itemView.$el.addClass('hide');
+            // prepend comment to container, later comments comeout first
+            this.$el.find('.dialogs').prepend(itemView.el);
+            this.trigger("comment:change");
         },
 
         // initializer
@@ -47,12 +81,26 @@ define([
                 // mark as liked
                 this.model.set('isLiked', true, {silent:true});
             }
+
+            this.collection = new CommentsCollection(this.model.get('comments'));
+            this.collection.document = this.model;
         },
 
         // after render
-        onShow: function() {
+        onRender: function() {
 
             var self = this;
+
+            // add tooltip on add button
+            this.$el.find('.btn-like').tooltip({
+                placement: 'top',
+                title: "いいね！"
+            });
+
+            this.$el.find('.btn-favorite').tooltip({
+                placement: 'top',
+                title: "お気に入り"
+            });
 
             // enable autosize on comment area
             this.$el.find('textarea').autosize({
@@ -71,7 +119,7 @@ define([
             this.model.save({
                 liked: selink.userModel.get('_id')
             }, {
-                url: '/posts/' + this.model.get('_id'),
+                url: '/posts/' + this.model.get('_id') + '/like',
                 success: function() {
                     // update the liked number
                     self.$el.find('.btn-like')
@@ -99,8 +147,8 @@ define([
             var self = this;
 
             this.$el.find('.comment-area').css('margin-left', '40px');
-            this.$el.find('.photo-area').show().slFadeInLeft();
-            this.$el.find('.btn-area').slideDown(function() {
+            this.$el.find('.photo-area').slideDown();
+            this.$el.find('.btn-area').slideDown('fast', function() {
                 self.trigger("comment:change");
             });
         },
@@ -112,7 +160,7 @@ define([
 
             this.$el.find('.comment-area').css('margin-left', '0px');
             this.$el.find('.photo-area').hide();
-            this.$el.find('.btn-area').slideUp(function() {
+            this.$el.find('.btn-area').slideUp('fast', function() {
                 self.trigger("comment:change");
             });
         },
@@ -122,17 +170,24 @@ define([
 
             var self = this;
 
-            this.model.save({
+            this.collection.create({
                 _owner: selink.userModel.get('_id'),
                 content: this.$el.find('textarea').val()
             }, {
-                url: '/posts/' + this.model.get('_id'),
                 success: function() {
-
+                    self.closeComment();
                 },
-                patch: true,
-                wait: true,
-                silent: true // supress the sync event
+                wait: true
+            });
+        },
+
+        showAllComment: function() {
+
+            var self = this;
+
+            this.$el.find('.hide').removeClass('hide').slideDown(function() {
+                self.$el.find('.btn-show').hide();
+                self.trigger("comment:change");
             });
         }
     });

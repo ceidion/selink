@@ -25,13 +25,23 @@ var Post = new Schema({
         ref: 'User'
     }],
 
-    // Comment
-    comment: [Comment],
+    // Comments
+    comments: [Comment],
 
-    // Publicity of this post
-    publicity: {
-        type: String,
-        trim: true
+    // Setting
+    setting: {
+
+        // Publicity of this post
+        publicity: {
+            type: String,
+            trim: true,
+            default: 'all'
+        },
+
+        commentable: {
+            type: Boolean,
+            default: true
+        }
     },
 
     // Logical Delete flag
