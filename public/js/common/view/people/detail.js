@@ -31,18 +31,19 @@ define([
         // item view
         itemView: ItemView,
 
-        // event
+        // events
         events: {
             'click .btn-friend': 'onAddFriend',
             'click .btn-break': 'onBreakFriend'
         },
 
-        // collection event
+        // collection events
         collectionEvents: {
             // isotope this page after collection get sync
             'sync': 'reIsotope',
         },
 
+        // item view events
         itemEvents: {
             'comment:opened': 'shiftColumn',
             'comment:closed': 'shiftColumn'
@@ -126,8 +127,9 @@ define([
 
         // after render
         onRender: function() {
-            // inject a region manager, so this composite view will have Layout view's power
+            // create region manager (this composite view will have Layout ability)
             this.rm = new Backbone.Marionette.RegionManager();
+            // create regions
             this.regions = this.rm.addRegions({
                 historyRegion: '#history',
                 friendsRegion: '#friends'
@@ -167,40 +169,24 @@ define([
 
         // before close
         onBeforeClose: function() {
-            // close region manager manually
+            // close region manager
             this.rm.close();
         },
 
-        // isotope
+        // re-isotope after collection get synced
         reIsotope: function() {
 
             var self = this;
 
+            // use imagesLoaded plugin
             this.$el.find('.board').imagesLoaded(function() {
+                // re-isotope
                 self.$el.find('.board').isotope({
                     layoutMode: 'selinkMasonry',
                     itemSelector : '.info-item, .post-item',
                     resizable: false
                 });
             });
-
-            $(window).smartresize(function(){
-                 self.$el.find('.board').isotope({
-                    layoutMode: 'selinkMasonry',
-                });
-            });
-
-            // this.$el.find('.post-item').hover(
-            //     function() {
-            //         $(this).css({ height: "+=100" });
-            //         // note that element is passed in, not jQuery object
-            //         self.$el.find('.board').isotope( 'selinkShiftColumn', this );
-            //     },
-            //     function() {
-            //         $(this).css({ height: "-=100" });
-            //         self.$el.find('.board').isotope( 'selinkShiftColumn', this );
-            //     }
-            // );
         },
 
         // add this person as friend

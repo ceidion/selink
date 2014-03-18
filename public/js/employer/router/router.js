@@ -5,10 +5,15 @@ define([], function() {
         appRoutes: {
             'home': 'showHomeView',
             'profile': 'showProfileView',
+            "profile/:id": "showProfileView",
+            "post": "showPostView",
             'jobIndex': 'showJobIndexView',
             'jobCreate': 'showJobCreateView',
             'jobEdit/:id': 'showJobEditView',
+            "friend": "showFriendView",
+            "people": "showPeopleView",
             'calendar': 'showCalendarView',
+            "mailbox": "showMailBoxView",
         }
     });
 

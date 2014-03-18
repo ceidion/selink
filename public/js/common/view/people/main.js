@@ -23,7 +23,7 @@ define([
         // item view
         itemView: ItemView,
 
-        // isotope after collection populated
+        // collection events
         collectionEvents: {
             'sync': 'reIsotope',
         },
@@ -33,10 +33,9 @@ define([
 
             var self = this;
 
-            this.events = _.extend({}, this.events);
-
-            // create collection
+            // create people collection
             this.collection = new Introductions();
+            // fetch people
             this.collection.fetch({
                 // after initialize the collection
                 success: function() {
@@ -92,19 +91,16 @@ define([
             $('.ace-thumbnails').data('infinitescroll', null);
         },
 
+        // re-isotope after collection get synced
         reIsotope: function() {
 
+            // use imageLoaded plugin
             $('.ace-thumbnails').imagesLoaded(function() {
+                // re-isotope
                 $('.ace-thumbnails').isotope({
                     layoutMode: 'selinkMasonry',
                     itemSelector : 'li',
                     resizable: false
-                });
-            });
-
-            $(window).smartresize(function(){
-                $('.ace-thumbnails').isotope({
-                    layoutMode: 'selinkMasonry',
                 });
             });
         },

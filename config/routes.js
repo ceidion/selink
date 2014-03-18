@@ -88,12 +88,6 @@ module.exports = function(app, sio) {
     // Update jobs (remove job)
     app.delete('/users/:id/jobs/:jobid', checkLoginStatus, job.remove);
 
-    // query address
-    app.get('/address/:zipcode', checkLoginStatus, address.show);
-
-    // suggeset user while type ahead
-    app.get('/suggestUser', checkLoginStatus, friend.suggest);
-
     // Show tags
     app.get('/tags', checkLoginStatus, tag.index);
     // Update tags (update tag)
@@ -101,9 +95,16 @@ module.exports = function(app, sio) {
     // Update tags (remove tag)
     app.delete('/tags/:id', checkLoginStatus, tag.remove);
 
+    // query address
+    app.get('/address/:zipcode', checkLoginStatus, address.show);
+    // suggeset user while type ahead
+    app.get('/suggest/user', checkLoginStatus, friend.suggest);
+    // suggeset tag while type ahead
+    app.get('/suggest/tag', checkLoginStatus, tag.suggest);
+
     // Get StackExcahge Tag Data
     app.post('/stack', checkLoginStatus, tag.create);
-    // import dataf from SELink1.0
+    // import data from SELink1.0
     app.post('/import', checkLoginStatus, user.import);
 };
 

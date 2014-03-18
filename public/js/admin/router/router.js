@@ -4,10 +4,14 @@ define([], function() {
 
         appRoutes: {
             "home": "showHomeView",
+            "profile": "showProfileView",
+            "profile/:id": "showProfileView",
+            "post": "showPostView",
+            "friend": "showFriendView",
+            "people": "showPeopleView",
+            "calendar": "showCalendarView",
+            "mailbox": "showMailBoxView",
             "skill": "showSkillsView",
-            'profile': 'showProfileView',
-            'calendar': 'showCalendarView',
-            // "administrator": "showAdministratorView"
         }
     });
 

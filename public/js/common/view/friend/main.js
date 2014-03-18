@@ -32,28 +32,34 @@ define([
         // item view
         itemView: ItemView,
 
-        events: {
-            'click .btn-flip': 'flipcard'
-        },
-
+        // collection events
         collectionEvents: {
             'sync': 'reIsotope',
+        },
+
+        // item view events
+        itemEvents: {
+            'comment:change': 'shiftColumn'
         },
 
         // Initializer
         initialize: function() {
 
+            // create invited friends view
             this.invitedView = new InvitedView({
                 model: selink.userModel
             });
 
+            // create firends view
             this.friendsView = new FriendsView({
                 model: selink.userModel
             });
 
+            // create posts collection
             this.collection = new PostsCollection();
             this.collection.document = selink.userModel;
 
+            // fetch the posts
             this.collection.fetch({
                 // after initialize the collection
                 success: function() {
@@ -69,7 +75,9 @@ define([
         // After render
         onRender: function() {
 
+            // create region manager (this composite view will have layout ability)
             this.rm = new Backbone.Marionette.RegionManager();
+            // create regions
             this.regions = this.rm.addRegions({
                 invitedRegion: '#invited',
                 friendsRegion: '#friends'
@@ -78,22 +86,26 @@ define([
 
         // After show
         onShow: function() {
-
-            this.$el.addClass('animated fadeInRight');
-
+            // show invited friends view
             this.regions.invitedRegion.show(this.invitedView);
+            // show friends view
             this.regions.friendsRegion.show(this.friendsView);
         },
 
+        // before close
         onBeforeClose: function() {
+            // close region manager
             this.rm.close();
         },
 
+        // re-isotope after collection get synced
         reIsotope: function() {
 
             var self = this;
 
+            // use imageLoaded plugin
             this.$el.imagesLoaded(function() {
+                // re-isotope
                 self.$el.isotope({
                     layoutMode: 'selinkMasonry',
                     itemSelector : '.post-item',
@@ -103,20 +115,11 @@ define([
                     },
                 });
             });
-
-            $(window).smartresize(function(){
-                self.$el.isotope({
-                    layoutMode: 'selinkMasonry',
-                    selinkMasonry: {
-                      cornerStampSelector: '.corner-stamp'
-                    },
-                });
-            });
         },
 
-        flipcard: function() {
-            var back = flippant.flip(this.$el.find('#friends'), this.$el.find('#invited'));
+        shiftColumn: function(event, view) {
+            this.$el.isotope('selinkShiftColumn', view.el);
         }
-    });
 
+    });
 });

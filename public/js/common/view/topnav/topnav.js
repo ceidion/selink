@@ -25,9 +25,15 @@ define([
         // class name
         className: 'navbar-header pull-right',
 
+        ui: {
+            completeness: '.completeness-value',
+            bar: '.progress-bar'
+        },
+
         // model events
         modelEvents: {
             'change:photo': 'updatePhoto',
+            'change': 'updateCompleteness'
         },
 
         // regions
@@ -54,6 +60,8 @@ define([
             this.notificationNav = new NotificationMenu({
                 model: this.model
             });
+
+            this.model.set({'completeness': this.model.completeness()}, {silent: true});
         },
 
         // after show
@@ -73,6 +81,30 @@ define([
                 $(this).attr('src', self.model.get('photo'));
                 $(this).removeClass('rollOut').addClass('rollIn');
             });
+        },
+
+        updateCompleteness: function() {
+
+            var completeness = this.model.completeness(),
+                progressClass = "progress-bar";
+
+            if (completeness == 100) {
+                progressClass += ' progress-bar-success';
+            } else if (completeness > 85) {
+                // progressClass = 'progress-bar';
+            } else if (completeness > 70) {
+                progressClass += ' progress-bar-warning';
+            } else if (completeness > 50) {
+                progressClass += ' progress-bar-pink';
+            } else if (completeness > 30) {
+                progressClass += ' progress-bar-purple';
+            } else {
+                progressClass += ' progress-bar-danger';
+            }
+
+            this.ui.completeness.empty().text(completeness + '%');
+            this.ui.bar.removeClass().addClass(progressClass);
+            this.ui.bar.css('width', completeness + '%');
         }
     });
 });

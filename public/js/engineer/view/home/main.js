@@ -1,5 +1,5 @@
 define([
-    'text!engineer/template/home/page.html',
+    'text!engineer/template/home/main.html',
     'common/view/timeline/main'
 ], function(
     pageTemplate,

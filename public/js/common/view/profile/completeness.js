@@ -9,20 +9,27 @@ define([
         // template
         template: template,
 
+        ui: {
+            progress: '.progress',
+            bar: '.progress-bar'
+        },
+
+        modelEvents: {
+            'change': 'updateCompleteness'
+        },
+
         // initializer
         initialize: function() {
 
-            this.ui = _.extend({}, this.ui, {
-                progress: '.progress',
-                bar: '.progress-bar'
-            });
-
-            // listen on property change for update completeness
-            this.modelEvents = {
-                'change': 'updateCompleteness'
-            };
-
             this.model.set({'completeness': this.model.completeness()}, {silent: true});
+        },
+
+        onRender: function() {
+            // add tooltip on add button
+            this.$el.find('.progress').tooltip({
+                placement: 'bottom',
+                title: "プロフィールの完成度です、100%目指していれましょう"
+            });
         },
 
         updateCompleteness: function() {
@@ -38,6 +45,8 @@ define([
                 progressClass += ' progress-bar-warning';
             } else if (completeness > 50) {
                 progressClass += ' progress-bar-pink';
+            } else if (completeness > 30) {
+                progressClass += ' progress-bar-purple';
             } else {
                 progressClass += ' progress-bar-danger';
             }
@@ -45,15 +54,6 @@ define([
             this.ui.progress.attr('data-percent', '完成度：' + completeness + '%');
             this.ui.bar.removeClass().addClass(progressClass);
             this.ui.bar.css('width', completeness + '%');
-        },
-
-        onRender: function() {
-            // add tooltip on add button
-            this.$el.find('.progress').tooltip({
-                placement: 'bottom',
-                title: "プロフィールの完成度です、100%目指していれましょう"
-            });
         }
-
     });
 });

@@ -6,7 +6,7 @@ var Skill = new Schema({
     skill: {
         type: String,
         trim: true,
-        validate: validate('len', 0, 20)
+        validate: validate('len', 0, 50)
     },
     weight: {
         type: Number,

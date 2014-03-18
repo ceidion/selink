@@ -10,8 +10,8 @@ define([], function() {
                 required: true,
                 msg: "スキル名をご入力ください"
             },{
-                maxLength: 20,
-                msg: "最大20文字までご入力ください"
+                maxLength: 50,
+                msg: "最大50文字までご入力ください"
             }]
         }
     });

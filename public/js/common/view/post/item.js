@@ -22,8 +22,8 @@ define([
         events: {
             'click .btn-like': 'onLike',
             'click .btn-comment': 'onComment',
+            'click .btn-cancel': 'closeComment',
             'focusin textarea': 'openComment',
-            'focusout textarea': 'closeComment'
         },
 
         // initializer
@@ -50,9 +50,17 @@ define([
         },
 
         // after render
-        onRender: function() {
+        onShow: function() {
+
+            var self = this;
+
             // enable autosize on comment area
-            this.$el.find('textarea').autosize({append: "\n"});
+            this.$el.find('textarea').autosize({
+                append: "\n",
+                callback: function() {
+                    self.trigger("comment:change");
+                }
+            });
         },
 
         // like this posts
@@ -88,37 +96,25 @@ define([
         // open the comment area
         openComment: function() {
 
-            var heightBefore = this.$el.height();
+            var self = this;
 
             this.$el.find('.comment-area').css('margin-left', '40px');
             this.$el.find('.photo-area').show().slFadeInLeft();
-            this.$el.find('.btn-area').slideDown();
-
-            var heightAfter = this.$el.height();
-
-            console.log("before: " + heightBefore + " -> after: " + heightAfter);
-
-            this.$el.css({ height: "+=46" });
-
-            this.trigger("comment:opened");
+            this.$el.find('.btn-area').slideDown(function() {
+                self.trigger("comment:change");
+            });
         },
 
         // close the comment area
         closeComment: function() {
 
-            var heightBefore = this.$el.height();
+            var self = this;
 
             this.$el.find('.comment-area').css('margin-left', '0px');
             this.$el.find('.photo-area').hide();
-            this.$el.find('.btn-area').slideUp();
-
-            var heightAfter = this.$el.height();
-
-            console.log("before: " + heightBefore + " -> after: " + heightAfter);
-
-            this.$el.css({ height: "-=46" });
-
-            this.trigger("comment:closed");
+            this.$el.find('.btn-area').slideUp(function() {
+                self.trigger("comment:change");
+            });
         },
 
         // comment this post

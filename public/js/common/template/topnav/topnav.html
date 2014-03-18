@@ -1,5 +1,21 @@
 <%
     var dispPhoto = obj.photo ? obj.photo : './asset/images/no_photo_male.gif';
+
+    var progressClass = 'progress-bar';
+
+    if (obj.completeness == 100) {
+        progressClass += ' progress-bar-success';
+    } else if (obj.completeness > 85) {
+
+    } else if (obj.completeness > 70) {
+        progressClass += ' progress-bar-warning';
+    } else if (obj.completeness > 50) {
+        progressClass += ' progress-bar-pink';
+    } else if (obj.completeness > 30) {
+        progressClass += ' progress-bar-purple';
+    } else {
+        progressClass += ' progress-bar-danger';
+    }
 %>
 <ul class="nav ace-nav">
 
@@ -40,10 +56,10 @@
                 <a href="#profile">
                     <div class="clearfix">
                         <span class="pull-left">プロフィール完成度</span>
-                        <span class="pull-right">80%</span>
+                        <span class="pull-right completeness-value"><%= obj.completeness %>%</span>
                     </div>
                     <div class="progress progress-mini progress-striped active">
-                        <div style="width:80%" class="progress-bar progress-bar-success"></div>
+                        <div style="width:<%= obj.completeness %>%" class="<%= progressClass %>"></div>
                     </div>
                 </a>
             </li>

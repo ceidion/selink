@@ -5,17 +5,17 @@ html(lang="ja", xmlns="http://www.w3.org/1999/xhtml")
   include partials/header
 
   //- body
-  body
+  body.navbar-fixed
 
     //- top navigation
     //- top bar
-    #navbar.navbar.navbar-default
+    #navbar.navbar.navbar-default.navbar-fixed-top
 
       //- container
       #navbar-container.navbar-container
 
         //- page name
-        .navbar-header
+        .navbar-header.pull-left
           a.navbar-brand(href="#")
             small
               block page-name
@@ -30,7 +30,8 @@ html(lang="ja", xmlns="http://www.w3.org/1999/xhtml")
         //- side navigation
         a#menu-toggler.menu-toggler(href="#")
           span.menu-text
-        #sidebar.sidebar
+        #sidebar.sidebar.sidebar-fixed
+          #shortcuts-area
           #sidenav-area
           #sidebar-collapse.sidebar-collapse
             i.icon-double-angle-left(data-icon1="icon-double-angle-left", data-icon2="icon-double-angle-right")

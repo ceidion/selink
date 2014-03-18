@@ -13,14 +13,13 @@ define([
         // template
         template: template,
 
-        // className: 'row',
-
         // item view container
         itemViewContainer: '.post-container',
 
         // item view
         itemView: ItemView,
 
+        // ui
         ui: {
             newPost: '.wysiwyg-editor',
             btnPost: '.btn-post'
@@ -32,10 +31,12 @@ define([
             'keyup .wysiwyg-editor': 'enablePost'
         },
 
+        // collection events
         collectionEvents: {
             'sync': 'reIsotope',
         },
 
+        // item view events
         itemEvents: {
             'comment:opened': 'shiftColumn',
             'comment:closed': 'shiftColumn'
@@ -46,8 +47,11 @@ define([
 
             var self = this;
 
+            // create posts collection
             this.collection = new PostsModel();
             this.collection.document = this.model;
+
+            // fetch posts
             this.collection.fetch({
                 // after initialize the collection
                 success: function() {
@@ -125,28 +129,27 @@ define([
         // new post
         onPost: function() {
 
+            // create new post
             this.collection.create({
                 content: this.ui.newPost.html()
             }, {
                 wait: true
             });
 
+            // clear input area
             this.ui.newPost.html("");
+            // disable post button (can't post empty)
             this.ui.btnPost.addClass('disabled');
         },
 
+        // re-isotope after collection get synced
         reIsotope: function() {
+
             $('.post-container').imagesLoaded(function() {
                 $('.post-container').isotope({
                     layoutMode: 'selinkMasonry',
                     itemSelector : '.post-item',
                     resizable: false
-                });
-            });
-
-            $(window).smartresize(function(){
-                $('.post-container').isotope({
-                    layoutMode: 'selinkMasonry',
                 });
             });
         },

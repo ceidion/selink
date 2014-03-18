@@ -2,7 +2,7 @@ define([
     'common/view/topnav/topnav',
     'common/view/shortcuts/shortcuts',
     'engineer/view/common/sidenav',
-    'engineer/view/home/page',
+    'engineer/view/home/main',
     'common/view/profile/main',
     'common/view/post/main',
     'common/view/friend/main',

@@ -26,7 +26,8 @@ define([
 
             this.events = _.extend({}, this.events, {
                 'change input': 'updateModel',
-                'click .btn-remove': 'removeModel'
+                'click .btn-remove': 'removeModel',
+                'typeahead:selected': 'ttUpdateModel'
             });
 
             this.listenTo(this, 'slider', this.updateModel);
@@ -37,28 +38,33 @@ define([
 
             var self = this;
 
+            // instantiate the bloodhound suggestion engine
+            var suggestion = new Bloodhound({
+                datumTokenizer: function(d) {
+                    if (d.name) {
+                        return Bloodhound.tokenizers.whitespace(d.name);
+                    }
+                    else return '';
+                },
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                remote: '/suggest/tag?initial=%QUERY',
+                limit: 8
+            });
+
+            // initialize the bloodhound suggestion engine
+            suggestion.initialize();
+
+            // setup typeahead
             this.ui.input.typeahead({
-                source: function(query, process) {
-                    $.ajax({
-
-                        // page url
-                        url: 'http://api.stackoverflow.com/1.1/tags?filter=' + query,
-
-                        // method is post
-                        type: 'GET',
-
-                        // use json format
-                        dataType: 'jsonp',
-
-                        jsonp: 'jsonp',
-
-                        // login success handler
-                        success: function(data) {
-                            var ahead = _.pluck(data.tags, 'name');
-                            process(ahead);
-                        }
-                    });
-                }
+                hint: true,
+                highlight: true,
+                minLength: 1
+            }, {
+                name: 'name',
+                displayKey: function(d) {
+                    return d.name;
+                },
+                source: suggestion.ttAdapter()
             });
 
             // attach slider
@@ -176,7 +182,16 @@ define([
                 // remove model
                 self.model.collection.remove(self.model);
             });
-        }
+        },
 
+        // on typeahead get selected
+        ttUpdateModel: function() {
+            // get selected value
+            var ttValue = this.ui.input.typeahead('val');
+            // set selected value on input
+            this.ui.input.val(ttValue);
+            // fire change event on input (so model will get updated)
+            this.ui.input.trigger('change');
+        }
     });
 });

@@ -10,11 +10,32 @@ ace.handle_side_menu = function($) {
 		$(this).toggleClass('display');
 		return false;
 	});
+
+	// customize: isotope after window size changed
+	$(window).smartresize(function(){
+	    $('.isotope').isotope({
+	        layoutMode: 'selinkMasonry',
+            selinkMasonry: {
+              cornerStampSelector: '.corner-stamp'
+            },
+	    });
+	});
+
 	//mini
 	var $minimized = $('#sidebar').hasClass('menu-min');
 	$('#sidebar-collapse').on(ace.click_event, function(){
 		$minimized = $('#sidebar').hasClass('menu-min');
 		ace.settings.sidebar_collapsed(!$minimized);//@ ace-extra.js
+
+		// customize: isotope after side nav collapse/expand
+		setTimeout(function() {
+			$('.isotope').isotope({
+			    layoutMode: 'selinkMasonry',
+			    selinkMasonry: {
+			      cornerStampSelector: '.corner-stamp'
+			    },
+			});
+		}, 500);
 	});
 
 	var touch = "ontouchend" in document;
