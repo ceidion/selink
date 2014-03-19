@@ -43,17 +43,23 @@ define([
 
         // events
         events: {
+            'click .btn-remove': 'showAlert',
+            'click .btn-remove-cancel': 'hideAlert',
+            'click .btn-remove-comfirm': 'onRemove',
+            'click .btn-forbid': 'onForbid',
             'click .btn-like': 'onLike',
             'click .btn-comment': 'onComment',
             'click .btn-cancel': 'closeComment',
             'focusin textarea': 'openComment',
-            'click .btn-show': 'showAllComment'
+            'click .btn-show': 'showAllComment',
+            'mouseover': 'showToolBar',
+            'mouseout': 'hideToolBar'
         },
 
         // override appendHtml
         appendHtml: function(collectionView, itemView, index) {
 
-            if (index < this.collection.length - 3) 
+            if (index < this.collection.length - 3)
                 itemView.$el.addClass('hide');
             // prepend comment to container, later comments comeout first
             this.$el.find('.dialogs').prepend(itemView.el);
@@ -108,6 +114,59 @@ define([
                 callback: function() {
                     self.trigger("comment:change");
                 }
+            });
+        },
+
+        showAlert: function(event) {
+
+            event.preventDefault();
+
+            var self = this;
+
+            this.$el.find('.alert')
+                .slideDown('fast', function() {
+                    self.trigger("comment:change");
+                })
+                .find('i')
+                .addClass('icon-animated-vertical');
+        },
+
+        hideAlert: function() {
+
+            var self = this;
+
+            this.$el.find('.alert').slideUp('fast', function() {
+                self.trigger("comment:change");
+            });
+        },
+
+        onRemove: function() {
+
+            var self = this;
+
+            // TODO: maybe I should do this on parent view
+            $('.post-container').isotope('remove', this.$el, function() {
+
+                self.model.destroy({
+                    success: function(model, response) {
+                    },
+                    wait: true
+                });
+            });
+        },
+
+        onForbid: function() {
+
+            var self = this;
+
+            this.model.save({
+                'setting.commentable': false
+            }, {
+                success: function() {
+
+                },
+                patch: true,
+                wait: true,
             });
         },
 
@@ -185,10 +244,18 @@ define([
 
             var self = this;
 
-            this.$el.find('.hide').removeClass('hide').slideDown(function() {
+            this.$el.find('.dialogs .hide').removeClass('hide').slideDown(function() {
                 self.$el.find('.btn-show').hide();
                 self.trigger("comment:change");
             });
+        },
+
+        showToolBar: function() {
+            this.$el.find('.widget-header .widget-toolbar').removeClass('hide');
+        },
+
+        hideToolBar: function() {
+            this.$el.find('.widget-header .widget-toolbar').addClass('hide');
         }
     });
 

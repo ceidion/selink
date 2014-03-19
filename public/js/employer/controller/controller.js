@@ -1,12 +1,11 @@
 define([
-    'common/model/job',
     'common/view/topnav/topnav',
     'common/view/shortcuts/shortcuts',
     'employer/view/common/sidenav',
     'employer/view/home/page',
     'common/view/profile/main',
     'common/view/post/main',
-    'employer/view/job/index',
+    'employer/view/job/main',
     'employer/view/job/edit',
     'common/view/friend/main',
     'common/view/people/main',
@@ -15,7 +14,6 @@ define([
     'common/view/mailbox/mailbox',
     'common/model/user'
 ], function(
-    JobModel,
     TopNavView,
     ShortCutsView,
     SideNavView,
@@ -119,26 +117,23 @@ define([
         },
 
         showJobIndexView: function() {
-            this.app.jobIndexView = new JobIndexView({
-                collection: this.app.jobsModel
+            selink.jobIndexView = new JobIndexView({
+                model: selink.userModel
             });
-            this.app.pageContent.show(this.app.jobIndexView);
+            selink.pageContent.show(selink.jobIndexView);
         },
 
         showJobCreateView: function() {
-            this.app.jobEditView = new JobEditView({
-                model: new JobModel(),
-                collection: this.app.jobsModel
-            });
-            this.app.pageContent.show(this.app.jobEditView);
+            selink.jobEditView = new JobEditView();
+            selink.pageContent.show(selink.jobEditView);
         },
 
         showJobEditView: function(id) {
-            this.app.jobEditView = new JobEditView({
-                model: this.app.jobsModel.get(id),
-                collection: this.app.jobsModel
+            selink.jobEditView = new JobEditView({
+                model: selink.jobsModel.get(id),
+                collection: selink.jobsModel
             });
-            this.app.pageContent.show(this.app.jobEditView);
+            selink.pageContent.show(selink.jobEditView);
         },
 
         // show friends

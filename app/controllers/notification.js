@@ -83,50 +83,54 @@ approve = function(req, res, next, notification) {
             // find request sender
             User.findById(notification._from, function(err, friend){
 
-                // move user's id from request sender's invited list
-                // to the friend list
-                friend.invited.pull(req.user._id);
-                friend.friends.push(req.user._id);
+                if (err) next(err);
+                else {
 
-                // update request sender
-                friend.save(function(err, updatedFriend) {
+                    // move user's id from request sender's invited list
+                    // to the friend list
+                    friend.invited.pull(req.user._id);
+                    friend.friends.push(req.user._id);
 
-                    // create respond notification
-                    Notification.create({
-                        _owner: [updatedFriend.id],
-                        _from: req.user.id,
-                        type: 'user-friend-approved'
-                    }, function(err, respond) {
+                    // update request sender
+                    friend.save(function(err, updatedFriend) {
 
-                        if (err) next(err);
-                        else {
-                            // populate the respond notification with user's info
-                            respond.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
+                        // create respond notification
+                        Notification.create({
+                            _owner: [updatedFriend.id],
+                            _from: req.user.id,
+                            type: 'user-friend-approved'
+                        }, function(err, respond) {
 
-                                if(err) next(err);
-                                // send real time message
-                                sio.sockets.in(updatedFriend.id).emit('user-friend-approved', noty);
-                            });
-                        }
+                            if (err) next(err);
+                            else {
+                                // populate the respond notification with user's info
+                                respond.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
+
+                                    if(err) next(err);
+                                    // send real time message
+                                    sio.sockets.in(updatedFriend.id).emit('user-friend-approved', noty);
+                                });
+                            }
+                        });
+
+                        // mark the notification as confirmed
+                        notification.result = req.body.result;
+                        notification.confirmed.addToSet(req.user.id);
+                        notification.save(function(err, confirmedNotification) {
+                            if (err) next(err);
+                            else res.json(confirmedNotification);
+                        });
+
+                        // log user's activity
+                        Activity.create({
+                            _owner: req.user.id,
+                            type: 'user-friend-approved',
+                            title: updatedFriend.firstName + ' ' + updatedFriend.lastName + "さんの友達リクエストを承認しました。"
+                        }, function(err) {
+                            if (err) next(err);
+                        });
                     });
-
-                    // mark the notification as confirmed
-                    notification.result = req.body.result;
-                    notification.confirmed.addToSet(req.user.id);
-                    notification.save(function(err, confirmedNotification) {
-                        if (err) next(err);
-                        else res.json(confirmedNotification);
-                    });
-
-                    // log user's activity
-                    Activity.create({
-                        _owner: req.user.id,
-                        type: 'user-friend-approved',
-                        title: updatedFriend.firstName + ' ' + updatedFriend.lastName + "さんの友達リクエストを承認しました。"
-                    }, function(err) {
-                        if (err) next(err);
-                    });
-                });
+                }
             });
         }
     });

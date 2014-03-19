@@ -4,6 +4,8 @@ define([], function() {
 
         idAttribute: "_id",
 
+        urlRoot: '/jobs',
+
         validation: {
             name: {
                 maxLength: 50,

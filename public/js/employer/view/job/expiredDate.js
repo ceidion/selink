@@ -44,8 +44,8 @@ define([
             // enable mask input
             this.ui.input.mask('9999/99/99');
 
-            // bind validator
-            Backbone.Validation.bind(this);
+            // // bind validator
+            // Backbone.Validation.bind(this);
         },
 
         onBeforeClose: function() {

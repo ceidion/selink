@@ -28,11 +28,11 @@ define([
             };
         },
 
-        // after render
-        onRender: function() {
-            // bind validator
-            Backbone.Validation.bind(this);
-        },
+        // // after render
+        // onRender: function() {
+        //     // bind validator
+        //     Backbone.Validation.bind(this);
+        // },
 
         // reflect user input on model
         updateModel: function() {

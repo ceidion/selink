@@ -1,6 +1,19 @@
 <div class="widget-box">
     <div class="widget-header widget-header-flat">
         <img class="avatar" src="<%= obj._owner.photo %>">
+        <div class="widget-toolbar no-border hide">
+            <a class="yellow dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-yellow pull-right dropdown-caret dropdown-close">
+                <li><a href="#" class="btn-remove"><i class="icon-trash red bigger-110"></i>&nbsp;&nbsp;投稿を削除</a></li>
+                <% if (obj.setting.commentable) { %>
+                <li><a href="#" class="btn-forbid"><i class="icon-ban-circle blue bigger-110"></i>&nbsp;&nbsp;コメント禁止</a></li>
+                <% } else { %>
+                <li><a href="#" class="btn-allow"><i class="icon-ok green bigger-110"></i>&nbsp;&nbsp;コメント許可</a></li>
+                <% } %>
+            </ul>
+        </div>
         <h5 class="smaller">
             <i class="icon-edit bigger-110"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
         </h5>
@@ -13,16 +26,32 @@
                 <i class="icon-heart bigger-110"></i>
                 <span><%= obj.liked.length %></span>
             </div>
-            <div class="inline btn-favorite orange">
-                <i class="icon-star-empty bigger-110"></i>
+            <div class="inline orange">
+                <i class="icon-star bigger-110"></i>
                 <span><%= obj.liked.length %></span>
             </div>
+            <% if (!obj.setting.commentable) { %>
+            <div class="inline red">
+                <i class="icon-ban-circle bigger-110"></i>
+            </div>
+            <% } %>
         </div>
         <div class="clearfix"></div>
     </div>
 
     <div class="widget-body">
         <div class="widget-main">
+
+            <div class="alert alert-danger clearfix" style="display: none;">
+                <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
+                この投稿を削除します、よろしいですか？
+                <br />
+                <br />
+                <p>
+                    <button class="btn btn-sm btn-warning btn-remove-cancel pull-right">取消</button>
+                    <button class="btn btn-sm btn-danger btn-remove-comfirm pull-right">削除</button>
+                </p>
+            </div>
 
             <%= obj.content %>
 
@@ -33,9 +62,21 @@
             <div class="dialogs"></div>
 
             <% if (obj.comments.length > 3) { %>
-                <button class="btn btn-xs btn-info btn-block btn-show">もっと見る</button>
+                <button class="btn btn-xs btn-info btn-block btn-show">もっと見る（<%= obj.comments.length - 3 %>件）</button>
             <% }%>
-            
+
         </div>
+<!--         <div class="widget-toolbox padding-4 clearfix">
+
+            <div class="action-buttons pull-right">
+                <button class="inline btn btn-sm btn-yellow btn-forbid tooltip-warning">
+                    <i class="icon-comments-alt"></i>&nbsp;コメント禁止
+                </button>
+                <button class="inline btn btn-sm btn-danger btn-remove tooltip-error">
+                    <i class="icon-trash"></i>&nbsp;削除
+                </button>
+            </div>
+
+        </div> -->
     </div>
 </div>

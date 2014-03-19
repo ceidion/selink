@@ -48,8 +48,8 @@ define([
             this.$el.find('input[name="startDate"], input[name="endDate"]')
             .mask('9999/99/99');
 
-            // bind validator
-            Backbone.Validation.bind(this);
+            // // bind validator
+            // Backbone.Validation.bind(this);
         },
 
         onBeforeClose: function() {

@@ -34,7 +34,8 @@ exports.index = function(req, res, next) {
         query.populate('_owner', 'firstName lastName photo');
     }
 
-    query.populate('comments._owner', 'firstName lastName photo')
+    query.where('logicDelete').equals(false)
+        .populate('comments._owner', 'firstName lastName photo')
         .sort('-createDate')
         // .limit(20)
         .exec(function(err, posts) {
@@ -95,14 +96,25 @@ exports.create = function(req, res, next) {
     });
 };
 
-// exports.update = function(req, res, next){
+exports.remove = function(req, res, next) {
 
-//     if (req.body.liked) {
-//         liked(req, res, next);
-//     } else if (req.body.content) {
-//         comment(req, res, next);
-//     }
-// };
+    // TODO: check post's ownership
+
+    Post.findByIdAndUpdate(req.params.post, {logicDelete: true}, function(err, post) {
+        if (err) next(err);
+        else res.json(post);
+    });
+};
+
+exports.update = function(req, res, next){
+
+    // TODO: check post's ownership
+
+    Post.findByIdAndUpdate(req.params.post, req.body, function(err, post) {
+        if (err) next(err);
+        else res.json(post);
+    });
+};
 
 exports.like = function(req, res, next){
 
@@ -150,6 +162,8 @@ exports.like = function(req, res, next){
 };
 
 exports.comment = function(req, res, next) {
+
+    // TODO: check post's forbidden flag
 
     Post.findById(req.params.post, function(err, post) {
 
@@ -199,7 +213,7 @@ exports.comment = function(req, res, next) {
                         if (err) next(err);
                         else res.json(newComment);
                     });
-                    
+
                 }
             });
         }

@@ -46,8 +46,8 @@
             <% }%>
 
         </div>
+        <% if (obj.setting.commentable) { %>
         <div class="widget-toolbox padding-4 clearfix">
-
             <img class="photo-area pull-left" src="<%= selink.userModel.get('photo') %>" style="max-width: 36px; display: none;">
             <div class="comment-area">
                 <textarea name="comment" placeholder="コメントを書く" style="width: 100%"/></textarea>
@@ -60,7 +60,7 @@
                     <i class="icon-off bigger-125"></i>&nbsp;取消
                 </button>
             </div>
-
         </div>
+        <% }%>
     </div>
 </div>

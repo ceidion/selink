@@ -44,6 +44,10 @@ module.exports = function(app, sio) {
     app.get('/users/:user/posts', checkLoginStatus, post.index);
     // Create new post
     app.post('/users/:user/posts', checkLoginStatus, post.create);
+    // Update post
+    app.patch('/users/:user/posts/:post', checkLoginStatus, post.update);
+    // Remove post
+    app.delete('/users/:user/posts/:post', checkLoginStatus, post.remove);
 
     // like a post
     app.patch('/posts/:post/like', checkLoginStatus, post.like);
@@ -68,6 +72,15 @@ module.exports = function(app, sio) {
     // Remove event
     app.delete('/users/:user/events/:event', checkLoginStatus, userEvent.remove);
 
+    // Get user's jobs (employer only)
+    app.get('/users/:user/jobs', checkLoginStatus, job.index);
+    // Update jobs (create new job)
+    app.post('/users/:user/jobs', checkLoginStatus, job.create);
+    // Update jobs (update job)
+    app.patch('/users/:user/jobs/:job', checkLoginStatus, job.update);
+    // Update jobs (remove job)
+    app.delete('/users/:user/jobs/:job', checkLoginStatus, job.remove);
+
     // Get user info
     app.get('/users/:user', checkLoginStatus, user.show);
     // Upload user photo
@@ -80,15 +93,6 @@ module.exports = function(app, sio) {
     app.patch('/users/:id/:sub/:subid', checkLoginStatus, user.updateSubDocument);
     // Remove nested collection item
     app.delete('/users/:id/:sub/:subid', checkLoginStatus, user.removeSubDocument);
-
-    // Get user's jobs (employer only)
-    app.get('/users/:id/jobs', checkLoginStatus, job.index);
-    // Update jobs (create new job)
-    app.post('/users/:id/jobs', checkLoginStatus, job.create);
-    // Update jobs (update job)
-    app.patch('/users/:id/jobs/:jobid', checkLoginStatus, job.update);
-    // Update jobs (remove job)
-    app.delete('/users/:id/jobs/:jobid', checkLoginStatus, job.remove);
 
     // Show tags
     app.get('/tags', checkLoginStatus, tag.index);

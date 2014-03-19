@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 exports.index = function(req, res, next) {
 
     Job.find({
-        owner: req.params.id
+        owner: req.params.user
     }, function(err, jobs) {
         if (err) next(err);
         res.json(jobs);
@@ -22,7 +22,7 @@ exports.create = function(req, res, next) {
     // create job object
     var job = new Job(req.body, false);
 
-    job.set('owner', req.params.id);
+    job.set('owner', req.params.user);
 
     // save job object
     job.save(function(err, newJob) {
