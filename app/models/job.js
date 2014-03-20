@@ -9,8 +9,10 @@ var Language = require('./profile/language');
 var Job = new Schema({
 
     // Job Owner
-    owner: {
-        type: Schema.Types.ObjectId
+    _owner: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
     // Name
     name: {

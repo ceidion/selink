@@ -5,12 +5,12 @@ var mongoose = require('mongoose'),
 
 exports.index = function(req, res, next) {
 
-    Job.find({
-        owner: req.params.user
-    }, function(err, jobs) {
-        if (err) next(err);
-        res.json(jobs);
-    });
+    Job.find({_owner: req.params.user})
+        // .sort('-createDate')
+        .exec(function(err, jobs) {
+            if (err) next(err);
+            res.json(jobs);
+        });
 };
 
 exports.create = function(req, res, next) {
@@ -22,7 +22,7 @@ exports.create = function(req, res, next) {
     // create job object
     var job = new Job(req.body, false);
 
-    job.set('owner', req.params.user);
+    job.set('_owner', req.params.user);
 
     // save job object
     job.save(function(err, newJob) {

@@ -89,15 +89,19 @@ define([
 
                 // customize: get the body width
                 var bodyWidth = $('body').width(),
+                    sideBarMinimized = $('#sidebar').hasClass('menu-min'),
+                    sideBarWidth = 190, // the "190" is the opened side navbar
                     width;
 
+                if (sideBarMinimized)
+                    sideBarWidth = 43;
+
                 // bootstrap grid: determine the column width
-                // the "190" is the left side navbar
                 // the "40" is the left and right padding of page body
                 if (bodyWidth >= 1200)
-                    width = (bodyWidth - 190 - 40)/3;
+                    width = (bodyWidth - sideBarWidth - 40)/3;
                 else if (bodyWidth >= 990)
-                    width = (bodyWidth - 190 - 40)/2;
+                    width = (bodyWidth - sideBarWidth - 40)/2;
                 else if (bodyWidth >= 768)
                     width = (bodyWidth - 40)/2;
                 else

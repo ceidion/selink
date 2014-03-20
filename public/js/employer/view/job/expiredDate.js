@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var ExpiredDateItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -82,6 +82,4 @@ define([
         }
 
     });
-
-    return ExpiredDateItem;
 });

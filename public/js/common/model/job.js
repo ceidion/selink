@@ -4,16 +4,31 @@ define([], function() {
 
         idAttribute: "_id",
 
-        urlRoot: '/jobs',
+        // urlRoot: '/jobs',
 
         validation: {
-            name: {
+            name: [{
+                required: true,
+                msg: "案件名称をご入力ください"
+            },{
                 maxLength: 50,
                 msg: "最大50文字までご入力ください"
-            },
+            }],
             address: {
                 maxLength: 100,
                 msg: "最大100文字までご入力ください"
+            },
+            expiredDate: {
+                required: false,
+                dateJa: true
+            },
+            startDate: {
+                required: false,
+                dateJa: true
+            },
+            endDate: {
+                required: false,
+                dateJa: true
             }
         },
 

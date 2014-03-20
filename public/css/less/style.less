@@ -372,18 +372,35 @@ html,body {
   }
 }
 
-// job create
-.page-header {
-  min-height: 60px;
-  padding-bottom: 7px;
+@media screen and (min-width: 768px) {
+  .job-modal .modal-dialog {
 
-  h1 {
-    margin-top: 10px;
-  }
+    width: 900px;
 
-  input {
-    font-size: 1.5em;
+    input[name="name"] {
+      font-size: 1.5em;
+    }
+
+    input {
+      line-height: normal;
+      width: 100%;
+    }
+
+    i {
+      width: 14px;
+    }
+
+    .col-xs-6 {
+      padding-left: 0px;
+    }
   }
+}
+
+// custom daterange pick
+.sl-input-group-addon {
+  padding: 6px 12px !important;
+  line-height: 1 !important;
+  border-width: 1px 0 1px 1px !important;
 }
 
 // highlight the error input with animation

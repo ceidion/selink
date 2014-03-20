@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var RemarkItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -84,6 +84,4 @@ define([
         }
 
     });
-
-    return RemarkItem;
 });

@@ -1,19 +1,19 @@
 <h1 class="sl-value">
-	<i class="icon-edit"></i>&nbsp;
-	<span id="name-value">
+    <i class="icon-edit"></i>&nbsp;
+    <span id="name-value">
     <%
         if (obj.name)
             print(obj.name);
         else
             print('<span class="text-muted">案件名称</span>');
     %>
-	</span>
+    </span>
 </h1>
 <div class="sl-editor form-group">
     <div class="col-sm-12 input-group">
         <span class="input-group-addon">
             <i class="icon-edit bigger-150"></i>
         </span>
-	    <input type="text" placeholder="案件名称" name="name" value="<%- obj.name %>">
+        <input type="text" placeholder="案件名称" name="name" value="<%- obj.name %>">
     </div>
 </div>

@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var NativeItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -38,6 +38,4 @@ define([
         }
 
     });
-
-    return NativeItem;
 });

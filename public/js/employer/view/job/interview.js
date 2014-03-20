@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var InterviewItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -70,6 +70,4 @@ define([
         }
 
     });
-
-    return InterviewItem;
 });

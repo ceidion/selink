@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var PriceItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -76,6 +76,4 @@ define([
         }
 
     });
-
-    return PriceItem;
 });

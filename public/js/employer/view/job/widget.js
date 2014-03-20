@@ -5,12 +5,12 @@ define([
     BaseView,
     template) {
 
-    var JobNameItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
 
-        className: 'col-xs-12 col-sm-6 col-md-4 widget-container-span',
+        className: 'job-item col-xs-12 col-sm-6 col-lg-4',
 
         // icon
         icon: 'icon-envelope-alt',
@@ -92,6 +92,4 @@ define([
         }
 
     });
-
-    return JobNameItem;
 });

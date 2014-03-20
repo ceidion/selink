@@ -5,7 +5,7 @@ define([
     BaseView,
     template) {
 
-    var JobNameItem = BaseView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -71,6 +71,4 @@ define([
         }
 
     });
-
-    return JobNameItem;
 });
