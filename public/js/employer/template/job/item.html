@@ -1,0 +1,84 @@
+<div class="widget-box">
+    <div class="widget-header widget-header-flat">
+        <h5 class="bigger lighter"><%= obj.name %></h5>
+        <div class="widget-toolbar action-buttons">
+            <a href="#" class="btn-edit"><i class="icon-pencil"></i></a>
+            <a href="#" class="btn-remove red"><i class="icon-trash"></i></a>
+        </div>
+    </div>
+
+    <div class="widget-body">
+
+        <div class="widget-main">
+
+            <!-- remark -->
+            <% if (obj.remark) { %>
+                <%= obj.remark %>
+                <div class="hr hr8 hr-double"></div>
+            <% } %>
+
+            <!-- address -->
+            <% if (obj.address) { %>
+                <div class="row" style="min-height: 40px; line-height: 40px;">
+                    <div class="col-xs-4 align-right"><i class="icon-map-marker bigger-110 blue"></i>&nbsp;&nbsp;作業場所：</div>
+                    <div class="col-xs-8 align-left"><%= obj.address%></div>
+                </div>
+            <% } %>
+
+            <!-- duration -->
+            <% if (obj.startDate || obj.endDate) { %>
+                <div class="row" style="min-height: 40px; line-height: 40px;">
+                    <div class="col-xs-4 align-right"><i class="icon-calendar bigger-110 blue"></i>&nbsp;&nbsp;作業期間：</div>
+                    <div class="col-xs-8 align-left"><%= obj.startDateInput %>～<%= obj.endDateInput %></div>
+                </div>
+            <% } %>
+
+            <!-- price -->
+            <% if (obj.priceBottom || obj.priceTop) { %>
+                <div class="row" style="min-height: 40px; line-height: 40px;">
+                    <div class="col-xs-4 align-right"><i class="icon-jpy bigger-110 blue"></i>&nbsp;&nbsp;単価：</div>
+                    <div class="col-xs-8 align-left"><%= obj.priceBottom %>～<%= obj.priceTop %></div>
+                </div>
+            <% } %>
+
+            <!-- recruitNum -->
+            <% if (obj.recruitNum) { %>
+                <div class="row" style="min-height: 40px; line-height: 40px;">
+                    <div class="col-xs-4 align-right"><i class="icon-bullhorn bigger-110 blue"></i>&nbsp;&nbsp;募集：</div>
+                    <div class="col-xs-8 align-left"><%= obj.recruitNumDisplay %></div>
+                </div>
+            <% } %>
+
+            <!-- interviewNum -->
+            <% if (obj.interviewNum) { %>
+                <div class="row" style="min-height: 40px; line-height: 40px;">
+                    <div class="col-xs-4 align-right"><i class="icon-user bigger-110 blue"></i>&nbsp;&nbsp;面接：</div>
+                    <div class="col-xs-8 align-left"><%= obj.interviewNum %>回</div>
+                </div>
+            <% } %>
+
+            <!-- nativesOnly -->
+            <% if (obj.nativesOnly) { %>
+                <div class="row" style="min-height: 40px; line-height: 40px;">
+                    <div class="col-xs-4 align-right"><i class="icon-globe bigger-110"></i>&nbsp;&nbsp;外国籍：</div>
+                    <div class="col-xs-8 align-left"><%= obj.nativesOnly %></div>
+                </div>
+            <% } %>
+
+        </div>
+
+        <div class="widget-toolbox padding-8 clearfix">
+            <span class="text-warning">
+                <i class="icon-ban-circle bigger-110"></i>&nbsp;応募締日：
+                <%　
+                    if (obj.expiredDate)
+                        print(moment(obj.expiredDate).fromNow());
+                    else
+                        print("なし");
+                %>
+            </span>
+        </div>
+
+    </div>
+
+</div>

@@ -26,9 +26,11 @@ define(['common/view/composite-empty'], function(EmptyView) {
         // SubView append behavior
         appendHtml: function(collectionView, itemView, index) {
 
+            // TODO: the second condition for stop the bounce effect on empty view ...
             // this happend on user click add button
             // subview's model don't have _id attribute, so it's a new model
             if (itemView.model.isNew() && !itemView.$el.find('.empty-view').length) {
+            // if (itemView.model.isNew()) {
 
                 // append the subview
                 this.$el.find(this.itemViewContainer).append(itemView.el);
@@ -49,6 +51,7 @@ define(['common/view/composite-empty'], function(EmptyView) {
             // this happend on composite initialzation.
             // if the subview's model has _id attribute, it is a existing model
             else {
+                
                 // just append the subview
                 this.$el.find(this.itemViewContainer).append(itemView.el);
             }
@@ -59,7 +62,7 @@ define(['common/view/composite-empty'], function(EmptyView) {
         },
 
         // Add new composite item
-        addItem: function() {
+        addItem: function(event) {
             // add a new model to composite's collection
             this.collection.add({});
             // if the number of items exceed the limitation

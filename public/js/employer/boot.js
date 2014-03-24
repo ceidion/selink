@@ -6,7 +6,7 @@ require.config({
         // core library
         'jquery': "lib/jquery-2.0.3.min",
         'jquery-ui': "lib/jquery-ui-1.10.3.custom.min",
-        'bootstrap': "lib/bootstrap.min",
+        'bootstrap': "lib/uncompressed/bootstrap",
         'underscore': 'lib/underscore',
         'backbone': 'lib/backbone',
         'marionette': 'lib/backbone.marionette',

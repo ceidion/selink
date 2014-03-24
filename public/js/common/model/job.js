@@ -56,6 +56,10 @@ define([], function() {
                 response.createDateInput = moment(response.createDate).format('L');
             }
 
+            if(response.recruitNum) {
+                response.recruitNumDisplay = response.recruitNumInput = response.recruitNum + "人";
+            }
+
             return response;
         }
     });

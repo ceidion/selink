@@ -6,7 +6,7 @@ var mongoose = require('mongoose'),
 exports.index = function(req, res, next) {
 
     Job.find({_owner: req.params.user})
-        // .sort('-createDate')
+        .sort('-createDate')
         .exec(function(err, jobs) {
             if (err) next(err);
             res.json(jobs);

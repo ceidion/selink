@@ -1,12 +1,12 @@
 define([
     'text!employer/template/job/main.html',
-    'employer/view/job/list',
+    'employer/view/job/item',
     'employer/view/job/edit',
     'common/model/job'
 ], function(
     template,
-    JobListView,
-    JobEditView,
+    ItemView,
+    EditView,
     JobModel
 ) {
 
@@ -19,19 +19,30 @@ define([
         }
     });
 
-    return Backbone.Marionette.Layout.extend({
+    return Backbone.Marionette.CompositeView.extend({
 
         // Template
         template: template,
 
+        // item view container
+        itemViewContainer: '.job-container',
+
+        // item view
+        itemView: ItemView,
+
+        // event
         events: {
-            'click .btn-add': 'showCreateModal'
+            'click .btn-create': 'showCreateModal'
         },
 
-        // regions
-        regions: {
-            jobListRegion: '.job-container',
-            jobEditRegion: '.modal'
+        // collection events
+        collectionEvents: {
+            'sync': 'reIsotope',
+        },
+
+        // item view events
+        itemEvents: {
+            'edit': 'showEditorModal'
         },
 
         // Initializer
@@ -44,30 +55,42 @@ define([
 
             this.collection.fetch({
                 success: function() {
+                    // change the behavior of add sub view
+                    self.appendHtml = function(collectionView, itemView, index) {
+                        // prepend new post and reIsotope
+                        self.$el.find('.job-container').prepend(itemView.$el).isotope('reloadItems');
+                    };
                     self.listenTo(self.collection, 'change', self.updateJob);
                     self.listenTo(self.collection, 'add', self.createJob);
                 }
-            });
-
-            this.jobListView = new JobListView({
-                model: this.model,
-                collection: this.collection,
             });
         },
 
         // after render
         onRender: function() {
-            this.jobListRegion.show(this.jobListView);
+
+            // create region manager (this composite view will have layout ability)
+            this.rm = new Backbone.Marionette.RegionManager();
+            // create regions
+            this.regions = this.rm.addRegions({
+                jobEditRegion: '.modal'
+            });
+        },
+
+        // before close
+        onBeforeClose: function() {
+            // close region manager
+            this.rm.close();
         },
 
         showCreateModal: function() {
 
-            this.jobEditView = new JobEditView({
+            this.jobEditView = new EditView({
                 // model: this.model,
                 collection: this.collection,
             });
 
-            this.jobEditRegion.show(this.jobEditView);
+            this.regions.jobEditRegion.show(this.jobEditView);
 
             // show modal
             this.$el.find('.modal').modal('show');
@@ -90,6 +113,32 @@ define([
                 },
                 patch: true,
                 wait: true
+            });
+        },
+
+        showEditorModal: function(event, view) {
+
+            this.jobEditView = new EditView({
+                model: view.model
+            });
+
+            this.regions.jobEditRegion.show(this.jobEditView);
+
+            // show modal
+            this.$el.find('.modal').modal('show');
+        },
+
+        // re-isotope after collection get synced
+        reIsotope: function() {
+
+            var self = this;
+
+            this.$el.find('.job-container').imagesLoaded(function() {
+                self.$el.find('.job-container').isotope({
+                    layoutMode: 'selinkMasonry',
+                    itemSelector : '.job-item',
+                    resizable: false
+                });
             });
         }
     });

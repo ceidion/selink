@@ -4,7 +4,7 @@
             <div class="form-group col-sm-8" style="margin-bottom: 0px;">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="icon-edit bigger-150"></i></span>
-                    <input type="text" placeholder="案件名称" name="name" value="<%- obj.name %>">
+                    <input type="text" placeholder="案件名称" name="name" value="<%= obj.name %>">
                 </div>
             </div>
             <div class="col-sm-4 align-right">
@@ -23,41 +23,41 @@
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="icon-building bigger-110"></i></span>
-                    <input type="text" class="col-xs-12" placeholder="作業場所" name="address" value="<%- obj.address %>">
+                    <input type="text" class="col-xs-12" placeholder="作業場所" name="address" value="<%= obj.address %>">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="icon-time bigger-110"></i></span>
-                    <input type="text" class="input-medium" placeholder="有効期限" name="expiredDate" value="<%- obj.expiredDateInput %>">
+                    <input type="text" class="input-medium" placeholder="有効期限" name="expiredDate" value="<%= obj.expiredDateInput %>">
                 </div>
             </div>
             <div class="form-group">
-                <div class="input-group input-daterange">
+                <div id="duration" class="input-group input-daterange">
                     <span class="input-group-addon sl-input-group-addon"><i class="icon-flag-alt bigger-110"></i></span>
-                    <input type="text" placeholder="作業開始日" name="startDate" value="<%- obj.startDate %>">
+                    <input type="text" placeholder="作業開始日" name="startDate" value="<%= obj.startDateInput %>">
                     <span class="input-group-addon"><i class="icon-arrow-right bigger-110"></i></span>
-                    <input type="text" placeholder="作業終了日" name="endDate" value="<%- obj.endDate %>">
+                    <input type="text" placeholder="作業終了日" name="endDate" value="<%= obj.endDateInput %>">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group input-daterange">
                     <span class="input-group-addon sl-input-group-addon"><i class="icon-jpy bigger-110"></i></span>
-                    <input type="text" placeholder="単金下限" name="priceBottom" value="<%- obj.priceBottom %>">
+                    <input type="text" placeholder="単金下限" name="priceBottom" value="<%= obj.priceBottom %>">
                     <span class="input-group-addon"><i class="icon-arrow-right bigger-110"></i></span>
-                    <input type="text" placeholder="単金上限" name="priceTop" value="<%- obj.priceTop %>">
+                    <input type="text" placeholder="単金上限" name="priceTop" value="<%= obj.priceTop %>">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="icon-bullhorn bigger-110"></i></span>
-                    <input type="text" class="col-xs-12" placeholder="募集人数" name="recruitNum" value="<%- obj.recruitNum %>">
+                    <input type="text" class="col-xs-12" placeholder="募集人数" name="recruitNum" value="<%= obj.recruitNumInput %>">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="icon-user bigger-110"></i></span>
-                    <input type="text" class="col-xs-12" placeholder="面接回数" name="interviewNum" value="<%- obj.interviewNum %>">
+                    <input type="text" class="col-xs-12" placeholder="面接回数" name="interviewNum" value="<%= obj.interviewNum %>">
                 </div>
             </div>
             <div class="btn-group" data-toggle="buttons">
@@ -72,37 +72,9 @@
             </div>
         </div>
 
-        <div class="col-xs-12 col-sm-6">
-            <div class="widget-box transparent">
-                <div class="widget-header">
-                    <h4 class="lighter"><i class="icon-comments-alt"></i>&nbsp;語学要求</h4>
-                    <div class="action-buttons inline">
-                        <a class="btn-add tooltip-success light-green"><i class="icon-plus"></i></a>
-                    </div>
-                </div>
-                <div class="widget-body">
-                    <div class="widget-main padding-6">
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-            </div>
-        </div>
-        <div class="col-xs-12 col-sm-6">
-            <div class="widget-box transparent">
-                <div class="widget-header">
-                    <h4 class="lighter"><i class="icon-wrench"></i>&nbsp;スキル要求</h4>
-                    <div class="action-buttons inline">
-                        <a class="btn-add tooltip-success light-green"><i class="icon-plus"></i></a>
-                    </div>
-                </div>
-                <div class="widget-body">
-                    <div class="widget-main padding-6">
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-            </div>
-        </div>
+        <div id="languages" class="col-xs-12 col-sm-6"></div>
 
+        <div id="skills" class="col-xs-12 col-sm-6"></div>
 
         <div class="col-xs-12">
             <div class="hr hr-double dotted"></div>

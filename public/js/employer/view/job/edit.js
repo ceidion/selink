@@ -1,30 +1,16 @@
 define([
     'text!employer/template/job/edit.html',
-    // 'employer/view/job/name',
-    // 'employer/view/job/address',
-    // 'employer/view/job/expiredDate',
-    // 'employer/view/job/duration',
-    // 'employer/view/job/price',
-    // 'employer/view/job/recruit',
-    // 'employer/view/job/interview',
-    // 'employer/view/job/native',
-    // 'employer/view/job/remark',
+    'common/view/profile/languages',
+    'common/view/profile/skills',
     'common/model/job'
 ], function(
     template,
-    // NameView,
-    // AddressView,
-    // ExpiredDateView,
-    // DurationView,
-    // PriceView,
-    // RecruitView,
-    // InterviewView,
-    // NativeView,
-    // RemarkView,
+    LanguageComposite,
+    SkillComposite,
     JobModel
 ) {
 
-    return Backbone.Marionette.ItemView.extend({
+    return Backbone.Marionette.Layout.extend({
 
         // template
         template: template,
@@ -46,18 +32,32 @@ define([
             'remark': '.wysiwyg-editor'
         },
 
+        regions: {
+            languageRegion: '#languages',
+            skillRegion: '#skills',
+        },
+
         events: {
             'click .btn-save': 'onSave'
         },
 
         // initializer
         initialize: function() {
-            this.model = new JobModel();
-            this.model.colleciton = this.collection;
+
+            if (!this.model) {
+                this.model = new JobModel();
+                this.model.colleciton = this.collection;
+            }
+
+            this.languageComposite = new LanguageComposite({model: this.model});
+            this.skillComposite = new SkillComposite({model: this.model});
         },
 
         // after render
         onRender: function() {
+
+            this.languageRegion.show(this.languageComposite);
+            this.skillRegion.show(this.skillComposite);
 
             // append data picker
             this.ui.expiredDate.datepicker({
@@ -67,7 +67,7 @@ define([
                 language: 'ja'
             });
 
-            this.$el.find('.input-daterange').datepicker({
+            this.$el.find('#duration').datepicker({
                 autoclose: true,
                 forceParse: false,
                 startDate: new Date(),
@@ -75,8 +75,8 @@ define([
             });
 
             // append input mask
-            this.ui.priceBottom.mask('999万円');
-            this.ui.priceTop.mask('999万円');
+            this.ui.priceBottom.mask('9?99万円');
+            this.ui.priceTop.mask('9?99万円');
             this.ui.recruitNum.mask('9?9人');
             this.ui.interviewNum.mask('9?9回');
 
@@ -128,13 +128,7 @@ define([
             if (this.inputValid()) {
 
                 // set value to model
-                this.model.set({
-                    name: this.ui.name.val(),
-                    address: this.ui.address.val(),
-                    expiredDate: this.ui.expiredDate.val(),
-                    startDate: this.ui.startDate.val(),
-                    endDate: this.ui.endDate.val(),
-                });
+                this.model.set(this.getInputData());
 
                 // if this model is a new event
                 if (this.model.isNew()) {
@@ -153,14 +147,10 @@ define([
                 .closest('.form-group').removeClass('has-error')
                 .find('i').removeClass('animated-input-error');
 
+            console.log(this.getInputData());
+
             // check input
-            var errors = this.model.preValidate({
-                name: this.ui.name.val(),
-                address: this.ui.address.val(),
-                expiredDate: this.ui.expiredDate.val(),
-                startDate: this.ui.startDate.val(),
-                endDate: this.ui.endDate.val(),
-            }) || {};
+            var errors = this.model.preValidate(this.getInputData()) || {};
 
             // check wheter end date is after start date
             if (this.ui.startDate.val() && this.ui.endDate.val()) {
@@ -192,6 +182,22 @@ define([
             } else {
                 // return valid
                 return true;
+            }
+        },
+
+        getInputData: function() {
+            return {
+                name: this.ui.name.val(),
+                address: this.ui.address.val(),
+                expiredDate: this.ui.expiredDate.val(),
+                startDate: this.ui.startDate.val(),
+                endDate: this.ui.endDate.val(),
+                priceBottom: this.ui.priceBottom.val().replace('万円'),
+                priceTop: this.ui.priceTop.val().replace('万円'),
+                recruitNum: this.ui.recruitNum.val().replace('人'),
+                interviewNum: this.ui.interviewNum.val().replace('回'),
+                nativesOnly: this.ui.nativesOnly.val(),
+                remark: this.ui.remark.html(),
             }
         }
 

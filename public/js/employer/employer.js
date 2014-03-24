@@ -152,8 +152,6 @@ define([
                 var instance = this,
                     props = instance.selinkMasonry;
 
-                    console.log(props);
-
                 $elems.each(function(){
 
                     var $this  = $(this),
