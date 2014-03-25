@@ -6,6 +6,7 @@ define([
     'text!common/template/topnav/notification/item/user-post.html',
     'text!common/template/topnav/notification/item/user-post-liked.html',
     'text!common/template/topnav/notification/item/user-post-commented.html',
+    'text!common/template/topnav/notification/item/user-job.html',
 ], function(
     friendInvitedTemplate,
     friendApprovedTemplate,
@@ -13,7 +14,8 @@ define([
     friendBreakTemplate,
     postTemplate,
     postLikedTemplate,
-    postCommentedTemplate
+    postCommentedTemplate,
+    jobTemplate
 ) {
 
     return Backbone.Marionette.ItemView.extend({
@@ -45,6 +47,8 @@ define([
                 return postLikedTemplate;
             else if (type == "user-post-commented")
                 return postCommentedTemplate;
+            else if (type == "user-job")
+                return jobTemplate;
         },
 
         onApproveClick: function(e) {

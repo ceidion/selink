@@ -29,12 +29,6 @@
                 </p>
             </div>
 
-            <!-- remark -->
-            <% if (obj.remark) { %>
-                <%= obj.remark %>
-                <div class="hr hr8 hr-double"></div>
-            <% } %>
-
             <!-- address -->
             <% if (obj.address) { %>
                 <div class="row" style="min-height: 40px; line-height: 40px;">
@@ -83,12 +77,43 @@
                 </div>
             <% } %>
 
+            <!-- remark -->
+            <% if (obj.remark) { %>
+                <div class="hr hr8 hr-double"></div>
+                <%= obj.remark %>
+            <% } %>
+
             <% if (obj.languages.length) { %>
                 <div class="hr hr8 hr-double"></div>
                 <div class="clearfix">
-                <% _.each(obj.languages, function(language){ %>
-                    <div class="grid3 center">
-                        <div class="easy-pie-chart percentage" data-percent="<%= language.weight %>" data-color="#CA5952">
+                <% 
+                    var sortedLanguages = _.sortBy(obj.languages, function(language) {
+                        return 0 - language.weight;
+                    });
+
+                    var span;
+
+                    if (sortedLanguages.length === 2)
+                        span = 'grid2';
+                    else if (sortedLanguages.length > 2)
+                        span = 'grid3';
+
+                    _.each(sortedLanguages, function(language){
+
+                        var color = '#9585bf';
+
+                        if (language.weight > 85) {
+                            color = '#59a84b';
+                        } else if (language.weight > 70) {
+                            color = '#2a91d8';
+                        } else if (language.weight > 50) {
+                            color = '#f2bb46';
+                        } else if (language.weight > 30) {
+                            color = '#ca5952';
+                        }
+                %>
+                    <div class="<%= span %> center">
+                        <div class="easy-pie-chart percentage" data-percent="<%= language.weight %>" data-color="<%= color %>">
                             <span class="percent"><%= language.weight %></span>%
                         </div>
                         <div class="space-2"></div>
@@ -96,16 +121,34 @@
                     </div>
                 <% }); %>
                 </div>
-                <div class="hr hr8 hr-double"></div>
             <% } %>
 
             <% if (obj.skills.length) { %>
+                <div class="hr hr8 hr-double"></div>
                 <div class="profile-skills">
-                <% _.each(obj.skills, function(skill){ %>
+                <%
+                    var sortedSkills = _.sortBy(obj.skills, function(skill) {
+                        return 0 - skill.weight;
+                    });
+
+                    _.each(sortedSkills, function(skill){
+
+                        var progressClass = 'progress-bar-purple';
+
+                        if (skill.weight > 85) {
+                            progressClass = 'progress-bar-success';
+                        } else if (skill.weight > 70) {
+                            progressClass = '';
+                        } else if (skill.weight > 50) {
+                            progressClass = 'progress-bar-warning';
+                        } else if (skill.weight > 30) {
+                            progressClass = 'progress-bar-danger';
+                        }
+                %>
                     <div class="progress">
-                        <div class="progress-bar" style="width:<%= skill.weight %>%">
+                        <div class="progress-bar <%= progressClass %>" style="width:<%= skill.weight %>%">
                             <span class="pull-left"><%= skill.skill %></span>
-                            <span class="pull-right"><%= skill.weight %></span>
+                            <span class="pull-right"><%= skill.weight %>pt</span>
                         </div>
                     </div>
                 <% }); %>
@@ -117,12 +160,7 @@
         <div class="widget-toolbox padding-8 clearfix">
             <span class="text-warning">
                 <i class="icon-ban-circle bigger-110"></i>&nbsp;応募締日：
-                <%　
-                    if (obj.expiredDate)
-                        print(moment(obj.expiredDate).fromNow());
-                    else
-                        print("なし");
-                %>
+                <%= moment(obj.expiredDate).fromNow() %>
             </span>
         </div>
 

@@ -13,6 +13,7 @@ var request = require('request'),
     5. user-post
     6. user-post-liked
     7. user-post-commented
+    8. user-job
 */
 
 // Notification index

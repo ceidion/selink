@@ -37,6 +37,9 @@ define([
                 placement: 'bottom',
                 title: "削除"
             });
+        },
+
+        onShow: function() {
 
             // decorate pie chart
             $('.easy-pie-chart.percentage').each(function(){
@@ -49,7 +52,7 @@ define([
                     scaleColor: false,
                     lineCap: 'butt',
                     lineWidth: parseInt(size/10),
-                    animate:false,
+                    animate: 1000,
                     size: size
                 }).css('color', barColor);
             });

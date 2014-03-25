@@ -1,0 +1,20 @@
+<a href="#<%= obj.link %>">
+    <img src="<%= obj._from.photo %>" class="msg-photo" alt="">
+    <span class="msg-body">
+        <span class="msg-title">
+            <span class="blue">
+                <%= obj._from.firstName %>&nbsp;
+                <%= obj._from.lastName %>&nbsp;
+            </span>
+            さんは新しい案件を公開しました。
+        </span>
+        <span class="msg-time">
+            <i class="icon-time"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>
+        </span>
+        <span class="msg-body">
+            <%= obj.content %>
+            <br/>
+            <button class="btn btn-minier btn-info btn-acknowledge"><i class="icon-ok"></i>&nbsp;了解</button>
+        </span>
+    </span>
+</a>

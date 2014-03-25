@@ -4,6 +4,7 @@ define([
     'text!common/template/timeline/item/user-logout.html',
     'text!common/template/timeline/item/user-post.html',
     'text!common/template/timeline/item/user-friend-invited.html',
+    'text!common/template/timeline/item/user-job.html',
     'text!common/template/timeline/item/default.html',
 ], function(
     userActivatedTemplate,
@@ -11,6 +12,7 @@ define([
     userLogoutTemplate,
     userPostTemplate,
     userFriendInvitedTemplate,
+    userJobTemplate,
     defaultTemplate) {
 
     return Backbone.Marionette.ItemView.extend({
@@ -30,6 +32,8 @@ define([
                 return userPostTemplate;
             else if (type == "user-friend-invited" || type == "user-friend-approved")
                 return userFriendInvitedTemplate;
+            else if (type == "user-job")
+                return userJobTemplate;
             else
                 return defaultTemplate;
         },
