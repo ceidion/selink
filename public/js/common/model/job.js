@@ -19,8 +19,8 @@ define([], function() {
                 msg: "最大100文字までご入力ください"
             },
             expiredDate: {
-                required: false,
-                dateJa: true
+                required: true,
+                datetimeJa: true
             },
             startDate: {
                 required: false,

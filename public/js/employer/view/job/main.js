@@ -42,7 +42,8 @@ define([
 
         // item view events
         itemEvents: {
-            'edit': 'showEditorModal'
+            'edit': 'showEditorModal',
+            'job:change': 'shiftColumn'
         },
 
         // Initializer
@@ -61,7 +62,7 @@ define([
                         self.$el.find('.job-container').prepend(itemView.$el).isotope('reloadItems');
                     };
                     self.listenTo(self.collection, 'change', self.updateJob);
-                    self.listenTo(self.collection, 'add', self.createJob);
+                    self.listenTo(self.collection, 'add', self.updateJob);
                 }
             });
         },
@@ -96,24 +97,34 @@ define([
             this.$el.find('.modal').modal('show');
         },
 
-        createJob: function(job) {
+        updateJob: function(job) {
 
             var self = this;
 
-            // safe the job
-            this.collection.create(job, {
+            if (job.isNew()) {
 
-                // job saved successful
-                success: function(model, response, options) {
-                    self.$el.find('.modal').modal('hide');
-                },
-                // if error happend
-                error: function(model, xhr, options) {
+                // safe the job
+                this.collection.create(job, {
+                    // job saved successful
+                    success: function(model, response, options) {
+                        self.$el.find('.modal').modal('hide');
+                    },
+                    silent: true,
+                    wait: true
+                });
 
-                },
-                patch: true,
-                wait: true
-            });
+            } else {
+
+                job.save(null, {
+                    // job saved successful
+                    success: function(model, response, options) {
+                        self.$el.find('.modal').modal('hide');
+                    },
+                    silent: true,
+                    patch: true,
+                    wait: true
+                });
+            }
         },
 
         showEditorModal: function(event, view) {
@@ -140,6 +151,10 @@ define([
                     resizable: false
                 });
             });
+        },
+
+        shiftColumn: function(event, view) {
+            $('.job-container').isotope('selinkShiftColumn', view.el);
         }
     });
 });

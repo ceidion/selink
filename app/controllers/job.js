@@ -1,11 +1,12 @@
-var util = require('util');
-var mongoose = require('mongoose'),
+var _ = require('underscore'),
+    util = require('util'),
+    mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Job = mongoose.model('Job');
 
 exports.index = function(req, res, next) {
 
-    Job.find({_owner: req.params.user})
+    Job.find({_owner: req.params.user, logicDelete: false})
         .sort('-createDate')
         .exec(function(err, jobs) {
             if (err) next(err);
@@ -19,55 +20,36 @@ exports.create = function(req, res, next) {
     console.log("request params: " + util.inspect(req.params));
     console.log("request attach: " + util.inspect(req.files));
 
-    // create job object
-    var job = new Job(req.body, false);
+    _.extend(req.body, {_owner: req.user.id});
 
-    job.set('_owner', req.params.user);
+    Job.create(req.body, function(err, job) {
 
-    // save job object
-    job.save(function(err, newJob) {
-
-        // handle error
         if (err) next(err);
         else {
-
             // send notifications
             // send success message
-            res.json(newJob);
+            res.json(job);
         }
     });
+
 };
 
 exports.update = function(req, res, next) {
 
-    // look up job info
-    Job.findById(req.params.jobid, function(err, job) {
+    // TODO: check ownership
+
+    var newJob = _.omit(req.body, '_id');
+
+    Job.findByIdAndUpdate(req.params.job, newJob, function(err, job) {
         if (err) next(err);
-        else {
-
-            for(var prop in req.body) {
-                job[prop] = req.body[prop];
-            }
-
-            job.save(function(err, newJob) {
-                if (err) next(err);
-                else res.json(newJob);
-            });
-        }
+        else res.json(job);
     });
 };
 
 exports.remove = function(req, res, next) {
 
-    // look up job info
-    Job.findById(req.params.id, function(err, job) {
+    Job.findByIdAndUpdate(req.params.job, {logicDelete: true}, function(err, job) {
         if (err) next(err);
-        else {
-
-            job.remove(function(err, removedJob) {
-                if (err) next(err);
-                else res.json(removedJob);
-            });
-        }
+        else res.json(job);
     });
 };

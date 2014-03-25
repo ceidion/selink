@@ -1,7 +1,7 @@
 define([
     'text!employer/template/job/edit.html',
-    'common/view/profile/languages',
-    'common/view/profile/skills',
+    'employer/view/job/languages',
+    'employer/view/job/skills',
     'common/model/job'
 ], function(
     template,
@@ -22,13 +22,14 @@ define([
             'name': 'input[name="name"]',
             'address': 'input[name="address"]',
             'expiredDate': 'input[name="expiredDate"]',
+            'expiredTime': 'input[name="expiredTime"]',
             'startDate': 'input[name="startDate"]',
             'endDate': 'input[name="endDate"]',
             'priceBottom': 'input[name="priceBottom"]',
             'priceTop': 'input[name="priceTop"]',
             'recruitNum': 'input[name="recruitNum"]',
             'interviewNum': 'input[name="interviewNum"]',
-            'nativesOnly': 'input[name="nativesOnly"]',
+            'foreignerAllowed': 'input[name="foreignerAllowed"]',
             'remark': '.wysiwyg-editor'
         },
 
@@ -46,7 +47,7 @@ define([
 
             if (!this.model) {
                 this.model = new JobModel();
-                this.model.colleciton = this.collection;
+                // this.model.colleciton = this.collection;
             }
 
             this.languageComposite = new LanguageComposite({model: this.model});
@@ -64,21 +65,31 @@ define([
                 autoclose: true,
                 forceParse: false,
                 startDate: new Date(),
+                todayHighlight: true,
                 language: 'ja'
+            });
+
+            this.ui.expiredTime.timepicker({
+                minuteStep: 5,
+                showMeridian: false,
+                defaultTime: false
+                // defaultTime: moment().format('h:m A')
             });
 
             this.$el.find('#duration').datepicker({
                 autoclose: true,
                 forceParse: false,
                 startDate: new Date(),
+                todayHighlight: true,
                 language: 'ja'
             });
 
             // append input mask
-            this.ui.priceBottom.mask('9?99万円');
-            this.ui.priceTop.mask('9?99万円');
-            this.ui.recruitNum.mask('9?9人');
-            this.ui.interviewNum.mask('9?9回');
+            this.ui.expiredTime.mask('99:99');
+            this.ui.priceBottom.mask('9?99');
+            this.ui.priceTop.mask('9?99');
+            this.ui.recruitNum.mask('9?9');
+            this.ui.interviewNum.mask('9?9');
 
             // enable wysiwyg editor
             this.ui.remark.ace_wysiwyg({
@@ -127,13 +138,13 @@ define([
             // if input value checking ok
             if (this.inputValid()) {
 
-                // set value to model
-                this.model.set(this.getInputData());
-
                 // if this model is a new event
                 if (this.model.isNew()) {
                     // add it to eventcollection
-                    this.collection.add(this.model.toJSON());
+                    this.collection.add(this.getInputData());
+                } else {
+                    // set value to model
+                    this.model.set(this.getInputData());
                 }
             }
         },
@@ -149,18 +160,41 @@ define([
 
             console.log(this.getInputData());
 
+            var userInput = this.getInputData(),
+                startDate,
+                endDate,
+                expiredDate;
+
             // check input
-            var errors = this.model.preValidate(this.getInputData()) || {};
+            var errors = this.model.preValidate(userInput) || {};
 
             // check wheter end date is after start date
-            if (this.ui.startDate.val() && this.ui.endDate.val()) {
+            if (userInput.startDate && userInput.endDate) {
 
                 // looks very bad, but work
-                var startDate = new Date(this.ui.startDate.val()),
-                    endDate = new Date(this.ui.endDate.val());
+                startDate = new Date(userInput.startDate);
+                endDate = new Date(userInput.endDate);
 
                 if (moment(startDate).isAfter(endDate))
-                    errors.endDate = errors.endTime = "開始日より後の時間をご入力ください";
+                    errors.endDate = "開始日より後の時間をご入力ください";
+            }
+
+            if (userInput.endDate && userInput.expiredDate) {
+
+                // looks very bad, but work
+                expiredDate = new Date(userInput.expiredDate);
+                endDate = new Date(userInput.endDate);
+
+                if (moment(expiredDate).isAfter(endDate))
+                    errors.expiredDate = "作業終了日より前の日時をご入力ください";
+            }
+
+            if (userInput.expiredDate && moment(userInput.expiredDate).isBefore(moment())) {
+                errors.expiredDate = "現在より未来の日時をご入力ください";
+            }
+
+            if (userInput.priceBottom && userInput.priceTop && userInput.priceBottom >= userInput.priceTop) {
+                errors.priceTop = "単価下限より高い金額をご入力ください";
             }
 
             // if got input error
@@ -186,19 +220,42 @@ define([
         },
 
         getInputData: function() {
+
+            // produce expired　datetime
+            var expiredDate = new Date(this.ui.expiredDate.val()),
+                expiredTime = this.ui.expiredTime.val() ? this.ui.expiredTime.val().split(':') : ["0","0"];
+
+            expiredDate.setHours(Number(expiredTime[0]));
+            expiredDate.setMinutes(Number(expiredTime[1]));
+
+            // produce foreignerAllowed value
+            var foreignerAllowed = this.ui.foreignerAllowed.is(':checked') ? true : false;
+
+            // produce languages value
+            var languages = _.filter(this.languageRegion.currentView.getInput(), function(language) {
+                return language.language && language.weight;
+            });
+
+            // produce skills value
+            var skills = _.filter(this.skillRegion.currentView.getInput(), function(skill) {
+                return skill.skill && skill.weight;
+            });
+
             return {
                 name: this.ui.name.val(),
                 address: this.ui.address.val(),
-                expiredDate: this.ui.expiredDate.val(),
+                expiredDate: expiredDate,
                 startDate: this.ui.startDate.val(),
                 endDate: this.ui.endDate.val(),
-                priceBottom: this.ui.priceBottom.val().replace('万円'),
-                priceTop: this.ui.priceTop.val().replace('万円'),
-                recruitNum: this.ui.recruitNum.val().replace('人'),
-                interviewNum: this.ui.interviewNum.val().replace('回'),
-                nativesOnly: this.ui.nativesOnly.val(),
+                priceBottom: this.ui.priceBottom.val().replace('_', ''),
+                priceTop: this.ui.priceTop.val().replace('_', ''),
+                recruitNum: this.ui.recruitNum.val().replace('_', ''),
+                interviewNum: this.ui.interviewNum.val().replace('_', ''),
+                foreignerAllowed: foreignerAllowed,
                 remark: this.ui.remark.html(),
-            }
+                languages: languages,
+                skills: skills
+            };
         }
 
     });

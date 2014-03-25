@@ -8,9 +8,6 @@
                 </div>
             </div>
             <div class="col-sm-4 align-right">
-                <% if (obj._id) { %>
-                    <button class="btn btn-sm btn-danger btn-remove"><i class="icon-trash"></i> 削除</button>
-                <% } %>
                 <button class="btn btn-sm btn-success btn-save"><i class="icon-ok"></i> 保存</button>
                 <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> 取消</button>
             </div>
@@ -19,17 +16,21 @@
 
     <div class="row modal-body overflow-visible">
 
-        <div class="col-xs-12 col-sm-6">
+        <div class="basic-info col-xs-12 col-sm-6">
             <div class="form-group">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="icon-building bigger-110"></i></span>
+                    <span class="input-group-addon"><i class="icon-map-marker bigger-110"></i></span>
                     <input type="text" class="col-xs-12" placeholder="作業場所" name="address" value="<%= obj.address %>">
                 </div>
             </div>
             <div class="form-group">
-                <div class="input-group">
+                <div class="input-group input-daterange">
+                    <span class="input-group-addon sl-input-group-addon"><i class="icon-calendar bigger-110"></i></span>
+                    <input type="text" class="input-medium" placeholder="応募締日" name="expiredDate" value="<%= obj.expiredDateInput %>">
                     <span class="input-group-addon"><i class="icon-time bigger-110"></i></span>
-                    <input type="text" class="input-medium" placeholder="有効期限" name="expiredDate" value="<%= obj.expiredDateInput %>">
+                    <div class="bootstrap-timepicker">
+                        <input type="text" class="input-medium " placeholder="時間" name="expiredTime" value="<%= obj.expiredTime %>">
+                    </div>
                 </div>
             </div>
             <div class="form-group">
@@ -60,14 +61,10 @@
                     <input type="text" class="col-xs-12" placeholder="面接回数" name="interviewNum" value="<%= obj.interviewNum %>">
                 </div>
             </div>
-            <div class="btn-group" data-toggle="buttons">
-                <label class="btn btn-sm btn-success <% if (!obj.nativesOnly) print('active') %>">
-                    <i class="icon-ok bigger-110"></i>&nbsp;&nbsp;可
-                    <input type="radio" name="nativesOnly" value="false" />
-                </label>
-                <label class="btn btn-sm btn-warning <% if (obj.nativesOnly) print('active') %>">
-                    <i class="icon-ban-circle bigger-110"></i>&nbsp;&nbsp;不可
-                    <input type="radio" name="nativesOnly" value="true" />
+            <div class="checkbox">
+                <label>
+                    <input class="ace" type="checkbox" name="foreignerAllowed" <% if (obj.foreignerAllowed) print('checked'); %>/>
+                    <span class="lbl"> 外国籍可</span>
                 </label>
             </div>
         </div>
@@ -96,9 +93,6 @@
     </div>
 
     <div class="modal-footer">
-        <% if (obj._id) { %>
-            <button class="btn btn-sm btn-danger btn-remove"><i class="icon-trash"></i> 削除</button>
-        <% } %>
         <button class="btn btn-sm btn-success btn-save"><i class="icon-ok"></i> 保存</button>
         <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> 取消</button>
     </div>

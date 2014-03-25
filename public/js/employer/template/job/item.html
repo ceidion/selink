@@ -1,15 +1,33 @@
+<%
+    var widgetColor = "";
+
+    if (moment(obj.expiredDate).isBefore(moment()))
+        widgetColor = "header-color-grey";
+%>
+
 <div class="widget-box">
-    <div class="widget-header widget-header-flat">
+    <div class="widget-header widget-header-flat <%= widgetColor %>">
         <h5 class="bigger lighter"><%= obj.name %></h5>
         <div class="widget-toolbar action-buttons">
-            <a href="#" class="btn-edit"><i class="icon-pencil"></i></a>
-            <a href="#" class="btn-remove red"><i class="icon-trash"></i></a>
+            <a href="#" class="btn-edit green tooltip-success"><i class="icon-pencil"></i></a>
+            <a href="#" class="btn-remove red tooltip-error"><i class="icon-trash"></i></a>
         </div>
     </div>
 
     <div class="widget-body">
 
         <div class="widget-main">
+
+            <div class="alert alert-danger clearfix" style="display: none;">
+                <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
+                この案件を削除します、よろしいですか？
+                <br />
+                <br />
+                <p>
+                    <button class="btn btn-sm btn-warning btn-remove-cancel pull-right">取消</button>
+                    <button class="btn btn-sm btn-danger btn-remove-comfirm pull-right">削除</button>
+                </p>
+            </div>
 
             <!-- remark -->
             <% if (obj.remark) { %>
@@ -57,11 +75,40 @@
                 </div>
             <% } %>
 
-            <!-- nativesOnly -->
-            <% if (obj.nativesOnly) { %>
+            <!-- foreignerAllowed -->
+            <% if (!obj.foreignerAllowed) { %>
                 <div class="row" style="min-height: 40px; line-height: 40px;">
-                    <div class="col-xs-4 align-right"><i class="icon-globe bigger-110"></i>&nbsp;&nbsp;外国籍：</div>
-                    <div class="col-xs-8 align-left"><%= obj.nativesOnly %></div>
+                    <div class="col-xs-4 align-right"><i class="icon-globe bigger-110 blue"></i>&nbsp;&nbsp;外国籍：</div>
+                    <div class="col-xs-8 align-left">不可</div>
+                </div>
+            <% } %>
+
+            <% if (obj.languages.length) { %>
+                <div class="hr hr8 hr-double"></div>
+                <div class="clearfix">
+                <% _.each(obj.languages, function(language){ %>
+                    <div class="grid3 center">
+                        <div class="easy-pie-chart percentage" data-percent="<%= language.weight %>" data-color="#CA5952">
+                            <span class="percent"><%= language.weight %></span>%
+                        </div>
+                        <div class="space-2"></div>
+                        <%= language.language %>
+                    </div>
+                <% }); %>
+                </div>
+                <div class="hr hr8 hr-double"></div>
+            <% } %>
+
+            <% if (obj.skills.length) { %>
+                <div class="profile-skills">
+                <% _.each(obj.skills, function(skill){ %>
+                    <div class="progress">
+                        <div class="progress-bar" style="width:<%= skill.weight %>%">
+                            <span class="pull-left"><%= skill.skill %></span>
+                            <span class="pull-right"><%= skill.weight %></span>
+                        </div>
+                    </div>
+                <% }); %>
                 </div>
             <% } %>
 
