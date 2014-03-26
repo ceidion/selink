@@ -22,7 +22,7 @@ exports.index = function(req, res, next) {
         query.populate('_owner', 'firstName lastName photo');
 
     // if requested for 'my' posts
-    } else if (req.params.user == req.user.id){
+    } else if (req.params.user == req.user.id) {
 
         // not populate owner, cause client have
         query.where('_owner').equals(req.user.id);
@@ -114,6 +114,21 @@ exports.update = function(req, res, next){
         if (err) next(err);
         else res.json(post);
     });
+};
+
+// Get post (for home)
+exports.home = function(req, res, next) {
+
+    Post.find()
+        .where('logicDelete').equals(false)
+        .populate('_owner', 'firstName lastName photo')
+        .populate('comments._owner', 'firstName lastName photo')
+        .sort('-createDate')
+        // .limit(20)
+        .exec(function(err, posts) {
+            if (err) next(err);
+            else res.json(posts);
+        });
 };
 
 exports.like = function(req, res, next){

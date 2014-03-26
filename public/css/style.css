@@ -39,9 +39,10 @@ html,body{height:100%}
 #employments blockquote{margin:0px}
 #employments .row{margin-top:5px}#employments .row:first-child{margin-top:0px}
 #employments i{width:14px}
-.post-item,.friend-item{margin:0px !important}.post-item img,.friend-item img,.post-item div,.friend-item div{max-width:100%}
-.post-item .avatar,.friend-item .avatar{max-width:100px;max-height:100px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
-.post-item .btn-block,.friend-item .btn-block{-webkit-transition:all 1s;transition:all 1s}
+.post-item,.friend-item,.job-item{margin:0px !important}.post-item img,.friend-item img,.job-item img,.post-item div,.friend-item div,.job-item div{max-width:100%}
+.post-item .avatar,.friend-item .avatar,.job-item .avatar{max-width:100px;max-height:100px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
+.post-item .widget-header .label,.friend-item .widget-header .label,.job-item .widget-header .label{margin-bottom:5px}
+.post-item .btn-block,.friend-item .btn-block,.job-item .btn-block{-webkit-transition:all 1s;transition:all 1s}
 #event-modal input{line-height:normal}
 #event-modal .row{margin-top:15px}#event-modal .row:first-child{margin-top:0px}
 #event-modal .checkbox{margin-top:4px;margin-bottom:0px}

@@ -49,6 +49,8 @@ module.exports = function(app, sio) {
     // Remove post
     app.delete('/users/:user/posts/:post', checkLoginStatus, post.remove);
 
+    // Get new posts (for home)
+    app.get('/posts', checkLoginStatus, post.home);
     // like a post
     app.patch('/posts/:post/like', checkLoginStatus, post.like);
     // comment a post
@@ -80,6 +82,9 @@ module.exports = function(app, sio) {
     app.patch('/users/:user/jobs/:job', checkLoginStatus, job.update);
     // Update jobs (remove job)
     app.delete('/users/:user/jobs/:job', checkLoginStatus, job.remove);
+
+    // Get new jobs (for home)
+    app.get('/jobs', checkLoginStatus, job.home);
 
     // Get user info
     app.get('/users/:user', checkLoginStatus, user.show);

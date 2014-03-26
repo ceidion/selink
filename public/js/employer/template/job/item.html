@@ -7,11 +7,72 @@
 
 <div class="widget-box">
     <div class="widget-header widget-header-flat <%= widgetColor %>">
+
+        <a href="#profile/<%= selink.userModel.id %>">
+            <img class="avatar" src="<%= selink.userModel.get('photo') %>">
+        </a>
+
+        <div class="widget-toolbar no-border">
+            <a class="yellow dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-yellow pull-right dropdown-caret dropdown-close">
+                <li><a href="#" class="btn-edit"><i class="icon-pencil green bigger-110"></i>&nbsp;&nbsp;編集</a></li>
+                <li><a href="#" class="btn-remove"><i class="icon-trash red bigger-110"></i>&nbsp;&nbsp;削除</a></li>
+            </ul>
+        </div>
+
+        <!-- job name -->
         <h5 class="bigger lighter"><%= obj.name %></h5>
-        <div class="widget-toolbar action-buttons">
+
+        <!-- address -->
+        <% if (obj.address) { %>
+            <span class="label label-lg label-primary arrowed arrowed-right">
+                <i class="icon-map-marker bigger-120"></i>&nbsp;&nbsp;<%= obj.address%>
+            </span>
+        <% } %>
+
+        <!-- duration -->
+        <% if (obj.startDate || obj.endDate) { %>
+            <span class="label label-lg label-pink arrowed arrowed-right">
+                <i class="icon-calendar bigger-120"></i>&nbsp;&nbsp;<%= obj.startDateInput %>～<%= obj.endDateInput %>
+            </span>
+        <% } %>
+
+        <!-- price -->
+        <% if (obj.priceBottom || obj.priceTop) { %>
+            <span class="label label-lg label-success arrowed arrowed-right">
+                <i class="icon-jpy bigger-120"></i>&nbsp;&nbsp;<%= obj.priceBottom %>～<%= obj.priceTop %>万円
+            </span>
+        <% } %>
+
+        <!-- recruitNum -->
+        <% if (obj.recruitNum) { %>
+            <span class="label label-lg label-purple arrowed arrowed-right">
+                <i class="icon-bullhorn bigger-120"></i>&nbsp;&nbsp;募集<%= obj.recruitNum %>人
+            </span>
+        <% } %>
+
+        <!-- interviewNum -->
+        <% if (obj.interviewNum) { %>
+            <span class="label label-lg label-warning arrowed arrowed-right">
+                <i class="icon-microphone bigger-120"></i>&nbsp;&nbsp;面接<%= obj.interviewNum %>回
+            </span>
+        <% } %>
+
+        <!-- foreignerAllowed -->
+        <% if (!obj.foreignerAllowed) { %>
+            <span class="label label-lg label-danger arrowed arrowed-right">
+                <i class="icon-globe bigger-120"></i>&nbsp;&nbsp;外国籍不可
+            </span>
+        <% } %>
+
+<!--         <div class="widget-toolbar action-buttons">
             <a href="#" class="btn-edit green tooltip-success"><i class="icon-pencil"></i></a>
             <a href="#" class="btn-remove red tooltip-error"><i class="icon-trash"></i></a>
-        </div>
+        </div> -->
+
+        <div class="clearfix"></div>
     </div>
 
     <div class="widget-body">
@@ -29,64 +90,15 @@
                 </p>
             </div>
 
-            <!-- address -->
-            <% if (obj.address) { %>
-                <div class="row" style="min-height: 40px; line-height: 40px;">
-                    <div class="col-xs-4 align-right"><i class="icon-map-marker bigger-110 blue"></i>&nbsp;&nbsp;作業場所：</div>
-                    <div class="col-xs-8 align-left"><%= obj.address%></div>
-                </div>
-            <% } %>
-
-            <!-- duration -->
-            <% if (obj.startDate || obj.endDate) { %>
-                <div class="row" style="min-height: 40px; line-height: 40px;">
-                    <div class="col-xs-4 align-right"><i class="icon-calendar bigger-110 blue"></i>&nbsp;&nbsp;作業期間：</div>
-                    <div class="col-xs-8 align-left"><%= obj.startDateInput %>～<%= obj.endDateInput %></div>
-                </div>
-            <% } %>
-
-            <!-- price -->
-            <% if (obj.priceBottom || obj.priceTop) { %>
-                <div class="row" style="min-height: 40px; line-height: 40px;">
-                    <div class="col-xs-4 align-right"><i class="icon-jpy bigger-110 blue"></i>&nbsp;&nbsp;単価：</div>
-                    <div class="col-xs-8 align-left"><%= obj.priceBottom %>～<%= obj.priceTop %></div>
-                </div>
-            <% } %>
-
-            <!-- recruitNum -->
-            <% if (obj.recruitNum) { %>
-                <div class="row" style="min-height: 40px; line-height: 40px;">
-                    <div class="col-xs-4 align-right"><i class="icon-bullhorn bigger-110 blue"></i>&nbsp;&nbsp;募集：</div>
-                    <div class="col-xs-8 align-left"><%= obj.recruitNumDisplay %></div>
-                </div>
-            <% } %>
-
-            <!-- interviewNum -->
-            <% if (obj.interviewNum) { %>
-                <div class="row" style="min-height: 40px; line-height: 40px;">
-                    <div class="col-xs-4 align-right"><i class="icon-user bigger-110 blue"></i>&nbsp;&nbsp;面接：</div>
-                    <div class="col-xs-8 align-left"><%= obj.interviewNum %>回</div>
-                </div>
-            <% } %>
-
-            <!-- foreignerAllowed -->
-            <% if (!obj.foreignerAllowed) { %>
-                <div class="row" style="min-height: 40px; line-height: 40px;">
-                    <div class="col-xs-4 align-right"><i class="icon-globe bigger-110 blue"></i>&nbsp;&nbsp;外国籍：</div>
-                    <div class="col-xs-8 align-left">不可</div>
-                </div>
-            <% } %>
-
             <!-- remark -->
             <% if (obj.remark) { %>
-                <div class="hr hr8 hr-double"></div>
                 <%= obj.remark %>
             <% } %>
 
             <% if (obj.languages.length) { %>
                 <div class="hr hr8 hr-double"></div>
                 <div class="clearfix">
-                <% 
+                <%
                     var sortedLanguages = _.sortBy(obj.languages, function(language) {
                         return 0 - language.weight;
                     });

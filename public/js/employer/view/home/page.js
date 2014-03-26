@@ -1,53 +1,106 @@
 define([
-    'text!employer/template/home/page.html'
-], function(pageTemplate) {
+    'text!employer/template/home/page.html',
+    'common/view/post/item',
+    'employer/view/job/item'
+], function(
+    template,
+    PostItemView,
+    JobItemView
+) {
 
-    // PageView is the biggest frame of the application
-    var PageView = Backbone.Marionette.ItemView.extend({
+    var ItemCollection = Backbone.Collection.extend({
+
+        model: Backbone.Model.extend({idAttribute: "_id"})
+    });
+
+    return Backbone.Marionette.CompositeView.extend({
 
         // Template
-        template: pageTemplate,
+        template: template,
 
-        className: "row",
+        // Class name
+        // className: "row",
+
+        // item view container
+        itemViewContainer: '.item-container',
+
+        getItemView: function(item) {
+
+            if (item.collection == this.postsCollection)
+                return PostItemView;
+            else if (item.collection == this.jobsCollection)
+                return JobItemView;
+        },
 
         // Events
         events: {
-            'click #logoutBtn': 'onLogout',
-            'click': 'onClick'
+
         },
 
-        // Regions
-        regions: {
-            header: '#header',
-            content: '#content',
-            footer: '#footer'
+        collectionEvents: {
+            'sync': 'reIsotope'
         },
 
         // Initializer
         initialize: function() {
 
-            // for slide animation effect change the default
-            // behavior of show view on content region
-            // this.content.open = function(view) {
-            //     this.$el.hide();
-            //     this.$el.html(view.el);
-            //     this.$el.fadeIn();
-            // };
+            this.collection = new ItemCollection(null, {
+                comparator: function(item) {
+                    // sort by createDate
+                    var date = moment(item.get('createDate'));
+                    return Number(date.valueOf());
+                }
+            });
+            this.postsCollection = new ItemCollection();
+            this.jobsCollection = new ItemCollection();
+
+            var self = this;
+
+            this.postsCollection.fetch({
+                url: '/posts',
+                success: function(collection, response, options) {
+                    self.collection.add(self.postsCollection.models);
+                    self.collection.sort();
+                    self.reIsotope();
+                }
+            });
+
+            this.jobsCollection.fetch({
+                url: '/jobs',
+                success: function(collection, response, options) {
+                    self.collection.add(self.jobsCollection.models);
+                    self.collection.sort();
+                    self.reIsotope();
+                }
+            });
         },
 
         // After render
         onRender: function() {
 
-            // this.listenTo(vent, 'logout:sessionTimeOut', this.doLogout);
-
         },
 
         // After show
         onShow: function() {
-            // move in the page component
-            // this.onPartScreen();
-        },
-    });
 
-    return PageView;
+        },
+
+        // re-isotope after collection get synced
+        reIsotope: function() {
+
+            var self = this;
+
+            this.$el.find('.item-container').imagesLoaded(function() {
+                self.$el.find('.item-container').isotope({
+                    layoutMode: 'selinkMasonry',
+                    itemSelector : '.post-item, .job-item',
+                    resizable: false
+                });
+            });
+        },
+
+        shiftColumn: function(event, view) {
+            this.$el.isotope('selinkShiftColumn', view.el);
+        }
+    });
 });

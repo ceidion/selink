@@ -8,7 +8,15 @@ var _ = require('underscore'),
 
 exports.index = function(req, res, next) {
 
-    Job.find({_owner: req.params.user, logicDelete: false})
+    var query = Job.find();
+
+    // if requested for 'my' jobs
+    if (req.params.user == req.user.id) {
+        // not populate owner, cause client have
+        query.where('_owner').equals(req.user.id);
+    }
+
+    query.where('logicDelete').equals(false)
         .sort('-createDate')
         .exec(function(err, jobs) {
             if (err) next(err);
@@ -84,4 +92,16 @@ exports.remove = function(req, res, next) {
         if (err) next(err);
         else res.json(job);
     });
+};
+
+exports.home = function(req, res, next) {
+
+    Job.find()
+        .where('logicDelete').equals(false)
+        .populate('_owner', 'firstName lastName photo')
+        .sort('-createDate')
+        .exec(function(err, jobs) {
+            if (err) next(err);
+            res.json(jobs);
+        });
 };

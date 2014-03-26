@@ -27,16 +27,7 @@ define([
         },
 
         onRender: function() {
-            // add tooltip on add button
-            this.$el.find('.btn-edit').tooltip({
-                placement: 'bottom',
-                title: "編集"
-            });
 
-            this.$el.find('.btn-remove').tooltip({
-                placement: 'bottom',
-                title: "削除"
-            });
         },
 
         onShow: function() {
