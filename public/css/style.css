@@ -43,8 +43,7 @@ html,body{height:100%}
 .post-item .avatar,.friend-item .avatar,.job-item .avatar{max-width:100px;max-height:100px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
 .post-item .widget-header .label,.friend-item .widget-header .label,.job-item .widget-header .label{margin-bottom:5px}
 .post-item .btn-block,.friend-item .btn-block,.job-item .btn-block{-webkit-transition:all 1s;transition:all 1s}
-#modal-area{line-height:33px}#modal-area input{line-height:normal}
-#modal-area i{width:14px}
+#modal-area input{line-height:normal}
 #event-modal input{line-height:normal}
 #event-modal .row{margin-top:15px}#event-modal .row:first-child{margin-top:0px}
 #event-modal .checkbox{margin-top:4px;margin-bottom:0px}
@@ -67,7 +66,6 @@ html,body{height:100%}
 .isotope .isotope-item{-webkit-transition-property:-webkit-transform,opacity;-moz-transition-property:-moz-transform,opacity;-ms-transition-property:-ms-transform,opacity;-o-transition-property:-o-transform,opacity;transition-property:transform, opacity}
 .isotope.no-transition,.isotope.no-transition .isotope-item,.isotope .isotope-item.no-transition{-webkit-transition-duration:0s;-moz-transition-duration:0s;-ms-transition-duration:0s;-o-transition-duration:0s;transition-duration:0s}
 #infscr-loading{position:fixed;text-align:center;bottom:30px;left:42%;z-index:100;background-color:#dff0d8;border:2px solid #d6e9c6;padding:15px;color:#468847;font-size:15px;font-weight:bold}
-.dropdown-navbar{width:320px}.dropdown-navbar .msg-body{max-width:250px}
 .dropdown-body{border-color:#bcd4e5}.dropdown-body>li{padding:0 8px;background-color:#FFFFFF}.dropdown-body>li>[class*="icon-"],.dropdown-body>li>a>[class*="icon-"]{margin-right:5px !important;color:#555;font-size:14px}
 .dropdown-body>li>a{padding:10px 2px;margin:0;border-bottom:1px solid;font-size:12px;line-height:16px;color:#555;display:block;clear:both;font-weight:normal;white-space:nowrap;text-decoration:none}.dropdown-body>li>a:active,.dropdown-body>li>a:hover,.dropdown-body>li>a:focus{background-color:transparent !important;color:#555}
 .dropdown-body>li>a .progress{margin-bottom:0;margin-top:4px}

@@ -2,12 +2,14 @@ define([
     'text!common/template/topnav/topnav.html',
     'common/view/topnav/event',
     'common/view/topnav/notification/main',
+    'common/view/issue/main',
     'common/view/setting/main',
     'common/view/password/main'
 ], function(
     template,
     EventMenu,
     NotificationMenu,
+    IssueView,
     SettingView,
     PasswordView
 ) {
@@ -35,6 +37,7 @@ define([
         },
 
         events: {
+            'click #issue': 'showIssueView',
             'click #setting': 'showSettingView',
             'click #password': 'showPasswordView'
         },
@@ -81,6 +84,21 @@ define([
             this.notificationNavRegion.show(this.notificationNav);
         },
 
+        showIssueView: function(event) {
+
+            event.preventDefault();
+
+            // create issue view
+            var issueView = new IssueView({
+                model: selink.userModel
+            });
+
+            // attention: access the selink object directly here
+            selink.modalArea.show(issueView);
+
+            selink.modalArea.$el.modal('show');
+        },
+
         showSettingView: function(event) {
 
             event.preventDefault();
@@ -100,7 +118,7 @@ define([
 
             event.preventDefault();
 
-            // create setting view
+            // create password reset view
             var passwordView = new PasswordView({
                 model: selink.userModel
             });

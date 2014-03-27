@@ -1,4 +1,5 @@
 var tag = require('../app/controllers/tag'),
+    issue = require('../app/controllers/issue'),
     user = require('../app/controllers/user'),
     friend = require('../app/controllers/friend'),
     post = require('../app/controllers/post'),
@@ -105,6 +106,15 @@ module.exports = function(app, sio) {
     app.patch('/tags/:id', checkLoginStatus, tag.update);
     // Update tags (remove tag)
     app.delete('/tags/:id', checkLoginStatus, tag.remove);
+
+    // Show issues
+    app.get('/issues', checkLoginStatus, issue.index);
+    // Create new issue
+    app.post('/issues', checkLoginStatus, issue.create);
+    // Update issue (update issue)
+    app.patch('/issues/:issue', checkLoginStatus, issue.update);
+    // Update issue (remove issue)
+    app.delete('/issues/:issue', checkLoginStatus, issue.remove);
 
     // query address
     app.get('/address/:zipcode', checkLoginStatus, address.show);
