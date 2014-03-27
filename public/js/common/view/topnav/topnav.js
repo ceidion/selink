@@ -2,10 +2,14 @@ define([
     'text!common/template/topnav/topnav.html',
     'common/view/topnav/event',
     'common/view/topnav/notification/main',
+    'common/view/setting/main',
+    'common/view/password/main'
 ], function(
     template,
     EventMenu,
-    NotificationMenu
+    NotificationMenu,
+    SettingView,
+    PasswordView
 ) {
 
     var ReplaceRegion = Backbone.Marionette.Region.extend({
@@ -28,6 +32,11 @@ define([
         ui: {
             completeness: '.completeness-value',
             bar: '.progress-bar'
+        },
+
+        events: {
+            'click #setting': 'showSettingView',
+            'click #password': 'showPasswordView'
         },
 
         // model events
@@ -70,6 +79,36 @@ define([
             // show every menu
             this.eventNavRegion.show(this.eventNav);
             this.notificationNavRegion.show(this.notificationNav);
+        },
+
+        showSettingView: function(event) {
+
+            event.preventDefault();
+
+            // create setting view
+            var settingView = new SettingView({
+                model: selink.userModel
+            });
+
+            // attention: access the selink object directly here
+            selink.modalArea.show(settingView);
+
+            selink.modalArea.$el.modal('show');
+        },
+
+        showPasswordView: function(event) {
+
+            event.preventDefault();
+
+            // create setting view
+            var passwordView = new PasswordView({
+                model: selink.userModel
+            });
+
+            // attention: access the selink object directly here
+            selink.modalArea.show(passwordView);
+
+            selink.modalArea.$el.modal('show');
         },
 
         // update user photo when changed

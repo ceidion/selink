@@ -1,7 +1,7 @@
 define([
-    'text!employer/template/home/page.html',
+    'text!employer/template/home/main.html',
     'common/view/post/item',
-    'employer/view/job/item'
+    'common/view/job/item'
 ], function(
     template,
     PostItemView,

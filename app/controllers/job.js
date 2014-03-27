@@ -98,6 +98,7 @@ exports.home = function(req, res, next) {
 
     Job.find()
         .where('logicDelete').equals(false)
+        .where('expiredDate').gt(new Date())
         .populate('_owner', 'firstName lastName photo')
         .sort('-createDate')
         .exec(function(err, jobs) {

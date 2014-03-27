@@ -16,7 +16,8 @@ define([
         pageContent: '.page-content',
         topnavArea: '#topnav-area',
         shortcutArea: '#shortcuts-area',
-        sidenavArea: '#sidenav-area'
+        sidenavArea: '#sidenav-area',
+        modalArea: '#modal-area'
     });
 
     // before application initialization, config plug-ins

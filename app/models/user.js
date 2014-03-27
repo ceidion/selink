@@ -170,6 +170,45 @@ var User = new Schema({
         ref: 'User'
     }],
 
+    // User Setting
+    setting: {
+
+        systemNotification: {
+            type: Boolean,
+            default: true
+        },
+
+        friendInvitation: {
+            type: Boolean,
+            default: true
+        },
+
+        invitationAccpected: {
+            type: Boolean,
+            default: true
+        },
+
+        friendNewPost: {
+            type: Boolean,
+            default: true
+        },
+
+        jobPost: {
+            type: Boolean,
+            default: true
+        },
+
+        postLiked: {
+            type: Boolean,
+            default: true
+        },
+
+        postCommented: {
+            type: Boolean,
+            default: true
+        }
+    },
+
     // Last login date
     lastLogin: {
         type: Date

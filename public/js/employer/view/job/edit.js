@@ -213,6 +213,7 @@ define([
 
                 // return not valid
                 return false;
+
             } else {
                 // return valid
                 return true;
@@ -229,7 +230,7 @@ define([
             expiredDate.setMinutes(Number(expiredTime[1]));
 
             // produce foreignerAllowed value
-            var foreignerAllowed = this.ui.foreignerAllowed.is(':checked') ? true : false;
+            var foreignerAllowed = this.ui.foreignerAllowed.is(':checked');
 
             // produce languages value
             var languages = _.filter(this.languageRegion.currentView.getInput(), function(language) {
