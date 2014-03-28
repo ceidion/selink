@@ -90,11 +90,6 @@ html,body {
   }
 }
 
-// profile photo, cancel the float for FF
-.sl-avatar {
-  border: 0px !important;
-  float: none !important;
-}
 
 // add some space for address input
 #name, #title {
@@ -102,7 +97,18 @@ html,body {
   min-height: 43px;
 }
 
-#completeness {
+#photo {
+
+  // profile photo, cancel the float for FF
+  .sl-avatar {
+    border: 0px !important;
+    float: none !important;
+  }
+
+  .progress {
+    margin-bottom: 0px;
+  }
+
   .progress[data-percent]:after {
     line-height: normal;
   }

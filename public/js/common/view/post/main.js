@@ -1,20 +1,34 @@
 define([
     'text!common/template/post/main.html',
-    'common/collection/posts',
+    'common/collection/base',
+    'common/model/post',
     'common/view/post/item'
 ], function(
     template,
-    PostsModel,
+    BaseCollection,
+    PostModel,
     ItemView
 ) {
+
+    var PostsCollection = BaseCollection.extend({
+
+        model: PostModel,
+
+        url: function() {
+            return this.document.url() + '/posts';
+        }
+    });
 
     return Backbone.Marionette.CompositeView.extend({
 
         // template
         template: template,
 
+        // class name
+        className: 'post-container',
+
         // item view container
-        itemViewContainer: '.post-container',
+        itemViewContainer: this.$el,
 
         // item view
         itemView: ItemView,
@@ -47,8 +61,7 @@ define([
             var self = this;
 
             // create posts collection
-            this.collection = new PostsModel();
-            this.collection.document = this.model;
+            this.collection = new PostsCollection(null, {document: this.model});
 
             // fetch posts
             this.collection.fetch({
@@ -57,66 +70,27 @@ define([
                     // change the behavior of add sub view
                     self.appendHtml = function(collectionView, itemView, index) {
                         // prepend new post and reIsotope
-                        this.$el.find(this.itemViewContainer).prepend(itemView.$el).isotope('reloadItems');
+                        this.$el.prepend(itemView.$el).isotope('reloadItems');
                     };
                 }
             });
-
         },
 
         // on render
         onRender: function() {
 
             // initiate wysiwyg eidtor for memo
-            this.ui.newPost.ace_wysiwyg({
-                toolbar_place: function(toolbar) {
-                    return $(this).closest('.widget-box').find('.btn-toolbar').prepend(toolbar).children(0).addClass('inline');
-                },
-                toolbar:
-                [
-                    'font',
-                    null,
-                    'fontSize',
-                    null,
-                    {name:'bold', className:'btn-info'},
-                    {name:'italic', className:'btn-info'},
-                    {name:'strikethrough', className:'btn-info'},
-                    {name:'underline', className:'btn-info'},
-                    null,
-                    {name:'insertunorderedlist', className:'btn-success'},
-                    {name:'insertorderedlist', className:'btn-success'},
-                    {name:'outdent', className:'btn-purple'},
-                    {name:'indent', className:'btn-purple'},
-                    null,
-                    {name:'justifyleft', className:'btn-primary'},
-                    {name:'justifycenter', className:'btn-primary'},
-                    {name:'justifyright', className:'btn-primary'},
-                    {name:'justifyfull', className:'btn-inverse'},
-                    null,
-                    {name:'createLink', className:'btn-pink'},
-                    {name:'unlink', className:'btn-pink'},
-                    null,
-                    {name:'insertImage', className:'btn-success'},
-                    null,
-                    'foreColor',
-                    null,
-                    {name:'undo', className:'btn-grey'},
-                    {name:'redo', className:'btn-grey'}
-                ],
-                'wysiwyg': {
-                    // fileUploadError: showErrorAlert
-                }
-            }).prev().addClass('wysiwyg-style3');
+            this.ui.newPost.ace_wysiwyg().prev().addClass('wysiwyg-style3');
         },
 
         // change the status of post button
         enablePost: function() {
 
             // get user input
-            var input = this.ui.newPost.html();
+            var input = this.ui.newPost.cleanHtml();
 
             // if user input is not empty
-            if (input && input.trim() !== "") {
+            if (input && !_.str.isBlank(input)) {
                 // enable the post button
                 this.ui.btnPost.removeClass('disabled');
             } else {
@@ -144,8 +118,10 @@ define([
         // re-isotope after collection get synced
         reIsotope: function() {
 
-            $('.post-container').imagesLoaded(function() {
-                $('.post-container').isotope({
+            var self = this;
+
+            this.$el.imagesLoaded(function() {
+                self.$el.isotope({
                     layoutMode: 'selinkMasonry',
                     itemSelector : '.post-item',
                     resizable: false
@@ -154,7 +130,7 @@ define([
         },
 
         shiftColumn: function(event, view) {
-            $('.post-container').isotope('selinkShiftColumn', view.el);
+            this.$el.isotope('selinkShiftColumn', view.el);
         }
     });
 });

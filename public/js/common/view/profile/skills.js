@@ -1,30 +1,12 @@
 define([
     'common/view/composite-base',
     'text!common/template/profile/skills.html',
-    'common/view/profile/skill',
-    'common/model/skill',
+    'common/view/profile/skill'
 ], function(
     BaseView,
     template,
-    ItemView,
-    Skill) {
-
-    var Skills = Backbone.Collection.extend({
-
-        model: Skill,
-
-        url:  function() {
-            return this.document.url() + '/skills';
-        },
-
-        comparator: function(skill) {
-            // sort by weight desc
-            if (skill.get('weight'))
-                return 0 - Number(skill.get('weight'));
-            else
-                return 0;
-        }
-    });
+    ItemView
+) {
 
     return BaseView.extend({
 
@@ -47,10 +29,8 @@ define([
 
         // initializer
         initialize: function() {
-
             // make the collection from user model
-            this.collection = new Skills(this.model.get('skills'));
-            this.collection.document = this.model;
+            this.collection = this.model.skills;
         },
 
         // on render

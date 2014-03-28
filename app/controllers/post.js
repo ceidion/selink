@@ -17,24 +17,14 @@ exports.index = function(req, res, next) {
 
     // if requested for 'my friends' posts
     if (category == "friend") {
-
         query.where('_owner').in(req.user.friends);
-        query.populate('_owner', 'firstName lastName photo');
-
-    // if requested for 'my' posts
-    } else if (req.params.user == req.user.id) {
-
-        // not populate owner, cause client have
-        query.where('_owner').equals(req.user.id);
-
     // or requested for "someone's" posts
     } else {
-
         query.where('_owner').equals(req.params.user);
-        query.populate('_owner', 'firstName lastName photo');
     }
 
     query.where('logicDelete').equals(false)
+        .populate('_owner', 'firstName lastName photo')
         .populate('comments._owner', 'firstName lastName photo')
         .sort('-createDate')
         // .limit(20)

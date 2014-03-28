@@ -1,6 +1,6 @@
 define([
     'text!common/template/post/item.html',
-    'text!common/template/post/item-my-post.html',
+    'text!common/template/post/item-owner.html',
     'common/view/post/comment'
 ], function(
     defaultTemplate,
@@ -29,7 +29,7 @@ define([
         // template
         getTemplate: function(){
 
-            if (this.model.get('isMyPost'))
+            if (this.model.get('_owner')._id === selink.userModel.id)
                 return myPostTemplate;
             else
                 return defaultTemplate;
@@ -68,19 +68,6 @@ define([
 
         // initializer
         initialize: function() {
-
-            // if this post's owner is not an object
-            if (!_.isObject(this.model.get('_owner'))) {
-                // then it's user's posts, fill the owner with user info
-                this.model.set({
-                    isMyPost: true,
-                    _owner: {
-                        firstName: selink.userModel.get('firstName'),
-                        lastName: selink.userModel.get('lastName'),
-                        photo: selink.userModel.get('photo')
-                    }
-                }, {silent:true});
-            }
 
             // if user's id exists in post's liked list
             if (_.indexOf(this.model.get('liked'), selink.userModel.get('_id')) >= 0) {
@@ -155,7 +142,9 @@ define([
             });
         },
 
-        onForbid: function() {
+        onForbid: function(event) {
+
+            event.preventDefault();
 
             var self = this;
 

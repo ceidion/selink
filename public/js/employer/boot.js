@@ -39,7 +39,6 @@ require.config({
         'chosen': 'lib/chosen.jquery.min',
         'gritter': 'lib/jquery.gritter.min',
         'colorbox': 'lib/jquery.colorbox-min',
-        'flippant': 'lib/flippant.min',
         'knob': 'lib/jquery.knob.min',
         'wysiwyg': 'lib/bootstrap-wysiwyg.min',
         'hotkeys': 'lib/jquery.hotkeys.min',
@@ -116,9 +115,6 @@ require.config({
         'colorbox': {
             deps: ['jquery']
         },
-        'flippant': {
-            deps: ['jquery']
-        },
         'knob': {
             deps: ['jquery']
         },
@@ -165,7 +161,6 @@ require.config({
                 'autosize',
                 'chosen',
                 'colorbox',
-                'flippant',
                 'gritter',
                 'knob',
                 'wysiwyg',

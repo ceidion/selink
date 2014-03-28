@@ -1,10 +1,6 @@
-define([], function() {
+define(['common/model/base'], function(BaseModel) {
 
-    return Backbone.DeepModel.extend({
-
-        idAttribute: "_id",
-
-        // urlRoot: '/jobs',
+    return BaseModel.extend({
 
         validation: {
             name: [{

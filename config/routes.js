@@ -1,15 +1,14 @@
 var tag = require('../app/controllers/tag'),
-    issue = require('../app/controllers/issue'),
-    user = require('../app/controllers/user'),
-    friend = require('../app/controllers/friend'),
-    post = require('../app/controllers/post'),
-    userEvent = require('../app/controllers/event'),
-    activity = require('../app/controllers/activity'),
-    notification = require('../app/controllers/notification'),
-    // message = require('../app/controllers/message'),
-    tempaccount = require('../app/controllers/tempaccount'),
     job = require('../app/controllers/job'),
-    address = require('../app/controllers/address');
+    user = require('../app/controllers/user'),
+    post = require('../app/controllers/post'),
+    issue = require('../app/controllers/issue'),
+    friend = require('../app/controllers/friend'),
+    address = require('../app/controllers/address'),
+    activity = require('../app/controllers/activity'),
+    userEvent = require('../app/controllers/event'),
+    tempaccount = require('../app/controllers/tempaccount'),
+    notification = require('../app/controllers/notification');
 
 module.exports = function(app, sio) {
 
@@ -17,6 +16,11 @@ module.exports = function(app, sio) {
     app.get('/', function(req, res, next){
         res.render('landing');
     });
+
+    // User sign-up
+    app.post('/signup', tempaccount.create);
+    // Account activate
+    app.get('/activate/:id', tempaccount.activate);
 
     // User Login
     app.post('/login', user.login);
@@ -28,22 +32,25 @@ module.exports = function(app, sio) {
         res.render('./' + req.user.type + '/index', req.user);
     });
 
-    // User sign-up
-    app.post('/signup', tempaccount.create);
-    // Account activate
-    app.get('/activate/:id', tempaccount.activate);
-
-    // Get user's activities
-    app.get('/users/:user/activities', checkLoginStatus, activity.index);
-
-    // Get user's notification
-    app.get('/users/:user/notifications', checkLoginStatus, notification.index);
-    // update notification
-    app.patch('/users/:user/notifications/:notification', checkLoginStatus, notification.update);
-
+    // Get user info
+    app.get('/users/:user', checkLoginStatus, user.show);
+    // Get user's jobs (employer only)
+    app.get('/users/:user/jobs', checkLoginStatus, job.index);
     // Get user's posts
     app.get('/users/:user/posts', checkLoginStatus, post.index);
-    // Create new post
+    // Get user's friends
+    app.get('/users/:user/friends', checkLoginStatus, friend.index);
+    // Get user's events
+    app.get('/users/:user/events', checkLoginStatus, userEvent.index);
+    // Get user's activities
+    app.get('/users/:user/activities', checkLoginStatus, activity.index);
+    // Get user's notification
+    app.get('/users/:user/notifications', checkLoginStatus, notification.index);
+
+    // Update notification
+    app.patch('/users/:user/notifications/:notification', checkLoginStatus, notification.update);
+
+    // Create post
     app.post('/users/:user/posts', checkLoginStatus, post.create);
     // Update post
     app.patch('/users/:user/posts/:post', checkLoginStatus, post.update);
@@ -59,15 +66,11 @@ module.exports = function(app, sio) {
 
     // Introduce friend
     app.get('/friends', checkLoginStatus, friend.introduce);
-    // Get user's friends
-    app.get('/users/:user/friends', checkLoginStatus, friend.index);
     // Request new friend
     app.patch('/users/:user/friends', checkLoginStatus, friend.create);
     // Remove friend
     app.delete('/users/:user/friends/:friend', checkLoginStatus, friend.remove);
 
-    // Get user's events
-    app.get('/users/:user/events', checkLoginStatus, userEvent.index);
     // Create new event
     app.post('/users/:user/events', checkLoginStatus, userEvent.create);
     // Update events
@@ -75,8 +78,6 @@ module.exports = function(app, sio) {
     // Remove event
     app.delete('/users/:user/events/:event', checkLoginStatus, userEvent.remove);
 
-    // Get user's jobs (employer only)
-    app.get('/users/:user/jobs', checkLoginStatus, job.index);
     // Update jobs (create new job)
     app.post('/users/:user/jobs', checkLoginStatus, job.create);
     // Update jobs (update job)
@@ -86,9 +87,9 @@ module.exports = function(app, sio) {
 
     // Get new jobs (for home)
     app.get('/jobs', checkLoginStatus, job.home);
+    // Like a job
+    // Comment a job
 
-    // Get user info
-    app.get('/users/:user', checkLoginStatus, user.show);
     // Upload user photo
     app.put('/users/:id', checkLoginStatus, user.update);
     // Update user info (first-level property)

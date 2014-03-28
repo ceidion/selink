@@ -1,32 +1,12 @@
 define([
     'common/view/composite-base',
     'text!common/template/profile/employments.html',
-    'common/view/profile/employment',
-    'common/model/employment',
+    'common/view/profile/employment'
 ], function(
     BaseView,
     template,
-    ItemView,
-    Employment) {
-
-    var Employments = Backbone.Collection.extend({
-
-        model: Employment,
-
-        url:  function() {
-            return this.document.url() + '/employments';
-        },
-
-        comparator: function(employment) {
-            // sort by startDate desc
-            if (employment.get('startDate')) {
-                var date = moment(employment.get('startDate'));
-                return 0 - Number(date.valueOf());
-            }
-            else
-                return 0;
-        }
-    });
+    ItemView
+) {
 
     return BaseView.extend({
 
@@ -49,10 +29,8 @@ define([
 
         // initializer
         initialize: function() {
-
             // make the collection from user model
-            this.collection = new Employments(this.model.get('employments'), {parse: true});
-            this.collection.document = this.model;
+            this.collection = this.model.employments;
         },
 
         // on render

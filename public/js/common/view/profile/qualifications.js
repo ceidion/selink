@@ -1,31 +1,12 @@
 define([
     'common/view/composite-base',
     'text!common/template/profile/qualifications.html',
-    'common/view/profile/qualification',
-    'common/model/qualification',
+    'common/view/profile/qualification'
 ], function(
     BaseView,
     template,
-    ItemView,
-    Qualification) {
-
-    var Qualifications = Backbone.Collection.extend({
-
-        model: Qualification,
-
-        url:  function() {
-            return this.document.url() + '/qualifications';
-        },
-
-        comparator: function(qualification) {
-            // sort by acquireDate desc
-            if (qualification.get('acquireDate')) {
-                var date = moment(qualification.get('acquireDate'));
-                return 0 - Number(date.valueOf());
-            }
-            else return 0;
-        }
-    });
+    ItemView
+) {
 
     return BaseView.extend({
 
@@ -48,10 +29,8 @@ define([
 
         // initializer
         initialize: function() {
-
             // make the collection from user model
-            this.collection = new Qualifications(this.model.get('qualifications'));
-            this.collection.document = this.model;
+            this.collection = this.model.qualifications;
         },
 
         // on render

@@ -77,16 +77,13 @@ define([
 
             if (!id || id === selink.userModel.get('_id')) {
 
-                selink.userModel.fetch({
-                    success: function() {
-                        // create profile view
-                        selink.profileView = new ProfileView({
-                            model: selink.userModel
-                        });
-                        // show profile view
-                        selink.pageContent.show(selink.profileView);
-                    }
+                // create profile view
+                selink.profileView = new ProfileView({
+                    model: selink.userModel
                 });
+                // show profile view
+                selink.pageContent.show(selink.profileView);
+
             } else {
 
                 var people = new UserModel({

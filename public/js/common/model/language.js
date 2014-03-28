@@ -1,8 +1,6 @@
-define([], function() {
+define(['common/model/base'], function(BaseModel) {
 
-    return Backbone.DeepModel.extend({
-
-        idAttribute: "_id",
+    return BaseModel.extend({
 
         validation: {
 

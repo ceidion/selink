@@ -1,6 +1,6 @@
 define([], function() {
 
-    var BaseItem = Backbone.Marionette.ItemView.extend({
+    return Backbone.Marionette.ItemView.extend({
 
         // placeholder for empty value
         placeholder: '<span class="text-muted">クリックして編集</span>',
@@ -99,6 +99,4 @@ define([], function() {
         // render value by user input data
         renderValue: function(data) {}
     });
-
-    return BaseItem;
 });

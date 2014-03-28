@@ -1,30 +1,12 @@
 define([
     'common/view/composite-base',
     'text!common/template/profile/languages.html',
-    'common/view/profile/language',
-    'common/model/language',
+    'common/view/profile/language'
 ], function(
     BaseView,
     template,
-    ItemView,
-    Language) {
-
-    var Languages = Backbone.Collection.extend({
-
-        model: Language,
-
-        url: function() {
-            return this.document.url() + '/languages';
-        },
-
-        comparator: function(language) {
-            // sort by weight desc
-            if (language.get('weight'))
-                return 0 - Number(language.get('weight'));
-            else
-                return 0;
-        }
-    });
+    ItemView
+) {
 
     return BaseView.extend({
 
@@ -47,10 +29,8 @@ define([
 
         // initializer
         initialize: function() {
-
             // make the collection from user model
-            this.collection = new Languages(this.model.get('languages'));
-            this.collection.document = this.model;
+            this.collection = this.model.languages;
         },
 
         // on render
