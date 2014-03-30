@@ -1,6 +1,6 @@
 define([
-    'text!common/template/timeline/item-day.html',
-    'common/view/timeline/item'
+    'text!common/template/activity/item-day.html',
+    'common/view/activity/item'
 ], function(
     template,
     ItemView) {

@@ -1,20 +1,18 @@
 define([
     'text!common/template/friend/main.html',
+    'common/collection/base',
     'common/view/friend/invited',
     'common/view/friend/friend',
     'common/view/post/item'
 ], function(
     pageTemplate,
+    BaseCollection,
     InvitedView,
     FriendsView,
     ItemView
 ) {
 
-    var PostsCollection = Backbone.Collection.extend({
-
-        idAttribute: "_id",
-
-        model: Backbone.Model.extend({idAttribute: "_id"}),
+    var PostsCollection = BaseCollection.extend({
 
         url: function() {
             return this.document.url() + '/posts?category=friend';
@@ -34,12 +32,12 @@ define([
 
         // collection events
         collectionEvents: {
-            'sync': 'reIsotope',
+            'sync': 'onSync',
         },
 
         // item view events
         itemEvents: {
-            'comment:change': 'shiftColumn'
+            'shiftColumn': 'shiftColumn'
         },
 
         // Initializer
@@ -56,8 +54,7 @@ define([
             });
 
             // create posts collection
-            this.collection = new PostsCollection();
-            this.collection.document = selink.userModel;
+            this.collection = new PostsCollection(null, {document: selink.userModel});
 
             // fetch the posts
             this.collection.fetch({
@@ -66,7 +63,7 @@ define([
                     // change the behavior of add sub view
                     self.appendHtml = function(collectionView, itemView, index) {
                         // prepend new post and reIsotope
-                        this.$el.find(this.itemViewContainer).prepend(itemView.$el).isotope('reloadItems');
+                        this.$el.prepend(itemView.$el).isotope('reloadItems');
                     };
                 }
             });
@@ -99,7 +96,11 @@ define([
         },
 
         // re-isotope after collection get synced
-        reIsotope: function() {
+        onSync: function(model_or_collection, resp, options) {
+
+            // reIsotope is a custom option, used here for stop isotope running when single item object get synced
+            // (itme object's sync event will proxy through to collection by backbone)
+            if (_.has(options, 'reIsotope') && !options.reIsotope) return;
 
             var self = this;
 

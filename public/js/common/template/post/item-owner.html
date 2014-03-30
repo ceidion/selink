@@ -1,45 +1,47 @@
 <div class="widget-box">
     <div class="widget-header widget-header-flat">
         <img class="avatar" src="<%= obj._owner.photo %>">
-        <div class="widget-toolbar no-border hide">
+        <div class="widget-toolbar no-border hidden">
             <a class="yellow dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-chevron-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-yellow pull-right dropdown-caret dropdown-close">
-                <li><a href="#" class="btn-remove"><i class="icon-trash red bigger-110"></i>&nbsp;&nbsp;投稿を削除</a></li>
+                <li>
+                    <a href="#" class="btn-remove">
+                        <i class="icon-edit blue bigger-110"></i>&nbsp;&nbsp;投稿を編集
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="btn-remove">
+                        <i class="icon-trash red bigger-110"></i>&nbsp;&nbsp;投稿を削除
+                    </a>
+                </li>
+                <li class="<% if (!obj.setting.commentable) print("hidden") %>">
+                    <a href="#" class="btn-forbid">
+                        <i class="icon-ban-circle pink bigger-110"></i>&nbsp;&nbsp;コメント禁止
+                    </a>
+                </li>
+                <li class="<% if (obj.setting.commentable) print("hidden") %>">
+                    <a href="#" class="btn-forbid">
+                        <i class="icon-ok green bigger-110"></i>&nbsp;&nbsp;コメント許可
+                    </a>
+                </li>
                 <% if (obj.setting.commentable) { %>
-                <li><a href="#" class="btn-forbid"><i class="icon-ban-circle blue bigger-110"></i>&nbsp;&nbsp;コメント禁止</a></li>
                 <% } else { %>
-                <li><a href="#" class="btn-allow"><i class="icon-ok green bigger-110"></i>&nbsp;&nbsp;コメント許可</a></li>
                 <% } %>
             </ul>
         </div>
-        <h5 class="smaller">
-            <i class="icon-edit bigger-110"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
-        </h5>
         <h5>
-            <i class="icon-calendar">&nbsp;</i><%= moment(obj.createDate).format('LL') %>
-            <i class="icon-time">&nbsp;</i><%= moment(obj.createDate).format('HH:mm') %>
+            <i class="icon-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
         </h5>
-        <div class="action-buttons">
-            <div class="inline red">
-                <i class="icon-heart bigger-110"></i>
-                <span><%= obj.liked.length %></span>
-            </div>
-            <div class="inline orange">
-                <i class="icon-star bigger-110"></i>
-                <span><%= obj.liked.length %></span>
-            </div>
-            <% if (!obj.setting.commentable) { %>
-            <div class="inline red">
-                <i class="icon-ban-circle bigger-110"></i>
-            </div>
-            <% } %>
-        </div>
+        <h5 class="smaller">
+            <i class="icon-time"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
+        </h5>
         <div class="clearfix"></div>
     </div>
 
     <div class="widget-body">
+
         <div class="widget-main">
 
             <div class="alert alert-danger clearfix" style="display: none;">
@@ -55,6 +57,27 @@
 
             <%= obj.content %>
 
+            <br/>
+            <br/>
+
+            <div class="inline btn btn-xs btn-link btn-detail">
+                <i class="icon-desktop bigger-110"></i>&nbsp;
+                <span>詳しく読む</span>
+            </div>
+
+            <div class="pull-right">
+                <div class="inline red">
+                    <i class="icon-heart bigger-110"></i>
+                    <span><%= obj.liked.length %></span>
+                </div>
+                <div class="inline orange">
+                    <i class="icon-star bigger-110"></i>
+                    <span><%= obj.liked.length %></span>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+
             <% if (obj.comments.length) { %>
                 <hr>
             <% }%>
@@ -66,17 +89,21 @@
             <% }%>
 
         </div>
-<!--         <div class="widget-toolbox padding-4 clearfix">
 
-            <div class="action-buttons pull-right">
-                <button class="inline btn btn-sm btn-yellow btn-forbid tooltip-warning">
-                    <i class="icon-comments-alt"></i>&nbsp;コメント禁止
+        <div class="widget-toolbox padding-4 clearfix"  <% if (!obj.setting.commentable) print('style="display: none;"') %>>
+            <img class="photo-area pull-left" src="<%= selink.userModel.get('photo') %>" style="max-width: 36px; display: none;">
+            <div class="comment-area">
+                <textarea name="comment" placeholder="コメントを書く" style="width: 100%"/></textarea>
+            </div>
+            <div class="btn-area pull-right" style="margin-top: 4px; display: none;">
+                <button class="btn btn-sm btn-success btn-comment">
+                    <i class="icon-comment bigger-125"></i>&nbsp;コメントする
                 </button>
-                <button class="inline btn btn-sm btn-danger btn-remove tooltip-error">
-                    <i class="icon-trash"></i>&nbsp;削除
+                <button class="btn btn-sm btn-yellow btn-cancel">
+                    <i class="icon-off bigger-125"></i>&nbsp;取消
                 </button>
             </div>
+        </div>
 
-        </div> -->
     </div>
 </div>

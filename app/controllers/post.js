@@ -11,7 +11,9 @@ var _ = require('underscore'),
 exports.index = function(req, res, next) {
 
     // category of request
-    var category = req.query.category || null;
+    var category = req.query.category || null,
+        // page number
+        page = req.query.page || 0;
 
     var query = Post.find();
 
@@ -26,8 +28,9 @@ exports.index = function(req, res, next) {
     query.where('logicDelete').equals(false)
         .populate('_owner', 'firstName lastName photo')
         .populate('comments._owner', 'firstName lastName photo')
+        .skip(20*page)  // skip n page
+        .limit(20)
         .sort('-createDate')
-        // .limit(20)
         .exec(function(err, posts) {
             if (err) next(err);
             else res.json(posts);
@@ -102,7 +105,12 @@ exports.update = function(req, res, next){
 
     Post.findByIdAndUpdate(req.params.post, req.body, function(err, post) {
         if (err) next(err);
-        else res.json(post);
+        else {
+            post.populate({path: '_owner', select: 'firstName lastName photo'}, function(err, result){
+                if (err) next(err)
+                else res.json(result);
+            });
+        }
     });
 };
 
@@ -130,37 +138,40 @@ exports.like = function(req, res, next){
             post.liked.addToSet(req.body.liked);
             post.save(function(err, newPost) {
 
-                // create activity
-                Activity.create({
-                    _owner: req.body.liked,
-                    type: 'user-post-liked',
-                    title: "いいね！しました。",
-                    link: 'user/' + newPost._owner + '/posts/' + newPost._id
-                }, function(err, activity) {
-                    if (err) next(err);
-                });
-
-                // create notification for post owner
-                Notification.create({
-                    _owner: [newPost._owner],
-                    _from: req.body.liked,
-                    type: 'user-post-liked'
-                }, function(err, notification) {
-
-                    if (err) next(err);
-                    else {
-                        // populate the respond notification with user's info
-                        notification.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
-
-                            if(err) next(err);
-                            // send real time message
-                            sio.sockets.in(newPost._owner).emit('user-post-liked', noty);
-                        });
-                    }
-                });
-
                 if (err) next(err);
-                else res.json(newPost);
+                else {
+
+                    // create activity
+                    Activity.create({
+                        _owner: req.body.liked,
+                        type: 'user-post-liked',
+                        title: "いいね！しました。",
+                        link: 'user/' + newPost._owner + '/posts/' + newPost._id
+                    }, function(err, activity) {
+                        if (err) next(err);
+                    });
+
+                    // create notification for post owner
+                    Notification.create({
+                        _owner: [newPost._owner],
+                        _from: req.body.liked,
+                        type: 'user-post-liked'
+                    }, function(err, notification) {
+
+                        if (err) next(err);
+                        else {
+                            // populate the respond notification with user's info
+                            notification.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
+
+                                if(err) next(err);
+                                // send real time message
+                                sio.sockets.in(newPost._owner).emit('user-post-liked', noty);
+                            });
+                        }
+                    });
+
+                    res.json(newPost);
+                }
             });
         }
     });

@@ -25,7 +25,7 @@ define([
 
         // collection events
         collectionEvents: {
-            'sync': 'reIsotope',
+            'sync': 'onSync',
         },
 
         // initializer
@@ -62,7 +62,7 @@ define([
                 dataType: 'json',
                 appendCallback: false,
                 loading: {
-                    msgText: '<em>友達情報をもっと読込み中・・・</em>',
+                    msgText: '<em>読込み中・・・</em>',
                     finishedMsg: 'No more pages to load.',
                     img: 'http://i.imgur.com/qkKy8.gif',
                     speed: 'slow',
@@ -92,7 +92,7 @@ define([
         },
 
         // re-isotope after collection get synced
-        reIsotope: function() {
+        onSync: function() {
 
             // use imageLoaded plugin
             $('.ace-thumbnails').imagesLoaded(function() {

@@ -1,6 +1,6 @@
 define([
     'text!engineer/template/home/main.html',
-    'common/view/timeline/main'
+    'common/view/activity/main'
 ], function(
     pageTemplate,
     TimelineView

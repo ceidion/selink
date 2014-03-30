@@ -1,11 +1,11 @@
 define([
-    'text!common/template/timeline/item/user-activated.html',
-    'text!common/template/timeline/item/user-login.html',
-    'text!common/template/timeline/item/user-logout.html',
-    'text!common/template/timeline/item/user-post.html',
-    'text!common/template/timeline/item/user-friend-invited.html',
-    'text!common/template/timeline/item/user-job.html',
-    'text!common/template/timeline/item/default.html',
+    'text!common/template/activity/item/user-activated.html',
+    'text!common/template/activity/item/user-login.html',
+    'text!common/template/activity/item/user-logout.html',
+    'text!common/template/activity/item/user-post.html',
+    'text!common/template/activity/item/user-friend-invited.html',
+    'text!common/template/activity/item/user-job.html',
+    'text!common/template/activity/item/default.html',
 ], function(
     userActivatedTemplate,
     userLoginTemplate,

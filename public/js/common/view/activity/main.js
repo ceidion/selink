@@ -1,6 +1,6 @@
 define([
-    'text!common/template/timeline/main.html',
-    'common/view/timeline/item-day'
+    'text!common/template/activity/main.html',
+    'common/view/activity/item-day'
 ], function(
     template,
     ItemView) {
@@ -23,7 +23,7 @@ define([
         className: 'widget-box transparent',
 
         // item view container
-        itemViewContainer: '.timeline-block',
+        itemViewContainer: this.$el,
 
         // item view
         itemView: ItemView,

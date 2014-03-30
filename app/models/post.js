@@ -25,6 +25,12 @@ var Post = new Schema({
         ref: 'User'
     }],
 
+    // People who favorite this post
+    favorite: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
     // Comments
     comments: [Comment],
 

@@ -9,6 +9,7 @@ define([
     'common/view/people/main',
     'common/view/people/detail',
     'common/view/calendar/main',
+    'common/view/activity/main',
     // 'common/view/timecard/timecard',
     'common/view/mailbox/mailbox',
     'common/model/user'
@@ -23,6 +24,7 @@ define([
     PeopleView,
     PeopleDetailView,
     CalendarView,
+    ActivityView,
     // TimecardView,
     MailBoxView,
     UserModel
@@ -137,6 +139,17 @@ define([
             });
             // show calendar view
             selink.pageContent.show(selink.calendarView);
+        },
+
+        // show activity
+        showActivityView: function() {
+
+            // create activity view
+            selink.activityView = new ActivityView({
+                model: selink.userModel
+            });
+            // show activity view
+            selink.pageContent.show(selink.activityView);
         },
 
         // // show timecard
