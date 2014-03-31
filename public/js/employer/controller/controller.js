@@ -5,12 +5,14 @@ define([
     'employer/view/home/main',
     'common/view/profile/main',
     'common/view/post/main',
-    'employer/view/job/main',
-    'employer/view/job/edit',
+    'common/view/job/main',
+    'common/view/job/edit',
     'common/view/friend/main',
     'common/view/people/main',
     'common/view/people/detail',
     'common/view/calendar/main',
+    'common/view/activity/main',
+    // 'common/view/timecard/timecard',
     'common/view/mailbox/mailbox',
     'common/model/user'
 ], function(
@@ -26,6 +28,8 @@ define([
     PeopleView,
     PeopleDetailView,
     CalendarView,
+    ActivityView,
+    // TimecardView,
     MailBoxView,
     UserModel
 ) {
@@ -79,16 +83,13 @@ define([
 
             if (!id || id === selink.userModel.get('_id')) {
 
-                selink.userModel.fetch({
-                    success: function() {
-                        // create profile view
-                        selink.profileView = new ProfileView({
-                            model: selink.userModel
-                        });
-                        // show profile view
-                        selink.pageContent.show(selink.profileView);
-                    }
+                // create profile view
+                selink.profileView = new ProfileView({
+                    model: selink.userModel
                 });
+                // show profile view
+                selink.pageContent.show(selink.profileView);
+
             } else {
 
                 var people = new UserModel({
@@ -163,6 +164,31 @@ define([
             // show calendar view
             selink.pageContent.show(selink.calendarView);
         },
+
+        // show activity
+        showActivityView: function() {
+
+            // create activity view
+            selink.activityView = new ActivityView({
+                model: selink.userModel
+            });
+            // show activity view
+            selink.pageContent.show(selink.activityView);
+        },
+
+        // // show timecard
+        // showTimecardView: function(date) {
+
+        //     var month = date ? moment(date, 'YYYYMM') : moment();
+
+        //     // create timecard view
+        //     selink.timecardView = new TimecardView({
+        //         model: new Backbone.Model({month: month}),
+        //         collection: selink.eventsModel
+        //     });
+        //     // show timecard view
+        //     selink.pageContent.show(selink.timecardView);
+        // },
 
         // show mailbox
         showMailBoxView: function() {

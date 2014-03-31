@@ -16,7 +16,8 @@ define([
         pageContent: '.page-content',
         topnavArea: '#topnav-area',
         shortcutArea: '#shortcuts-area',
-        sidenavArea: '#sidenav-area'
+        sidenavArea: '#sidenav-area',
+        modalArea: '#modal-area'
     });
 
     // before application initialization, config plug-ins
@@ -150,11 +151,13 @@ define([
 
             _selinkMasonryLayout: function( $elems ) {
 
-                // call delayed reset method, calulate the column setting
-                this._selinkMasonryDelayReset();
-
                 var instance = this,
                     props = instance.selinkMasonry;
+
+                // do not calculate layout propery every time, for add/remove item etc.
+                if (_.isEmpty(props))
+                    // call delayed reset method, calulate the column setting
+                    this._selinkMasonryDelayReset();
 
                 $elems.each(function(){
 
@@ -195,6 +198,7 @@ define([
             // worker method that places brick in the columnSet
             //   with the the minY
             _selinkMasonryPlaceBrick: function( $brick, setY ) {
+
                 // get the minimum Y value from the columns
                 var minimumY = Math.min.apply( Math, setY ),
                     shortCol = 0;

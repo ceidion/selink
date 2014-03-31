@@ -1,16 +1,19 @@
 define([
     'text!employer/template/home/main.html',
+    'common/collection/base',
+    'common/Model/job',
     'common/view/post/item',
     'common/view/job/item'
 ], function(
     template,
+    BaseCollection,
+    JobModel,
     PostItemView,
     JobItemView
 ) {
 
-    var ItemCollection = Backbone.Collection.extend({
-
-        model: Backbone.Model.extend({idAttribute: "_id"})
+    var JobsCollection = BaseCollection.extend({
+        model: JobModel
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -44,15 +47,15 @@ define([
         // Initializer
         initialize: function() {
 
-            this.collection = new ItemCollection(null, {
+            this.collection = new BaseCollection(null, {
                 comparator: function(item) {
                     // sort by createDate
                     var date = moment(item.get('createDate'));
                     return Number(date.valueOf());
                 }
             });
-            this.postsCollection = new ItemCollection();
-            this.jobsCollection = new ItemCollection();
+            this.postsCollection = new BaseCollection(null, {document: this.model});
+            this.jobsCollection = new JobsCollection(null, {document: this.model});
 
             var self = this;
 

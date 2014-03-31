@@ -1,16 +1,19 @@
 define([
-    'text!employer/template/job/main.html',
-    'employer/view/job/item',
-    'employer/view/job/edit',
+    'text!common/template/job/main.html',
+    'common/view/job/item',
+    'common/view/job/edit',
+    'common/collection/base',
     'common/model/job'
 ], function(
     template,
     ItemView,
     EditView,
+    BaseCollection,
     JobModel
 ) {
 
-    var JobCollection = Backbone.Collection.extend({
+    // Job collection
+    var JobCollection = BaseCollection.extend({
 
         model: JobModel,
 
@@ -37,13 +40,14 @@ define([
 
         // collection events
         collectionEvents: {
-            'sync': 'reIsotope',
+            'sync': 'onSync',
         },
 
         // item view events
         itemEvents: {
             'edit': 'showEditorModal',
-            'job:change': 'shiftColumn'
+            'remove': 'onRemove',
+            'shiftColumn': 'shiftColumn'
         },
 
         // Initializer
@@ -51,9 +55,10 @@ define([
 
             var self = this;
 
-            this.collection = new JobCollection();
-            this.collection.document = this.model;
+            // create job collection
+            this.collection = new JobCollection(null, {document: this.model});
 
+            // populate job collection
             this.collection.fetch({
                 success: function() {
                     // change the behavior of add sub view
@@ -67,47 +72,41 @@ define([
             });
         },
 
-        // after render
-        onRender: function() {
-
-            // create region manager (this composite view will have layout ability)
-            this.rm = new Backbone.Marionette.RegionManager();
-            // create regions
-            this.regions = this.rm.addRegions({
-                jobEditRegion: '.modal'
-            });
-        },
-
-        // before close
-        onBeforeClose: function() {
-            // close region manager
-            this.rm.close();
-        },
-
+        // display create job modal
         showCreateModal: function() {
 
-            this.jobEditView = new EditView({
-                // model: this.model,
+            var jobEditView = new EditView({
                 collection: this.collection,
             });
 
-            this.regions.jobEditRegion.show(this.jobEditView);
-
-            // show modal
-            this.$el.find('.modal').modal('show');
+            selink.modalArea.show(jobEditView);
+            selink.modalArea.$el.modal('show');
         },
 
+        // display edit job modal
+        showEditorModal: function(event, view) {
+
+            var jobEditView = new EditView({
+                model: view.model
+            });
+
+            selink.modalArea.show(jobEditView);
+            selink.modalArea.$el.modal('show');
+        },
+
+        // save/update job
         updateJob: function(job) {
 
             var self = this;
 
+            // if this is a new job
             if (job.isNew()) {
 
                 // safe the job
                 this.collection.create(job, {
                     // job saved successful
                     success: function(model, response, options) {
-                        self.$el.find('.modal').modal('hide');
+                        selink.modalArea.$el.modal('hide');
                     },
                     silent: true,
                     wait: true
@@ -115,10 +114,11 @@ define([
 
             } else {
 
+                // update the job
                 job.save(null, {
                     // job saved successful
                     success: function(model, response, options) {
-                        self.$el.find('.modal').modal('hide');
+                        selink.modalArea.$el.modal('hide');
                     },
                     silent: true,
                     patch: true,
@@ -127,20 +127,22 @@ define([
             }
         },
 
-        showEditorModal: function(event, view) {
+        // remove job
+        onRemove: function(event, view) {
 
-            this.jobEditView = new EditView({
-                model: view.model
+            // remove job from isotope
+            $('.job-container').isotope('remove', view.$el, function() {
+                // remove job model
+                view.model.destroy({
+                    success: function(model, response) {
+                    },
+                    wait: true
+                });
             });
-
-            this.regions.jobEditRegion.show(this.jobEditView);
-
-            // show modal
-            this.$el.find('.modal').modal('show');
         },
 
-        // re-isotope after collection get synced
-        reIsotope: function() {
+        // isotope after collection get synced
+        onSync: function() {
 
             var self = this;
 
@@ -153,6 +155,7 @@ define([
             });
         },
 
+        // shift column
         shiftColumn: function(event, view) {
             $('.job-container').isotope('selinkShiftColumn', view.el);
         }

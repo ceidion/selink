@@ -107,7 +107,7 @@ exports.update = function(req, res, next){
         if (err) next(err);
         else {
             post.populate({path: '_owner', select: 'firstName lastName photo'}, function(err, result){
-                if (err) next(err)
+                if (err) next(err);
                 else res.json(result);
             });
         }
@@ -179,14 +179,17 @@ exports.like = function(req, res, next){
 
 exports.comment = function(req, res, next) {
 
-    // TODO: check post's forbidden flag
+    // TODO: check post's forbidden flag, check ownership
 
     Post.findById(req.params.post, function(err, post) {
 
         if (err) next(err);
         else {
 
-            var comment = post.comments.create(req.body);
+            var comment = post.comments.create({
+                _owner: req.user.id,
+                content: req.body.content,
+            });
 
             post.comments.push(comment);
 
@@ -195,34 +198,37 @@ exports.comment = function(req, res, next) {
                 if (err) next(err);
                 else {
 
-                    // create activity
-                    Activity.create({
-                        _owner: req.body._owner,
-                        type: 'user-post-commented',
-                        title: "コメントしました。",
-                        link: 'user/' + newPost._owner + '/posts/' + newPost._id
-                    }, function(err, activity) {
-                        if (err) next(err);
-                    });
+                    if (newPost._owner != req.user.id) {
 
-                    // create notification for post owner
-                    Notification.create({
-                        _owner: [newPost._owner],
-                        _from: req.body._owner,
-                        type: 'user-post-commented'
-                    }, function(err, notification) {
+                        // create activity
+                        Activity.create({
+                            _owner: req.user.id,
+                            type: 'user-post-commented',
+                            title: "コメントしました。",
+                            link: 'user/' + newPost._owner + '/posts/' + newPost._id
+                        }, function(err, activity) {
+                            if (err) next(err);
+                        });
 
-                        if (err) next(err);
-                        else {
-                            // populate the respond notification with user's info
-                            notification.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
+                        // create notification for post owner
+                        Notification.create({
+                            _owner: [newPost._owner],
+                            _from: req.user.id,
+                            type: 'user-post-commented'
+                        }, function(err, notification) {
 
-                                if(err) next(err);
-                                // send real time message
-                                sio.sockets.in(newPost._owner).emit('user-post-commented', noty);
-                            });
-                        }
-                    });
+                            if (err) next(err);
+                            else {
+                                // populate the respond notification with user's info
+                                notification.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
+
+                                    if(err) next(err);
+                                    // send real time message
+                                    sio.sockets.in(newPost._owner).emit('user-post-commented', noty);
+                                });
+                            }
+                        });
+                    }
 
                     User.populate(comment, {path: '_owner', select: '_id firstName lastName photo'}, function(err, newComment) {
 

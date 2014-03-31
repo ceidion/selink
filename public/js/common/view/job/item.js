@@ -1,9 +1,14 @@
 define([
-    'text!common/template/job/item.html'
+    'text!common/template/job/item.html',
+    'common/view/job/item/languages',
+    'common/view/job/item/skills'
 ], function(
-    template) {
+    template,
+    Languages,
+    Skills
+) {
 
-    return Backbone.Marionette.ItemView.extend({
+    return Backbone.Marionette.Layout.extend({
 
         // template
         template: template,
@@ -15,10 +20,17 @@ define([
             'click .btn-remove': 'showAlert',
             'click .btn-remove-cancel': 'hideAlert',
             'click .btn-remove-comfirm': 'onRemove',
+            'mouseover': 'toggleMenuIndicator',
+            'mouseout': 'toggleMenuIndicator'
+        },
+
+        regions: {
+            'languageArea': '#language',
+            'skillArea': '#skill'
         },
 
         modelEvents: {
-            'change': 'render'
+            // 'change': 'render'
         },
 
         // initializer
@@ -28,25 +40,19 @@ define([
 
         onRender: function() {
 
+            this.languagesView = new Languages({
+                collection: this.model.languages
+            });
+
+            this.skillsView = new Skills({
+                collection: this.model.skills
+            });
         },
 
         onShow: function() {
 
-            // decorate pie chart
-            $('.easy-pie-chart.percentage').each(function(){
-                var barColor = $(this).data('color') || '#555';
-                var trackColor = '#E2E2E2';
-                var size = parseInt($(this).data('size')) || 72;
-                $(this).easyPieChart({
-                    barColor: barColor,
-                    trackColor: trackColor,
-                    scaleColor: false,
-                    lineCap: 'butt',
-                    lineWidth: parseInt(size/10),
-                    animate: 1000,
-                    size: size
-                }).css('color', barColor);
-            });
+            this.languageArea.show(this.languagesView);
+            this.skillArea.show(this.skillsView);
         },
 
         editJob: function(event) {
@@ -62,7 +68,7 @@ define([
 
             this.$el.find('.alert')
                 .slideDown('fast', function() {
-                    self.trigger("job:change");
+                    self.trigger("shiftColumn");
                 })
                 .find('i')
                 .addClass('icon-animated-vertical');
@@ -73,24 +79,17 @@ define([
             var self = this;
 
             this.$el.find('.alert').slideUp('fast', function() {
-                self.trigger("job:change");
+                self.trigger("shiftColumn");
             });
         },
 
         onRemove: function() {
-
-            var self = this;
-
-            // TODO: maybe I should do this on parent view
-            $('.job-container').isotope('remove', this.$el, function() {
-
-                self.model.destroy({
-                    success: function(model, response) {
-                    },
-                    wait: true
-                });
-            });
+            this.trigger('remove');
         },
 
+        // show operation menu indicator
+        toggleMenuIndicator: function() {
+            this.$el.find('.widget-header .widget-toolbar').toggleClass('hidden');
+        }
     });
 });

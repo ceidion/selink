@@ -12,7 +12,10 @@ define([], function() {
             'job/:id/edit': 'showJobEditView',
             "friend": "showFriendView",
             "people": "showPeopleView",
-            'calendar': 'showCalendarView',
+            "calendar": "showCalendarView",
+            "activity": "showActivityView",
+            // "timecard": "showTimecardView",
+            // "timecard/:date": "showTimecardView",
             "mailbox": "showMailBoxView",
         }
     });

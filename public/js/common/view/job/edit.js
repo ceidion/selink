@@ -1,7 +1,7 @@
 define([
-    'text!employer/template/job/edit.html',
-    'employer/view/job/languages',
-    'employer/view/job/skills',
+    'text!common/template/job/edit.html',
+    'common/view/job/edit/languages',
+    'common/view/job/edit/skills',
     'common/model/job'
 ], function(
     template,
@@ -16,7 +16,7 @@ define([
         template: template,
 
         // this view is a modal dialog
-        className: 'modal-dialog',
+        className: 'modal-dialog job-modal',
 
         ui: {
             'name': 'input[name="name"]',
@@ -92,42 +92,7 @@ define([
             this.ui.interviewNum.mask('9?9');
 
             // enable wysiwyg editor
-            this.ui.remark.ace_wysiwyg({
-                toolbar:
-                [
-                    'font',
-                    null,
-                    'fontSize',
-                    null,
-                    {name:'bold', className:'btn-info'},
-                    {name:'italic', className:'btn-info'},
-                    {name:'strikethrough', className:'btn-info'},
-                    {name:'underline', className:'btn-info'},
-                    null,
-                    {name:'insertunorderedlist', className:'btn-success'},
-                    {name:'insertorderedlist', className:'btn-success'},
-                    {name:'outdent', className:'btn-purple'},
-                    {name:'indent', className:'btn-purple'},
-                    null,
-                    {name:'justifyleft', className:'btn-primary'},
-                    {name:'justifycenter', className:'btn-primary'},
-                    {name:'justifyright', className:'btn-primary'},
-                    {name:'justifyfull', className:'btn-inverse'},
-                    null,
-                    {name:'createLink', className:'btn-pink'},
-                    {name:'unlink', className:'btn-pink'},
-                    null,
-                    {name:'insertImage', className:'btn-success'},
-                    null,
-                    'foreColor',
-                    null,
-                    {name:'undo', className:'btn-grey'},
-                    {name:'redo', className:'btn-grey'}
-                ],
-                'wysiwyg': {
-                    // fileUploadError: showErrorAlert
-                }
-            }).prev().addClass('wysiwyg-style3');
+            this.ui.remark.ace_wysiwyg().prev().addClass('wysiwyg-style3');
 
             // bind validator
             Backbone.Validation.bind(this);

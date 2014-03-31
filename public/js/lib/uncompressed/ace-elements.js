@@ -594,9 +594,6 @@ jQuery(function() {
 			speech_button:true,
 			wysiwyg:{},
 			// customize: add defautl option
-			toolbar_place: function(toolbar) {
-			    return $(this).closest('.widget-box').find('.btn-toolbar').prepend(toolbar).children(0).addClass('inline');
-			},
 			toolbar:
 			[
 			    'font',

@@ -124,18 +124,7 @@ define([
 
         // remove post
         onRemove: function() {
-
-            var self = this;
-
-            // TODO: maybe I should do this on parent view
-            $('.post-container').isotope('remove', this.$el, function() {
-
-                self.model.destroy({
-                    success: function(model, response) {
-                    },
-                    wait: true
-                });
-            });
+            this.trigger('remove');
         },
 
         // forbid/allow comment
@@ -229,7 +218,6 @@ define([
             var self = this;
 
             this.collection.create({
-                _owner: selink.userModel.get('_id'),
                 content: this.$el.find('textarea').val()
             }, {
                 success: function() {

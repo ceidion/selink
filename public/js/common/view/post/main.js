@@ -52,6 +52,8 @@ define([
 
         // item view events
         itemEvents: {
+            'edit': 'showEditorModal',
+            'remove': 'onRemove',
             'shiftColumn': 'shiftColumn'
         },
 
@@ -71,7 +73,7 @@ define([
                     self.appendHtml = function(collectionView, itemView, index) {
 
                         // if the post is new created post
-                        if (index === 0) 
+                        if (index === 0)
                             // prepend new post and reIsotope
                             this.$el.prepend(itemView.$el).isotope('reloadItems');
                         // if the post from infinit scroll loading
@@ -89,7 +91,11 @@ define([
         onRender: function() {
 
             // initiate wysiwyg eidtor for memo
-            this.ui.newPost.ace_wysiwyg().prev().addClass('wysiwyg-style3');
+            this.ui.newPost.ace_wysiwyg({
+                toolbar_place: function(toolbar) {
+                    return $(this).closest('.widget-box').find('.btn-toolbar').prepend(toolbar).children(0).addClass('inline');
+                }
+            }).prev().addClass('wysiwyg-style3');
         },
 
         // after show
@@ -113,7 +119,7 @@ define([
                     currPage: 0
                 },
                 path: function(pageNum) {
-                    return '/users/' + self.model.get('_id') + '/posts?page=' + pageNum
+                    return '/users/' + self.model.get('_id') + '/posts?page=' + pageNum;
                 }
             }, function(json, opts) {
                 // no more data
@@ -167,6 +173,18 @@ define([
             this.ui.newPost.html("");
             // disable post button (can't post empty)
             this.ui.btnPost.addClass('disabled');
+        },
+
+        onRemove: function(event, view) {
+
+            this.$el.isotope('remove', view.$el, function() {
+
+                view.model.destroy({
+                    success: function(model, response) {
+                    },
+                    wait: true
+                });
+            });
         },
 
         // re-isotope after collection get synced
