@@ -1,17 +1,15 @@
 define([
     'text!common/template/activity/main.html',
+    'common/collection/base',
     'common/view/activity/item-day'
 ], function(
     template,
+    BaseCollection,
     ItemView) {
 
-    var ActivitiesModel = Backbone.Collection.extend({
+    var Activities = BaseCollection.extend({
 
-        model: Backbone.Model.extend({idAttribute: "_id"}),
-
-        url: function() {
-            return this.document.url() + '/activities';
-        }
+        url: '/activities'
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -35,7 +33,7 @@ define([
 
             this.collection = new Backbone.Collection();
 
-            var rawData = new ActivitiesModel();
+            var rawData = new Activities();
             rawData.document = this.model;
 
             rawData.fetch({

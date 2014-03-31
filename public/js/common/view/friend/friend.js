@@ -1,21 +1,17 @@
 define([
     'text!common/template/friend/friend.html',
+    'common/collection/base',
     'common/view/friend/empty',
     'common/view/friend/item',
 ], function(
     template,
+    BaseCollection,
     EmptyView,
     ItemView) {
 
-    var Friends = Backbone.Collection.extend({
+    var Friends = BaseCollection.extend({
 
-        idAttribute: "_id",
-
-        model: Backbone.Model.extend({idAttribute: "_id"}),
-
-        url: function() {
-            return this.document.url() + '/friends';
-        }
+        url: '/friends'
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -47,7 +43,6 @@ define([
 
             // create collection
             this.collection = new Friends();
-            this.collection.document = this.model;
             this.collection.fetch();
         },
 

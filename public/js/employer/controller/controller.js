@@ -6,7 +6,6 @@ define([
     'common/view/profile/main',
     'common/view/post/main',
     'common/view/job/main',
-    'common/view/job/edit',
     'common/view/friend/main',
     'common/view/people/main',
     'common/view/people/detail',
@@ -22,8 +21,7 @@ define([
     HomeView,
     ProfileView,
     PostView,
-    JobIndexView,
-    JobEditView,
+    JobView,
     FriendView,
     PeopleView,
     PeopleDetailView,
@@ -117,24 +115,9 @@ define([
             selink.pageContent.show(selink.postView);
         },
 
-        showJobIndexView: function() {
-            selink.jobIndexView = new JobIndexView({
-                model: selink.userModel
-            });
+        showJobView: function() {
+            selink.jobIndexView = new JobView();
             selink.pageContent.show(selink.jobIndexView);
-        },
-
-        showJobCreateView: function() {
-            selink.jobEditView = new JobEditView();
-            selink.pageContent.show(selink.jobEditView);
-        },
-
-        showJobEditView: function(id) {
-            selink.jobEditView = new JobEditView({
-                model: selink.jobsModel.get(id),
-                collection: selink.jobsModel
-            });
-            selink.pageContent.show(selink.jobEditView);
         },
 
         // show friends

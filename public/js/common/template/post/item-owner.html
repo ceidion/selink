@@ -66,11 +66,18 @@
             </div>
 
             <div class="pull-right">
-                <div class="inline red">
-                    <i class="icon-heart bigger-110"></i>
-                    <span><%= obj.liked.length %></span>
-                </div>
-                <div class="inline orange">
+                <% if (obj.isLiked) { %>
+                    <div class="inline red">
+                        <i class="icon-heart bigger-110"></i>
+                        <span><%= obj.liked.length %></span>
+                    </div>
+                <% } else { %>
+                    <div class="inline btn-like red tooltip-error">
+                        <i class="icon-heart-empty bigger-110"></i>
+                        <span><%= obj.liked.length %></span>
+                    </div>
+                <% } %>
+                <div class="inline btn-favorite orange tooltip-warning">
                     <i class="icon-star bigger-110"></i>
                     <span><%= obj.liked.length %></span>
                 </div>

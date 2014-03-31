@@ -11,21 +11,23 @@ var _ = require('underscore'),
 exports.index = function(req, res, next) {
 
     // category of request
-    var category = req.query.category || null,
-        // page number
-        page = req.query.page || 0;
+    // var category = req.query.category || null;
+
+    // page number
+    var page = req.query.page || 0;
 
     var query = Post.find();
 
-    // if requested for 'my friends' posts
-    if (category == "friend") {
-        query.where('_owner').in(req.user.friends);
-    // or requested for "someone's" posts
-    } else {
-        query.where('_owner').equals(req.params.user);
-    }
+    // // if requested for 'my friends' posts
+    // if (category == "friend") {
+    //     query.where('_owner').in(req.user.friends);
+    // // or requested for "someone's" posts
+    // } else {
+    //     query.where('_owner').equals(req.params.user);
+    // }
 
-    query.where('logicDelete').equals(false)
+    query.where('_owner').equals(req.user.id)
+        .where('logicDelete').equals(false)
         .populate('_owner', 'firstName lastName photo')
         .populate('comments._owner', 'firstName lastName photo')
         .skip(20*page)  // skip n page
@@ -45,6 +47,7 @@ exports.create = function(req, res, next) {
         _owner: req.user.id,
         content: req.body.content,
     }, function(err, newPost) {
+
         if (err) next(err);
         else {
 
@@ -89,28 +92,37 @@ exports.create = function(req, res, next) {
     });
 };
 
-exports.remove = function(req, res, next) {
-
-    // TODO: check post's ownership
-
-    Post.findByIdAndUpdate(req.params.post, {logicDelete: true}, function(err, post) {
-        if (err) next(err);
-        else res.json(post);
-    });
-};
-
+// Update post
 exports.update = function(req, res, next){
 
     // TODO: check post's ownership
 
+    // find the post and update it
     Post.findByIdAndUpdate(req.params.post, req.body, function(err, post) {
+
         if (err) next(err);
         else {
-            post.populate({path: '_owner', select: 'firstName lastName photo'}, function(err, result){
+
+            post.populate({
+                path: '_owner',
+                select: 'firstName lastName photo'
+            }, function(err, result){
                 if (err) next(err);
                 else res.json(result);
             });
         }
+    });
+};
+
+// Remove post
+exports.remove = function(req, res, next) {
+
+    // TODO: check post's ownership
+
+    // find the post and mark it as logical deleted
+    Post.findByIdAndUpdate(req.params.post, {logicDelete: true}, function(err, post) {
+        if (err) next(err);
+        else res.json(post);
     });
 };
 
@@ -122,54 +134,67 @@ exports.home = function(req, res, next) {
         .populate('_owner', 'firstName lastName photo')
         .populate('comments._owner', 'firstName lastName photo')
         .sort('-createDate')
-        // .limit(20)
+        .limit(20)
         .exec(function(err, posts) {
             if (err) next(err);
             else res.json(posts);
         });
 };
 
+// Like post
 exports.like = function(req, res, next){
 
+    // find post
     Post.findById(req.params.post, function(err, post) {
 
         if (err) next(err);
         else {
+
+            // add one like
             post.liked.addToSet(req.body.liked);
+
+            // save the post
             post.save(function(err, newPost) {
 
                 if (err) next(err);
                 else {
 
-                    // create activity
-                    Activity.create({
-                        _owner: req.body.liked,
-                        type: 'user-post-liked',
-                        title: "いいね！しました。",
-                        link: 'user/' + newPost._owner + '/posts/' + newPost._id
-                    }, function(err, activity) {
-                        if (err) next(err);
-                    });
+                    // if someone not post owner liked this post
+                    if (newPost._owner != req.user.id) {
 
-                    // create notification for post owner
-                    Notification.create({
-                        _owner: [newPost._owner],
-                        _from: req.body.liked,
-                        type: 'user-post-liked'
-                    }, function(err, notification) {
+                        // create activity
+                        Activity.create({
+                            _owner: req.body.liked,
+                            type: 'user-post-liked',
+                            title: "いいね！しました。",
+                            link: 'user/' + newPost._owner + '/posts/' + newPost._id
+                        }, function(err, activity) {
+                            if (err) next(err);
+                        });
 
-                        if (err) next(err);
-                        else {
-                            // populate the respond notification with user's info
-                            notification.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
+                        // create notification for post owner
+                        Notification.create({
+                            _owner: [newPost._owner],
+                            _from: req.body.liked,
+                            type: 'user-post-liked'
+                        }, function(err, notification) {
 
-                                if(err) next(err);
-                                // send real time message
-                                sio.sockets.in(newPost._owner).emit('user-post-liked', noty);
-                            });
-                        }
-                    });
+                            if (err) next(err);
+                            else {
+                                // populate the respond notification with user's info
+                                notification.populate({
+                                    path:'_from',
+                                    select: '_id firstName lastName photo'
+                                }, function(err, noty) {
+                                    if(err) next(err);
+                                    // send real time message
+                                    sio.sockets.in(newPost._owner).emit('user-post-liked', noty);
+                                });
+                            }
+                        });
+                    }
 
+                    // return the saved post
                     res.json(newPost);
                 }
             });
@@ -177,27 +202,33 @@ exports.like = function(req, res, next){
     });
 };
 
+// Comment a post
 exports.comment = function(req, res, next) {
 
     // TODO: check post's forbidden flag, check ownership
 
+    // find the post
     Post.findById(req.params.post, function(err, post) {
 
         if (err) next(err);
         else {
 
+            // create a comment object
             var comment = post.comments.create({
                 _owner: req.user.id,
                 content: req.body.content,
             });
 
+            // add comment to post
             post.comments.push(comment);
 
+            // save the post
             post.save(function(err, newPost) {
 
                 if (err) next(err);
                 else {
 
+                    // if someone not post owner commented this post
                     if (newPost._owner != req.user.id) {
 
                         // create activity
@@ -220,8 +251,10 @@ exports.comment = function(req, res, next) {
                             if (err) next(err);
                             else {
                                 // populate the respond notification with user's info
-                                notification.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
-
+                                notification.populate({
+                                    path:'_from',
+                                    select: '_id firstName lastName photo'
+                                }, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
                                     sio.sockets.in(newPost._owner).emit('user-post-commented', noty);
@@ -230,8 +263,11 @@ exports.comment = function(req, res, next) {
                         });
                     }
 
-                    User.populate(comment, {path: '_owner', select: '_id firstName lastName photo'}, function(err, newComment) {
-
+                    // populate the comment owner and send saved post back
+                    User.populate(comment, {
+                        path: '_owner',
+                        select: '_id firstName lastName photo'
+                    }, function(err, newComment) {
                         if (err) next(err);
                         else res.json(newComment);
                     });

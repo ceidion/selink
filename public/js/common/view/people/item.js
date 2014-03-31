@@ -31,7 +31,7 @@ define([
                 firstName: this.model.get('firstName'),
                 lastName: this.model.get('lastName')
             }, {
-                url: './users/' + selink.userModel.id + '/friends',
+                url: '/friends',
                 success: function() {
                     // self.$el.find('.btn-friend').button('reset');
                     self.$el.find('.btn-friend')

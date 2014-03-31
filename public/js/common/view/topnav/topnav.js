@@ -63,15 +63,13 @@ define([
         // initializer
         initialize: function() {
 
+            this.model = selink.userModel;
+
             // create event menu
-            this.eventNav = new EventMenu({
-                model: this.model
-            });
+            this.eventNav = new EventMenu();
 
             // create notification menu
-            this.notificationNav = new NotificationMenu({
-                model: this.model
-            });
+            this.notificationNav = new NotificationMenu();
 
             this.model.set({'completeness': this.model.completeness()}, {silent: true});
         },

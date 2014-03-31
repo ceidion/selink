@@ -1,19 +1,16 @@
 define([
     'text!common/template/friend/invited.html',
+    'common/collection/base',
     'common/view/friend/item',
 ], function(
     template,
-    ItemView) {
+    BaseCollection,
+    ItemView
+) {
 
-    var Invited = Backbone.Collection.extend({
+    var Invited = BaseCollection.extend({
 
-        idAttribute: "_id",
-
-        model: Backbone.Model.extend({idAttribute: "_id"}),
-
-        url: function() {
-            return this.document.url() + '/friends?type=requested';
-        }
+        url: '/friends?type=invited'
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -42,7 +39,6 @@ define([
 
             // create collection
             this.collection = new Invited();
-            this.collection.document = this.model;
             this.collection.fetch();
         },
 

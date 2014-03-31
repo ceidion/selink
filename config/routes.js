@@ -32,64 +32,66 @@ module.exports = function(app, sio) {
         res.render('./' + req.user.type + '/index', req.user);
     });
 
-    // Get user info
-    app.get('/users/:user', checkLoginStatus, user.show);
-    // Get user's jobs (employer only)
-    app.get('/users/:user/jobs', checkLoginStatus, job.index);
-    // Get user's posts
-    app.get('/users/:user/posts', checkLoginStatus, post.index);
-    // Get user's friends
-    app.get('/users/:user/friends', checkLoginStatus, friend.index);
-    // Get user's events
-    app.get('/users/:user/events', checkLoginStatus, userEvent.index);
     // Get user's activities
-    app.get('/users/:user/activities', checkLoginStatus, activity.index);
+    app.get('/activities', checkLoginStatus, activity.index);
+
     // Get user's notification
-    app.get('/users/:user/notifications', checkLoginStatus, notification.index);
-
+    app.get('/notifications', checkLoginStatus, notification.index);
     // Update notification
-    app.patch('/users/:user/notifications/:notification', checkLoginStatus, notification.update);
+    app.patch('/notifications/:notification', checkLoginStatus, notification.update);
 
+    // Get user's posts
+    app.get('/posts', checkLoginStatus, post.index);
     // Create post
-    app.post('/users/:user/posts', checkLoginStatus, post.create);
+    app.post('/posts', checkLoginStatus, post.create);
     // Update post
-    app.patch('/users/:user/posts/:post', checkLoginStatus, post.update);
-    // Remove post
-    app.delete('/users/:user/posts/:post', checkLoginStatus, post.remove);
-
-    // Get new posts (for home)
-    app.get('/posts', checkLoginStatus, post.home);
+    app.patch('/posts/:post', checkLoginStatus, post.update);
     // like a post
     app.patch('/posts/:post/like', checkLoginStatus, post.like);
+    // Remove post
+    app.delete('/posts/:post', checkLoginStatus, post.remove);
     // comment a post
     app.post('/posts/:post/comments', checkLoginStatus, post.comment);
 
-    // Introduce friend
-    app.get('/friends', checkLoginStatus, friend.introduce);
-    // Request new friend
-    app.patch('/users/:user/friends', checkLoginStatus, friend.create);
-    // Remove friend
-    app.delete('/users/:user/friends/:friend', checkLoginStatus, friend.remove);
+    // Get new posts (for home)
+    // app.get('/posts', checkLoginStatus, post.home);
 
-    // Create new event
-    app.post('/users/:user/events', checkLoginStatus, userEvent.create);
-    // Update events
-    app.patch('/users/:user/events/:event', checkLoginStatus, userEvent.update);
-    // Remove event
-    app.delete('/users/:user/events/:event', checkLoginStatus, userEvent.remove);
-
-    // Update jobs (create new job)
-    app.post('/users/:user/jobs', checkLoginStatus, job.create);
-    // Update jobs (update job)
-    app.patch('/users/:user/jobs/:job', checkLoginStatus, job.update);
-    // Update jobs (remove job)
-    app.delete('/users/:user/jobs/:job', checkLoginStatus, job.remove);
+    // Get user's jobs (employer only)
+    app.get('/jobs', checkLoginStatus, job.index);
+    // Create jobs
+    app.post('/jobs', checkLoginStatus, job.create);
+    // Update jobs
+    app.patch('/jobs/:job', checkLoginStatus, job.update);
+    // Like a job
+    app.patch('/jobs/:job/like', checkLoginStatus, job.update);
+    // Remove jobs
+    app.delete('/jobs/:job', checkLoginStatus, job.remove);
+    // Comment a job
+    app.post('/jobs/:job/comments', checkLoginStatus, job.create);
 
     // Get new jobs (for home)
-    app.get('/jobs', checkLoginStatus, job.home);
-    // Like a job
-    // Comment a job
+    // app.get('/jobs', checkLoginStatus, job.home);
 
+    // Introduce friend
+    app.get('/people', checkLoginStatus, friend.introduce);
+    // Get user's friends
+    app.get('/friends', checkLoginStatus, friend.index);
+    // Request new friend
+    app.patch('/friends', checkLoginStatus, friend.create);
+    // Remove friend
+    app.delete('/friends/:friend', checkLoginStatus, friend.remove);
+
+    // Get user's events
+    app.get('/events', checkLoginStatus, userEvent.index);
+    // Create new event
+    app.post('/events', checkLoginStatus, userEvent.create);
+    // Update events
+    app.patch('/events/:event', checkLoginStatus, userEvent.update);
+    // Remove event
+    app.delete('/events/:event', checkLoginStatus, userEvent.remove);
+
+    // Get user info
+    app.get('/users/:user', checkLoginStatus, user.show);
     // Upload user photo
     app.put('/users/:id', checkLoginStatus, user.update);
     // Update user info (first-level property)

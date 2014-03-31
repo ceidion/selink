@@ -1,20 +1,20 @@
 define([
     'text!common/template/calendar/main.html',
+    'common/collection/base',
     'common/model/event',
     'common/view/calendar/event'
 ], function(
     template,
+    BaseCollection,
     EventModel,
     EventView
 ) {
 
-    var EventsCollection = Backbone.Collection.extend({
+    var Events = BaseCollection.extend({
 
         model: EventModel,
 
-        url:  function() {
-            return this.document.url() + '/events';
-        },
+        url:  '/events',
 
         comparator: function(event) {
             // sort by start desc
@@ -54,8 +54,7 @@ define([
         initialize: function() {
 
             // create events model(collection) from user model
-            this.collection = new EventsCollection();
-            this.collection.document = this.model;
+            this.collection = new Events();
         },
 
         // After render

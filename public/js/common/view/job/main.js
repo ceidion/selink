@@ -17,9 +17,7 @@ define([
 
         model: JobModel,
 
-        url: function() {
-            return this.document.url() + '/jobs';
-        }
+        url: '/jobs'
     });
 
     return Backbone.Marionette.CompositeView.extend({

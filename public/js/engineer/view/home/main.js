@@ -64,7 +64,7 @@ define([
                 success: function(collection, response, options) {
                     self.collection.add(self.postsCollection.models);
                     self.collection.sort();
-                    self.reIsotope();
+                    // self.reIsotope();
                 }
             });
 
@@ -73,7 +73,7 @@ define([
                 success: function(collection, response, options) {
                     self.collection.add(self.jobsCollection.models);
                     self.collection.sort();
-                    self.reIsotope();
+                    // self.reIsotope();
                 }
             });
         },

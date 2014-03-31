@@ -14,9 +14,7 @@ define([
 
         model: PostModel,
 
-        url: function() {
-            return this.document.url() + '/posts';
-        }
+        url: '/posts'
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -63,7 +61,7 @@ define([
             var self = this;
 
             // create posts collection
-            this.collection = new PostsCollection(null, {document: this.model});
+            this.collection = new PostsCollection();
 
             // fetch posts
             this.collection.fetch({
@@ -117,9 +115,6 @@ define([
                 },
                 state: {
                     currPage: 0
-                },
-                path: function(pageNum) {
-                    return '/users/' + self.model.get('_id') + '/posts?page=' + pageNum;
                 }
             }, function(json, opts) {
                 // no more data

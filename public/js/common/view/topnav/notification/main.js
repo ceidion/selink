@@ -1,14 +1,19 @@
 define([
     'text!common/template/topnav/notification/main.html',
-    'common/collection/notifications',
+    'common/collection/base',
     'common/view/topnav/notification/item',
     'common/view/topnav/notification/empty'
 ], function(
     template,
-    NotificationsModel,
+    BaseCollection,
     ItemView,
     EmptyView
 ) {
+
+    var Notifications = BaseCollection.extend({
+
+        url: '/notifications'
+    });
 
     return Backbone.Marionette.CompositeView.extend({
 
@@ -51,8 +56,7 @@ define([
             var self = this;
 
             // create notifications model(collection)
-            this.collection = new NotificationsModel();
-            this.collection.document = this.model;
+            this.collection = new Notifications();
 
             // retrive user's notification
             this.collection.fetch();

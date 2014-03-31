@@ -6,8 +6,8 @@ define(['common/model/base'], function(BaseModel) {
         model: BaseModel,
 
         initialize: function(models, options) {
-            this.document = options.document;
+        	if (options && options.document)
+            	this.document = options.document;
         }
-
     });
 });

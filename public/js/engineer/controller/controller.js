@@ -58,9 +58,7 @@ define([
             selink.sidenavArea.show(selink.sideNavView);
 
             // setup top nav
-            selink.topNavView = new TopNavView({
-                model: selink.userModel
-            });
+            selink.topNavView = new TopNavView();
             selink.topnavArea.show(selink.topNavView);
         },
 
@@ -106,9 +104,7 @@ define([
         showPostView: function() {
 
             // create post view
-            selink.postView = new PostView({
-                model: selink.userModel
-            });
+            selink.postView = new PostView();
             // show post view
             selink.pageContent.show(selink.postView);
         },
@@ -134,9 +130,7 @@ define([
         showCalendarView: function() {
 
             // create calendar view
-            selink.calendarView = new CalendarView({
-                model: selink.userModel
-            });
+            selink.calendarView = new CalendarView();
             // show calendar view
             selink.pageContent.show(selink.calendarView);
         },
@@ -145,9 +139,7 @@ define([
         showActivityView: function() {
 
             // create activity view
-            selink.activityView = new ActivityView({
-                model: selink.userModel
-            });
+            selink.activityView = new ActivityView();
             // show activity view
             selink.pageContent.show(selink.activityView);
         },

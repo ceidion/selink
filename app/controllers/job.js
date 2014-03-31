@@ -1,22 +1,26 @@
 var _ = require('underscore'),
-    util = require('util'),
     mongoose = require('mongoose'),
     Job = mongoose.model('Job'),
     User = mongoose.model('User'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
 
+// Job Index
 exports.index = function(req, res, next) {
+
+    // page number
+    var page = req.query.page || 0;
 
     var query = Job.find();
 
-    // if requested for 'my' jobs
-    if (req.params.user == req.user.id) {
-        // not populate owner, cause client have
-        query.where('_owner').equals(req.user.id);
-    }
+    // // if requested for 'my' jobs
+    // if (req.params.user == req.user.id) {
+    //     // not populate owner, cause client have
+    //     query.where('_owner').equals(req.user.id);
+    // }
 
-    query.where('logicDelete').equals(false)
+    query.where('_owner').equals(req.user.id)
+        .where('logicDelete').equals(false)
         .sort('-createDate')
         .exec(function(err, jobs) {
             if (err) next(err);
@@ -24,10 +28,13 @@ exports.index = function(req, res, next) {
         });
 };
 
+// Create Job
 exports.create = function(req, res, next) {
 
+    // set job's owner as current user
     _.extend(req.body, {_owner: req.user.id});
 
+    // create job
     Job.create(req.body, function(err, job) {
 
         if (err) next(err);
@@ -56,8 +63,10 @@ exports.create = function(req, res, next) {
                 if (err) next(err);
                 else {
                     // populate the respond notification with user's info
-                    notification.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
-
+                    notification.populate({
+                        path:'_from',
+                        select: '_id firstName lastName photo'
+                    }, function(err, noty) {
                         if(err) next(err);
                         // send real time message
                         sio.sockets.emit('user-job', noty);
@@ -72,6 +81,7 @@ exports.create = function(req, res, next) {
 
 };
 
+// Update Job
 exports.update = function(req, res, next) {
 
     // TODO: check ownership
@@ -84,6 +94,7 @@ exports.update = function(req, res, next) {
     });
 };
 
+// Remove Job
 exports.remove = function(req, res, next) {
 
     // TODO: check ownership

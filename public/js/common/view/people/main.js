@@ -1,15 +1,16 @@
 define([
     'text!common/template/people/main.html',
+    'common/collection/base',
     'common/view/people/item',
 ], function(
     template,
-    ItemView) {
+    BaseCollection,
+    ItemView
+) {
 
-    var Introductions = Backbone.Collection.extend({
+    var Introductions = BaseCollection.extend({
 
-        model: Backbone.Model.extend({idAttribute: "_id"}),
-
-        url: '/friends'
+        url: '/people'
     });
 
     return Backbone.Marionette.CompositeView.extend({

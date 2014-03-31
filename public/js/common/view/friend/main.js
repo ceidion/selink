@@ -14,9 +14,7 @@ define([
 
     var PostsCollection = BaseCollection.extend({
 
-        url: function() {
-            return this.document.url() + '/posts?category=friend';
-        }
+        url: '/posts?category=friend'
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -44,17 +42,13 @@ define([
         initialize: function() {
 
             // create invited friends view
-            this.invitedView = new InvitedView({
-                model: selink.userModel
-            });
+            this.invitedView = new InvitedView();
 
             // create firends view
-            this.friendsView = new FriendsView({
-                model: selink.userModel
-            });
+            this.friendsView = new FriendsView();
 
             // create posts collection
-            this.collection = new PostsCollection(null, {document: selink.userModel});
+            this.collection = new PostsCollection();
 
             // fetch the posts
             this.collection.fetch({

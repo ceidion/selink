@@ -30,41 +30,41 @@ exports.introduce = function(req, res, next) {
 // friend list
 exports.index = function(req, res, next) {
 
-    // if requested for 'my' friend
-    if (req.params.user == req.user.id) {
+    // type of request
+    var type = req.query.type || null;
 
-        // type of request
-        var type = req.query.type || null;
+    // default to show user's friends
+    var friendIdList = req.user.friends;
 
-        // default to show user's friends
-        var friendIdList = req.user.friends;
-
-        // if requested for 'invited' friend
-        if (type == "requested") {
-            // change the query condition
-            friendIdList = req.user.invited;
-        }
-
-        // get friends
-        User.find()
-            .where('_id')
-            .in(friendIdList)
-            .select('type firstName lastName title photo createDate')
-            .exec(function(err, friends) {
-                if (err) next(err);
-                else
-                    res.json(friends);
-            });
-
-    } else {
-
-        User.findById(req.params.user, function(err, user) {
-            user.populate('friends', 'type firstName lastName title photo createDate', function(err, populateUser) {
-                if (err) next(err);
-                else res.json(populateUser.friends);
-            });
-        });
+    // if requested for 'invited' friend
+    if (type == "invited") {
+        // change the query condition
+        friendIdList = req.user.invited;
     }
+
+    // get friends
+    User.find()
+        .where('_id')
+        .in(friendIdList)
+        .select('type firstName lastName title photo createDate')
+        .exec(function(err, friends) {
+            if (err) next(err);
+            else res.json(friends);
+        });
+
+    // // if requested for 'my' friend
+    // if (req.params.user == req.user.id) {
+
+
+    // } else {
+
+    //     User.findById(req.params.user, function(err, user) {
+    //         user.populate('friends', 'type firstName lastName title photo createDate', function(err, populateUser) {
+    //             if (err) next(err);
+    //             else res.json(populateUser.friends);
+    //         });
+    //     });
+    // }
 };
 
 // Create Friend
