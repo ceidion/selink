@@ -32,16 +32,18 @@ module.exports = function(app, sio) {
         res.render('./' + req.user.type + '/index', req.user);
     });
 
-    // Get user's activities
+    // Get activities
     app.get('/activities', checkLoginStatus, activity.index);
 
-    // Get user's notification
+    // Get notification
     app.get('/notifications', checkLoginStatus, notification.index);
     // Update notification
     app.patch('/notifications/:notification', checkLoginStatus, notification.update);
 
-    // Get user's posts
+    // Get posts
     app.get('/posts', checkLoginStatus, post.index);
+    // Get specific posts
+    app.get('/posts/:post', checkLoginStatus, post.show);
     // Create post
     app.post('/posts', checkLoginStatus, post.create);
     // Update post
@@ -56,7 +58,7 @@ module.exports = function(app, sio) {
     // Get new posts (for home)
     // app.get('/posts', checkLoginStatus, post.home);
 
-    // Get user's jobs (employer only)
+    // Get jobs (employer only)
     app.get('/jobs', checkLoginStatus, job.index);
     // Create jobs
     app.post('/jobs', checkLoginStatus, job.create);
@@ -74,14 +76,14 @@ module.exports = function(app, sio) {
 
     // Introduce friend
     app.get('/people', checkLoginStatus, friend.introduce);
-    // Get user's friends
+    // Get friends
     app.get('/friends', checkLoginStatus, friend.index);
     // Request new friend
     app.patch('/friends', checkLoginStatus, friend.create);
     // Remove friend
     app.delete('/friends/:friend', checkLoginStatus, friend.remove);
 
-    // Get user's events
+    // Get events
     app.get('/events', checkLoginStatus, userEvent.index);
     // Create new event
     app.post('/events', checkLoginStatus, userEvent.create);

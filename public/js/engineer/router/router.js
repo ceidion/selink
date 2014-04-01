@@ -7,13 +7,14 @@ define([], function() {
             "profile": "showProfileView",
             "profile/:id": "showProfileView",
             "post": "showPostView",
+            "post/:id": "showPostView",
             "friend": "showFriendView",
             "people": "showPeopleView",
             "calendar": "showCalendarView",
             "activity": "showActivityView",
             // "timecard": "showTimecardView",
             // "timecard/:date": "showTimecardView",
-            "mailbox": "showMailBoxView",
+            // "mailbox": "showMailBoxView",
         }
     });
 

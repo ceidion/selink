@@ -1,14 +1,17 @@
 
 html,body{height:100%}
+input{line-height:normal !important}
+img{max-width:100%}
 .main-container{height:90%;min-height:90%}
 .main-container-inner,.main-content,.page-content{height:100%;min-height:100%}
 .sidebar{-webkit-transition:width .5s;transition:width .5s}.sidebar:before{-webkit-transition:width .5s;transition:width .5s}
 .main-content{-webkit-transition:margin .5s;transition:margin .5s}.main-content:before{-webkit-transition:margin .5s;transition:margin .5s}
 .sl-editable{-webkit-transition:background-color .5s;transition:background-color .5s}.sl-editable:hover{background-color:#EEE;cursor:pointer}
 .sl-editable .form-group{margin-bottom:0px}
-.sl-editable .sl-editor{display:none}.sl-editable .sl-editor input{line-height:normal}
+.sl-editable .sl-editor{display:none}
 .label{line-height:1.4}
 .badge{top:-2px !important;padding-top:3px;padding-bottom:1px}
+[class^="icon-"],[class*=" icon-"]{min-width:15px}
 .icon-nothing{font-family:inherit}
 .sl-title{line-height:1.3 !important}
 #sl-basic-info .sl-editable{padding:10px;line-height:33px}#sl-basic-info .sl-editable .align-right{padding:0px;color:#667e99}
@@ -16,7 +19,6 @@ html,body{height:100%}
 #photo .sl-avatar{border:0px !important;float:none !important}
 #photo .progress{margin-bottom:0px}
 #photo .progress[data-percent]:after{line-height:normal}
-#bio img{max-width:100%}
 #zipCodeArea{margin-bottom:10px}
 .empty-view{border:2px dashed #eee;padding:25px}
 #languages .grid2,#languages .grid3,#languages .grid4{min-height:127px;margin-bottom:6px;padding-top:6px;border-left:none}#languages .grid2 input[type="text"],#languages .grid3 input[type="text"],#languages .grid4 input[type="text"]{-webkit-transition-duration:0;transition-duration:0}
@@ -28,37 +30,29 @@ html,body{height:100%}
 #skills .input-group-btn .btn{min-height:33px}
 #skills .input-group-addon{width:100%}
 #skills .icon-nothing{right:18px}
-#qualifications .sl-editable{padding:7px;min-height:42px}
+#qualifications .sl-editable{min-height:42px;padding:7px}
 #qualifications blockquote{margin:0px}
 #qualifications .row{margin-top:5px}#qualifications .row:first-child{margin-top:0px}
-#qualifications i{width:14px}
-#educations .sl-editable{padding:7px;min-height:42px}
+#educations .sl-editable{min-height:42px;padding:7px}
 #educations blockquote{margin:0px}
 #educations .row{margin-top:5px}#educations .row:first-child{margin-top:0px}
-#educations i{width:14px}
-#employments .sl-editable{padding:7px;min-height:42px}
+#employments .sl-editable{min-height:42px;padding:7px}
 #employments blockquote{margin:0px}
 #employments .row{margin-top:5px}#employments .row:first-child{margin-top:0px}
-#employments i{width:14px}
-.post-item,.friend-item,.job-item{margin:0px !important}.post-item img,.friend-item img,.job-item img,.post-item div,.friend-item div,.job-item div{max-width:100%}
+.post-item,.friend-item,.job-item{margin:0px !important}.post-item div,.friend-item div,.job-item div{max-width:100%}
 .post-item .avatar,.friend-item .avatar,.job-item .avatar{max-width:100px;max-height:100px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
 .post-item .widget-header .label,.friend-item .widget-header .label,.job-item .widget-header .label{margin-bottom:5px}
 .post-item .btn-block,.friend-item .btn-block,.job-item .btn-block{-webkit-transition:all 1s;transition:all 1s}
-#modal-area input{line-height:normal}
-#event-modal input{line-height:normal}
-#event-modal .row{margin-top:15px}#event-modal .row:first-child{margin-top:0px}
+@media screen and (min-width:768px){.job-modal,.post-modal{width:900px}.job-modal input[name="name"],.post-modal input[name="name"]{font-size:1.5em} .job-modal input,.post-modal input{width:100%}}#event-modal .row{margin-top:15px}#event-modal .row:first-child{margin-top:0px}
 #event-modal .checkbox{margin-top:4px;margin-bottom:0px}
 #event-modal .wysiwyg-editor{margin:0 15px;height:150px}
 #event-modal .wysiwyg-toolbar{margin:0 15px !important}
-#write-area input{line-height:normal}
-#write-area .row .col-sm-2{line-height:31px}
-.table-timecard{margin-bottom:0px}.table-timecard td{line-height:35px !important}
 .gritter-item{font-size:12px}
 .gritter-image{height:auto}
 #gritter-notice-wrapper{top:50px}
 #external-events>div,.fc-event-container>div{-webkit-transition:all 0.2s;transition:all 0.2s}#external-events>div:hover,.fc-event-container>div:hover{text-decoration:none;-moz-transform:scale(1.1);-webkit-transform:scale(1.1);-o-transform:scale(1.1);-ms-transform:scale(1.1);transform:scale(1.1);opacity:0.85}
 .fc-event-inner{padding:3px 5px}.fc-event-inner .sl-event-memo{padding:10px 15px}
-@media screen and (min-width:768px){.job-modal{width:900px}.job-modal input[name="name"]{font-size:1.5em} .job-modal input{line-height:normal;width:100%} .job-modal .basic-info i{width:14px} .job-modal .col-xs-6{padding-left:0px}}.sl-input-group-addon{padding:6px 12px !important;line-height:1 !important;border-width:1px 0 1px 1px !important}
+.sl-input-group-addon{padding:6px 12px !important;line-height:1 !important;border-width:1px 0 1px 1px !important}
 .animated-input-error{display:inline-block;-moz-animation:vertical 2.0s 3 ease 0.5s;-webkit-animation:vertical 2.0s 3 ease 0.5s;-o-animation:vertical 2.0s 3 ease 0.5s;-ms-animation:vertical 2.0s 3 ease 0.5s;animation:vertical 2.0s 3 ease 0.5s}
 @-moz-keyframes vertical{0%{-moz-transform:translate(0, -3px)} 4%{-moz-transform:translate(0, 3px)} 8%{-moz-transform:translate(0, -3px)} 12%{-moz-transform:translate(0, 3px)} 16%{-moz-transform:translate(0, -3px)} 20%{-moz-transform:translate(0, 3px)} 22%{-moz-transform:translate(0, 0)}}@-webkit-keyframes vertical{0%{-webkit-transform:translate(0, -3px)} 4%{-webkit-transform:translate(0, 3px)} 8%{-webkit-transform:translate(0, -3px)} 12%{-webkit-transform:translate(0, 3px)} 16%{-webkit-transform:translate(0, -3px)} 20%{-webkit-transform:translate(0, 3px)} 22%{-webkit-transform:translate(0, 0)}}@-ms-keyframes vertical{0%{-ms-transform:translate(0, -3px)} 4%{-ms-transform:translate(0, 3px)} 8%{-ms-transform:translate(0, -3px)} 12%{-ms-transform:translate(0, 3px)} 16%{-ms-transform:translate(0, -3px)} 20%{-ms-transform:translate(0, 3px)} 22%{-ms-transform:translate(0, 0)}}@keyframes vertical{0%{transform:translate(0, -3px)} 4%{transform:translate(0, 3px)} 8%{transform:translate(0, -3px)} 12%{transform:translate(0, 3px)} 16%{transform:translate(0, -3px)} 20%{transform:translate(0, 3px)} 22%{transform:translate(0, 0)}}.isotope-item{z-index:2}
 .isotope-hidden.isotope-item{pointer-events:none;z-index:1}

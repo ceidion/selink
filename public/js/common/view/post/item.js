@@ -1,11 +1,13 @@
 define([
     'text!common/template/post/item.html',
+    'text!common/template/post/detail.html',
     'text!common/template/post/item-owner.html',
     'common/collection/base',
     'common/view/post/comment'
 ], function(
     defaultTemplate,
-    myPostTemplate,
+    detailTemplate,
+    ownerTemplate,
     BaseCollection,
     ItemView) {
 
@@ -30,8 +32,10 @@ define([
         // template
         getTemplate: function(){
 
-            if (this.model.get('_owner')._id === selink.userModel.id)
-                return myPostTemplate;
+            if (this.options.modal)
+                return detailTemplate;
+            else if (this.model.get('_owner')._id === selink.userModel.id)
+                return ownerTemplate;
             else
                 return defaultTemplate;
         },
@@ -48,6 +52,7 @@ define([
             'click .btn-remove-cancel': 'hideAlert',
             'click .btn-remove-comfirm': 'onRemove',
             'click .btn-forbid': 'onToggleForbid',
+            'click .btn-detail': 'showDetail',
             'click .btn-like': 'onLike',
             'click .btn-comment': 'onComment',
             'click .btn-cancel': 'closeComment',
@@ -68,6 +73,9 @@ define([
 
         // initializer
         initialize: function() {
+
+            if (this.options.modal)
+                this.$el.removeClass(this.className).addClass('modal-dialog post-modal');
 
             // if user's id exists in post's liked list
             if (_.indexOf(this.model.get('liked'), selink.userModel.get('_id')) >= 0) {
@@ -147,6 +155,18 @@ define([
                 patch: true,
                 wait: true
             });
+        },
+
+        // show detail view
+        showDetail: function() {
+
+            var detailView = new this.constructor({
+                model: this.model,
+                modal: true
+            });
+
+            selink.modalArea.show(detailView);
+            selink.modalArea.$el.modal('show');
         },
 
         // like this posts

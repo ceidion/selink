@@ -39,6 +39,19 @@ exports.index = function(req, res, next) {
         });
 };
 
+// Show post
+exports.show = function(req, res, next) {
+
+    Post.findById(req.params.post)
+        .where('logicDelete').equals(false)
+        .populate('_owner', 'firstName lastName photo')
+        .populate('comments._owner', 'firstName lastName photo')
+        .exec(function(err, posts) {
+            if (err) next(err);
+            else res.json(posts);
+        });
+};
+
 // Create post
 exports.create = function(req, res, next) {
 

@@ -290,11 +290,11 @@ define([
             success: function() {
 
                 // make controller
-                var controller = new Controller();
+                self.controller = new Controller();
 
                 // setup router
-                var router = new Router({
-                    controller: controller
+                self.router = new Router({
+                    controller: self.controller
                 });
 
                 // start history

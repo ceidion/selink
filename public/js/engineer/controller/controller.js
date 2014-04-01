@@ -5,14 +5,16 @@ define([
     'engineer/view/home/main',
     'common/view/profile/main',
     'common/view/post/main',
+    'common/view/post/item',
     'common/view/friend/main',
     'common/view/people/main',
     'common/view/people/detail',
     'common/view/calendar/main',
     'common/view/activity/main',
     // 'common/view/timecard/timecard',
-    'common/view/mailbox/mailbox',
-    'common/model/user'
+    // 'common/view/mailbox/mailbox',
+    'common/model/user',
+    'common/model/post'
 ], function(
     TopNavView,
     ShortCutsView,
@@ -20,14 +22,16 @@ define([
     HomeView,
     ProfileView,
     PostView,
+    PostDetailView,
     FriendView,
     PeopleView,
     PeopleDetailView,
     CalendarView,
     ActivityView,
     // TimecardView,
-    MailBoxView,
-    UserModel
+    // MailBoxView,
+    UserModel,
+    PostModel
 ) {
 
     // Main page controller
@@ -86,9 +90,7 @@ define([
 
             } else {
 
-                var people = new UserModel({
-                    _id: id
-                });
+                var people = new UserModel({_id: id});
                 people.fetch({
                     success: function() {
                         selink.peopleDetailView = new PeopleDetailView({
@@ -101,12 +103,31 @@ define([
         },
 
         // show posts
-        showPostView: function() {
+        showPostView: function(id) {
 
-            // create post view
-            selink.postView = new PostView();
-            // show post view
-            selink.pageContent.show(selink.postView);
+            if (id) {
+
+                var post = new PostModel({_id: id});
+                post.fetch({
+                    success: function() {
+
+                        var postDetailView = new PostDetailView({
+                            model: post,
+                            modal: true
+                        });
+
+                        selink.modalArea.show(postDetailView);
+                        selink.modalArea.$el.modal('show');
+                    }
+                });
+
+            } else {
+
+                // create post view
+                selink.postView = new PostView();
+                // show post view
+                selink.pageContent.show(selink.postView);
+            }
         },
 
         // show friends
@@ -120,6 +141,7 @@ define([
 
         // show people
         showPeopleView: function() {
+
             // create people view
             selink.peopleView = new PeopleView();
             // show people view
@@ -158,15 +180,15 @@ define([
         //     selink.pageContent.show(selink.timecardView);
         // },
 
-        // show mailbox
-        showMailBoxView: function() {
+        // // show mailbox
+        // showMailBoxView: function() {
 
-            // create mailbox view
-            selink.mailBoxView = new MailBoxView({
-                model: selink.userModel
-            });
-            // show mailbox view
-            selink.pageContent.show(selink.mailBoxView);
-        }
+        //     // create mailbox view
+        //     selink.mailBoxView = new MailBoxView({
+        //         model: selink.userModel
+        //     });
+        //     // show mailbox view
+        //     selink.pageContent.show(selink.mailBoxView);
+        // }
     });
 });

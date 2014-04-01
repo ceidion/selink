@@ -2,6 +2,9 @@ define(['common/model/base'], function(BaseModel) {
 
     return BaseModel.extend({
 
+        // Url root
+        urlRoot: '/posts',
+
         validation: {
             content: {
                 required: true,

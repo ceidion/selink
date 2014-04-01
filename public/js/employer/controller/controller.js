@@ -5,6 +5,7 @@ define([
     'employer/view/home/main',
     'common/view/profile/main',
     'common/view/post/main',
+    'common/view/post/item',
     'common/view/job/main',
     'common/view/friend/main',
     'common/view/people/main',
@@ -12,8 +13,9 @@ define([
     'common/view/calendar/main',
     'common/view/activity/main',
     // 'common/view/timecard/timecard',
-    'common/view/mailbox/mailbox',
-    'common/model/user'
+    // 'common/view/mailbox/mailbox',
+    'common/model/user',
+    'common/model/post'
 ], function(
     TopNavView,
     ShortCutsView,
@@ -21,6 +23,7 @@ define([
     HomeView,
     ProfileView,
     PostView,
+    PostDetailView,
     JobView,
     FriendView,
     PeopleView,
@@ -28,8 +31,9 @@ define([
     CalendarView,
     ActivityView,
     // TimecardView,
-    MailBoxView,
-    UserModel
+    // MailBoxView,
+    UserModel,
+    PostModel
 ) {
 
     // Main page controller
@@ -60,9 +64,7 @@ define([
             selink.sidenavArea.show(selink.sideNavView);
 
             // setup top nav
-            selink.topNavView = new TopNavView({
-                model: selink.userModel
-            });
+            selink.topNavView = new TopNavView();
             selink.topnavArea.show(selink.topNavView);
         },
 
@@ -90,9 +92,7 @@ define([
 
             } else {
 
-                var people = new UserModel({
-                    _id: id
-                });
+                var people = new UserModel({_id: id});
                 people.fetch({
                     success: function() {
                         selink.peopleDetailView = new PeopleDetailView({
@@ -105,14 +105,31 @@ define([
         },
 
         // show posts
-        showPostView: function() {
+        showPostView: function(id) {
 
-            // create post view
-            selink.postView = new PostView({
-                model: selink.userModel
-            });
-            // show post view
-            selink.pageContent.show(selink.postView);
+            if (id) {
+
+                var post = new PostModel({_id: id});
+                post.fetch({
+                    success: function() {
+
+                        var postDetailView = new PostDetailView({
+                            model: post,
+                            modal: true
+                        });
+
+                        selink.modalArea.show(postDetailView);
+                        selink.modalArea.$el.modal('show');
+                    }
+                });
+
+            } else {
+
+                // create post view
+                selink.postView = new PostView();
+                // show post view
+                selink.pageContent.show(selink.postView);
+            }
         },
 
         showJobView: function() {
@@ -131,6 +148,7 @@ define([
 
         // show people
         showPeopleView: function() {
+
             // create people view
             selink.peopleView = new PeopleView();
             // show people view
@@ -141,9 +159,7 @@ define([
         showCalendarView: function() {
 
             // create calendar view
-            selink.calendarView = new CalendarView({
-                model: selink.userModel
-            });
+            selink.calendarView = new CalendarView();
             // show calendar view
             selink.pageContent.show(selink.calendarView);
         },
@@ -152,9 +168,7 @@ define([
         showActivityView: function() {
 
             // create activity view
-            selink.activityView = new ActivityView({
-                model: selink.userModel
-            });
+            selink.activityView = new ActivityView();
             // show activity view
             selink.pageContent.show(selink.activityView);
         },
@@ -173,15 +187,15 @@ define([
         //     selink.pageContent.show(selink.timecardView);
         // },
 
-        // show mailbox
-        showMailBoxView: function() {
+        // // show mailbox
+        // showMailBoxView: function() {
 
-            // create mailbox view
-            selink.mailBoxView = new MailBoxView({
-                model: selink.userModel
-            });
-            // show mailbox view
-            selink.pageContent.show(selink.mailBoxView);
-        }
+        //     // create mailbox view
+        //     selink.mailBoxView = new MailBoxView({
+        //         model: selink.userModel
+        //     });
+        //     // show mailbox view
+        //     selink.pageContent.show(selink.mailBoxView);
+        // }
     });
 });

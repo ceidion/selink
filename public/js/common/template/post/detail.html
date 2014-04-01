@@ -1,0 +1,32 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <a href="#profile/<%= obj._owner._id %>" title="<%- obj._owner.firstName %>">
+                    <img class="avatar" src="<%= obj._owner.photo %>">
+                </a>
+                <div class="clearfix"></div>
+            </div>
+            <div class="col-sm-12 col-md-8">
+                <h5>
+                    <i class="icon-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
+                </h5>
+                <h5 class="smaller">
+                    <i class="icon-time"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="row modal-body overflow-visible">
+        <div class="col-sm-12 col-md-8">
+            <%= obj.content %>
+        </div>
+        <div class="dialogs col-sm-12 col-md-4"></div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-sm btn-success btn-save"><i class="icon-ok"></i> 保存</button>
+        <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> 取消</button>
+    </div>
+</div>

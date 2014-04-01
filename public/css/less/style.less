@@ -7,6 +7,14 @@ html,body {
   height: 100%;
 }
 
+input {
+  line-height: normal !important;
+}
+
+img {
+  max-width: 100%;
+}
+
 .main-container {
   height: 90%;
   min-height: 90%;
@@ -51,24 +59,26 @@ html,body {
 
     .sl-editor {
         display: none;
-
-        input {
-            line-height: normal;
-        }
     }
 }
 
 .label {
   line-height: 1.4;
-  // margin-left: 15px;
-  // padding-left: 7px;
-  // padding-right: 7px;
 }
 
 .badge {
   top: -2px !important;
   padding-top: 3px;
   padding-bottom: 1px;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  min-width: 15px;
+}
+
+.empty-view {
+  border: 2px dashed #eee;
+  padding: 25px;
 }
 
 .icon-nothing {
@@ -89,7 +99,6 @@ html,body {
     color: #667e99;
   }
 }
-
 
 // add some space for address input
 #name, #title {
@@ -114,19 +123,8 @@ html,body {
   }
 }
 
-#bio {
-  img {
-    max-width: 100%;
-  }
-}
-
 #zipCodeArea {
   margin-bottom: 10px;
-}
-
-.empty-view {
-  border: 2px dashed #eee;
-  padding: 25px;
 }
 
 #languages {
@@ -163,11 +161,8 @@ html,body {
 #skills {
 
   .sl-editable {
-    min-height: 40px;
+    min-height: 42px;
     padding: 7px;
-  }
-
-  .input-icon {
   }
 
   input {
@@ -193,8 +188,8 @@ html,body {
 #qualifications {
 
   .sl-editable {
-    padding: 7px;
     min-height: 42px;
+    padding: 7px;
   }
 
   blockquote {
@@ -209,16 +204,13 @@ html,body {
     }
   }
 
-  i {
-    width: 14px;
-  }
 }
 
 #educations {
 
   .sl-editable {
-    padding: 7px;
     min-height: 42px;
+    padding: 7px;
   }
 
   blockquote {
@@ -233,16 +225,13 @@ html,body {
     }
   }
 
-  i {
-    width: 14px;
-  }
 }
 
 #employments {
 
   .sl-editable {
-    padding: 7px;
     min-height: 42px;
+    padding: 7px;
   }
 
   blockquote {
@@ -257,16 +246,13 @@ html,body {
     }
   }
 
-  i {
-    width: 14px;
-  }
 }
 
 .post-item, .friend-item, .job-item {
 
   margin: 0px !important;
 
-  img, div {
+  div {
     max-width: 100%;
   }
 
@@ -290,20 +276,26 @@ html,body {
 
 #modal-area {
 
-  input {
-    line-height: normal;
-  }
+}
 
-  // i {
-  //   width: 14px;
-  // }
+@media screen and (min-width: 768px) {
+
+  .job-modal,.post-modal {
+
+    width: 900px;
+
+    input[name="name"] {
+      font-size: 1.5em;
+    }
+
+    input {
+      width: 100%;
+    }
+
+  }
 }
 
 #event-modal {
-
-  input {
-    line-height: normal;
-  }
 
   .row {
     margin-top: 15px;
@@ -325,26 +317,6 @@ html,body {
 
   .wysiwyg-toolbar {
     margin: 0 15px !important;
-  }
-}
-
-#write-area {
-
-  input {
-    line-height: normal;
-  }
-
-  .row .col-sm-2 {
-    line-height: 31px;
-  }
-}
-
-.table-timecard {
-
-  margin-bottom: 0px;
-
-  td {
-    line-height: 35px !important;
   }
 }
 
@@ -379,41 +351,6 @@ html,body {
 
   .sl-event-memo {
     padding: 10px 15px;
-  }
-}
-
-// // job index
-// .job-container .job-item {
-
-//   .transition(~"all 0.2s");
-
-//   &:hover {
-//     text-decoration:none;
-//     .transform(~"scale(1.05)");
-//   }
-// }
-
-@media screen and (min-width: 768px) {
-  .job-modal {
-
-    width: 900px;
-
-    input[name="name"] {
-      font-size: 1.5em;
-    }
-
-    input {
-      line-height: normal;
-      width: 100%;
-    }
-
-    .basic-info i {
-      width: 14px;
-    }
-
-    .col-xs-6 {
-      padding-left: 0px;
-    }
   }
 }
 
