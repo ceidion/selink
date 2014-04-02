@@ -26,8 +26,9 @@
             </div>
 
             <div class="pull-right">
+
                 <% if (obj.isLiked) { %>
-                    <div class="inline red">
+                    <div class="inline btn-like red tooltip-error">
                         <i class="icon-heart bigger-110"></i>
                         <span><%= obj.liked.length %></span>
                     </div>
@@ -37,22 +38,31 @@
                         <span><%= obj.liked.length %></span>
                     </div>
                 <% } %>
-                <div class="inline btn-favorite orange tooltip-warning">
-                    <i class="icon-star-empty bigger-110"></i>
-                    <span><%= obj.liked.length %></span>
-                </div>
+
+                <% if (obj.isMarked) { %>
+                    <div class="inline btn-bookmark orange tooltip-warning">
+                        <i class="icon-star bigger-110"></i>
+                        <span><%= obj.bookmarked.length %></span>
+                    </div>
+                <% } else { %>
+                    <div class="inline btn-bookmark orange tooltip-warning">
+                        <i class="icon-star-empty bigger-110"></i>
+                        <span><%= obj.bookmarked.length %></span>
+                    </div>
+                <% } %>
+
             </div>
 
             <div class="clearfix"></div>
 
-            <% if (obj.comments.length) { %>
+            <% if (obj.commentNum) { %>
                 <hr>
             <% }%>
 
             <div class="dialogs"></div>
 
-            <% if (obj.comments.length > 3) { %>
-                <button class="btn btn-xs btn-info btn-block btn-show">もっと見る（<%= obj.comments.length - 3 %>件）</button>
+            <% if (obj.commentNum > 3) { %>
+                <button class="btn btn-xs btn-info btn-block btn-show">もっと見る（<%= obj.commentNum - 3 %>件）</button>
             <% }%>
 
         </div>

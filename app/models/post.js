@@ -25,8 +25,8 @@ var Post = new Schema({
         ref: 'User'
     }],
 
-    // People who favorite this post
-    favorite: [{
+    // People who bookmarked this post
+    bookmarked: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],

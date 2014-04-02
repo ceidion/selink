@@ -1,11 +1,13 @@
 define([
     'text!common/template/job/main.html',
+    'common/view/composite-isotope',
     'common/view/job/item',
     'common/view/job/edit',
     'common/collection/base',
     'common/model/job'
 ], function(
     template,
+    BaseView,
     ItemView,
     EditView,
     BaseCollection,
@@ -20,13 +22,10 @@ define([
         url: '/jobs'
     });
 
-    return Backbone.Marionette.CompositeView.extend({
+    return BaseView.extend({
 
         // Template
         template: template,
-
-        // item view container
-        itemViewContainer: '.job-container',
 
         // item view
         itemView: ItemView,
@@ -36,38 +35,38 @@ define([
             'click .btn-create': 'showCreateModal'
         },
 
-        // collection events
-        collectionEvents: {
-            'sync': 'onSync',
-        },
-
-        // item view events
-        itemEvents: {
-            'edit': 'showEditorModal',
-            'remove': 'onRemove',
-            'shiftColumn': 'shiftColumn'
-        },
-
         // Initializer
         initialize: function() {
 
-            var self = this;
+            this.itemEvents = _.extend({}, this.itemEvents, {
+                'edit': 'showEditorModal'
+            });
+
+            this.collectionEvents = _.extend({}, this.collectionEvents, {
+                'change': 'updateJob',
+                'add': 'updateJob'
+            });
 
             // create job collection
-            this.collection = new JobCollection(null, {document: this.model});
+            this.collection = new JobCollection();
 
-            // populate job collection
-            this.collection.fetch({
-                success: function() {
-                    // change the behavior of add sub view
-                    self.appendHtml = function(collectionView, itemView, index) {
-                        // prepend new post and reIsotope
-                        self.$el.find('.job-container').prepend(itemView.$el).isotope('reloadItems');
-                    };
-                    self.listenTo(self.collection, 'change', self.updateJob);
-                    self.listenTo(self.collection, 'add', self.updateJob);
-                }
-            });
+            // call super initializer
+            BaseView.prototype.initialize.apply(this);
+
+            // var self = this;
+
+            // // populate job collection
+            // this.collection.fetch({
+            //     success: function() {
+            //         // change the behavior of add sub view
+            //         self.appendHtml = function(collectionView, itemView, index) {
+            //             // prepend new post and reIsotope
+            //             self.$el.find('.job-container').prepend(itemView.$el).isotope('reloadItems');
+            //         };
+            //         self.listenTo(self.collection, 'change', self.updateJob);
+            //         self.listenTo(self.collection, 'add', self.updateJob);
+            //     }
+            // });
         },
 
         // display create job modal
@@ -107,7 +106,8 @@ define([
                         selink.modalArea.$el.modal('hide');
                     },
                     silent: true,
-                    wait: true
+                    wait: true,
+                    index: 0
                 });
 
             } else {
@@ -123,39 +123,7 @@ define([
                     wait: true
                 });
             }
-        },
-
-        // remove job
-        onRemove: function(event, view) {
-
-            // remove job from isotope
-            $('.job-container').isotope('remove', view.$el, function() {
-                // remove job model
-                view.model.destroy({
-                    success: function(model, response) {
-                    },
-                    wait: true
-                });
-            });
-        },
-
-        // isotope after collection get synced
-        onSync: function() {
-
-            var self = this;
-
-            this.$el.find('.job-container').imagesLoaded(function() {
-                self.$el.find('.job-container').isotope({
-                    layoutMode: 'selinkMasonry',
-                    itemSelector : '.job-item',
-                    resizable: false
-                });
-            });
-        },
-
-        // shift column
-        shiftColumn: function(event, view) {
-            $('.job-container').isotope('selinkShiftColumn', view.el);
         }
+
     });
 });

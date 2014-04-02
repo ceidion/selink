@@ -126,6 +126,18 @@ define([
                 self.collection.add(data);
             });
 
+            selink.socket.on('user-post-bookmarked', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: 'あなたの投稿にブックマーク付けました。',
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-success'
+                });
+                // add the notification to collection
+                self.collection.add(data);
+            });
+
             selink.socket.on('user-post-commented', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,

@@ -8,16 +8,10 @@ define([
 
         template: template,
 
-        tagName: 'li',
+        className: 'isotope-item col-xs-12 col-sm-6 col-lg-4',
 
-        className: 'friend-item col-xs-12 col-sm-6 col-lg-4',
-
-        // initializer
-        initialize: function(options) {
-
-            this.events = _.extend({}, this.events, {
-                'click .btn-friend': 'onAddFriend'
-            });
+        events: {
+            'click .btn-friend': 'onAddFriend'
         },
 
         onAddFriend: function() {
@@ -41,6 +35,7 @@ define([
                             .html('<i class="icon-ok light-green"></i>&nbsp;友達リクエスト送信済み');
                     selink.userModel.get('invited').push(self.model.get('_id'));
                 },
+                reIsotope: false,
                 patch: true
             });
         },

@@ -13,7 +13,7 @@ define([
         // template
         template: template,
 
-        className: 'job-item col-xs-12 col-sm-6 col-lg-4',
+        className: 'isotope-item col-xs-12 col-sm-6 col-lg-4',
 
         events: {
             'click .btn-edit': 'editJob',

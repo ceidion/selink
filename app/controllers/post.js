@@ -10,24 +10,20 @@ var _ = require('underscore'),
 // Post index
 exports.index = function(req, res, next) {
 
-    // category of request
-    // var category = req.query.category || null;
-
-    // page number
-    var page = req.query.page || 0;
+    var category = req.query.category || null, // category of request
+        page = req.query.page || 0;            // page number
 
     var query = Post.find();
 
-    // // if requested for 'my friends' posts
-    // if (category == "friend") {
-    //     query.where('_owner').in(req.user.friends);
-    // // or requested for "someone's" posts
-    // } else {
-    //     query.where('_owner').equals(req.params.user);
-    // }
+    // if requested for 'my friends' posts
+    if (category == "friend") {
+        query.where('_owner').in(req.user.friends);
+    // or requested for 'my' posts
+    } else {
+        query.where('_owner').equals(req.user.id);
+    }
 
-    query.where('_owner').equals(req.user.id)
-        .where('logicDelete').equals(false)
+    query.where('logicDelete').equals(false)
         .populate('_owner', 'firstName lastName photo')
         .populate('comments._owner', 'firstName lastName photo')
         .skip(20*page)  // skip n page
@@ -39,7 +35,7 @@ exports.index = function(req, res, next) {
         });
 };
 
-// Show post
+// Show single post
 exports.show = function(req, res, next) {
 
     Post.findById(req.params.post)
@@ -202,6 +198,67 @@ exports.like = function(req, res, next){
                                     if(err) next(err);
                                     // send real time message
                                     sio.sockets.in(newPost._owner).emit('user-post-liked', noty);
+                                });
+                            }
+                        });
+                    }
+
+                    // return the saved post
+                    res.json(newPost);
+                }
+            });
+        }
+    });
+};
+
+// bookmark post
+exports.bookmark = function(req, res, next){
+
+    // find post
+    Post.findById(req.params.post, function(err, post) {
+
+        if (err) next(err);
+        else {
+
+            // add one bookmarked people id
+            post.bookmarked.addToSet(req.body.bookmarked);
+
+            // save the post
+            post.save(function(err, newPost) {
+
+                if (err) next(err);
+                else {
+
+                    // if someone not post owner bookmarked this post
+                    if (newPost._owner != req.user.id) {
+
+                        // create activity
+                        Activity.create({
+                            _owner: req.body.bookmarked,
+                            type: 'user-post-bookmarked',
+                            title: "気になるしました。",
+                            link: 'user/' + newPost._owner + '/posts/' + newPost._id
+                        }, function(err, activity) {
+                            if (err) next(err);
+                        });
+
+                        // create notification for post owner
+                        Notification.create({
+                            _owner: [newPost._owner],
+                            _from: req.body.bookmarked,
+                            type: 'user-post-bookmarked'
+                        }, function(err, notification) {
+
+                            if (err) next(err);
+                            else {
+                                // populate the respond notification with user's info
+                                notification.populate({
+                                    path:'_from',
+                                    select: '_id firstName lastName photo'
+                                }, function(err, noty) {
+                                    if(err) next(err);
+                                    // send real time message
+                                    sio.sockets.in(newPost._owner).emit('user-post-bookmarked', noty);
                                 });
                             }
                         });

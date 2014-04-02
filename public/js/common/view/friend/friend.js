@@ -33,10 +33,10 @@ define([
             container: '.ace-thumbnails'
         },
 
-        // isotope after collection populated
-        collectionEvents: {
-            'sync': 'reIsotope',
-        },
+        // // isotope after collection populated
+        // collectionEvents: {
+        //     'sync': 'reIsotope',
+        // },
 
         // initializer
         initialize: function() {

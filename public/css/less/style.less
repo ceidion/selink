@@ -248,7 +248,7 @@ img {
 
 }
 
-.post-item, .friend-item, .job-item {
+.isotope-item {
 
   margin: 0px !important;
 
@@ -275,14 +275,21 @@ img {
 }
 
 #modal-area {
-
+  .avatar {
+    max-width: 100px;
+    max-height: 100px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-right: 12px;
+    float: left;
+  }
 }
 
 @media screen and (min-width: 768px) {
 
   .job-modal,.post-modal {
 
-    width: 900px;
+    width: 80%;
 
     input[name="name"] {
       font-size: 1.5em;

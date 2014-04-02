@@ -21,6 +21,8 @@ exports.index = function(req, res, next) {
 
     query.where('_owner').equals(req.user.id)
         .where('logicDelete').equals(false)
+        .skip(20*page)  // skip n page
+        .limit(20)
         .sort('-createDate')
         .exec(function(err, jobs) {
             if (err) next(err);

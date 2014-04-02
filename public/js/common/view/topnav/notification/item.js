@@ -45,6 +45,8 @@ define([
                 return postTemplate;
             else if (type == "user-post-liked")
                 return postLikedTemplate;
+            else if (type == "user-post-bookmarked")
+                return postLikedTemplate;
             else if (type == "user-post-commented")
                 return postCommentedTemplate;
             else if (type == "user-job")

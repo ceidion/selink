@@ -11,23 +11,10 @@ define([
     BaseCollection,
     ItemView) {
 
-    var CommentsCollection = BaseCollection.extend({
-
-        url: function() {
-            return '/posts/' + this.document.id + '/comments';
-        },
-
-        comparator: function(comment) {
-            // sort by createDate
-            var date = moment(comment.get('createDate'));
-            return Number(date.valueOf());
-        }
-    });
-
     return Backbone.Marionette.CompositeView.extend({
 
         // class name
-        className: 'post-item col-xs-12 col-sm-6 col-lg-4',
+        className: 'isotope-item col-xs-12 col-sm-6 col-lg-4',
 
         // template
         getTemplate: function(){
@@ -54,6 +41,7 @@ define([
             'click .btn-forbid': 'onToggleForbid',
             'click .btn-detail': 'showDetail',
             'click .btn-like': 'onLike',
+            'click .btn-bookmark': 'onBookmark',
             'click .btn-comment': 'onComment',
             'click .btn-cancel': 'closeComment',
             'focusin textarea': 'openComment',
@@ -65,7 +53,7 @@ define([
         // override appendHtml
         appendHtml: function(collectionView, itemView, index) {
 
-            if (index < this.collection.length - 3)
+            if (!this.options.modal && index < this.collection.length - 3)
                 itemView.$el.addClass('hide');
             // prepend comment to container, later comments comeout first
             this.$el.find('.dialogs').prepend(itemView.el);
@@ -83,8 +71,17 @@ define([
                 this.model.set('isLiked', true, {silent:true});
             }
 
+            // if user's id exists in post's bookmark list
+            if (_.indexOf(this.model.get('bookmarked'), selink.userModel.get('_id')) >= 0) {
+                // mark as marked
+                this.model.set('isMarked', true, {silent:true});
+            }
+
             // create comments collction
-            this.collection = new CommentsCollection(this.model.get('comments'), {document: this.model});
+            this.collection = this.model.comments;
+
+            // set comment num
+            this.model.set('commentNum', this.model.comments.length, {silent: true});
         },
 
         // after render
@@ -98,7 +95,7 @@ define([
                 title: "いいね！"
             });
 
-            this.$el.find('.btn-favorite').tooltip({
+            this.$el.find('.btn-bookmark').tooltip({
                 placement: 'top',
                 title: "お気に入り"
             });
@@ -192,6 +189,37 @@ define([
                         .slFlip();
                     // remove like button, can't like it twice
                     self.$el.find('.btn-like').removeClass('btn-like');
+                },
+                // do not re-isotope whole collection, that will cause image flicker
+                reIsotope: false,
+                patch: true,
+                wait: true
+            });
+        },
+
+        // Bookmark this posts
+        onBookmark: function() {
+
+            var self = this;
+
+            this.model.save({
+                bookmarked: selink.userModel.get('_id')
+            }, {
+                url: '/posts/' + this.model.get('_id') + '/bookmark',
+                success: function() {
+                    // update the bookmark number
+                    self.$el.find('.btn-bookmark')
+                        .find('span')
+                        .empty()
+                        .text(self.model.get('bookmarked').length);
+                    // flip the icon and mark this post as bookmark
+                    self.$el.find('.btn-bookmark')
+                        .find('i')
+                        .removeClass('icon-star-empty')
+                        .addClass('icon-star')
+                        .slFlip();
+                    // remove like button, can't like it twice
+                    self.$el.find('.btn-bookmark').removeClass('btn-bookmark');
                 },
                 // do not re-isotope whole collection, that will cause image flicker
                 reIsotope: false,

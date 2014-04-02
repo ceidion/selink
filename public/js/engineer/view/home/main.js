@@ -1,31 +1,35 @@
 define([
     'text!engineer/template/home/main.html',
+    'common/view/composite-isotope',
     'common/collection/base',
+    'common/model/post',
     'common/Model/job',
     'common/view/post/item',
     'common/view/job/item'
 ], function(
     template,
+    BaseView,
     BaseCollection,
+    PostModel,
     JobModel,
     PostItemView,
     JobItemView
 ) {
 
+    var PostsCollection = BaseCollection.extend({
+        url: '/posts',
+        model: PostModel
+    });
+
     var JobsCollection = BaseCollection.extend({
+        url: '/jobs',
         model: JobModel
     });
 
-    return Backbone.Marionette.CompositeView.extend({
+    return BaseView.extend({
 
         // Template
         template: template,
-
-        // Class name
-        // className: "row",
-
-        // item view container
-        itemViewContainer: '.item-container',
 
         getItemView: function(item) {
 
@@ -35,17 +39,10 @@ define([
                 return JobItemView;
         },
 
-        // Events
-        events: {
-
-        },
-
-        collectionEvents: {
-            'sync': 'reIsotope'
-        },
-
         // Initializer
         initialize: function() {
+
+            var self = this;
 
             this.collection = new BaseCollection(null, {
                 comparator: function(item) {
@@ -54,56 +51,26 @@ define([
                     return Number(date.valueOf());
                 }
             });
-            this.postsCollection = new BaseCollection(null, {document: this.model});
-            this.jobsCollection = new JobsCollection(null, {document: this.model});
 
-            var self = this;
+            this.postsCollection = new PostsCollection();
+            this.jobsCollection = new JobsCollection();
 
             this.postsCollection.fetch({
-                url: '/posts',
                 success: function(collection, response, options) {
                     self.collection.add(self.postsCollection.models);
-                    self.collection.sort();
-                    // self.reIsotope();
+                    self.collection.trigger('sync');
                 }
             });
 
             this.jobsCollection.fetch({
-                url: '/jobs',
                 success: function(collection, response, options) {
                     self.collection.add(self.jobsCollection.models);
-                    self.collection.sort();
+                    self.collection.trigger('sync');
+                    // self.collection.sort();
                     // self.reIsotope();
                 }
             });
-        },
-
-        // After render
-        onRender: function() {
-
-        },
-
-        // After show
-        onShow: function() {
-
-        },
-
-        // re-isotope after collection get synced
-        reIsotope: function() {
-
-            var self = this;
-
-            this.$el.find('.item-container').imagesLoaded(function() {
-                self.$el.find('.item-container').isotope({
-                    layoutMode: 'selinkMasonry',
-                    itemSelector : '.post-item, .job-item',
-                    resizable: false
-                });
-            });
-        },
-
-        shiftColumn: function(event, view) {
-            this.$el.isotope('selinkShiftColumn', view.el);
         }
+
     });
 });

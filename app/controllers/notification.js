@@ -12,8 +12,9 @@ var request = require('request'),
     4. user-friend-break
     5. user-post
     6. user-post-liked
-    7. user-post-commented
-    8. user-job
+    7. user-post-bookmarked
+    8. user-post-commented
+    9. user-job
 */
 
 // Notification index

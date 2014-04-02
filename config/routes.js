@@ -50,6 +50,8 @@ module.exports = function(app, sio) {
     app.patch('/posts/:post', checkLoginStatus, post.update);
     // like a post
     app.patch('/posts/:post/like', checkLoginStatus, post.like);
+    // bookmark a post
+    app.patch('/posts/:post/bookmark', checkLoginStatus, post.bookmark);
     // Remove post
     app.delete('/posts/:post', checkLoginStatus, post.remove);
     // comment a post
@@ -66,6 +68,8 @@ module.exports = function(app, sio) {
     app.patch('/jobs/:job', checkLoginStatus, job.update);
     // Like a job
     app.patch('/jobs/:job/like', checkLoginStatus, job.update);
+    // bookmark a job
+    app.patch('/jobs/:job/bookmark', checkLoginStatus, job.update);
     // Remove jobs
     app.delete('/jobs/:job', checkLoginStatus, job.remove);
     // Comment a job
