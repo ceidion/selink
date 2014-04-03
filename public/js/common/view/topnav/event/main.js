@@ -1,7 +1,7 @@
 define([
-    'text!common/template/topnav/event.html',
+    'text!common/template/topnav/event/main.html',
     'common/collection/base',
-    'common/view/topnav/event-item'
+    'common/view/topnav/event/item'
 ], function(
     template,
     BaseCollection,

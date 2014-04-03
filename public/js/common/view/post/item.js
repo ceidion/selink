@@ -1,13 +1,13 @@
 define([
     'text!common/template/post/item.html',
     'text!common/template/post/detail.html',
-    'text!common/template/post/item-owner.html',
+    'text!common/template/post/detail-owner.html',
     'common/collection/base',
     'common/view/post/comment'
 ], function(
     defaultTemplate,
     detailTemplate,
-    ownerTemplate,
+    detailOwnerTemplate,
     BaseCollection,
     ItemView) {
 
@@ -17,12 +17,12 @@ define([
         className: 'isotope-item col-xs-12 col-sm-6 col-lg-4',
 
         // template
-        getTemplate: function(){
+        getTemplate: function() {
 
+            if (this.options.modal && this.model.get('isMine'))
+                return detailOwnerTemplate;
             if (this.options.modal)
                 return detailTemplate;
-            else if (this.model.get('_owner')._id === selink.userModel.id)
-                return ownerTemplate;
             else
                 return defaultTemplate;
         },
@@ -33,6 +33,18 @@ define([
         // item view
         itemView: ItemView,
 
+        // ui
+        ui: {
+            editArea: '.wysiwyg-editor',
+            alertArea: '.alert',
+            likeBtn: '.btn-like',
+            bookmarkBtn: '.btn-bookmark',
+            commentArea: '.dialogs',
+            commentInput: 'textarea',
+            commentBtn: '.btn-comment',
+            menuToggler: '.widget-header .widget-toolbar'
+        },
+
         // events
         events: {
             'click .btn-remove': 'showAlert',
@@ -42,12 +54,17 @@ define([
             'click .btn-detail': 'showDetail',
             'click .btn-like': 'onLike',
             'click .btn-bookmark': 'onBookmark',
+            'focusin textarea': 'openComment',
+            'keyup textarea': 'checkComment',
             'click .btn-comment': 'onComment',
             'click .btn-cancel': 'closeComment',
-            'focusin textarea': 'openComment',
             'click .btn-show': 'showAllComment',
             'mouseover': 'toggleMenuIndicator',
             'mouseout': 'toggleMenuIndicator'
+        },
+
+        itemEvents: {
+
         },
 
         // override appendHtml
@@ -56,7 +73,7 @@ define([
             if (!this.options.modal && index < this.collection.length - 3)
                 itemView.$el.addClass('hide');
             // prepend comment to container, later comments comeout first
-            this.$el.find('.dialogs').prepend(itemView.el);
+            this.ui.commentArea.prepend(itemView.el);
         },
 
         // initializer
@@ -65,23 +82,34 @@ define([
             if (this.options.modal)
                 this.$el.removeClass(this.className).addClass('modal-dialog post-modal');
 
+            // if the post owner's id is user id
+            if (this.model.get('_owner')._id === selink.userModel.id)
+            // mark as my post
+                this.model.set('isMine', true, {
+                    silent: true
+                });
+
             // if user's id exists in post's liked list
-            if (_.indexOf(this.model.get('liked'), selink.userModel.get('_id')) >= 0) {
-                // mark as liked
-                this.model.set('isLiked', true, {silent:true});
-            }
+            if (_.indexOf(this.model.get('liked'), selink.userModel.get('_id')) >= 0)
+            // mark as liked
+                this.model.set('isLiked', true, {
+                    silent: true
+                });
 
             // if user's id exists in post's bookmark list
-            if (_.indexOf(this.model.get('bookmarked'), selink.userModel.get('_id')) >= 0) {
-                // mark as marked
-                this.model.set('isMarked', true, {silent:true});
-            }
+            if (_.indexOf(this.model.get('bookmarked'), selink.userModel.get('_id')) >= 0)
+            // mark as marked
+                this.model.set('isMarked', true, {
+                    silent: true
+                });
 
             // create comments collction
             this.collection = this.model.comments;
 
             // set comment num
-            this.model.set('commentNum', this.model.comments.length, {silent: true});
+            this.model.set('commentNum', this.model.comments.length, {
+                silent: true
+            });
         },
 
         // after render
@@ -90,16 +118,18 @@ define([
             var self = this;
 
             // add tooltip on add button
-            this.$el.find('.btn-like').tooltip({
+            this.ui.likeBtn.tooltip({
                 placement: 'top',
                 title: "いいね！"
             });
 
-            this.$el.find('.btn-bookmark').tooltip({
+            this.ui.bookmarkBtn.tooltip({
                 placement: 'top',
                 title: "お気に入り"
             });
 
+            // initiate wysiwyg eidtor for memo
+            this.ui.editArea.ace_wysiwyg().prev().addClass('wysiwyg-style3');
         },
 
         // show the comfirm alert
@@ -109,7 +139,7 @@ define([
 
             var self = this;
 
-            this.$el.find('.alert')
+            this.ui.alertArea
                 .slideDown('fast', function() {
                     self.trigger("shiftColumn");
                 })
@@ -122,9 +152,10 @@ define([
 
             var self = this;
 
-            this.$el.find('.alert').slideUp('fast', function() {
-                self.trigger("shiftColumn");
-            });
+            this.ui.alertArea
+                .slideUp('fast', function() {
+                    self.trigger("shiftColumn");
+                });
         },
 
         // remove post
@@ -177,18 +208,18 @@ define([
                 url: '/posts/' + this.model.get('_id') + '/like',
                 success: function() {
                     // update the liked number
-                    self.$el.find('.btn-like')
+                    self.ui.likeBtn
                         .find('span')
                         .empty()
                         .text(self.model.get('liked').length);
                     // flip the icon and mark this post as liked
-                    self.$el.find('.btn-like')
+                    self.ui.likeBtn
                         .find('i')
                         .removeClass('icon-heart-empty')
                         .addClass('icon-heart')
                         .slFlip();
                     // remove like button, can't like it twice
-                    self.$el.find('.btn-like').removeClass('btn-like');
+                    self.ui.likeBtn.removeClass('btn-like');
                 },
                 // do not re-isotope whole collection, that will cause image flicker
                 reIsotope: false,
@@ -208,18 +239,18 @@ define([
                 url: '/posts/' + this.model.get('_id') + '/bookmark',
                 success: function() {
                     // update the bookmark number
-                    self.$el.find('.btn-bookmark')
+                    self.ui.bookmarkBtn
                         .find('span')
                         .empty()
                         .text(self.model.get('bookmarked').length);
                     // flip the icon and mark this post as bookmark
-                    self.$el.find('.btn-bookmark')
+                    self.ui.bookmarkBtn
                         .find('i')
                         .removeClass('icon-star-empty')
                         .addClass('icon-star')
                         .slFlip();
-                    // remove like button, can't like it twice
-                    self.$el.find('.btn-bookmark').removeClass('btn-bookmark');
+                    // remove bookmark button, can't bookmark it twice
+                    self.ui.bookmarkBtn.removeClass('btn-bookmark');
                 },
                 // do not re-isotope whole collection, that will cause image flicker
                 reIsotope: false,
@@ -237,7 +268,7 @@ define([
             this.$el.find('.photo-area').slideDown();
             this.$el.find('.btn-area').slideDown('fast', function() {
                 // enable autosize on comment area
-                self.$el.find('textarea').autosize({
+                self.ui.commentInput.autosize({
                     // append: "\n",
                     callback: function() {
                         self.trigger("shiftColumn");
@@ -255,9 +286,21 @@ define([
             this.$el.find('.comment-area').css('margin-left', '0px');
             this.$el.find('.photo-area').hide();
             this.$el.find('.btn-area').slideUp('fast', function() {
-                self.$el.find('textarea').val('').trigger('autosize.destroy');
+                self.ui.commentInput.val('').trigger('autosize.destroy');
                 self.trigger("shiftColumn");
             });
+        },
+
+        // check comment input
+        checkComment: function() {
+
+            // if the comment input is not blank
+            if (!_.str.isBlank(this.ui.commentInput.val()))
+            // enable comment button
+                this.ui.commentBtn.removeClass('disabled');
+            else
+            // disable comment button
+                this.ui.commentBtn.addClass('disabled');
         },
 
         // comment this post
@@ -266,12 +309,12 @@ define([
             var self = this;
 
             this.collection.create({
-                content: this.$el.find('textarea').val()
+                content: this.ui.commentInput.val()
             }, {
                 success: function() {
 
                     if (self.collection.length == 1)
-                        self.$el.find('.dialogs').before("<hr>");
+                        self.ui.commentArea.before("<hr>");
                     self.closeComment();
                 },
                 wait: true
@@ -283,7 +326,7 @@ define([
 
             var self = this;
 
-            this.$el.find('.dialogs .hide').removeClass('hide').slideDown(function() {
+            this.ui.commentArea.find('.hide').removeClass('hide').slideDown(function() {
                 self.$el.find('.btn-show').hide();
                 self.trigger("shiftColumn");
             });
@@ -291,7 +334,7 @@ define([
 
         // show operation menu indicator
         toggleMenuIndicator: function() {
-            this.$el.find('.widget-header .widget-toolbar').toggleClass('hidden');
+            this.ui.menuToggler.toggleClass('hidden');
         }
     });
 

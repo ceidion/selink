@@ -1,5 +1,5 @@
 define([
-    'text!common/template/topnav/event-item.html'
+    'text!common/template/topnav/event/item.html'
 ], function(
     template
 ) {

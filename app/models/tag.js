@@ -12,7 +12,19 @@ var Tag = new Schema({
     },
     wikis: {
         type: String,
-        trim: true  
+        trim: true
+    },
+
+    // Logical Delete flag
+    logicDelete: {
+        type: Boolean,
+        default: false
+    },
+
+    // Create Date
+    createDate: {
+        type: Date,
+        default: Date.now
     }
 });
 

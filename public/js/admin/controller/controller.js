@@ -2,16 +2,18 @@ define([
     'common/view/topnav/topnav',
     'common/view/shortcuts/shortcuts',
     'admin/view/common/sidenav',
-    'admin/view/home/page',
+    'admin/view/home/main',
     'common/view/profile/main',
     'common/view/post/main',
+    'common/view/post/item',
     'common/view/friend/main',
     'common/view/people/main',
     'common/view/people/detail',
     'common/view/calendar/main',
-    'common/view/mailbox/mailbox',
-    'admin/view/data/skill/skills',
-    'common/model/user'
+    'common/view/activity/main',
+    'admin/view/data/skill/main',
+    'common/model/user',
+    'common/model/post'
 ], function(
     TopNavView,
     ShortCutsView,
@@ -19,13 +21,15 @@ define([
     HomeView,
     ProfileView,
     PostView,
+    PostDetailView,
     FriendView,
     PeopleView,
     PeopleDetailView,
     CalendarView,
-    MailBoxView,
+    ActivityView,
     SkillsView,
-    UserModel
+    UserModel,
+    PostModel
 ) {
 
     // Main page controller
@@ -56,9 +60,7 @@ define([
             selink.sidenavArea.show(selink.sideNavView);
 
             // setup top nav
-            selink.topNavView = new TopNavView({
-                model: selink.userModel
-            });
+            selink.topNavView = new TopNavView();
             selink.topnavArea.show(selink.topNavView);
         },
 
@@ -77,21 +79,16 @@ define([
 
             if (!id || id === selink.userModel.get('_id')) {
 
-                selink.userModel.fetch({
-                    success: function() {
-                        // create profile view
-                        selink.profileView = new ProfileView({
-                            model: selink.userModel
-                        });
-                        // show profile view
-                        selink.pageContent.show(selink.profileView);
-                    }
+                // create profile view
+                selink.profileView = new ProfileView({
+                    model: selink.userModel
                 });
+                // show profile view
+                selink.pageContent.show(selink.profileView);
+
             } else {
 
-                var people = new UserModel({
-                    _id: id
-                });
+                var people = new UserModel({_id: id});
                 people.fetch({
                     success: function() {
                         selink.peopleDetailView = new PeopleDetailView({
@@ -104,14 +101,31 @@ define([
         },
 
         // show posts
-        showPostView: function() {
+        showPostView: function(id) {
 
-            // create post view
-            selink.postView = new PostView({
-                model: selink.userModel
-            });
-            // show post view
-            selink.pageContent.show(selink.postView);
+            if (id) {
+
+                var post = new PostModel({_id: id});
+                post.fetch({
+                    success: function() {
+
+                        var postDetailView = new PostDetailView({
+                            model: post,
+                            modal: true
+                        });
+
+                        selink.modalArea.show(postDetailView);
+                        selink.modalArea.$el.modal('show');
+                    }
+                });
+
+            } else {
+
+                // create post view
+                selink.postView = new PostView();
+                // show post view
+                selink.pageContent.show(selink.postView);
+            }
         },
 
         // show friends
@@ -125,6 +139,7 @@ define([
 
         // show people
         showPeopleView: function() {
+
             // create people view
             selink.peopleView = new PeopleView();
             // show people view
@@ -135,25 +150,22 @@ define([
         showCalendarView: function() {
 
             // create calendar view
-            selink.calendarView = new CalendarView({
-                model: selink.userModel
-            });
+            selink.calendarView = new CalendarView();
             // show calendar view
             selink.pageContent.show(selink.calendarView);
         },
 
-        // show mailbox
-        showMailBoxView: function() {
+        // show activity
+        showActivityView: function() {
 
-            // create mailbox view
-            selink.mailBoxView = new MailBoxView({
-                model: selink.userModel
-            });
-            // show mailbox view
-            selink.pageContent.show(selink.mailBoxView);
+            // create activity view
+            selink.activityView = new ActivityView();
+            // show activity view
+            selink.pageContent.show(selink.activityView);
         },
 
         showSkillsView: function() {
+
             // create home view
             selink.skillsView = new SkillsView();
             // show main page

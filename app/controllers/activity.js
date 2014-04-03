@@ -26,12 +26,17 @@ exports.index = function(req, res, next) {
     // }, function(err, response, body) {
     //     console.log(body);
     // });
+
+    // page number
+    var page = req.query.page || 0;
+
     // find the activities of all users
     Activity.find()
         .where('_owner').ne(req.user.id).in(req.user.friends)
         .where('type').nin(['user-login', 'user-logout', 'user-friend-declined'])
         .sort('-createDate')
-        .limit(20)
+        .skip(20*page)  // skip n page
+        .limit(20)  // 20 user per page
         .populate('_owner', '_id firstName lastName photo')
         .exec(function(err, activities) {
             if (err) next(err);

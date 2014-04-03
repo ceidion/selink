@@ -1,22 +1,23 @@
 define([
-    'common/view/composite-base',
-    'text!admin/template/data/skill/skills.html',
-    'admin/view/data/skill/skill',
-    'common/collection/tags'
+    'common/view/composite-isotope',
+    'text!admin/template/data/skill/main.html',
+    'common/collection/base',
+    'admin/view/data/skill/item'
 ], function(
     BaseView,
     template,
-    ItemView,
-    TagsModel
+    BaseCollection,
+    ItemView
 ) {
 
-    var IndexView = BaseView.extend({
+    var TagCollection = BaseCollection.extend({
+        url: '/tags'
+    });
+
+    return BaseView.extend({
 
         // Template
         template: template,
-
-        // item view container
-        itemViewContainer: '.tag-container',
 
         // item view
         itemView: ItemView,
@@ -31,39 +32,19 @@ define([
             'click #stack': 'getStack'
         },
 
-        collectionEvents: {
-            'sync': 'reIsotope',
-            // 'add': 'createTag',
-            'change': 'updateTag',
-            // 'remove': 'removeTag',
-        },
-
         count: 1,
 
         // Initializer
         initialize: function() {
 
-            this.collection = new TagsModel();
-            this.collection.fetch();
-        },
-
-        // After render
-        onRender: function() {
-        },
-
-        // After show
-        onShow: function() {
-            // $('.tag-container').isotope({
-            //   // options
-            //   itemSelector : '.sl-tag'
-            // });
-        },
-
-        reIsotope: function() {
-            $('.tag-container').isotope({
-              // options
-              itemSelector : '.widget-container-span'
+            this.collectionEvents = _.extend({}, this.collectionEvents, {
+                'change': 'updateTag'
             });
+
+            this.collection = new TagCollection();
+
+            // call super initializer
+            BaseView.prototype.initialize.apply(this);
         },
 
         createTag: function(model) {
@@ -175,5 +156,4 @@ define([
         }
     });
 
-    return IndexView;
 });

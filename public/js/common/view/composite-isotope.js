@@ -90,8 +90,6 @@ define([], function() {
             // (itme object's sync event will proxy through to collection by backbone)
             if (options && _.has(options, 'reIsotope') && !options.reIsotope) return;
 
-            console.log("message");
-
             var self = this;
 
             // use imageLoaded plugin

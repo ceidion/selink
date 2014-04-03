@@ -26,6 +26,10 @@ define([
 
         onRender: function() {
 
+        },
+
+        onShow: function() {
+            this.$el.slFadeInUp();
         }
     });
 

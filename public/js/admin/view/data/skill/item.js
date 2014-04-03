@@ -1,26 +1,22 @@
 define([
-    'common/view/item-base',
-    'text!admin/template/data/skill/skill.html'
+    'text!admin/template/data/skill/item.html'
 ], function(
-    BaseView,
-    template) {
+    template
+) {
 
-    var SkillItem = BaseView.extend({
+    return Backbone.Marionette.ItemView.extend({
 
         // template
         template: template,
 
-        className: 'widget-container-span col-sm-3',
+        className: 'isotope-item col-xs-12 col-sm-6 col-lg-4',
+
+        events: {
+            'click .widget-body': 'getWikis'
+        },
 
         // initializer
         initialize: function() {
-
-            this.ui = _.extend({}, this.ui, {});
-
-            this.events = _.extend({}, this.events, {
-                'click .widget-body': 'getWikis'
-            });
-
         },
 
         onRender: function() {
@@ -71,5 +67,4 @@ define([
 
     });
 
-    return SkillItem;
 });

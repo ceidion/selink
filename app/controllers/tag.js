@@ -3,13 +3,18 @@ var mongoose = require('mongoose'),
 
 exports.index = function(req, res, next) {
 
-    var query = Tag.find().sort({count:-1}).limit(100);
+    // page number
+    var page = req.query.page || 0;
 
-    query.exec(function(err, tags) {
-        if(err) next(err);
-
-        res.json(tags);
-    });
+    Tag.find()
+        .where('logicDelete').equals(false)
+        .sort({count:-1})
+        .skip(100*page)  // skip n page
+        .limit(100)  // 100 user per page
+        .exec(function(err, tags) {
+            if(err) next(err);
+            else res.json(tags);
+        });
 };
 
 exports.create = function(req, res) {

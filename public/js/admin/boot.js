@@ -8,6 +8,7 @@ require.config({
         'jquery-ui': "lib/jquery-ui-1.10.3.custom.min",
         'bootstrap': "lib/bootstrap.min",
         'underscore': 'lib/underscore',
+        'underscore.string': 'lib/underscore.string.min',
         'backbone': 'lib/backbone',
         'marionette': 'lib/backbone.marionette',
         'backbone.wreqr': 'lib/backbone.wreqr',
@@ -62,6 +63,9 @@ require.config({
         },
         'underscore': {
             exports: '_'
+        },
+        'underscore.string': {
+            deps: ['underscore']
         },
         'backbone': {
             deps: ['jquery', 'underscore'],
@@ -147,6 +151,7 @@ require.config({
                 'jquery-ui',
                 'bootstrap',
                 'marionette',
+                'underscore.string',
                 'deep-model',
                 'backbone.validation',
                 'ace',

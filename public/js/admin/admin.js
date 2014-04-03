@@ -16,7 +16,8 @@ define([
         pageContent: '.page-content',
         topnavArea: '#topnav-area',
         shortcutArea: '#shortcuts-area',
-        sidenavArea: '#sidenav-area'
+        sidenavArea: '#sidenav-area',
+        modalArea: '#modal-area'
     });
 
     // before application initialization, config plug-ins
@@ -89,15 +90,19 @@ define([
 
                 // customize: get the body width
                 var bodyWidth = $('body').width(),
+                    sideBarMinimized = $('#sidebar').hasClass('menu-min'),
+                    sideBarWidth = 190, // the "190" is the opened side navbar
                     width;
 
+                if (sideBarMinimized)
+                    sideBarWidth = 43;
+
                 // bootstrap grid: determine the column width
-                // the "190" is the left side navbar
                 // the "40" is the left and right padding of page body
                 if (bodyWidth >= 1200)
-                    width = (bodyWidth - 190 - 40)/3;
+                    width = (bodyWidth - sideBarWidth - 40)/3;
                 else if (bodyWidth >= 990)
-                    width = (bodyWidth - 190 - 40)/2;
+                    width = (bodyWidth - sideBarWidth - 40)/2;
                 else if (bodyWidth >= 768)
                     width = (bodyWidth - 40)/2;
                 else
@@ -142,13 +147,13 @@ define([
 
             _selinkMasonryLayout: function( $elems ) {
 
-                // call delayed reset method, calulate the column setting
-                this._selinkMasonryDelayReset();
-
                 var instance = this,
                     props = instance.selinkMasonry;
 
-                    console.log(props);
+                // do not calculate layout propery every time, for add/remove item etc.
+                if (_.isEmpty(props))
+                    // call delayed reset method, calulate the column setting
+                    this._selinkMasonryDelayReset();
 
                 $elems.each(function(){
 
@@ -189,6 +194,7 @@ define([
             // worker method that places brick in the columnSet
             //   with the the minY
             _selinkMasonryPlaceBrick: function( $brick, setY ) {
+
                 // get the minimum Y value from the columns
                 var minimumY = Math.min.apply( Math, setY ),
                     shortCol = 0;
@@ -284,11 +290,11 @@ define([
             success: function() {
 
                 // make controller
-                var controller = new Controller();
+                self.controller = new Controller();
 
                 // setup router
-                var router = new Router({
-                    controller: controller
+                self.router = new Router({
+                    controller: self.controller
                 });
 
                 // start history

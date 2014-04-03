@@ -3,6 +3,40 @@
         <a href="#profile/<%= obj._owner._id %>" title="<%- obj._owner.firstName %>">
             <img class="avatar" src="<%= obj._owner.photo %>">
         </a>
+
+        <% if (obj.isMine) { %>
+        <div class="widget-toolbar no-border hidden">
+            <a class="yellow dropdown-toggle" data-toggle="dropdown">
+                <i class="icon-chevron-down"></i>
+            </a>
+            <ul class="dropdown-menu dropdown-yellow pull-right dropdown-caret dropdown-close">
+                <li>
+                    <a href="#" class="btn-edit">
+                        <i class="icon-edit blue bigger-110"></i>&nbsp;&nbsp;編集
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="btn-remove">
+                        <i class="icon-trash red bigger-110"></i>&nbsp;&nbsp;削除
+                    </a>
+                </li>
+                <li class="<% if (!obj.setting.commentable) print("hidden") %>">
+                    <a href="#" class="btn-forbid">
+                        <i class="icon-ban-circle pink bigger-110"></i>&nbsp;&nbsp;コメント禁止
+                    </a>
+                </li>
+                <li class="<% if (obj.setting.commentable) print("hidden") %>">
+                    <a href="#" class="btn-forbid">
+                        <i class="icon-ok green bigger-110"></i>&nbsp;&nbsp;コメント許可
+                    </a>
+                </li>
+                <% if (obj.setting.commentable) { %>
+                <% } else { %>
+                <% } %>
+            </ul>
+        </div>
+        <% } %>
+
         <h5>
             <i class="icon-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
         </h5>
@@ -14,6 +48,19 @@
 
     <div class="widget-body">
         <div class="widget-main">
+
+            <% if (obj.isMine) { %>
+            <div class="alert alert-danger clearfix" style="display: none;">
+                <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
+                この投稿を削除します、よろしいですか？
+                <br />
+                <br />
+                <p>
+                    <button class="btn btn-sm btn-warning btn-remove-cancel pull-right">取消</button>
+                    <button class="btn btn-sm btn-danger btn-remove-comfirm pull-right">削除</button>
+                </p>
+            </div>
+            <% } %>
 
             <%= obj.content %>
 
@@ -66,14 +113,14 @@
             <% }%>
 
         </div>
-        <% if (obj.setting.commentable) { %>
-        <div class="widget-toolbox padding-4 clearfix">
+
+        <div class="widget-toolbox padding-4 clearfix <% if (!obj.setting.commentable) print('hidden') %>">
             <img class="photo-area pull-left" src="<%= selink.userModel.get('photo') %>" style="max-width: 36px; display: none;">
             <div class="comment-area">
                 <textarea name="comment" placeholder="コメントを書く" style="width: 100%"/></textarea>
             </div>
             <div class="btn-area pull-right" style="margin-top: 4px; display: none;">
-                <button class="btn btn-sm btn-success btn-comment">
+                <button class="btn btn-sm btn-success btn-comment disabled">
                     <i class="icon-comment bigger-125"></i>&nbsp;コメントする
                 </button>
                 <button class="btn btn-sm btn-yellow btn-cancel">
@@ -81,6 +128,6 @@
                 </button>
             </div>
         </div>
-        <% }%>
+
     </div>
 </div>

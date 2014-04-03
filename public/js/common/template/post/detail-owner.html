@@ -2,7 +2,23 @@
 
     <div class="row modal-body overflow-visible">
         <div class="col-sm-12 col-md-8">
-            <%= obj.content %>
+
+            <div class="wysiwyg-editor">
+                <%= obj.content %>
+            </div>
+
+            <% if (obj.isMine) { %>
+            <div class="alert alert-danger clearfix" style="display: none;">
+                <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
+                この投稿を削除します、よろしいですか？
+                <br />
+                <br />
+                <p>
+                    <button class="btn btn-sm btn-warning btn-remove-cancel pull-right">取消</button>
+                    <button class="btn btn-sm btn-danger btn-remove-comfirm pull-right">削除</button>
+                </p>
+            </div>
+            <% } %>
         </div>
         <div class="col-sm-12 col-md-4">
 
@@ -21,24 +37,7 @@
                 </div>
 
                 <div class="widget-body">
-
                     <div class="widget-main dialogs"></div>
-
-                    <div class="widget-toolbox padding-4 clearfix <% if (!obj.setting.commentable) print('hidden') %>">
-                        <img class="photo-area pull-left" src="<%= selink.userModel.get('photo') %>" style="max-width: 36px; display: none;">
-                        <div class="comment-area">
-                            <textarea name="comment" placeholder="コメントを書く" style="width: 100%"/></textarea>
-                        </div>
-                        <div class="btn-area pull-right" style="margin-top: 4px; display: none;">
-                            <button class="btn btn-sm btn-success btn-comment disabled">
-                                <i class="icon-comment bigger-125"></i>&nbsp;コメントする
-                            </button>
-                            <button class="btn btn-sm btn-yellow btn-cancel">
-                                <i class="icon-off bigger-125"></i>&nbsp;取消
-                            </button>
-                        </div>
-                    </div>
-
                 </div>
             </div>
 
@@ -71,6 +70,8 @@
             </div>
         <% } %>
 
+        <button class="btn btn-sm btn-success"><i class="icon-save"></i> 保存</button>
+        <button class="btn btn-sm btn-danger btn-remove"><i class="icon-trash"></i> 削除</button>
         <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> 閉じる</button>
     </div>
 </div>

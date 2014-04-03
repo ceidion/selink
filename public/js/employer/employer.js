@@ -169,7 +169,7 @@ define([
                     if (colSpan < 1) colSpan = 1;
                     colSpan = Math.min(colSpan, props.cols);
 
-                    console.log("outerWidth:" + $this.outerWidth(true) + " -> columnWidth: " + props.columnWidth + " -> colspan: " + colSpan);
+                    // console.log("outerWidth:" + $this.outerWidth(true) + " -> columnWidth: " + props.columnWidth + " -> colspan: " + colSpan);
 
                     if (colSpan === 1) {
                         // if brick spans only one column, just like singleMode
@@ -215,7 +215,7 @@ define([
                 var x = this.selinkMasonry.columnWidth * shortCol,
                 y = minimumY;
 
-                console.log("placement X: " + x + ", Y: " + y);
+                // console.log("placement X: " + x + ", Y: " + y);
 
                 this._pushPosition( $brick, x, y );
 
