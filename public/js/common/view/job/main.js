@@ -107,7 +107,7 @@ define([
                     },
                     silent: true,
                     wait: true,
-                    index: 0
+                    at: 0
                 });
 
             } else {

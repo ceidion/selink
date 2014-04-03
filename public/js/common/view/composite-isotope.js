@@ -21,19 +21,19 @@ define([], function() {
 
             var self = this;
 
-            // fetch the posts
+            // fetch collection items
             this.collection.fetch({
                 // after initialize the collection
                 success: function() {
                     // change the behavior of add sub view
                     self.appendHtml = function(collectionView, itemView, index) {
-                        // if the post is new created post
+                        // if the item is newly created one
                         if (index === 0)
-                            // prepend new post and reIsotope
+                            // prepend new item and reIsotope
                             this.$el.find('.isotope').prepend(itemView.$el).isotope('reloadItems');
-                        // if the post from infinit scroll loading
+                        // if the item from infinit scroll loading
                         else
-                            // append post and reIsotope
+                            // append item and reIsotope
                             this.$el.find('.isotope').imagesLoaded(function() {
                                 self.$el.find('.isotope').append(itemView.$el).isotope('appended', itemView.$el);
                             });
