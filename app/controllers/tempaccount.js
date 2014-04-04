@@ -12,17 +12,9 @@ exports.show = function(req, res, next) {};
 
 exports.create = function(req, res, next) {
 
-    // validate request parameter
-    console.log(req.body);
-
-    // create temporary account for a new registered user
-    var tempAccountObj = new TempAccount(req.body, false);
-
-    var email = req.body.email;
-
     // try to find a account by the user applicated account ID
     User.findOne({
-        email: email
+        email: req.body.email
     }, function(err, user) {
 
         // handle error
@@ -31,20 +23,16 @@ exports.create = function(req, res, next) {
         }
         // if a existed account are found, require another ID
         else if (user) {
-            res.status(424).json({
-                msg: "このメールアドレスは既に使われてますので、他のメールアドレスを使ってください。"
-            });
+            res.json(409, {});
         }
         // for valid account ID
         else {
             // save temp account object
-            tempAccountObj.save(function(err) {
+            TempAccount.create(req.body, function(err, tempAccount) {
                 // handle error
                 if (err) {
                     if (err.code == 11000)
-                        res.status(424).json({
-                            msg: "このメールアドレスは既に使われてますので、他のメールアドレスを使ってください。"
-                        });
+                        res.json(409, {});
                     else next(err);
                 } else {
                     // // send account-activate mail
@@ -58,12 +46,10 @@ exports.create = function(req, res, next) {
                     //     Mailer.sendNewUserRegistedNotification(admins, {email: email});
                     // });
 
-                    console.log("http://localhost:8081/activate/" + tempAccountObj._id);
+                    console.log("http://localhost:8081/activate/" + tempAccount._id);
 
-                    // send success message
-                    res.json({
-                        msg: "ご利用いただきありがとうございます！ご提供したメールアドレスにメールを送りました、ご確認してください。"
-                    });
+                    // send success singnal
+                    res.json({});
                 }
             });
         }
@@ -92,7 +78,7 @@ exports.activate = function(req, res, next) {
         }
         // if the target account not exists
         else if (!tempAccount) {
-            res.status(424).send("Sorry, we can'f find register information of this account.");
+            res.status(404).send("Sorry, we can'f find register information of this account.");
         }
         // if the target account was found
         else {
@@ -113,10 +99,8 @@ exports.activate = function(req, res, next) {
             userObj.save(function(err, user) {
 
                 // handle error
-                if (err) {
-                    if (err.code == 11000) res.status(424).send("This e-mail address already in used, Please use another one.");
-                    else next(err);
-                } else {
+                if (err) next(err);
+                else {
 
                     // remove the temporary account
                     tempAccount.remove();

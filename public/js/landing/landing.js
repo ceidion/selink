@@ -1,22 +1,38 @@
 define([
-    "view/signin",
-    "view/signup"
+    'landing/view/signin',
+    'landing/view/signup'
 ], function(
     SignInView,
     SignUpView
 ) {
 
     // create application instance
-    var landing = new Backbone.Marionette.Application();
+    window.selink = new Backbone.Marionette.Application();
 
     // create regions
-    landing.addRegions({
+    selink.addRegions({
         signInArea: '#sign-in-area',
-        signUpArea: '#sign-up-area'
+        signUpArea: '#sign-up-area',
+        modalArea: '#modal-area'
     });
 
     // initialize application
-    landing.addInitializer(function(options) {
+    selink.addInitializer(function(options) {
+
+        // THIS IS VITAL, change the default behavior of views load template,
+        // or the underscore template won't work
+        Backbone.Marionette.TemplateCache.prototype.loadTemplate = function(templateId) {
+
+            var template = templateId;
+
+            if (!template || template.length === 0) {
+                var msg = "Could not find template: '" + templateId + "'";
+                var err = new Error(msg);
+                err.name = "NoTemplateError";
+                throw err;
+            }
+            return template;
+        };
 
         // switch page with fade effect
         Backbone.Marionette.Region.prototype.open = function(view){
@@ -32,5 +48,5 @@ define([
         this.signUpArea.show(signUpView);
     });
 
-    return landing;
+    return selink;
 });

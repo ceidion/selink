@@ -1,26 +1,27 @@
 require.config({
 
-    baseUrl: '/js/landing',
+    baseUrl: '/js',
 
     paths: {
         // core library
-        jquery: '../lib/jquery-2.0.3.min',
-        'jquery-ui': '../lib/jquery-ui-1.10.3.custom.min',
-        bootstrap: '../lib/bootstrap.min',
-        underscore: '../lib/underscore',
-        backbone: '../lib/backbone',
-        marionette: '../lib/backbone.marionette',
-        'backbone.wreqr': '../lib/backbone.wreqr',
-        'backbone.babysitter': '../lib/backbone.babysitter',
-        text: '../lib/text',
-        templates: 'template',
+        'jquery': 'lib/jquery-2.0.3.min',
+        'jquery-ui': 'lib/jquery-ui-1.10.3.custom.min',
+        'bootstrap': 'lib/bootstrap.min',
+        'underscore': 'lib/underscore',
+        'underscore.string': 'lib/underscore.string.min',
+        'backbone': 'lib/backbone',
+        'marionette': 'lib/backbone.marionette',
+        'backbone.wreqr': 'lib/backbone.wreqr',
+        'backbone.babysitter': 'lib/backbone.babysitter',
+        'text': 'lib/text',
         // core theme
-        ace: '../lib/uncompressed/ace',
-        'ace-extra': '../lib/uncompressed/ace-extra',
-        'ace-element': '../lib/uncompressed/ace-elements',
+        'ace': 'lib/uncompressed/ace',
+        'ace-extra': 'lib/uncompressed/ace-extra',
+        'ace-element': 'lib/uncompressed/ace-elements',
         // validator
-        validate: '../lib/jquery.validate.min',
-        gritter: '../lib/jquery.gritter.min'
+        'validate': 'lib/jquery.validate.min',
+        'gritter': 'lib/jquery.gritter.min',
+        'app': 'landing/landing'
     },
 
     shim: {
@@ -32,6 +33,9 @@ require.config({
         },
         'underscore': {
             exports: '_'
+        },
+        'underscore.string': {
+            deps: ['underscore']
         },
         'backbone': {
             deps: ['jquery', 'underscore'],
@@ -52,10 +56,11 @@ require.config({
         'gritter': {
             deps: ['ace']
         },
-        'landing': {
+        'app': {
             deps: [
                 'jquery-ui',
                 'bootstrap',
+                'underscore.string',
                 'marionette',
                 'ace',
                 'validate',
@@ -65,6 +70,6 @@ require.config({
     }
 });
 
-require(['landing'], function(landing) {
+require(['app'], function(landing) {
     landing.start();
 });
