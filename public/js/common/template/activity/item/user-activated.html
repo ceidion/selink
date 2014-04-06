@@ -1,18 +1,24 @@
 <div class="timeline-info">
-    <i class="timeline-indicator icon-star btn btn-warning "></i>
+    <a href="#profile/<%= obj._owner._id %>" title="<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>">
+        <img alt="" src="<%= obj._owner.photo %>" />
+    </a>
 </div>
 
 <div class="widget-box">
-    <div class="widget-header header-color-blue widget-header-small">
-        <h5 class="smaller"><%= obj.title %></h5>
+    <div class="widget-header header-color-green3 widget-header-small">
+        <h5 class="smaller">
+            <i class="icon-star bigger-110 light-orange"></i>&nbsp;SELinkへようこそ！
+        </h5>
         <span class="widget-toolbar no-border">
             <i class="icon-time bigger-110"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
         </span>
     </div>
     <div class="widget-body">
         <div class="widget-main">
-            <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
-            さんは<%= obj.content %>
+            <a href="#profile/<%= obj._owner._id %>" title="<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>">
+                <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
+            </a>
+            はSELinkを参加しました！
         </div>
     </div>
 </div>

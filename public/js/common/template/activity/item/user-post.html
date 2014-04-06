@@ -1,3 +1,21 @@
+<%
+    var title = "";
+
+    if (obj.type == "user-post") {
+        title = "新しい記事を投稿しました";
+    }
+    else if (obj.type == "user-post-liked") {
+        title = "下記投稿に「いいね！」しました";
+    }
+    else if (obj.type == "user-post-bookmarked") {
+        title = "下記投稿にブックマークを付けました";
+    }
+    else if (obj.type == "user-post-commented") {
+        title = "下記投稿をコメントしました";
+    }
+
+%>
+
 <div class="timeline-info">
     <a href="#profile/<%= obj._owner._id %>"><img alt="" src="<%= obj._owner.photo %>" /></a>
 </div>
@@ -7,7 +25,7 @@
         <h5 class="smaller">
             <i class="icon-edit bigger-110"></i>&nbsp;
             <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
-            さんは<%= obj.title %>
+            は<%= title %>
         </h5>
         <span class="widget-toolbar no-border">
             <i class="icon-time bigger-110"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
@@ -15,13 +33,12 @@
     </div>
     <div class="widget-body">
         <div class="widget-main">
-            <%= obj.content %>
+            <%= obj.target.summary %>
             <div class="widget-toolbox clearfix">
                 <div class="pull-right action-buttons">
                     <div class="space-4"></div>
                     <div>
-                        <a href="#"><i class="icon-heart-empty red bigger-125"></i></a>
-                        <a href="#"><i class="icon-comment-alt light-green bigger-130"></i></a>
+                        <a href="#post/<%= obj.target._id %>"><i class="icon-desktop bigger-110"></i>&nbsp;詳しく読む</a>
                     </div>
                 </div>
             </div>

@@ -114,6 +114,18 @@ define([
                 // selink.userModel.get('friend').pull(data._from._id);
             });
 
+            selink.socket.on('user-post', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: '新しい記事を投稿しました。',
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-success'
+                });
+                // add the notification to collection
+                self.collection.add(data);
+            });
+
             selink.socket.on('user-post-liked', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,

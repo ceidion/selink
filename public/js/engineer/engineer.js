@@ -308,7 +308,8 @@ define([
         });
 
         // initiate web socket
-        this.socket = io.connect('http://localhost:8081');
+        this.socket = io.connect('/');
+
         // web socket handler
         this.socket.on('message', function(data) {
             setTimeout(function() {
@@ -316,6 +317,29 @@ define([
                     title: data.title,
                     text: data.msg,
                     class_name: 'gritter-success'
+                });
+            }, 3000);
+        });
+
+        // web socket handler
+        this.socket.on('user-login', function(data) {
+            setTimeout(function() {
+                $.gritter.add({
+                    title: data.firstName + ' ' + data.lastName,
+                    text: 'オンラインになりました',
+                    image: data.photo,
+                    class_name: 'gritter-success'
+                });
+            }, 3000);
+        });
+
+        // web socket handler
+        this.socket.on('no-session', function(data) {
+            setTimeout(function() {
+                $.gritter.add({
+                    title: 'セッションが切りました',
+                    text: 'お手数ですが、もう一度ログインしてください。',
+                    class_name: 'gritter-error'
                 });
             }, 3000);
         });

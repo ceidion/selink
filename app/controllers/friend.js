@@ -91,21 +91,19 @@ exports.create = function(req, res, next) {
                 else {
                     // populate the notification with request sender's info
                     notification.populate({path:'_from', select: 'firstName lastName photo'}, function(err, noty) {
-
-                        if(err) next(err);
                         // send real time message
-                        sio.sockets.in(req.body._id).emit('user-friend-invited', noty);
+                        if(err) next(err);
+                        else sio.sockets.in(req.body._id).emit('user-friend-invited', noty);
                     });
 
                     // log user's activity
                     Activity.create({
                         _owner: user.id,
                         type: 'user-friend-invited',
-                        title: req.body.firstName + ' ' + req.body.lastName + "さんに友達リクエストを送りました。"
+                        target: req.body._id
                     }, function(err, activity) {
-
-                        if (err) next(err);
                         // send back requested user's info
+                        if (err) next(err);
                         else res.json(req.body);
                     });
                 }
@@ -143,20 +141,19 @@ exports.remove = function(req, res, next) {
                             // populate the notification with request sender's info
                             notification.populate({path:'_from', select: 'firstName lastName photo'}, function(err, noty) {
 
-                                if(err) next(err);
                                 // send real time message
-                                sio.sockets.in(friend.id).emit('user-friend-break', noty);
+                                if(err) next(err);
+                                else sio.sockets.in(friend.id).emit('user-friend-break', noty);
                             });
 
                             // log user's activity
                             Activity.create({
                                 _owner: user.id,
                                 type: 'user-friend-break',
-                                title: friend.firstName + ' ' + friend.lastName + "さんと友達を解除しました。"
+                                target: req.params.friend
                             }, function(err, activity) {
-
-                                if (err) next(err);
                                 // send back requested user's info
+                                if (err) next(err);
                                 else res.json(friend);
                             });
                         }

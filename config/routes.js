@@ -62,6 +62,8 @@ module.exports = function(app, sio) {
 
     // Get jobs (employer only)
     app.get('/jobs', checkLoginStatus, job.index);
+    // Get specific posts
+    app.get('/jobs/:job', checkLoginStatus, job.show);
     // Create jobs
     app.post('/jobs', checkLoginStatus, job.create);
     // Update jobs

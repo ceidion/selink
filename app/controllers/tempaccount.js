@@ -35,11 +35,12 @@ exports.create = function(req, res, next) {
                         res.json(409, {});
                     else next(err);
                 } else {
-                    // // send account-activate mail
-                    // Mailer.sendAccountActiveMail({
-                    //     id: tempAccountObj._id,
-                    //     email: email
-                    // });
+                    
+                    // send account-activate mail
+                    Mailer.accountActive({
+                        id: tempAccount._id,
+                        email: req.body.email
+                    });
 
                     // Account.find({type: "Administrator"}, function(err, admins) {
                     //     if (err) next(err);
@@ -83,8 +84,8 @@ exports.activate = function(req, res, next) {
         // if the target account was found
         else {
 
-            // create real user object and connect it to profile
-            var userObj = new User({
+            // create the new user
+            User.create({
                 email: tempAccount.email,
                 password: tempAccount.password,
                 firstName: tempAccount.firstName,
@@ -93,10 +94,7 @@ exports.activate = function(req, res, next) {
                 type: tempAccount.type,
                 photo: './asset/images/no_photo_male.gif',
                 provider: 'local'
-            }, false);
-
-            // save the new user
-            userObj.save(function(err, user) {
+            }, function(err, user) {
 
                 // handle error
                 if (err) next(err);
@@ -112,9 +110,7 @@ exports.activate = function(req, res, next) {
                     // });
                     Activity.create({
                         _owner: user._id,
-                        type: 'user-activated',
-                        title: "SELinkへようこそ！",
-                        content: "SELinkのアカウントを開通しました。"
+                        type: 'user-activated'
                     }, function(err, activity) {
                         if (err) next(err);
                     });

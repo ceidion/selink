@@ -91,11 +91,9 @@ define([
 
                     } else if (status == 'error') {
 
-                        var error = $.parseJSON(xhr.responseText);
-
                         $.gritter.add({
-                            title: error.title,
-                            text: error.msg,
+                            title: "アカウントが存在しません",
+                            text: "ユーザIDとパースワードを確かめて、もう一度ご入力ください。",
                             class_name: 'gritter-error',
                             sticky: false,
                             before_open: function(){

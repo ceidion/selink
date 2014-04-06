@@ -44,12 +44,18 @@ var SessionSockets = require('session.socket.io'),
 
 sessionSockets.on('connection', function(err, socket, session) {
 
-    socket.join(session.userId);
+    if (session) {
 
-    socket.emit('message', {
-        title: "welcome",
-        msg: "welcome to selink"
-    });
+        socket.join(session.userId);
+
+        socket.emit('message', {
+            title: "welcome",
+            msg: "welcome to selink"
+        });
+
+    } else {
+        socket.emit('no-session');
+    }
 });
 
 // config route

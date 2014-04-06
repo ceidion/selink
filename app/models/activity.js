@@ -18,29 +18,9 @@ var Activity = new Schema({
         required: true
     },
 
-    // title
-    title: {
-        type: String,
-        trim: true,
-        required: true
-    },
-
-    // activity content
-    content: {
-        type: String,
-        trim: true,
-    },
-
-    // link
-    link: {
-        type: String,
-        trim: true,
-    },
-
-    // Publicity of this post
-    publicity: {
-        type: String,
-        trim: true
+    // activity target
+    target: {
+        type: Schema.Types.ObjectId
     },
 
     // Logical Delete flag

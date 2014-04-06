@@ -78,8 +78,13 @@ define([
                 }
             });
 
-            // for create this person's timeline, combine his employments, educations, qulification together
-            var unionHistory = _.union(this.model.get('employments'), this.model.get('educations'), this.model.get('qualifications'));
+            var employments = this.employments ? this.employments.toJSON() : [],
+                educations = this.educations ? this.educations.toJSON() : [],
+                qualifications = this.qualifications ? this.qualifications.toJSON() : [];
+
+            // for create this person's timeline, combine his employments, educations, qualification together
+            var unionHistory = _.union(employments, educations, qualifications);
+
             // filter out the item which do not have time information
             var filterHistory = _.filter(unionHistory, function(history) {
                 return history.startDate || history.acquireDate;
@@ -198,11 +203,11 @@ define([
 
             // post this person's info for friend creation
             this.model.save({
-                _id: this.model.get('_id'),
-                firstName: this.model.get('firstName'),
-                lastName: this.model.get('lastName')
+                _id: this.model.get('_id')
+                // firstName: this.model.get('firstName'),
+                // lastName: this.model.get('lastName')
             }, {
-                url: './users/' + selink.userModel.id + '/friends',
+                url: '/friends',
                 success: function() {
                     // change the button for success info, but won't enable it
                     self.$el.find('.btn-friend')
@@ -227,7 +232,7 @@ define([
 
             // post this person's id for break up
             this.model.destroy({
-                url: './users/' + selink.userModel.id + '/friends/' + this.model.get('_id'),
+                url: '/friends/' + this.model.get('_id'),
                 success: function() {
                     // change the button for success info, but won't enable it
                     self.$el.find('.btn-break')

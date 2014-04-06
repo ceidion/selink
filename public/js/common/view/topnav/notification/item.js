@@ -1,24 +1,20 @@
 define([
-    'text!common/template/topnav/notification/item/user-friend-invited.html',
-    'text!common/template/topnav/notification/item/user-friend-approved.html',
-    'text!common/template/topnav/notification/item/user-friend-declined.html',
-    'text!common/template/topnav/notification/item/user-friend-break.html',
+    'text!common/template/topnav/notification/item/user-friend.html',
     'text!common/template/topnav/notification/item/user-post.html',
-    'text!common/template/topnav/notification/item/user-post-liked.html',
-    'text!common/template/topnav/notification/item/user-post-commented.html',
     'text!common/template/topnav/notification/item/user-job.html',
 ], function(
-    friendInvitedTemplate,
-    friendApprovedTemplate,
-    friendDeclinedTemplate,
-    friendBreakTemplate,
+    friendTemplate,
     postTemplate,
-    postLikedTemplate,
-    postCommentedTemplate,
     jobTemplate
 ) {
 
     return Backbone.Marionette.ItemView.extend({
+
+        userTargetNotification: ['user-friend-invited', 'user-friend-approved', 'user-friend-declined', 'user-friend-break'],
+
+        postTargetNotification: ['user-post', 'user-post-liked', 'user-post-bookmarked', 'user-post-commented'],
+
+        jobTargetNotification: ['user-job'],
 
         tagName: 'li',
 
@@ -33,23 +29,11 @@ define([
 
             var type = this.model.get("type");
 
-            if (type == "user-friend-invited")
-                return friendInvitedTemplate;
-            else if (type == "user-friend-approved")
-                return friendApprovedTemplate;
-            else if (type == "user-friend-declined")
-                return friendDeclinedTemplate;
-            else if (type == "user-friend-break")
-                return friendBreakTemplate;
-            else if (type == "user-post")
+            if (_.indexOf(this.userTargetNotification, type) >= 0)
+                return friendTemplate;
+            else if (_.indexOf(this.postTargetNotification, type) >= 0)
                 return postTemplate;
-            else if (type == "user-post-liked")
-                return postLikedTemplate;
-            else if (type == "user-post-bookmarked")
-                return postLikedTemplate;
-            else if (type == "user-post-commented")
-                return postCommentedTemplate;
-            else if (type == "user-job")
+            else if (_.indexOf(this.jobTargetNotification, type) >= 0)
                 return jobTemplate;
         },
 

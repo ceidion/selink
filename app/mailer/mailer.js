@@ -5,47 +5,35 @@ var path = require('path'),
     nodemailer = require('nodemailer');
 
 // Setup mail transport facility
-var transport = nodemailer.createTransport("SMTP", config['production'].mail);
+var transport = nodemailer.createTransport("SMTP", config['development'].mail);
 
-exports.sendPromotion = function(subscribers, promotion) {
+exports.accountActive = function(recipient) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) console.log(err);
+        if (err) {
+            console.log(err);
+        } else {
 
-        else {
-
-            subscribers.forEach(function(subscriber) {
-
-                template('promotion', {
-
-                    promotion: promotion,
-                    subscriber: subscriber
-
-                }, function(err, html, text) {
-
-                    if (err) console.log(err);
-
-                    else {
-
-                        transport.sendMail({
-                            from: 'Joe <joe@cvbakery.com>',
-                            to: subscriber.email,
-                            subject: promotion.product.title,
-                            html: html
-                        }, function(err, responseStatus) {
-
-                            promotion.update({$addToSet: {mailSent: subscriber.id}}, function(err, promotion) {
-                                if (err) console.log(err);
-                            });
-
-                            if (err) console.log(err);
-                            else {
-                                console.log(responseStatus);
-                            }
-                        });
-                    }
-                });
+            // send account active email
+            template('account-active', recipient, function(err, html, text) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    transport.sendMail({
+                        from: 'SELink <noreply@selink.jp>',
+                        to: recipient.email,
+                        subject: 'SELinkへようこそ！',
+                        html: html,
+                        text: text
+                    }, function(err, responseStatus) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log(responseStatus.message);
+                        }
+                    });
+                }
             });
         }
     });

@@ -21,9 +21,9 @@ define([
             this.$el.find('.btn-friend').button('loading');
 
             this.model.save({
-                _id: this.model.get('_id'),
-                firstName: this.model.get('firstName'),
-                lastName: this.model.get('lastName')
+                _id: this.model.get('_id')
+                // firstName: this.model.get('firstName'),
+                // lastName: this.model.get('lastName')
             }, {
                 url: '/friends',
                 success: function() {

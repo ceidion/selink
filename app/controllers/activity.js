@@ -3,18 +3,20 @@ var request = require('request'),
     Activity = mongoose.model('Activity');
 
 /*
-    Activity Type:
-    1. user-login
-    2. user-logout
-    3. user-friend-invited
-    4. user-friend-approved
-    5. user-friend-declined
-    6. user-friend-break
-    7. user-post
-    8. user-post-liked
-    9. user-post-bookmarked
-    10. user-post-commented
-    11. user-job
+    No. | Activity Type        | Target | Content
+    ------------------------------------------
+    1.  | user-activate        | none   | none
+    2.  | user-login           | none   | none
+    3.  | user-logout          | none   | none
+    4.  | user-friend-invited  | user   | none
+    5.  | user-friend-approved | user   | none
+    6.  | user-friend-declined | user   | none
+    7.  | user-friend-break    | user   | none
+    8.  | user-post            | post   | post summary
+    9.  | user-post-liked      | post   | post summary
+    10. | user-post-bookmarked | post   | post summary
+    11. | user-post-commented  | post   | comment summary
+    12. | user-job             | job    | job name
 */
 
 // Activity index

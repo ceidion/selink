@@ -1,17 +1,29 @@
+<%
+    var title = "";
+
+    if (obj.type == "user-login") {
+        title = "ログインしました";
+    }
+    else if (obj.type == "user-logout") {
+        title = "ログアウトしました";
+    }
+%>
+
 <div class="timeline-info">
-    <img alt="" src="<%= obj._owner.photo %>" />
+    <a href="#profile/<%= obj._owner._id %>" title="<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>">
+        <img alt="" src="<%= obj._owner.photo %>" />
+    </a>
 </div>
 
-<div class="widget-box transparent">
-    <div class="widget-header widget-header-small hidden"></div>
-    <div class="widget-body">
-        <div class="widget-main">
-            <i class="icon-signin bigger-110"></i>&nbsp;
+<div class="widget-box">
+    <div class="widget-header header-color-pink widget-header-small">
+        <h5 class="smaller">
+            <i class="icon-signin bigger-110"></i>
             <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
-            さんは<%= obj.title %>
-            <div class="pull-right">
-                <i class="icon-time bigger-110"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
-            </div>
-        </div>
+            は<%= title %>
+        </h5>
+        <span class="widget-toolbar no-border">
+            <i class="icon-time bigger-110"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
+        </span>
     </div>
 </div>

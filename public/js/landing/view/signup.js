@@ -132,8 +132,8 @@ define([
                 firstName = this.ui.firstName.val(),
                 lastName = this.ui.lastName.val(),
                 email = this.ui.email.val(),
-                password = this.ui.password.val();
-            passwordConf = this.ui.passwordConf.val();
+                password = this.ui.password.val(),
+                passwordConf = this.ui.passwordConf.val();
 
             // clear errors
             this._clearError();

@@ -24,22 +24,9 @@ var Notification = new Schema({
         required: true
     },
 
-    // title
-    title: {
-        type: String,
-        trim: true
-    },
-
-    // notification content
-    content: {
-        type: String,
-        trim: true
-    },
-
-    // link
-    link: {
-        type: String,
-        trim: true
+    // notification target
+    target: {
+        type: Schema.Types.ObjectId
     },
 
     // notification confirmed

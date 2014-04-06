@@ -13,8 +13,14 @@ var Post = new Schema({
         required: true
     },
 
-    // Content
+    // Post content
     content: {
+        type: String,
+        trim: true,
+    },
+
+    // Post summary
+    summary: {
         type: String,
         trim: true,
     },

@@ -30,6 +30,17 @@ exports.index = function(req, res, next) {
         });
 };
 
+// Show single post
+exports.show = function(req, res, next) {
+
+    Job.findById(req.params.job)
+        .where('logicDelete').equals(false)
+        .exec(function(err, posts) {
+            if (err) next(err);
+            else res.json(posts);
+        });
+};
+
 // Create Job
 exports.create = function(req, res, next) {
 
@@ -46,9 +57,7 @@ exports.create = function(req, res, next) {
             Activity.create({
                 _owner: req.user.id,
                 type: 'user-job',
-                title: "新しい案件を公開しました。",
-                content: req.body.name,
-                link: 'user/' + req.user.id + '/posts/' + job._id
+                target: job._id
             }, function(err, activity) {
                 if (err) next(err);
             });

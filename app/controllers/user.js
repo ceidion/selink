@@ -3,21 +3,12 @@ var mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Activity = mongoose.model('Activity');
 
-var msgAuthFailedTitle = "アカウントが存在しません",
-    msgAuthFailed = "ユーザIDとパースワードを確かめて、もう一度ご入力ください。",
-    msgMissAuthInfoTitle = "アカウント情報を入力してください",
-    msgMissAuthInfo = "ログインするには、メールアドレスとパースワード両方ご入力する必要があります。";
-
 // User login
 exports.login = function(req, res, next) {
 
     // do nothing if login info are not enough
-    if (!req.body.email || !req.body.password) {
-        res.status(400).json({
-            title: msgMissAuthInfoTitle,
-            msg: msgMissAuthInfo
-        });
-    }
+    if (!req.body.email || !req.body.password)
+        res.json(400, {});
 
     // look up user info
     User.findOne(req.body, function(err, user) {
@@ -25,29 +16,31 @@ exports.login = function(req, res, next) {
         // pass if error happend
         if (err) next(err);
         // if the account not found, return the fail message
-        else if (!user) {
-            res.status(401).json({
-                title: msgAuthFailedTitle,
-                msg: msgAuthFailed
-            });
-        }
+        else if (!user) res.json(401, {});
         // if account could be found
         else {
+
             // put user's id into session
             req.session.userId = user.id;
 
             // create activity
             Activity.create({
                 _owner: user.id,
-                type: 'user-login',
-                title: "ログインしました。"
+                type: 'user-login'
             }, function(err, activity) {
                 if (err) next(err);
             });
 
-            res.json({
-                msg: "welcome!"
+            user.friends.forEach(function(room) {
+                sio.sockets.in(room).emit('user-login', {
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    photo: user.photo
+                });
             });
+
+            // send success singnal
+            res.json({});
         }
     });
 };
@@ -55,10 +48,10 @@ exports.login = function(req, res, next) {
 // User logout
 exports.logout = function(req, res, next) {
 
+    // create activity
     Activity.create({
         _owner: req.session.userId,
-        type: 'user-logout',
-        title: "ログアウトしました。"
+        type: 'user-logout'
     }, function(err, activity) {
         if (err) next(err);
     });
@@ -157,9 +150,7 @@ exports.updateSubDocument = function(req, res, next) {
                     else res.send(subDoc);
                 });
             } else {
-                res.status(404).json({
-                    msg: "更新失敗しました"
-                });
+                res.json(404, {});
             }
         }
     });
@@ -184,9 +175,7 @@ exports.removeSubDocument = function(req, res, next) {
                     else res.send(removedDoc);
                 });
             } else {
-                res.status(404).json({
-                    msg: "更新失敗しました"
-                });
+                res.json(404, {});
             }
         }
     });

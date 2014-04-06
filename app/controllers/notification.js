@@ -45,9 +45,7 @@ exports.update = function(req, res, next) {
 
         // if notification not exist
         else if (!notification || !req.body.result) {
-            res.status(404).json({
-                msg: "更新失敗しました"
-            });
+            res.json(404, {});
         }
 
         // approve friend invitation
@@ -110,9 +108,18 @@ approve = function(req, res, next, notification) {
 
                                     if(err) next(err);
                                     // send real time message
-                                    sio.sockets.in(updatedFriend.id).emit('user-friend-approved', noty);
+                                    else sio.sockets.in(updatedFriend.id).emit('user-friend-approved', noty);
                                 });
                             }
+                        });
+
+                        // log user's activity
+                        Activity.create({
+                            _owner: req.user.id,
+                            type: 'user-friend-approved',
+                            target: updatedFriend._id
+                        }, function(err) {
+                            if (err) next(err);
                         });
 
                         // mark the notification as confirmed
@@ -121,15 +128,6 @@ approve = function(req, res, next, notification) {
                         notification.save(function(err, confirmedNotification) {
                             if (err) next(err);
                             else res.json(confirmedNotification);
-                        });
-
-                        // log user's activity
-                        Activity.create({
-                            _owner: req.user.id,
-                            type: 'user-friend-approved',
-                            title: updatedFriend.firstName + ' ' + updatedFriend.lastName + "さんの友達リクエストを承認しました。"
-                        }, function(err) {
-                            if (err) next(err);
                         });
                     });
                 }
@@ -163,9 +161,18 @@ decline = function(req, res, next, notification) {
 
                         if(err) next(err);
                         // send real time message
-                        sio.sockets.in(updatedFriend.id).emit('user-friend-declined', noty);
+                        else sio.sockets.in(updatedFriend.id).emit('user-friend-declined', noty);
                     });
                 }
+            });
+
+            // log user's activity
+            Activity.create({
+                _owner: req.user.id,
+                type: 'user-friend-declined',
+                target: updatedFriend._id
+            }, function(err) {
+                if (err) next(err);
             });
 
             // mark the notification as confirmed
@@ -174,15 +181,6 @@ decline = function(req, res, next, notification) {
             notification.save(function(err, confirmedNotification) {
                 if (err) next(err);
                 else res.json(confirmedNotification);
-            });
-
-            // log user's activity
-            Activity.create({
-                _owner: req.user.id,
-                type: 'user-friend-declined',
-                title: updatedFriend.firstName + ' ' + updatedFriend.lastName + "さんの友達リクエストを拒否しました。"
-            }, function(err) {
-                if (err) next(err);
             });
         });
     });

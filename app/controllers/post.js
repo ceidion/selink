@@ -51,31 +51,30 @@ exports.show = function(req, res, next) {
 // Create post
 exports.create = function(req, res, next) {
 
+    // strip out the tags in content
+    var contentStripTag = S(req.body.content).stripTags();
+
+    // if content is longer than 150
+    if (contentStripTag.length > 150) {
+        // cut it in 150
+        contentStripTag = contentStripTag.truncate(150).s;
+    }
+
     // create post
     Post.create({
         _owner: req.user.id,
         content: req.body.content,
+        summary: contentStripTag
     }, function(err, newPost) {
 
         if (err) next(err);
         else {
 
-            // strip out the tags in content
-            var contentStripTag = S(req.body.content).stripTags();
-
-            // if content is longer than 150
-            if (contentStripTag.length > 150) {
-                // cut it in 150
-                contentStripTag = contentStripTag.truncate(150).s;
-            }
-
             // create activity
             Activity.create({
                 _owner: req.user.id,
                 type: 'user-post',
-                title: "新しい記事を投稿しました。",
-                content: contentStripTag,
-                link: 'user/' + req.params.id + '/posts/' + newPost._id
+                target: newPost._id
             }, function(err, activity) {
                 if (err) next(err);
             });
@@ -84,7 +83,7 @@ exports.create = function(req, res, next) {
                 _owner: req.user.friends,
                 _from: req.user.id,
                 type: 'user-post',
-                content: contentStripTag
+                target: newPost._id
             }, function(err, notification) {
                 if (err) next(err);
             });
@@ -175,8 +174,7 @@ exports.like = function(req, res, next){
                         Activity.create({
                             _owner: req.body.liked,
                             type: 'user-post-liked',
-                            title: "いいね！しました。",
-                            link: 'user/' + newPost._owner + '/posts/' + newPost._id
+                            target: newPost._id
                         }, function(err, activity) {
                             if (err) next(err);
                         });
@@ -185,7 +183,8 @@ exports.like = function(req, res, next){
                         Notification.create({
                             _owner: [newPost._owner],
                             _from: req.body.liked,
-                            type: 'user-post-liked'
+                            type: 'user-post-liked',
+                            target: newPost._id
                         }, function(err, notification) {
 
                             if (err) next(err);
@@ -236,8 +235,7 @@ exports.bookmark = function(req, res, next){
                         Activity.create({
                             _owner: req.body.bookmarked,
                             type: 'user-post-bookmarked',
-                            title: "気になるしました。",
-                            link: 'user/' + newPost._owner + '/posts/' + newPost._id
+                            target: newPost._id
                         }, function(err, activity) {
                             if (err) next(err);
                         });
@@ -246,7 +244,8 @@ exports.bookmark = function(req, res, next){
                         Notification.create({
                             _owner: [newPost._owner],
                             _from: req.body.bookmarked,
-                            type: 'user-post-bookmarked'
+                            type: 'user-post-bookmarked',
+                            target: newPost._id
                         }, function(err, notification) {
 
                             if (err) next(err);
@@ -305,8 +304,7 @@ exports.comment = function(req, res, next) {
                         Activity.create({
                             _owner: req.user.id,
                             type: 'user-post-commented',
-                            title: "コメントしました。",
-                            link: 'user/' + newPost._owner + '/posts/' + newPost._id
+                            target: newPost._id
                         }, function(err, activity) {
                             if (err) next(err);
                         });
@@ -315,7 +313,8 @@ exports.comment = function(req, res, next) {
                         Notification.create({
                             _owner: [newPost._owner],
                             _from: req.user.id,
-                            type: 'user-post-commented'
+                            type: 'user-post-commented',
+                            target: newPost._id
                         }, function(err, notification) {
 
                             if (err) next(err);
