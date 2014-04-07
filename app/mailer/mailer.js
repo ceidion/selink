@@ -55,7 +55,7 @@ exports.resetPassword = function(recipient) {
                     transport.sendMail({
                         from: 'SELink <noreply@selink.jp>',
                         to: recipient.email,
-                        subject: 'SELinkのパースワードを更新',
+                        subject: 'SELinkパースワード更新案内',
                         html: html,
                         text: text
                     }, function(err, responseStatus) {
