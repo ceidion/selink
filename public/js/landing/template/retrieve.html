@@ -9,12 +9,15 @@
 
     <div class="modal-body overflow-visible">
 
-        <div class="alert alert-info">
-            <strong><i class="icon-question-sign bigger-110"></i>&nbsp;&nbsp;パースワードを忘れたら・・・</strong>
-            <br />
-            <br />
-            <p>お手数ですが、ご登録時に使用したメールアドレスを教えていただければ、こちらからご専用のパースワードリセット案内メール情報を該当アドレスに送信させていただきます。メールの内容を沿って新しいパースワードを設定することができます。</p>
+        <strong class="blue"><i class="icon-question-sign bigger-110"></i>&nbsp;&nbsp;パースワードを忘れたら・・・</strong>
+        <br />
+        <p><small>お手数ですが、ご登録時に使用したメールアドレスを教えていただければ、こちらからご専用のパースワードリセット案内メール情報を該当アドレスに送信させていただきます。メールの内容を沿って新しいパースワードを設定することができます。</small></p>
+        <br />
+
+        <div class="alert alert-success" style="display: none;">
+            ご協力ありがとうございます、お客様専用のパースワード変更案内はご提示していただいたメールアドレスに送信しました。お届くまで少々時間かかることがありますので、ご了承ください。また、ご利用しているメールサービスに迷惑メールと認識される可能性がありますので、長く間に届かなかった場合は、迷惑メールフォルダもご確認ください。
         </div>
+        <div class="alert alert-danger" style="display: none;"></div>
 
         <div class="form-group">
             <div class="input-group">
@@ -26,7 +29,10 @@
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-sm btn-success btn-save"><i class="icon-ok"></i> 送信</button>
+        <button class="btn btn-sm btn-success btn-send"
+                data-loading-text="<i class='icon-spinner icon-spin white bigger-125'></i>&nbsp;&nbsp;処理中・・・">
+                <i class="icon-ok"></i> 送信
+        </button>
         <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> 取消</button>
     </div>
 </div>

@@ -5,6 +5,7 @@ var tag = require('../app/controllers/tag'),
     issue = require('../app/controllers/issue'),
     friend = require('../app/controllers/friend'),
     address = require('../app/controllers/address'),
+    resetPs = require('../app/controllers/resetpassword'),
     activity = require('../app/controllers/activity'),
     userEvent = require('../app/controllers/event'),
     tempaccount = require('../app/controllers/tempaccount'),
@@ -21,6 +22,13 @@ module.exports = function(app, sio) {
     app.post('/signup', tempaccount.create);
     // Account activate
     app.get('/activate/:id', tempaccount.activate);
+
+    // Retrieve password request
+    app.post('/retrieve', resetPs.create);
+    // Retrieve password page
+    app.get('/retrieve/:id', resetPs.show);
+    // Reset password
+    app.put('/retrieve/:id', resetPs.update);
 
     // User Login
     app.post('/login', user.login);

@@ -38,3 +38,35 @@ exports.accountActive = function(recipient) {
         }
     });
 };
+
+exports.resetPassword = function(recipient) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) {
+            console.log(err);
+        } else {
+
+            // send account active email
+            template('password-retrieve', recipient, function(err, html, text) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    transport.sendMail({
+                        from: 'SELink <noreply@selink.jp>',
+                        to: recipient.email,
+                        subject: 'SELinkのパースワードを更新',
+                        html: html,
+                        text: text
+                    }, function(err, responseStatus) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log(responseStatus.message);
+                        }
+                    });
+                }
+            });
+        }
+    });
+};

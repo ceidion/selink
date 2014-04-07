@@ -165,7 +165,7 @@ define([
                     if (colSpan < 1) colSpan = 1;
                     colSpan = Math.min(colSpan, props.cols);
 
-                    console.log("outerWidth:" + $this.outerWidth(true) + " -> columnWidth: " + props.columnWidth + " -> colspan: " + colSpan);
+                    // console.log("outerWidth:" + $this.outerWidth(true) + " -> columnWidth: " + props.columnWidth + " -> colspan: " + colSpan);
 
                     if (colSpan === 1) {
                         // if brick spans only one column, just like singleMode
@@ -211,7 +211,7 @@ define([
                 var x = this.selinkMasonry.columnWidth * shortCol,
                 y = minimumY;
 
-                console.log("placement X: " + x + ", Y: " + y);
+                // console.log("placement X: " + x + ", Y: " + y);
 
                 this._pushPosition( $brick, x, y );
 
@@ -308,7 +308,8 @@ define([
         });
 
         // initiate web socket
-        this.socket = io.connect('http://localhost:8081');
+        this.socket = io.connect('/');
+
         // web socket handler
         this.socket.on('message', function(data) {
             setTimeout(function() {
@@ -316,6 +317,29 @@ define([
                     title: data.title,
                     text: data.msg,
                     class_name: 'gritter-success'
+                });
+            }, 3000);
+        });
+
+        // web socket handler
+        this.socket.on('user-login', function(data) {
+            setTimeout(function() {
+                $.gritter.add({
+                    title: data.firstName + ' ' + data.lastName,
+                    text: 'オンラインになりました',
+                    image: data.photo,
+                    class_name: 'gritter-success'
+                });
+            }, 3000);
+        });
+
+        // web socket handler
+        this.socket.on('no-session', function(data) {
+            setTimeout(function() {
+                $.gritter.add({
+                    title: 'セッションが切りました',
+                    text: 'お手数ですが、もう一度ログインしてください。',
+                    class_name: 'gritter-error'
                 });
             }, 3000);
         });
