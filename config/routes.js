@@ -40,8 +40,8 @@ module.exports = function(app, sio) {
         res.render('./' + req.user.type + '/index', req.user);
     });
 
-    // Get activities
-    app.get('/activities', checkLoginStatus, activity.index);
+    // Get news
+    app.get('/newsfeed', checkLoginStatus, user.newsfeed);
 
     // Get notification
     app.get('/notifications', checkLoginStatus, notification.index);
@@ -50,26 +50,27 @@ module.exports = function(app, sio) {
 
     // Get posts
     app.get('/posts', checkLoginStatus, post.index);
+    // Get new posts (for home)
+    app.get('/posts/news', checkLoginStatus, post.news);
     // Get specific posts
     app.get('/posts/:post', checkLoginStatus, post.show);
     // Create post
     app.post('/posts', checkLoginStatus, post.create);
     // Update post
     app.patch('/posts/:post', checkLoginStatus, post.update);
-    // like a post
+    // Like a post
     app.patch('/posts/:post/like', checkLoginStatus, post.like);
-    // bookmark a post
+    // Bookmark a post
     app.patch('/posts/:post/bookmark', checkLoginStatus, post.bookmark);
     // Remove post
     app.delete('/posts/:post', checkLoginStatus, post.remove);
-    // comment a post
+    // Comment a post
     app.post('/posts/:post/comments', checkLoginStatus, post.comment);
-
-    // Get new posts (for home)
-    // app.get('/posts', checkLoginStatus, post.home);
 
     // Get jobs (employer only)
     app.get('/jobs', checkLoginStatus, job.index);
+    // Get new jobs (for home)
+    app.get('/jobs/news', checkLoginStatus, job.news);
     // Get specific posts
     app.get('/jobs/:job', checkLoginStatus, job.show);
     // Create jobs
@@ -84,9 +85,6 @@ module.exports = function(app, sio) {
     app.delete('/jobs/:job', checkLoginStatus, job.remove);
     // Comment a job
     app.post('/jobs/:job/comments', checkLoginStatus, job.create);
-
-    // Get new jobs (for home)
-    // app.get('/jobs', checkLoginStatus, job.home);
 
     // Introduce friend
     app.get('/people', checkLoginStatus, friend.introduce);
@@ -118,6 +116,9 @@ module.exports = function(app, sio) {
     app.patch('/users/:id/:sub/:subid', checkLoginStatus, user.updateSubDocument);
     // Remove nested collection item
     app.delete('/users/:id/:sub/:subid', checkLoginStatus, user.removeSubDocument);
+
+    // Get activities
+    app.get('/activities', checkLoginStatus, activity.index);
 
     // Show tags
     app.get('/tags', checkLoginStatus, tag.index);

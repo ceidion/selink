@@ -2,18 +2,36 @@ define([
     'text!employer/template/home/main.html',
     'common/collection/base',
     'common/Model/job',
+    'common/Model/post',
     'common/view/post/item',
     'common/view/job/item'
 ], function(
     template,
     BaseCollection,
     JobModel,
+    PostModel,
     PostItemView,
     JobItemView
 ) {
 
-    var JobsCollection = BaseCollection.extend({
-        model: JobModel
+    var NewsFeedCollection = BaseCollection.extend({
+
+        url: '/newsfeed',
+
+        model: function(attrs, options) {
+
+            if (_.has(attrs, 'expiredDate')) {
+                return new JobModel(attrs, options);
+            } else {
+                return new PostModel(attrs, options);
+            }
+        },
+
+        comparator: function(item) {
+            // sort by createDate
+            var date = moment(item.get('createDate'));
+            return 0 - Number(date.valueOf());
+        }
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -29,10 +47,10 @@ define([
 
         getItemView: function(item) {
 
-            if (item.collection == this.postsCollection)
-                return PostItemView;
-            else if (item.collection == this.jobsCollection)
+            if (item.has('expiredDate'))
                 return JobItemView;
+            else
+                return PostItemView;
         },
 
         // Events
@@ -41,41 +59,36 @@ define([
         },
 
         collectionEvents: {
-            'sync': 'reIsotope'
+            // 'sync': 'reIsotope',
+            'sort': 'reIsotope',
         },
 
         // Initializer
         initialize: function() {
 
-            this.collection = new BaseCollection(null, {
-                comparator: function(item) {
-                    // sort by createDate
-                    var date = moment(item.get('createDate'));
-                    return Number(date.valueOf());
-                }
-            });
-            this.postsCollection = new BaseCollection(null, {document: this.model});
-            this.jobsCollection = new JobsCollection(null, {document: this.model});
+            this.collection = new NewsFeedCollection();
+            this.collection.fetch();
 
-            var self = this;
+            // this.postsCollection = new PostsCollection();
+            // this.jobsCollection = new JobsCollection();
 
-            this.postsCollection.fetch({
-                url: '/posts',
-                success: function(collection, response, options) {
-                    self.collection.add(self.postsCollection.models);
-                    self.collection.sort();
-                    self.reIsotope();
-                }
-            });
+            // var self = this;
 
-            this.jobsCollection.fetch({
-                url: '/jobs',
-                success: function(collection, response, options) {
-                    self.collection.add(self.jobsCollection.models);
-                    self.collection.sort();
-                    self.reIsotope();
-                }
-            });
+            // this.postsCollection.fetch({
+            //     url: '/posts/news',
+            //     success: function(collection, response, options) {
+
+            //         // self.collection.add(self.postsCollection.models);
+
+            //         self.jobsCollection.fetch({
+            //             url: '/jobs/news',
+            //             success: function(collection, response, options) {
+            //                 self.collection.add(_.union(self.jobsCollection.models, self.postsCollection.models));
+            //             }
+            //         });
+            //     }
+            // });
+
         },
 
         // After render
@@ -93,10 +106,12 @@ define([
 
             var self = this;
 
+            this.render();
+
             this.$el.find('.item-container').imagesLoaded(function() {
                 self.$el.find('.item-container').isotope({
                     layoutMode: 'selinkMasonry',
-                    itemSelector : '.post-item, .job-item',
+                    itemSelector : '.isotope-item',
                     resizable: false
                 });
             });

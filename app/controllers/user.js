@@ -1,6 +1,9 @@
-var mongoose = require('mongoose'),
+var _ = require('underscore'),
+    mongoose = require('mongoose'),
     util = require('util'),
     User = mongoose.model('User'),
+    Post = mongoose.model('Post'),
+    Job = mongoose.model('Job'),
     Activity = mongoose.model('Activity');
 
 // User login
@@ -179,6 +182,37 @@ exports.removeSubDocument = function(req, res, next) {
             }
         }
     });
+};
+
+exports.newsfeed = function(req, res, next) {
+
+    // page number
+    var page = req.query.page || 0;
+
+    Post.find()
+        .where('logicDelete').equals(false)
+        .populate('_owner', 'firstName lastName photo')
+        .populate('comments._owner', 'firstName lastName photo')
+        .sort('-createDate')
+        .skip(20*page)  // skip n page
+        .limit(20)
+        .exec(function(err, posts) {
+            if (err) next(err);
+            else {
+
+                Job.find()
+                    .where('logicDelete').equals(false)
+                    .where('expiredDate').gt(new Date())
+                    .populate('_owner', 'firstName lastName photo')
+                    .sort('-createDate')
+                    .skip(20*page)  // skip n page
+                    .limit(20)
+                    .exec(function(err, jobs) {
+                        if (err) next(err);
+                        res.json(_.union(jobs, posts));
+                    });
+            }
+        });
 };
 
 exports.import = function(req, res, next) {

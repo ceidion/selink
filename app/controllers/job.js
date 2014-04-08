@@ -116,7 +116,7 @@ exports.remove = function(req, res, next) {
     });
 };
 
-exports.home = function(req, res, next) {
+exports.news = function(req, res, next) {
 
     Job.find()
         .where('logicDelete').equals(false)

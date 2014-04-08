@@ -134,8 +134,8 @@ exports.remove = function(req, res, next) {
     });
 };
 
-// Get post (for home)
-exports.home = function(req, res, next) {
+// Get latest post
+exports.news = function(req, res, next) {
 
     Post.find()
         .where('logicDelete').equals(false)
