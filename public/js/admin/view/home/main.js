@@ -1,53 +1,63 @@
 define([
-    'text!admin/template/home/main.html'
-], function(pageTemplate) {
+    'text!employer/template/home/main.html',
+    'common/view/composite-isotope',
+    'common/collection/base',
+    'common/model/job',
+    'common/model/post',
+    'common/view/post/item',
+    'common/view/job/item'
+], function(
+    template,
+    BaseView,
+    BaseCollection,
+    JobModel,
+    PostModel,
+    PostItemView,
+    JobItemView
+) {
 
-    // PageView is the biggest frame of the application
-    var PageView = Backbone.Marionette.ItemView.extend({
+    var NewsFeedCollection = BaseCollection.extend({
 
-        // Template
-        template: pageTemplate,
+        url: '/newsfeed',
 
-        className: "row",
+        model: function(attrs, options) {
 
-        // Events
-        events: {
-            'click #logoutBtn': 'onLogout',
-            'click': 'onClick'
+            if (_.has(attrs, 'expiredDate')) {
+                return new JobModel(attrs, options);
+            } else {
+                return new PostModel(attrs, options);
+            }
         },
 
-        // Regions
-        regions: {
-            header: '#header',
-            content: '#content',
-            footer: '#footer'
+        comparator: function(item) {
+            // sort by createDate
+            var date = moment(item.get('createDate'));
+            return 0 - Number(date.valueOf());
+        }
+    });
+
+    return BaseView.extend({
+
+        // Template
+        template: template,
+
+        // item view
+        getItemView: function(item) {
+
+            if (item.has('expiredDate'))
+                return JobItemView;
+            else
+                return PostItemView;
         },
 
         // Initializer
         initialize: function() {
 
-            // for slide animation effect change the default
-            // behavior of show view on content region
-            // this.content.open = function(view) {
-            //     this.$el.hide();
-            //     this.$el.html(view.el);
-            //     this.$el.fadeIn();
-            // };
-        },
+            this.collection = new NewsFeedCollection();
 
-        // After render
-        onRender: function() {
+            // call super initializer
+            BaseView.prototype.initialize.apply(this);
+        }
 
-            // this.listenTo(vent, 'logout:sessionTimeOut', this.doLogout);
-
-        },
-
-        // After show
-        onShow: function() {
-            // move in the page component
-            // this.onPartScreen();
-        },
     });
-
-    return PageView;
 });

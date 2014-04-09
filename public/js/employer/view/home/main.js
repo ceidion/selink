@@ -1,12 +1,14 @@
 define([
     'text!employer/template/home/main.html',
+    'common/view/composite-isotope',
     'common/collection/base',
-    'common/Model/job',
-    'common/Model/post',
+    'common/model/job',
+    'common/model/post',
     'common/view/post/item',
     'common/view/job/item'
 ], function(
     template,
+    BaseView,
     BaseCollection,
     JobModel,
     PostModel,
@@ -34,17 +36,12 @@ define([
         }
     });
 
-    return Backbone.Marionette.CompositeView.extend({
+    return BaseView.extend({
 
         // Template
         template: template,
 
-        // Class name
-        // className: "row",
-
-        // item view container
-        itemViewContainer: '.item-container',
-
+        // item view
         getItemView: function(item) {
 
             if (item.has('expiredDate'))
@@ -53,72 +50,14 @@ define([
                 return PostItemView;
         },
 
-        // Events
-        events: {
-
-        },
-
-        collectionEvents: {
-            // 'sync': 'reIsotope',
-            'sort': 'reIsotope',
-        },
-
         // Initializer
         initialize: function() {
 
             this.collection = new NewsFeedCollection();
-            this.collection.fetch();
 
-            // this.postsCollection = new PostsCollection();
-            // this.jobsCollection = new JobsCollection();
-
-            // var self = this;
-
-            // this.postsCollection.fetch({
-            //     url: '/posts/news',
-            //     success: function(collection, response, options) {
-
-            //         // self.collection.add(self.postsCollection.models);
-
-            //         self.jobsCollection.fetch({
-            //             url: '/jobs/news',
-            //             success: function(collection, response, options) {
-            //                 self.collection.add(_.union(self.jobsCollection.models, self.postsCollection.models));
-            //             }
-            //         });
-            //     }
-            // });
-
-        },
-
-        // After render
-        onRender: function() {
-
-        },
-
-        // After show
-        onShow: function() {
-
-        },
-
-        // re-isotope after collection get synced
-        reIsotope: function() {
-
-            var self = this;
-
-            this.render();
-
-            this.$el.find('.item-container').imagesLoaded(function() {
-                self.$el.find('.item-container').isotope({
-                    layoutMode: 'selinkMasonry',
-                    itemSelector : '.isotope-item',
-                    resizable: false
-                });
-            });
-        },
-
-        shiftColumn: function(event, view) {
-            this.$el.isotope('selinkShiftColumn', view.el);
+            // call super initializer
+            BaseView.prototype.initialize.apply(this);
         }
+
     });
 });

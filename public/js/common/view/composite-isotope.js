@@ -92,6 +92,8 @@ define([], function() {
 
             var self = this;
 
+            // this.render();
+
             // use imageLoaded plugin
             this.$el.find('.isotope').imagesLoaded(function() {
                 // re-isotope

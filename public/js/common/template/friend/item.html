@@ -1,3 +1,14 @@
 <a href="#profile/<%= obj._id %>" style="margin: 5px;">
     <img alt="" src="<%= obj.photo %>" style="min-width: 70px; max-width: 70px;"/>
+    <div class="tags">
+    <% if (obj.type == "employer") { %>
+        <span class="label-holder">
+            <span class="label label-success arrowed">営業担当</span>
+        </span>
+    <% } else if (obj.type == "admin") { %>
+        <span class="label-holder">
+            <span class="label label-warning arrowed">管理者</span>
+        </span>
+    <% } %>
+    </div>
 </a>
