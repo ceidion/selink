@@ -15,7 +15,7 @@ define(['text!admin/template/common/sidenav.html',], function(template) {
 
         onShow: function() {
             // this.$el.addClass('animated fadeInLeft');
-            // ace.handle_side_menu($);
+            ace.handle_side_menu($);
         },
 
         activeMenu: function(event) {

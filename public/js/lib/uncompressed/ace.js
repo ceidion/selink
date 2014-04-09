@@ -33,7 +33,8 @@ ace.handle_side_menu = function($) {
 	//opening submenu
 	$('.nav-list').on(ace.click_event, function(e){
 
-		console.log('nav-on');
+		$('.nav-list').find('.active').removeClass('active');
+
 		//check to see if we have clicked on an element which is inside a .dropdown-toggle element?!
 		//if so, it means we should toggle a submenu
 		var link_element = $(e.target).closest('a');
@@ -54,6 +55,9 @@ ace.handle_side_menu = function($) {
 					if( e.target != text && !$.contains(text , e.target) )//not clicking on the text or its children
 					  return false;
 			}
+
+			$(e.target).closest('li').addClass('active');
+			$(e.target).closest('li').parent().parent().addClass('active');
 
 			return;
 		}
@@ -82,6 +86,7 @@ ace.handle_side_menu = function($) {
 		if($minimized && $(sub.parentNode.parentNode).hasClass('nav-list')) return false;
 
 		$(sub).slideToggle(200).parent().toggleClass('open');
+		$(sub.parentNode).addClass('active');
 		return false;
 	 })
 }
