@@ -104,6 +104,13 @@ define([], function() {
                     selinkMasonry: {
                       cornerStampSelector: '.corner-stamp'
                     },
+                    getSortData: {
+                        createDate: function($elem) {
+                            return $elem.find('.widget-box').data('create-date');
+                        }
+                    },
+                    sortBy: 'createDate',
+                    sortAscending: false
                 });
             });
         },

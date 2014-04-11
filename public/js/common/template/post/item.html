@@ -1,4 +1,4 @@
-<div class="widget-box">
+<div class="widget-box" data-create-date="<%= moment(obj.createDate).valueOf() %>">
     <div class="widget-header widget-header-flat">
         <a href="#profile/<%= obj._owner._id %>" title="<%- obj._owner.firstName %>">
             <img class="avatar" src="<%= obj._owner.photo %>">
@@ -59,14 +59,21 @@
             </div>
             <% } %>
 
-            <%= obj.content %>
+            <div class="content">
+                <%= obj.content %>
+            </div>
 
             <br/>
             <br/>
 
             <div class="inline btn btn-xs btn-link btn-detail">
-                <i class="icon-desktop bigger-110"></i>&nbsp;
-                <span>詳しく読む</span>
+                <% if (obj.isMine) { %>
+                    <i class="icon-pencil bigger-110"></i>&nbsp;
+                    <span>編集</span>
+                <% } else { %>
+                    <i class="icon-desktop bigger-110"></i>&nbsp;
+                    <span>詳しく読む</span>
+                <% } %>
             </div>
 
             <div class="pull-right">

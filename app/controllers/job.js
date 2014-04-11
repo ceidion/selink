@@ -21,6 +21,7 @@ exports.index = function(req, res, next) {
 
     query.where('_owner').equals(req.user.id)
         .where('logicDelete').equals(false)
+        .populate('_owner', 'firstName lastName photo')
         .skip(20*page)  // skip n page
         .limit(20)
         .sort('-createDate')
@@ -76,7 +77,7 @@ exports.create = function(req, res, next) {
                     // populate the respond notification with user's info
                     notification.populate({
                         path:'_from',
-                        select: '_id firstName lastName photo'
+                        select: 'firstName lastName photo'
                     }, function(err, noty) {
                         if(err) next(err);
                         // send real time message
@@ -96,6 +97,8 @@ exports.create = function(req, res, next) {
 exports.update = function(req, res, next) {
 
     // TODO: check ownership
+
+    console.log("message##############");
 
     var newJob = _.omit(req.body, '_id');
 

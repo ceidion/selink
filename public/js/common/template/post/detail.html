@@ -2,7 +2,28 @@
 
     <div class="row modal-body overflow-visible">
         <div class="col-sm-12 col-md-8">
-            <%= obj.content %>
+
+            <% if (obj.isMine) { %>
+            <div class="wysiwyg-editor" style="height: 500px;">
+                <%= obj.content %>
+            </div>
+            <% } else { %>
+                <%= obj.content %>
+            <% } %>
+
+            <% if (obj.isMine) { %>
+            <div class="alert alert-danger clearfix" style="display: none;">
+                <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
+                この投稿を削除します、よろしいですか？
+                <br />
+                <br />
+                <p>
+                    <button class="btn btn-sm btn-warning btn-remove-cancel pull-right">取消</button>
+                    <button class="btn btn-sm btn-danger btn-remove-comfirm pull-right">削除</button>
+                </p>
+            </div>
+            <% } %>
+
         </div>
         <div class="col-sm-12 col-md-4">
 
@@ -71,6 +92,10 @@
             </div>
         <% } %>
 
+        <% if (obj.isMine) { %>
+        <button class="btn btn-sm btn-success btn-save"><i class="icon-save"></i> 保存</button>
+        <button class="btn btn-sm btn-danger btn-remove"><i class="icon-trash"></i> 削除</button>
+        <% } %>
         <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> 閉じる</button>
     </div>
 </div>

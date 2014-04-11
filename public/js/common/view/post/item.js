@@ -1,15 +1,14 @@
 define([
     'text!common/template/post/item.html',
     'text!common/template/post/detail.html',
-    'text!common/template/post/detail-owner.html',
     'common/collection/base',
     'common/view/post/comment'
 ], function(
     defaultTemplate,
     detailTemplate,
-    detailOwnerTemplate,
     BaseCollection,
-    ItemView) {
+    ItemView
+) {
 
     return Backbone.Marionette.CompositeView.extend({
 
@@ -19,8 +18,8 @@ define([
         // template
         getTemplate: function() {
 
-            if (this.options.modal && this.model.get('isMine'))
-                return detailOwnerTemplate;
+            // if (this.options.modal && this.model.get('isMine'))
+            //     return detailOwnerTemplate;
             if (this.options.modal)
                 return detailTemplate;
             else
@@ -35,8 +34,10 @@ define([
 
         // ui
         ui: {
+            contentArea: '.content',
             editArea: '.wysiwyg-editor',
             alertArea: '.alert',
+            saveBtn: '.btn-save',
             likeBtn: '.btn-like',
             bookmarkBtn: '.btn-bookmark',
             commentArea: '.dialogs',
@@ -47,6 +48,7 @@ define([
 
         // events
         events: {
+            'click .btn-save': 'onSave',
             'click .btn-remove': 'showAlert',
             'click .btn-remove-cancel': 'hideAlert',
             'click .btn-remove-comfirm': 'onRemove',
@@ -59,8 +61,19 @@ define([
             'click .btn-comment': 'onComment',
             'click .btn-cancel': 'closeComment',
             'click .btn-show': 'showAllComment',
+            'keyup .wysiwyg-editor': 'enableSave',
             'mouseover': 'toggleMenuIndicator',
             'mouseout': 'toggleMenuIndicator'
+        },
+
+        modelEvents: {
+            'change:content': 'renderContent',
+            'change:liked': 'renderLike',
+            'change:bookmarked': 'renderBookmark',
+        },
+
+        collectionEvents: {
+            'add': 'renderComments',
         },
 
         itemEvents: {
@@ -178,8 +191,7 @@ define([
                     self.$el.find('.btn-forbid').closest('li').toggleClass('hidden');
                     self.trigger("shiftColumn");
                 },
-                // do not re-isotope whole collection, that will cause image flicker
-                reIsotope: false,
+                reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
                 patch: true,
                 wait: true
             });
@@ -197,66 +209,99 @@ define([
             selink.modalArea.$el.modal('show');
         },
 
-        // like this posts
-        onLike: function() {
+        // change the status of save button
+        enableSave: function() {
 
-            var self = this;
+            // get user input
+            var input = this.ui.editArea.cleanHtml();
+
+            // if user input is not empty
+            if (input && !_.str.isBlank(input)) {
+                // enable the post button
+                this.ui.saveBtn.removeClass('disabled');
+            } else {
+                // disable ths post button
+                this.ui.saveBtn.addClass('disabled');
+            }
+        },
+
+        onSave: function() {
 
             this.model.save({
-                liked: selink.userModel.get('_id')
+                content: this.ui.editArea.cleanHtml()
             }, {
-                url: '/posts/' + this.model.get('_id') + '/like',
-                success: function() {
-                    // update the liked number
-                    self.ui.likeBtn
-                        .find('span')
-                        .empty()
-                        .text(self.model.get('liked').length);
-                    // flip the icon and mark this post as liked
-                    self.ui.likeBtn
-                        .find('i')
-                        .removeClass('icon-heart-empty')
-                        .addClass('icon-heart')
-                        .slFlip();
-                    // remove like button, can't like it twice
-                    self.ui.likeBtn.removeClass('btn-like');
+                success: function(model, response, options) {
+                    selink.modalArea.$el.modal('hide');
                 },
-                // do not re-isotope whole collection, that will cause image flicker
-                reIsotope: false,
+                reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
                 patch: true,
                 wait: true
             });
         },
 
+        renderContent: function() {
+            this.ui.contentArea.empty().html(this.model.get('content'));
+            this.trigger("shiftColumn");
+        },
+
+        // like this posts
+        onLike: function() {
+
+            this.model.save({
+                liked: selink.userModel.get('_id')
+            }, {
+                url: '/posts/' + this.model.get('_id') + '/like',
+                reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
+                patch: true,
+                wait: true
+            });
+        },
+
+        renderLike: function() {
+
+            // update the liked number
+            this.ui.likeBtn
+                .find('span')
+                .empty()
+                .text(this.model.get('liked').length);
+            // flip the icon and mark this post as liked
+            this.ui.likeBtn
+                .find('i')
+                .removeClass('icon-heart-empty')
+                .addClass('icon-heart')
+                .slFlip();
+            // remove like button, can't like it twice
+            this.ui.likeBtn.removeClass('btn-like');
+        },
+
         // Bookmark this posts
         onBookmark: function() {
-
-            var self = this;
 
             this.model.save({
                 bookmarked: selink.userModel.get('_id')
             }, {
                 url: '/posts/' + this.model.get('_id') + '/bookmark',
-                success: function() {
-                    // update the bookmark number
-                    self.ui.bookmarkBtn
-                        .find('span')
-                        .empty()
-                        .text(self.model.get('bookmarked').length);
-                    // flip the icon and mark this post as bookmark
-                    self.ui.bookmarkBtn
-                        .find('i')
-                        .removeClass('icon-star-empty')
-                        .addClass('icon-star')
-                        .slFlip();
-                    // remove bookmark button, can't bookmark it twice
-                    self.ui.bookmarkBtn.removeClass('btn-bookmark');
-                },
-                // do not re-isotope whole collection, that will cause image flicker
-                reIsotope: false,
+                reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
                 patch: true,
                 wait: true
             });
+        },
+
+        renderBookmark: function() {
+
+            // update the bookmark number
+            this.ui.bookmarkBtn
+                .find('span')
+                .empty()
+                .text(this.model.get('bookmarked').length);
+            // flip the icon and mark this post as bookmark
+            this.ui.bookmarkBtn
+                .find('i')
+                .removeClass('icon-star-empty')
+                .addClass('icon-star')
+                .slFlip();
+            // remove bookmark button, can't bookmark it twice
+            this.ui.bookmarkBtn.removeClass('btn-bookmark');
         },
 
         // open the comment area
@@ -321,6 +366,10 @@ define([
             });
         },
 
+        renderComments: function() {
+            this.trigger("shiftColumn");
+        },
+
         // display all comments
         showAllComment: function() {
 
@@ -336,6 +385,6 @@ define([
         toggleMenuIndicator: function() {
             this.ui.menuToggler.toggleClass('hidden');
         }
-    });
 
+    });
 });
