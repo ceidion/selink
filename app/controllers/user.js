@@ -194,8 +194,8 @@ exports.newsfeed = function(req, res, next) {
         .populate('_owner', 'firstName lastName photo')
         .populate('comments._owner', 'firstName lastName photo')
         .sort('-createDate')
-        .skip(10*page)  // skip n page
-        .limit(10)
+        .skip(20*page)  // skip n page
+        .limit(20)
         .exec(function(err, posts) {
             if (err) next(err);
             else {
@@ -205,8 +205,8 @@ exports.newsfeed = function(req, res, next) {
                     .where('expiredDate').gt(new Date())
                     .populate('_owner', 'firstName lastName photo')
                     .sort('-createDate')
-                    .skip(10*page)  // skip n page
-                    .limit(10)
+                    .skip(20*page)  // skip n page
+                    .limit(20)
                     .exec(function(err, jobs) {
                         if (err) next(err);
                         res.json(_.union(jobs, posts));

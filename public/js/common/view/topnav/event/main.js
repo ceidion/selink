@@ -1,14 +1,16 @@
 define([
     'text!common/template/topnav/event/main.html',
     'common/collection/base',
-    'common/view/topnav/event/item'
+    'common/view/topnav/event/item',
+    'common/view/topnav/event/empty'
 ], function(
     template,
     BaseCollection,
-    ItemView
+    ItemView,
+    EmptyView
 ) {
 
-    var EventsCollection = BaseCollection.extend({
+    var Events = BaseCollection.extend({
 
         url: '/events'
     });
@@ -26,6 +28,10 @@ define([
         // item view
         itemView: ItemView,
 
+        itemViewContainer: '.dropdown-body',
+
+        emptyView: EmptyView,
+
         // collection events
         collectionEvents: {
             'add': 'updateBadge',
@@ -39,17 +45,8 @@ define([
             if (moment(itemView.model.get('start')).isBefore(moment()))
                 return;
 
-            var $menu = this.$el.find('.dropdown-menu');
-
-            // event menu has max 5 items, so the menu
-            // itself should has no more than 7 items (include header + footer)
-            if ($menu.children().size() >= 7)
-                $menu.find('li:nth-last-child(2)').slideUp(function(){
-                    $(this).remove();
-                });
-
             // insert sub view before dropdown menu's footer (this is imply a order of items)
-            this.$el.find('.dropdown-footer').before(itemView.el);
+            this.$el.find('.dropdown-body').prepend(itemView.el);
         },
 
         // initializer
@@ -59,7 +56,7 @@ define([
 
             this.model = new Backbone.Model();
 
-            this.collection = new EventsCollection();
+            this.collection = new Events();
 
             this.collection.fetch({
                 success: function() {
@@ -83,11 +80,11 @@ define([
                 e.stopPropagation();
             });
 
-            // if there are future events
-            if (this.model.get('eventsNum') > 0) {
-                // let the icon jump
-                this.$el.find('.icon-tasks').addClass('icon-animated-vertical');
-            }
+            // make dropdown menu scrollable
+            this.$el.find('.dropdown-body').slimScroll({
+                height: 300,
+                railVisible:true
+            });
         },
 
         // update the number badge when collection changed
@@ -109,15 +106,20 @@ define([
             else if ($badge.length === 0)
                 // create badge and show it
                 $('<span class="badge badge-primary">' + futureEvents + '</span>')
-                    .appendTo(this.$el.find('.dropdown-toggle')).slFlip();
+                    .appendTo(this.$el.find('.dropdown-toggle')).slFlipInY();
             // or
-            else{
-                $badge.empty().text(futureEvents);
+            else
                 // update badge
-                $badge.slFlip(null, function() {
-                    $badge.removeClass('flip');
+                $badge.slFlipOutY(null, function() {
+                    $badge.empty().text(futureEvents).removeClass('flipOutY').slFlipInY();
                 });
-            }
+
+            // update notification number on title
+            this.$el.find('.title-num').empty().text(futureEvents);
+
+            if (futureEvents > 0)
+                // let the icon swing
+                this.$el.find('.icon-tasks').addClass('icon-animated-vertical');
 
         }
     });

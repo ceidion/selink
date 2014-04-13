@@ -1,4 +1,5 @@
-var request = require('request'),
+var Mailer = require('../mailer/mailer.js'),
+    request = require('request'),
     mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Activity = mongoose.model('Activity'),
@@ -128,6 +129,11 @@ approve = function(req, res, next, notification) {
                         notification.save(function(err, confirmedNotification) {
                             if (err) next(err);
                             else res.json(confirmedNotification);
+                        });
+
+                        Mailer.friendApprove({
+                            from: req.user,
+                            email: updatedFriend.email
                         });
                     });
                 }

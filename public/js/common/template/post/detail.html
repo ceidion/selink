@@ -1,31 +1,18 @@
 <div class="modal-content">
 
     <div class="row modal-body overflow-visible">
-        <div class="col-sm-12 col-md-8">
+        <div class="col-sm-12 col-md-8 post-content">
 
             <% if (obj.isMine) { %>
-            <div class="wysiwyg-editor" style="height: 500px;">
+            <div class="wysiwyg-editor">
                 <%= obj.content %>
             </div>
             <% } else { %>
                 <%= obj.content %>
             <% } %>
 
-            <% if (obj.isMine) { %>
-            <div class="alert alert-danger clearfix" style="display: none;">
-                <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
-                この投稿を削除します、よろしいですか？
-                <br />
-                <br />
-                <p>
-                    <button class="btn btn-sm btn-warning btn-remove-cancel pull-right">取消</button>
-                    <button class="btn btn-sm btn-danger btn-remove-comfirm pull-right">削除</button>
-                </p>
-            </div>
-            <% } %>
-
         </div>
-        <div class="col-sm-12 col-md-4">
+        <div class="col-sm-12 col-md-4 post-comment">
 
             <div class="widget-box transparent">
                 <div class="widget-header">
@@ -68,34 +55,47 @@
 
     <div class="modal-footer">
 
-        <% if (obj.isLiked) { %>
-            <div class="inline btn-like red tooltip-error pull-left">
-                <i class="icon-heart bigger-130"></i>
-                <span><%= obj.liked.length %></span>
-            </div>
-        <% } else { %>
-            <div class="inline btn-like red tooltip-error pull-left">
-                <i class="icon-heart-empty bigger-130"></i>
-                <span><%= obj.liked.length %></span>
-            </div>
-        <% } %>
+        <div class="pull-left" style="margin-top: 10px;">        
+            <% if (obj.isLiked) { %>
+                <div class="inline btn-like red tooltip-error">
+                    <i class="icon-heart bigger-130"></i>
+                    <span><%= obj.liked.length %></span>
+                </div>
+            <% } else { %>
+                <div class="inline btn-like red tooltip-error">
+                    <i class="icon-heart-empty bigger-130"></i>
+                    <span><%= obj.liked.length %></span>
+                </div>
+            <% } %>
 
-        <% if (obj.isMarked) { %>
-            <div class="inline btn-bookmark orange tooltip-warning pull-left">
-                <i class="icon-star bigger-130"></i>
-                <span><%= obj.bookmarked.length %></span>
-            </div>
-        <% } else { %>
-            <div class="inline btn-bookmark orange tooltip-warning pull-left">
-                <i class="icon-star-empty bigger-130"></i>
-                <span><%= obj.bookmarked.length %></span>
-            </div>
+            <% if (obj.isMarked) { %>
+                <div class="inline btn-bookmark orange tooltip-warning">
+                    <i class="icon-star bigger-130"></i>
+                    <span><%= obj.bookmarked.length %></span>
+                </div>
+            <% } else { %>
+                <div class="inline btn-bookmark orange tooltip-warning">
+                    <i class="icon-star-empty bigger-130"></i>
+                    <span><%= obj.bookmarked.length %></span>
+                </div>
+            <% } %>
+        </div>
+
+        <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> 閉じる</button>
+        <% if (obj.isMine) { %>
+        <button class="btn btn-sm btn-danger btn-remove"><i class="icon-trash"></i> 削除</button>
+        <button class="btn btn-sm btn-success btn-save"><i class="icon-save"></i> 保存</button>
         <% } %>
 
         <% if (obj.isMine) { %>
-        <button class="btn btn-sm btn-success btn-save"><i class="icon-save"></i> 保存</button>
-        <button class="btn btn-sm btn-danger btn-remove"><i class="icon-trash"></i> 削除</button>
+        <div class="alert alert-danger clearfix" style="display: none;">
+            <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
+            この投稿を削除します、よろしいですか？
+            <div class="pull-right">            
+                <button class="btn btn-sm btn-warning btn-remove-cancel">取消</button>
+                <button class="btn btn-sm btn-danger btn-remove-comfirm">削除</button>
+            </div>
+        </div>
         <% } %>
-        <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> 閉じる</button>
     </div>
 </div>

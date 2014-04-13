@@ -95,6 +95,11 @@ define([
             if (this.options.modal)
                 this.$el.removeClass(this.className).addClass('modal-dialog post-modal');
 
+            // if (!this.options.modal && this.model.get('liked').length >= 1) {
+            //     this.$el.removeClass('col-sm-6 col-lg-4').addClass('col-sm-12 col-lg-8');
+            //     this.$el.find('.widget-header').addClass('header-color-orange');
+            // }
+
             // if the post owner's id is user id
             if (this.model.get('_owner')._id === selink.userModel.id)
             // mark as my post
@@ -173,7 +178,13 @@ define([
 
         // remove post
         onRemove: function() {
+
             this.trigger('remove');
+
+            // if this is a detail view
+            if (this.options.modal)
+                // hide the modal dialog
+                selink.modalArea.$el.modal('hide');
         },
 
         // forbid/allow comment
@@ -200,10 +211,16 @@ define([
         // show detail view
         showDetail: function() {
 
+            // detail use the same view just like this
+            // but pass an custom option "modal: true", view will switch template by this
             var detailView = new this.constructor({
                 model: this.model,
                 modal: true
             });
+
+            // detail also has a "remove" button, emit remove event
+            // for achive the same behavior of composite-isotope view, have delegate it to this view
+            this.listenTo(detailView, 'remove', this.onRemove);
 
             selink.modalArea.show(detailView);
             selink.modalArea.$el.modal('show');

@@ -82,14 +82,6 @@ define(['common/view/composite-empty'], function(EmptyView) {
                 // if save success
                 success: function(model, response, options) {
 
-                    var currentItems = self.collection.document.get(self.itemName),
-                        updatedItem = _.find(currentItems, function(item) {
-                            return item._id == response._id;
-                        });
-
-                    if (!updatedItem)
-                        self.collection.document.set(self.itemName, _.union(currentItems, response));
-
                 },
 
                 // if other errors happend
@@ -105,9 +97,7 @@ define(['common/view/composite-empty'], function(EmptyView) {
                     });
                 },
                 // use patch
-                patch: true,
-                // silently sycn with server
-                silent: true
+                patch: true
             });
         },
 
@@ -125,13 +115,6 @@ define(['common/view/composite-empty'], function(EmptyView) {
                     if (self.collection.length < self.itemLimit)
                         // show the add button
                         self.ui.addBtn.fadeIn('fast');
-
-                    var currentItems = self.collection.document.get(self.itemName),
-                        newItems = _.reject(currentItems, function(item) {
-                            return item._id == response._id;
-                        });
-
-                    self.collection.document.set(self.itemName, newItems);
                 },
 
                 // if other errors happend
@@ -145,10 +128,7 @@ define(['common/view/composite-empty'], function(EmptyView) {
                         sticky: true,
                         class_name: 'gritter-error gritter-center',
                     });
-                },
-
-                // use patch
-                patch: true
+                }
             });
         }
 

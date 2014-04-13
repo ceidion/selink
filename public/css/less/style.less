@@ -291,6 +291,32 @@ img {
 
     width: 80%;
 
+    // height: 100%;
+    // max-height: 100%;
+
+    // .modal-content, .modal-body, .post-content, .post-comment {
+    //   height: 100%;
+    //   max-height: 100%;
+
+    .wysiwyg-editor, .widget-box {
+      height: 500px;
+      max-height: 500px;
+    }
+    // }
+
+    .modal-footer {
+      // position: absolute;
+      // bottom: 0px;
+      // left: 0px;
+      // right: 0px;
+
+      .alert-danger {
+        margin-bottom: 0px;
+        margin-top: 10px;
+        text-align: left;
+      }
+    }
+
     input[name="name"] {
       font-size: 1.5em;
     }
@@ -341,15 +367,21 @@ img {
   top: 50px;
 }
 
-// expand effect for event on calendar
-#external-events > div,.fc-event-container > div {
+// // expand effect for event on calendar
+// #external-events > div,.fc-event-container > div {
 
-  .transition(~"all 0.2s");
+//   .transition(~"all 0.2s");
 
-  &:hover {
-    text-decoration:none;
-    .transform(~"scale(1.1)");
-    opacity:0.85;
+//   &:hover {
+//     text-decoration:none;
+//     .transform(~"scale(1.1)");
+//     opacity:0.85;
+//   }
+// }
+
+#external-events > div {
+  :hover {
+    cursor: move;
   }
 }
 
@@ -358,6 +390,11 @@ img {
 
   .sl-event-memo {
     padding: 10px 15px;
+    max-height: 100px;
+    img {
+      max-height: 100px;
+      max-width: 100px;
+    }
   }
 }
 

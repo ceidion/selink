@@ -41,11 +41,6 @@ define([
         // override appendHtml
         appendHtml: function(collectionView, itemView, index) {
 
-            // event menu has max 5 items, so the menu
-            // itself should has no more than 7 items (include header + footer)
-            // if (this.$el.find('.dropdown-menu').children().size() >= 7)
-            //     return;
-
             // insert sub view before dropdown menu's footer (this is imply a order of items)
             this.$el.find('.dropdown-body').prepend(itemView.el);
         },

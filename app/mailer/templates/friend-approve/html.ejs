@@ -281,6 +281,84 @@
                 max-width:560px;
             }
 
+            .widget-box {
+                padding: 0;
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                margin: 3px 0;
+            }
+
+            .widget-header {
+                background: #F7F7F7;
+                -moz-box-sizing: content-box;
+                box-sizing: content-box;
+                position: relative;
+                min-height: 38px;
+                background-repeat: repeat-x;
+                color: #669fc7 !important;
+                border: 1px solid #CCC;
+                border-bottom: 1px solid #DDD;
+                padding-left: 12px;
+            }
+
+            .widget-header h4 {
+                font-size: 18px;
+                font-weight: normal;
+                font-family: 'Hiragino Kaku Gothic ProN',Meiryo,'MS PGothic',Sans-serif;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                color: #669fc7 !important;
+            }
+
+            .avatar {
+                max-width: 100px;
+                max-height: 100px;
+                margin-top: 8px;
+                margin-bottom: 8px;
+                margin-right: 12px;
+                float: left;
+            }
+
+            .widget-body {
+                border: 1px solid #CCC;
+                border-top: none;
+                background-color: #FFF;
+            }
+
+            .widget-main {
+                padding: 12px;
+            }
+
+            .widget-toolbox {
+                background-color: #EEE;
+                padding: 8px;
+                border-top: 1px solid #CCC;
+                clear: both;
+            }
+
+            .btn-friend {
+                display: inline-block;
+                color: #FFF !important;
+                text-shadow: 0 -1px 0 rgba(0,0,0,0.25) !important;
+                background-image: none !important;
+                border: 5px solid #FFF;
+                border-radius: 0;
+                box-shadow: none !important;
+                cursor: pointer;
+                vertical-align: middle;
+                margin: 0;
+                position: relative;
+                background-color: #6fb3e0 !important;
+                border-color: #6fb3e0;
+                width: 100%;
+                padding: 6px 0px;
+                font-size: 14px;
+                font-weight: normal;
+                line-height: 1.428571429;
+                text-align: center;
+                white-space: nowrap;
+            }
+
             /* ========== Footer Styles ========== */
 
             /**
@@ -424,6 +502,84 @@
                     /*@editable*/ line-height:125% !important;
                 }
 
+                .widget-box {
+                    padding: 0;
+                    -webkit-box-shadow: none;
+                    box-shadow: none;
+                    margin: 3px 0;
+                }
+
+                .widget-header {
+                    background: #F7F7F7;
+                    -moz-box-sizing: content-box;
+                    box-sizing: content-box;
+                    position: relative;
+                    min-height: 38px;
+                    background-repeat: repeat-x;
+                    color: #669fc7 !important;
+                    border: 1px solid #CCC;
+                    border-bottom: 1px solid #DDD;
+                    padding-left: 12px;
+                }
+
+                .widget-header h4 {
+                    font-size: 18px;
+                    font-weight: normal;
+                    font-family: 'Hiragino Kaku Gothic ProN',Meiryo,'MS PGothic',Sans-serif;
+                    margin-top: 10px;
+                    margin-bottom: 10px;
+                    color: #669fc7 !important;
+                }
+
+                .avatar {
+                    max-width: 100px;
+                    max-height: 100px;
+                    margin-top: 8px;
+                    margin-bottom: 8px;
+                    margin-right: 12px;
+                    float: left;
+                }
+
+                .widget-body {
+                    border: 1px solid #CCC;
+                    border-top: none;
+                    background-color: #FFF;
+                }
+
+                .widget-main {
+                    padding: 12px;
+                }
+
+                .widget-toolbox {
+                    background-color: #EEE;
+                    padding: 8px;
+                    border-top: 1px solid #CCC;
+                    clear: both;
+                }
+
+                .btn-friend {
+                    display: inline-block;
+                    color: #FFF !important;
+                    text-shadow: 0 -1px 0 rgba(0,0,0,0.25) !important;
+                    background-image: none !important;
+                    border: 5px solid #FFF;
+                    border-radius: 0;
+                    box-shadow: none !important;
+                    cursor: pointer;
+                    vertical-align: middle;
+                    margin: 0;
+                    position: relative;
+                    background-color: #6fb3e0 !important;
+                    border-color: #6fb3e0;
+                    width: 100%;
+                    padding: 6px 0px;
+                    font-size: 14px;
+                    font-weight: normal;
+                    line-height: 1.428571429;
+                    text-align: center;
+                    white-space: nowrap;
+                }
+
                 /* ======== Footer Styles ======== */
 
                 /**
@@ -453,7 +609,7 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templatePreheader">
                                         <tr>
                                             <td valign="top" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:20px;" mc:edit="preheader_content00">
-                                                ご利用ありがとうございます、SELinkユーザパースワード変更の案内です。
+                                                <%= from.firstName %>&nbsp;<%= from.lastName %>さんはお友達要請が承認しました。
                                             </td>
                                             <!-- *|IFNOT:ARCHIVE_PAGE|* -->
                                             <td valign="top" width="180" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:0;" mc:edit="preheader_content01">
@@ -472,7 +628,7 @@
                                         <tr>
                                             <td valign="top" class="headerContent" style="color: #fff;">
                                                 <h1>SELink</h1>
-                                                <h3>パースワード再設定</h3>
+                                                <h3>お友達要請が承認されました</h3>
                                             </td>
                                             <td style="width: 10%; height: 100%; background: #42a8e1;"></td>
                                             <td style="width: 10%; height: 100%; background: #fcac6f;"></td>
@@ -488,16 +644,23 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody">
                                         <tr>
                                             <td valign="top" class="bodyContent" mc:edit="body_content">
-                                                SELinkをご利用いただき、誠にありがとうございます。お客様のパースワード変更請求を受けまして、ご専用の変更ページを用意いたしました。下記リンクをクリックしたら、該当ページへ遷移して、パースワードを再設定することができます。
-                                                <br />
-                                                <br />
-                                                <h4>下記ご専用の認証リンクをクリックしたら、パースワードを変更する手続きに進めます。</h4>
-                                                <a href="http://localhost:8081/retrieve/<%= id %>">
-                                                    ここをクリックして、SELinkのお客様パースワードを再設定します。
-                                                </a>
-                                                <br />
-                                                <br />
-                                                ※上記リンクは、お客様SELinkでパースワード変更を申請する度に発行されます。発行から１時間以内有効となります。１時間以上お手続きを済まなかった場合は、お手数ですが、再度SELinkのホームページでパースワード変更を申請してください。
+                                                <div class="widget-box">
+                                                    <div class="widget-header widget-header-flat">
+                                                        <a href="#profile/<%= from._id %>"><img class="avatar" src="http://localhost:8081/<%= from.photo %>"></a>
+                                                        <h4>
+                                                            <strong><%= from.firstName %>&nbsp;<%= from.lastName %></strong>
+                                                        </h4>
+                                                    </div>
+
+                                                    <div class="widget-body">
+                                                        <div class="widget-main"><%= from.bio %></div>
+                                                        <div class="widget-toolbox">
+                                                            <button class="btn-friend">
+                                                                メッセージ
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     </table>

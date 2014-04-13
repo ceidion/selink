@@ -270,8 +270,7 @@ define([
                 // if error happend
                 error: function(model, xhr, options) {
 
-                },
-                silent: true
+                }
             });
         },
 

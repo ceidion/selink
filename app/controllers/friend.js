@@ -1,4 +1,5 @@
-var mongoose = require('mongoose'),
+var Mailer = require('../mailer/mailer.js'),
+    mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
@@ -94,6 +95,16 @@ exports.create = function(req, res, next) {
                         // send real time message
                         if(err) next(err);
                         else sio.sockets.in(req.body._id).emit('user-friend-invited', noty);
+                    });
+
+                    // send friend-invitation mail
+                    User.findById(req.body._id, 'email', function(err, target){
+                        if (err) next(err);
+                        else
+                            Mailer.friendInvitation({
+                                from: user,
+                                email: target.email
+                            });
                     });
 
                     // log user's activity

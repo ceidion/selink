@@ -1,32 +1,35 @@
 define([
     'text!common/template/people/detail.html',
+    'common/collection/base',
+    'common/model/post',
+    'common/view/composite-isotope',
     'common/view/post/item',
     'common/view/people/history/main',
     'common/view/friend/friend'
 ], function(
     template,
+    BaseCollection,
+    PostModel,
+    BaseView,
     ItemView,
     HistoryView,
     FriendsView
 ) {
 
-    var PostsCollection = Backbone.Collection.extend({
+    var PostsCollection = BaseCollection.extend({
 
-        model: Backbone.Model.extend({idAttribute: "_id"}),
+        model: PostModel,
 
         url: function() {
-            return this.document.url() + '/posts';
+            return '/posts?user=' + this.document.id;
         }
     });
 
     // profile view
-    return Backbone.Marionette.CompositeView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
-
-        // item view container
-        itemViewContainer: '.board',
 
         // item view
         itemView: ItemView,
@@ -35,17 +38,6 @@ define([
         events: {
             'click .btn-friend': 'onAddFriend',
             'click .btn-break': 'onBreakFriend'
-        },
-
-        // collection events
-        collectionEvents: {
-            // isotope this page after collection get sync
-            'sync': 'reIsotope',
-        },
-
-        // item view events
-        itemEvents: {
-            'comment:change': 'shiftColumn'
         },
 
         // initializer
@@ -63,24 +55,14 @@ define([
                 this.model.set('isInvited', true, {silent:true});
 
             // create post collection
-            this.collection = new PostsCollection();
-            // relate post collection with this person
-            this.collection.document = this.model;
-            // get his posts
-            this.collection.fetch({
-                // after initialize the collection
-                success: function() {
-                    // change the behavior of add sub view
-                    self.appendHtml = function(collectionView, itemView, index) {
-                        // prepend new post and reIsotope
-                        self.$el.find('.board').prepend(itemView.$el).isotope('reloadItems');
-                    };
-                }
-            });
+            this.collection = new PostsCollection(null, {document: this.model});
 
-            var employments = this.employments ? this.employments.toJSON() : [],
-                educations = this.educations ? this.educations.toJSON() : [],
-                qualifications = this.qualifications ? this.qualifications.toJSON() : [];
+            // call super initializer
+            BaseView.prototype.initialize.apply(this);
+
+            var employments = this.model.employments ? this.model.employments.toJSON() : [],
+                educations = this.model.educations ? this.model.educations.toJSON() : [],
+                qualifications = this.model.qualifications ? this.model.qualifications.toJSON() : [];
 
             // for create this person's timeline, combine his employments, educations, qualification together
             var unionHistory = _.union(employments, educations, qualifications);
@@ -177,22 +159,6 @@ define([
             this.rm.close();
         },
 
-        // re-isotope after collection get synced
-        reIsotope: function() {
-
-            var self = this;
-
-            // use imagesLoaded plugin
-            this.$el.find('.board').imagesLoaded(function() {
-                // re-isotope
-                self.$el.find('.board').isotope({
-                    layoutMode: 'selinkMasonry',
-                    itemSelector : '.info-item, .post-item',
-                    resizable: false
-                });
-            });
-        },
-
         // add this person as friend
         onAddFriend: function() {
 
@@ -247,10 +213,7 @@ define([
                     }
                 }
             });
-        },
-
-        shiftColumn: function(event, view) {
-            this.$el.find('.board').isotope('selinkShiftColumn', view.el);
         }
+
     });
 });

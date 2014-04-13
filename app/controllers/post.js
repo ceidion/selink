@@ -11,6 +11,7 @@ var _ = require('underscore'),
 exports.index = function(req, res, next) {
 
     var category = req.query.category || null, // category of request
+        user = req.query.user || null,
         page = req.query.page || 0;            // page number
 
     var query = Post.find();
@@ -18,6 +19,9 @@ exports.index = function(req, res, next) {
     // if requested for 'my friends' posts
     if (category == "friend") {
         query.where('_owner').in(req.user.friends);
+    // or requested for 'someone' posts
+    } else if (user) {
+        query.where('_owner').equals(user);
     // or requested for 'my' posts
     } else {
         query.where('_owner').equals(req.user.id);

@@ -26,6 +26,21 @@ define([
             });
 
             this.model.set({'completeness': this.model.completeness()}, {silent: true});
+
+            this.listenTo(this.model.qualifications, 'change', this.updateCompleteness);
+            this.listenTo(this.model.qualifications, 'remove', this.updateCompleteness);
+
+            this.listenTo(this.model.languages, 'change', this.updateCompleteness);
+            this.listenTo(this.model.languages, 'remove', this.updateCompleteness);
+
+            this.listenTo(this.model.skills, 'change', this.updateCompleteness);
+            this.listenTo(this.model.skills, 'remove', this.updateCompleteness);
+
+            this.listenTo(this.model.educations, 'change', this.updateCompleteness);
+            this.listenTo(this.model.educations, 'remove', this.updateCompleteness);
+            
+            this.listenTo(this.model.employments, 'change', this.updateCompleteness);
+            this.listenTo(this.model.employments, 'remove', this.updateCompleteness);
         },
 
         onRender: function() {

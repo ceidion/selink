@@ -30,11 +30,11 @@ define([], function() {
                         // if the item is newly created one
                         if (index === 0)
                             // prepend new item and reIsotope
-                            this.$el.find('.isotope').prepend(itemView.$el).isotope('reloadItems');
+                            self.$el.find('.isotope').prepend(itemView.$el).isotope('reloadItems');
                         // if the item from infinit scroll loading
                         else
                             // append item and reIsotope
-                            this.$el.find('.isotope').imagesLoaded(function() {
+                            self.$el.find('.isotope').imagesLoaded(function() {
                                 self.$el.find('.isotope').append(itemView.$el).isotope('appended', itemView.$el);
                             });
                     };
@@ -69,10 +69,10 @@ define([], function() {
                     self.$el.find('.isotope').infinitescroll('destroy');
                     self.$el.find('.isotope').data('infinitescroll', null);
                 } else
-                    // add data to collection
+                    // add data to collection, don't forget parse the json object
                     // this will trigger 'add' event and will call on
                     // the appendHtml method that changed on initialization
-                    self.collection.add(json);
+                    self.collection.add(json, {parse: true});
             });
         },
 
