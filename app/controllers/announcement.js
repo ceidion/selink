@@ -26,7 +26,12 @@ exports.create = function(req, res, next) {
     Announcement.create(req.body, function(err, announcement) {
 
         if (err) next(err);
-        else res.json(announcement);
+        else {
+            announcement.populate('_owner', 'firstName lastName photo', function(err, announcement){
+                if (err) next(err);
+                else res.json(announcement);
+            });
+        }
     });
 };
 

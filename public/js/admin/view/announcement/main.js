@@ -2,12 +2,14 @@ define([
     'text!admin/template/announcement/main.html',
     'common/view/composite-isotope',
     'common/collection/base',
-    'admin/view/announcement/item'
+    'admin/view/announcement/item',
+    'admin/view/announcement/edit'
 ], function(
     template,
     BaseView,
     BaseCollection,
-    ItemView
+    ItemView,
+    EditView
 ) {
 
     var Announcements = BaseCollection.extend({
@@ -25,12 +27,12 @@ define([
 
         // ui
         ui: {
-            btnPost: '.btn-post'
+            createBtn: '.btn-create'
         },
 
         // events
         events: {
-            'click .btn-post': 'onPost',
+            'click .btn-create': 'showCreateModal',
         },
 
         // initializer
@@ -40,6 +42,11 @@ define([
                 'edit': 'showEditorModal'
             });
 
+            this.collectionEvents = _.extend({}, this.collectionEvents, {
+                'change': 'updateAnnouncement',
+                'add': 'updateAnnouncement'
+            });
+
             // create posts collection
             this.collection = new Announcements();
 
@@ -47,37 +54,49 @@ define([
             BaseView.prototype.initialize.apply(this);
         },
 
-        // change the status of post button
-        enablePost: function() {
+        // show editor for new announcement
+        showCreateModal: function() {
 
-            // get user input
-            var input = this.ui.newPost.cleanHtml();
-
-            // if user input is not empty
-            if (input && !_.str.isBlank(input)) {
-                // enable the post button
-                this.ui.btnPost.removeClass('disabled');
-            } else {
-                // disable ths post button
-                this.ui.btnPost.addClass('disabled');
-            }
-        },
-
-        // new post
-        onPost: function() {
-
-            // create new post
-            this.collection.create({
-                content: this.ui.newPost.html()
-            }, {
-                wait: true,
-                at: 0  // new post at index 0, impile this post is newly create one
+            var editView = new EditView({
+                collection: this.collection,
             });
 
-            // clear input area
-            this.ui.newPost.html("");
-            // disable post button (can't post empty)
-            this.ui.btnPost.addClass('disabled');
+            selink.modalArea.show(editView);
+            selink.modalArea.$el.modal('show');
+        },
+
+        // save/update announcement
+        updateAnnouncement: function(announcement) {
+
+            var self = this;
+
+            // if this is a new announcement
+            if (announcement.isNew()) {
+
+                // create the announcement
+                this.collection.create(announcement, {
+                    // announcement saved successful
+                    success: function(model, response, options) {
+                        selink.modalArea.$el.modal('hide');
+                    },
+                    silent: true,
+                    wait: true,
+                    at: 0
+                });
+
+            } else {
+
+                // update the announcement
+                announcement.save(null, {
+                    // announcement saved successful
+                    success: function(model, response, options) {
+                        selink.modalArea.$el.modal('hide');
+                    },
+                    silent: true,
+                    patch: true,
+                    wait: true
+                });
+            }
         }
 
     });

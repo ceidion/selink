@@ -4,6 +4,7 @@ var _ = require('underscore'),
     User = mongoose.model('User'),
     Post = mongoose.model('Post'),
     Job = mongoose.model('Job'),
+    Announcement = mongoose.model('Announcement'),
     Activity = mongoose.model('Activity');
 
 // User login
@@ -209,7 +210,19 @@ exports.newsfeed = function(req, res, next) {
                     .limit(20)
                     .exec(function(err, jobs) {
                         if (err) next(err);
-                        res.json(_.union(jobs, posts));
+                        else {
+
+                            Announcement.find()
+                                .where('logicDelete').equals(false)
+                                .where('expiredDate').gt(new Date())
+                                .sort('-createDate')
+                                .skip(20*page)  // skip n page
+                                .limit(20)
+                                .exec(function(err, announcements) {
+                                    if (err) next(err);
+                                    else res.json(_.union(jobs, posts, announcements));
+                                });
+                        }
                     });
             }
         });
