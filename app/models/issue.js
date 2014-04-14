@@ -22,6 +22,12 @@ var Issue = new Schema({
     // Comments
     comments: [Comment],
 
+    // Status
+    status: {
+        type: String,
+        trim: true,
+    },
+
     // Logical Delete flag
     logicDelete: {
         type: Boolean,

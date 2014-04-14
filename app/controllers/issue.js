@@ -4,11 +4,19 @@ var _ = require('underscore'),
 
 exports.index = function(req, res, next) {
 
-    Issue.find({logicDelete: false}, function(err, issues) {
+    // page number
+    var page = req.query.page || 0;
 
-        if (err) next(err);
-        else res.json(issues);
-    });
+    Issue.find()
+        .where('logicDelete').equals(false)
+        .populate('_owner', 'firstName lastName photo')
+        .skip(20*page)  // skip n page
+        .limit(20)
+        .sort('-createDate')
+        .exec(function(err, issues) {
+            if (err) next(err);
+            else res.json(issues);
+        });
 };
 
 exports.create = function(req, res, next) {

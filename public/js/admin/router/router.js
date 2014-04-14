@@ -13,6 +13,8 @@ define([], function() {
             "calendar": "showCalendarView",
             "activity": "showActivityView",
             "skill": "showSkillsView",
+            "announcement": "showAnnouncementView",
+            "issue": "showIssueView",
         }
     });
 

@@ -12,6 +12,8 @@ define([
     'common/view/calendar/main',
     'common/view/activity/main',
     'admin/view/data/skill/main',
+    'admin/view/announcement/main',
+    'admin/view/issue/main',
     'common/model/user',
     'common/model/post'
 ], function(
@@ -28,6 +30,8 @@ define([
     CalendarView,
     ActivityView,
     SkillsView,
+    AnnouncementView,
+    IssueView,
     UserModel,
     PostModel
 ) {
@@ -170,6 +174,22 @@ define([
             selink.skillsView = new SkillsView();
             // show main page
             selink.pageContent.show(selink.skillsView);
+        },
+
+        showAnnouncementView: function() {
+
+            // create home view
+            selink.announcementView = new AnnouncementView();
+            // show main page
+            selink.pageContent.show(selink.announcementView);
+        },
+
+        showIssueView: function() {
+
+            // create home view
+            selink.issueView = new IssueView();
+            // show main page
+            selink.pageContent.show(selink.issueView);
         },
 
     });

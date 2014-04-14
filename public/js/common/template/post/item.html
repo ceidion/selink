@@ -4,7 +4,7 @@
             <img class="avatar" src="<%= obj._owner.photo %>">
         </a>
 
-        <% if (obj.isMine) { %>
+        <% if (obj.isMine || obj.isAdmin) { %>
         <div class="widget-toolbar no-border hidden">
             <a class="yellow dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-chevron-down"></i>
@@ -41,7 +41,7 @@
     <div class="widget-body">
         <div class="widget-main">
 
-            <% if (obj.isMine) { %>
+            <% if (obj.isMine || obj.isAdmin) { %>
             <div class="alert alert-danger clearfix" style="display: none;">
                 <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
                 この投稿を削除します、よろしいですか？
@@ -62,7 +62,7 @@
             <br/>
 
             <div class="inline btn btn-xs btn-link btn-detail">
-                <% if (obj.isMine) { %>
+                <% if (obj.isMine || obj.isAdmin) { %>
                     <i class="icon-pencil bigger-110"></i>&nbsp;
                     <span>編集</span>
                 <% } else { %>

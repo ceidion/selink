@@ -107,6 +107,13 @@ define([
                     silent: true
                 });
 
+            // if the viewer is administrator
+            if (selink.userModel.get('type') === "admin")
+            // mark his user type
+                this.model.set('isAdmin', true, {
+                    silent: true
+                });
+
             // if user's id exists in post's liked list
             if (_.indexOf(this.model.get('liked'), selink.userModel.get('_id')) >= 0)
             // mark as liked

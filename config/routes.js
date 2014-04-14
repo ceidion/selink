@@ -9,7 +9,8 @@ var tag = require('../app/controllers/tag'),
     activity = require('../app/controllers/activity'),
     userEvent = require('../app/controllers/event'),
     tempaccount = require('../app/controllers/tempaccount'),
-    notification = require('../app/controllers/notification');
+    notification = require('../app/controllers/notification'),
+    announcement = require('../app/controllers/announcement');
 
 module.exports = function(app, sio) {
 
@@ -135,6 +136,15 @@ module.exports = function(app, sio) {
     app.patch('/issues/:issue', checkLoginStatus, issue.update);
     // Update issue (remove issue)
     app.delete('/issues/:issue', checkLoginStatus, issue.remove);
+
+    // Show announcements
+    app.get('/announcements', checkLoginStatus, announcement.index);
+    // Create new announcement
+    app.post('/announcements', checkLoginStatus, announcement.create);
+    // Update announcement (update announcement)
+    app.patch('/announcements/:announcement', checkLoginStatus, announcement.update);
+    // Update announcement (remove announcement)
+    app.delete('/announcements/:announcement', checkLoginStatus, announcement.remove);
 
     // query address
     app.get('/address/:zipcode', checkLoginStatus, address.show);

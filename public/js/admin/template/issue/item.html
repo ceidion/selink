@@ -1,0 +1,17 @@
+<div class="panel-heading">
+    <h4 class="panel-title">
+        <a class="accordion-toggle collapsed" data-toggle="collapse" data-parent="#accordion" href="#<%= obj._id %>">
+            <i class="icon-angle-right bigger-110" data-icon-hide="icon-angle-down" data-icon-show="icon-angle-right"></i>
+            &nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
+            <span class="pull-right"><%= moment(obj.createDate).format('LLLL') %></span>
+        </a>
+    </h4>
+</div>
+<div class="panel-collapse collapse" id="<%= obj._id %>">
+    <div class="panel-body">
+        <a class="pull-right" href="#profile/<%= obj._owner._id %>" title="<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>">
+            <img src="<%= obj._owner.photo %>" style="max-width: 100px; max-height: 100px;">
+        </a>
+        <%= obj.content %>
+    </div>
+</div>

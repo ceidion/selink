@@ -22,7 +22,7 @@
         <% } %>
     </div>
 
-    <div class="col-md-5">
+    <div class="col-md-9">
 
         <!-- name -->
         <div class="bigger-150">
@@ -46,7 +46,13 @@
 
     </div>
 
-    <div class="col-md-4">
+</div>
+
+<hr>
+
+<div class="row isotope">
+
+    <div class="isotope-item col-md-4">
         <div class="widget-box transparent">
 
             <div class="widget-header">
@@ -116,11 +122,40 @@
         </div>
     </div>
 
-</div>
+    <div id="friends" class="isotope-item col-xs-12 col-sm-6 col-lg-4">
+        <div class="widget-box">
+            <div class="widget-header widget-header-small header-color-green">
+                <h5><i class="icon-group"></i>&nbsp;お友達</h5>
+            </div>
 
-<div class="row isotope">
+            <div class="widget-body">
+                <div class="widget-main">
+                    <ul class="ace-thumbnails">
+                        <% _.each(obj.friends, function(friend){ %>
+                        <li>
+                            <a href="#profile/<%= friend._id %>" style="margin: 5px;">
+                                <img alt="" src="<%= friend.photo %>" style="min-width: 70px; max-width: 70px;"/>
+                                <div class="tags">
+                                <% if (friend.type == "employer") { %>
+                                    <span class="label-holder">
+                                        <span class="label label-success arrowed">営業担当</span>
+                                    </span>
+                                <% } else if (friend.type == "admin") { %>
+                                    <span class="label-holder">
+                                        <span class="label label-warning arrowed">管理者</span>
+                                    </span>
+                                <% } %>
+                                </div>
+                            </a>
+                        </li>
+                        <% }); %>
+                    </ul>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
 
-    <div id="friends" class="isotope-item col-xs-12 col-sm-6 col-lg-4"></div>
     <div id="history" class="isotope-item col-xs-12 col-sm-6 col-lg-4"></div>
 
     <div class="isotope-item col-xs-12 col-sm-6 col-lg-4">

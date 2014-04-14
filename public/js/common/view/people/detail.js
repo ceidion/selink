@@ -102,13 +102,13 @@ define([
                 });
             }
 
-            // if this person have friends
-            if (this.model.get('friends').length) {
-                // show his friends info
-                this.friendsView = new FriendsView({
-                    model: this.model
-                });
-            }
+            // // if this person have friends
+            // if (this.model.get('friends').length) {
+            //     // show his friends info
+            //     this.friendsView = new FriendsView({
+            //         model: this.model
+            //     });
+            // }
         },
 
         // after render
@@ -128,9 +128,9 @@ define([
             // some effect
             this.$el.addClass('animated fadeInRight');
 
-            // show friends view
-            if (this.friendsView)
-                this.regions.friendsRegion.show(this.friendsView);
+            // // show friends view
+            // if (this.friendsView)
+            //     this.regions.friendsRegion.show(this.friendsView);
 
             // show history view
             if (this.historyView)
