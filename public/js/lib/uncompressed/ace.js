@@ -19,12 +19,7 @@ ace.handle_side_menu = function($) {
 
 		// customize: isotope after side nav collapse/expand
 		setTimeout(function() {
-			$('.isotope').isotope({
-			    layoutMode: 'selinkMasonry',
-			    selinkMasonry: {
-			      cornerStampSelector: '.corner-stamp'
-			    },
-			});
+			$('.isotope').isotope('layout');
 		}, 500);
 		// customize: isotope after side nav collapse/expand end
 	});
@@ -390,17 +385,6 @@ jQuery(function($) {
 
 	ace.widget_boxes(jQuery);
 	ace.widget_reload_handler(jQuery);//this is for demo only, you can remove and have your own function, please see examples/widget.html
-
-	// customize: isotope after window size changed
-	$(window).smartresize(function(){
-	    $('.isotope').isotope({
-	        layoutMode: 'selinkMasonry',
-            selinkMasonry: {
-              cornerStampSelector: '.corner-stamp'
-            },
-	    });
-	});
-	// customize: isotope after window size changed end
 
 	/**
 	//make sidebar scrollbar when it is fixed and some parts of it is out of view

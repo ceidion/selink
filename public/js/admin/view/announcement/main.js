@@ -42,10 +42,10 @@ define([
                 'edit': 'showEditorModal'
             });
 
-            this.collectionEvents = _.extend({}, this.collectionEvents, {
-                'change': 'updateAnnouncement',
-                'add': 'updateAnnouncement'
-            });
+            // this.collectionEvents = _.extend({}, this.collectionEvents, {
+            //     'change': 'updateAnnouncement',
+            //     'add': 'updateAnnouncement'
+            // });
 
             // create posts collection
             this.collection = new Announcements();

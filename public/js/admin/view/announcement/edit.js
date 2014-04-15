@@ -62,13 +62,33 @@ define([
             // if input value checking ok
             if (this.inputValid()) {
 
-                // if this model is a new event
+                var self = this;
+
+                // if this is a new model
                 if (this.model.isNew()) {
-                    // add it to eventcollection
-                    this.collection.add(this.getInputData());
+
+                    // create the model
+                    this.collection.create(this.getInputData(), {
+                        // model saved successful
+                        success: function(model, response, options) {
+                            selink.modalArea.$el.modal('hide');
+                        },
+                        wait: true,
+                        at: 0
+                    });
+
                 } else {
-                    // set value to model
-                    this.model.set(this.getInputData());
+
+                    // update the model
+                    this.model.save(this.getInputData(), {
+                        // model saved successful
+                        success: function(model, response, options) {
+                            selink.modalArea.$el.modal('hide');
+                        },
+                        silent: true,
+                        patch: true,
+                        wait: true
+                    });
                 }
             }
         },

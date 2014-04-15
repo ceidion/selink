@@ -16,30 +16,49 @@ define([], function() {
             'shiftColumn': 'shiftColumn'
         },
 
+        appendHtml: function(collectionView, itemView, index) {
+
+            var self = this;
+
+            // ensure the image are loaded
+            this.$el.find('.isotope').imagesLoaded(function() {
+                // if the item is newly created one
+                if (index === 0)
+                    // prepend new item and reIsotope
+                    self.$el.find('.isotope').append(itemView.$el).isotope('prepended', itemView.$el);
+                // if the item from infinit scroll loading
+                else
+                    // append item and reIsotope
+                    self.$el.find('.isotope').append(itemView.$el).isotope('appended', itemView.$el);
+            });
+        },
+
         // Initializer
         initialize: function() {
 
             var self = this;
 
-            // fetch collection items
-            this.collection.fetch({
-                // after initialize the collection
-                success: function() {
-                    // change the behavior of add sub view
-                    self.appendHtml = function(collectionView, itemView, index) {
-                        // if the item is newly created one
-                        if (index === 0)
-                            // prepend new item and reIsotope
-                            self.$el.find('.isotope').prepend(itemView.$el).isotope('reloadItems');
-                        // if the item from infinit scroll loading
-                        else
-                            // append item and reIsotope
-                            self.$el.find('.isotope').imagesLoaded(function() {
-                                self.$el.find('.isotope').append(itemView.$el).isotope('appended', itemView.$el);
-                            });
-                    };
-                }
+            // use imageLoaded plugin
+            this.$el.find('.isotope').imagesLoaded(function() {
+                // enable isotope
+                self.$el.find('.isotope').isotope({
+                    itemSelector : '.isotope-item',
+                    stamp: '.stamp',
+                    masonry: {
+                        columnWidth: '.isotope-item'
+                    },
+                    getSortData: {
+                        createDate: function(elem) {
+                            return $(elem).find('.widget-box').data('create-date');
+                        }
+                    },
+                    sortBy: 'createDate',
+                    sortAscending: false
+                });
             });
+
+            // fetch collection items
+            this.collection.fetch();
         },
 
         // After show
@@ -86,49 +105,68 @@ define([], function() {
         // re-isotope after collection get synced
         onSync: function(model_or_collection, resp, options) {
 
-            // reIsotope is a custom option, used here for stop isotope running when single item object get synced
-            // (itme object's sync event will proxy through to collection by backbone)
-            if (options && _.has(options, 'reIsotope') && !options.reIsotope) return;
-
             var self = this;
 
-            // this.render();
+            // reIsotope is a custom option, used here for stop isotope running when single item object get synced
+            // (itme object's sync event will proxy through to collection by backbone), which gonna cause a flicker
+            if (options && _.has(options, 'reIsotope') && !options.reIsotope) return;
 
             // use imageLoaded plugin
             this.$el.find('.isotope').imagesLoaded(function() {
                 // re-isotope
-                self.$el.find('.isotope').isotope({
-                    layoutMode: 'selinkMasonry',
-                    itemSelector : '.isotope-item',
-                    resizable: false,
-                    selinkMasonry: {
-                      cornerStampSelector: '.corner-stamp'
-                    },
-                    getSortData: {
-                        createDate: function($elem) {
-                            return $elem.find('.widget-box').data('create-date');
-                        }
-                    },
-                    sortBy: 'createDate',
-                    sortAscending: false
-                });
+                self.$el.find('.isotope').isotope('layout');
             });
+        },
+
+        onChange: function(model) {
+
+            console.log("message");
+            console.log(arguments);
+
+            var self = this;
+
+            // if this is a new model
+            if (model.isNew()) {
+
+                // create the model
+                this.collection.create(model, {
+                    // model saved successful
+                    success: function(model, response, options) {
+                        selink.modalArea.$el.modal('hide');
+                    },
+                    silent: true,
+                    wait: true,
+                    at: 0
+                });
+
+            } else {
+
+                // update the model
+                model.save(null, {
+                    // model saved successful
+                    success: function(model, response, options) {
+                        selink.modalArea.$el.modal('hide');
+                    },
+                    silent: true,
+                    patch: true,
+                    wait: true
+                });
+            }
         },
 
         onRemove: function(event, view) {
 
-            this.$el.find('.isotope').isotope('remove', view.$el, function() {
+            this.$el.find('.isotope').isotope('remove', view.$el).isotope('layout');
 
-                view.model.destroy({
-                    success: function(model, response) {
-                    },
-                    wait: true
-                });
+            view.model.destroy({
+                success: function(model, response) {
+                },
+                wait: true
             });
         },
 
         shiftColumn: function(event, view) {
-            this.$el.find('.isotope').isotope('selinkShiftColumn', view.el);
+            this.$el.find('.isotope').isotope('layout');
         }
 
     });

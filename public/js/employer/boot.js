@@ -43,7 +43,10 @@ require.config({
         'knob': 'lib/jquery.knob.min',
         'wysiwyg': 'lib/bootstrap-wysiwyg.min',
         'hotkeys': 'lib/jquery.hotkeys.min',
-        'isotope': 'lib/jquery.isotope',
+        // isotope
+        'bridget': 'lib/uncompressed/jquery.bridget',
+        'imagesloaded': 'lib/imagesloaded.pkgd.min',
+        'isotope': 'lib/isotope.pkgd.min',
         'slim-scroll': 'lib/jquery.slimscroll.min',
         'infinite-scroll': 'lib/jquery.infinitescroll.min',
         'tag': 'lib/uncompressed/bootstrap-tag',
@@ -128,8 +131,14 @@ require.config({
         'wysiwyg': {
             deps: ['bootstrap', 'hotkeys']
         },
-        'isotope': {
+        'bridget': {
             deps: ['jquery']
+        },
+        'imagesloaded': {
+            deps: ['jquery']
+        },
+        'isotope': {
+            deps: ['jquery', 'bridget', 'imagesloaded']
         },
         'slim-scroll': {
             deps: ['jquery']
@@ -188,6 +197,7 @@ require([
     'backbone.validation',
     'fileupload',
     'autosize',
+    'isotope',
     'app'
 ], function(
     deepModel,
@@ -196,7 +206,9 @@ require([
     validation,
     fileupload,
     autosize,
+    isotope,
     employer
 ) {
+    $.bridget( 'isotope', isotope );
     employer.start();
 });
