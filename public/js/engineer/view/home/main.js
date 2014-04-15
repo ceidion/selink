@@ -2,17 +2,21 @@ define([
     'text!employer/template/home/main.html',
     'common/view/composite-isotope',
     'common/collection/base',
+    'common/model/base',
     'common/model/job',
     'common/model/post',
     'common/view/post/item',
+    'common/view/announcement/item',
     'common/view/job/item'
 ], function(
     template,
     BaseView,
     BaseCollection,
+    BaseModel,
     JobModel,
     PostModel,
     PostItemView,
+    AnnouncementItemView,
     JobItemView
 ) {
 
@@ -22,11 +26,12 @@ define([
 
         model: function(attrs, options) {
 
-            if (_.has(attrs, 'expiredDate')) {
+            if (_.has(attrs, 'name'))
                 return new JobModel(attrs, options);
-            } else {
+            else if (_.has(attrs, 'title'))
+                return new BaseModel(attrs, options);
+            else
                 return new PostModel(attrs, options);
-            }
         },
 
         comparator: function(item) {
@@ -44,8 +49,10 @@ define([
         // item view
         getItemView: function(item) {
 
-            if (item.has('expiredDate'))
+            if (item.has('name'))
                 return JobItemView;
+            else if (item.has('title'))
+                return AnnouncementItemView;
             else
                 return PostItemView;
         },

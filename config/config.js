@@ -34,12 +34,12 @@ module.exports = {
     },
 
     staging: {
-        db: 'mongodb://localhost/selink_stg',
+        db: 'mongodb://localhost/selink',
         mail: {
             service: "Gmail",
             auth: {
-                user: "joe.19840729.china@gmail.com",
-                pass: "19840729"
+                user: "administrator@selink.jp",
+                pass: "ZSkikuD2O5"
             }
         },
         root: rootPath,

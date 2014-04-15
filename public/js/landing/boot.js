@@ -70,6 +70,12 @@ require.config({
     }
 });
 
-require(['app'], function(landing) {
+require([
+    'marionette',
+    'app'
+], function(
+    marionette,
+    landing
+) {
     landing.start();
 });

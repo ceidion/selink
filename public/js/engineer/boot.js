@@ -197,6 +197,8 @@ require([
     'backbone.validation',
     'fileupload',
     'autosize',
+    'bridget',
+    'imagesloaded',
     'isotope',
     'app'
 ], function(
@@ -206,6 +208,8 @@ require([
     validation,
     fileupload,
     autosize,
+    bridget,
+    imagesloaded,
     isotope,
     engineer
 ) {
