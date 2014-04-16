@@ -114,44 +114,11 @@ define([], function() {
             // use imageLoaded plugin
             this.$el.find('.isotope').imagesLoaded(function() {
                 // re-isotope
-                self.$el.find('.isotope').isotope('layout');
+                self.$el.find('.isotope').isotope({
+                    sortBy: 'createDate',
+                    sortAscending: false
+                });
             });
-        },
-
-        onChange: function(model) {
-
-            console.log("message");
-            console.log(arguments);
-
-            var self = this;
-
-            // if this is a new model
-            if (model.isNew()) {
-
-                // create the model
-                this.collection.create(model, {
-                    // model saved successful
-                    success: function(model, response, options) {
-                        selink.modalArea.$el.modal('hide');
-                    },
-                    silent: true,
-                    wait: true,
-                    at: 0
-                });
-
-            } else {
-
-                // update the model
-                model.save(null, {
-                    // model saved successful
-                    success: function(model, response, options) {
-                        selink.modalArea.$el.modal('hide');
-                    },
-                    silent: true,
-                    patch: true,
-                    wait: true
-                });
-            }
         },
 
         onRemove: function(event, view) {
