@@ -13,14 +13,14 @@ define([
         className: 'thumbnail',
 
         onRender: function() {
-            this.$el.find('img').popover({
-                html: true,
-                placement: 'auto',
-                trigger: 'hover',
-                title: this.model.get('firstName') + " " + this.model.get('lastName'),
-                content: "123",
-                container: 'body'
-            });
+            // this.$el.find('img').popover({
+            //     html: true,
+            //     placement: 'auto',
+            //     trigger: 'hover',
+            //     title: this.model.get('firstName') + " " + this.model.get('lastName'),
+            //     content: "123",
+            //     container: 'body'
+            // });
         }
     });
 });
