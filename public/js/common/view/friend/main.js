@@ -35,10 +35,10 @@ define([
         initialize: function() {
 
             // create invited friends view
-            this.invitedView = new InvitedView();
+            this.invitedView = new InvitedView({collection: selink.userModel.invited});
 
             // create firends view
-            this.friendsView = new FriendsView();
+            this.friendsView = new FriendsView({collection: selink.userModel.friends});
 
             // create posts collection
             this.collection = new PostsCollection();

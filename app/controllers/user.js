@@ -71,21 +71,22 @@ exports.index = function(req, res, next) {
 // Get single user
 exports.show = function(req, res, next) {
 
-    var query = User.findById(req.params.user, '-password');
 
-    // if requested for 'my' info
-    if (req.params.user == req.user.id){
+    // // if requested for 'my' info
+    // if (req.params.user == req.user.id){
 
-    // others info
-    } else {
+    // // others info
+    // } else {
 
-        query.populate('friends', 'type firstName lastName title photo createDate');
-    }
+    // }
 
-    query.exec(function(err, user) {
-        if (err) next(err);
-        else res.json(user);
-    });
+    User.findById(req.params.user, '-password')
+        .populate('friends', 'type firstName lastName title photo createDate')
+        .populate('invited', 'type firstName lastName title photo createDate')
+        .exec(function(err, user) {
+            if (err) next(err);
+            else res.json(user);
+        });
 };
 
 // Edit Profile

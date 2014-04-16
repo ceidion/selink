@@ -1,19 +1,16 @@
 define([
     'text!common/template/friend/invited.html',
+    'common/view/composite-isotope',
     'common/collection/base',
     'common/view/friend/item',
 ], function(
     template,
+    BaseView,
     BaseCollection,
     ItemView
 ) {
 
-    var Invited = BaseCollection.extend({
-
-        url: '/friends?type=invited'
-    });
-
-    return Backbone.Marionette.CompositeView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -24,22 +21,21 @@ define([
         // item view
         itemView: ItemView,
 
-        // ui
-        ui: {
-            container: '.ace-thumbnails'
-        },
-
-        // // isotope after collection populated
-        // collectionEvents: {
-        //     'sync': 'reIsotope',
-        // },
-
         // initializer
         initialize: function() {
 
-            // create collection
-            this.collection = new Invited();
-            this.collection.fetch();
+            var self = this;
+
+            // use imageLoaded plugin
+            this.$el.find('.ace-thumbnails').imagesLoaded(function() {
+                // enable isotope
+                self.$el.find('.ace-thumbnails').isotope({
+                    itemSelector : '.thumbnail',
+                    masonry: {
+                        columnWidth: '.thumbnail'
+                    }
+                });
+            });
         },
 
         // after show
@@ -49,19 +45,7 @@ define([
                 height: 300,
                 railVisible:true
             });
-        },
+        }
 
-        reIsotope: function() {
-
-            var self = this;
-
-            this.ui.container.imagesLoaded(function() {
-                self.ui.container.isotope({
-                  // options
-                  itemSelector : 'li',
-                });
-            });
-        },
     });
-
 });

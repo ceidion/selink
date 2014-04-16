@@ -112,6 +112,16 @@ define([
         }
     });
 
+    var Friends = BaseCollection.extend({
+
+        url: '/friends'
+    });
+
+    var Invited = BaseCollection.extend({
+
+        url: '/friends?type=invited'
+    });
+
     // User Model
     return BaseModel.extend({
 
@@ -135,6 +145,12 @@ define([
 
             // create employments collection inside model
             this.employments = new Employments(null, {document: this});
+
+            // create friends collection inside model
+            this.friends = new Friends();
+
+            // create invited collection inside model
+            this.invited = new Invited();
 
             // call super constructor
             Backbone.Model.apply(this, arguments);
@@ -162,6 +178,14 @@ define([
             // populate employments collection
             this.employments.set(response.employments, {parse: true, remove: false});
             delete response.employments;
+
+            // populate friends collection
+            this.friends.set(response.friends, {parse: true, remove: false});
+            delete response.friends;
+
+            // populate invited collection
+            this.invited.set(response.invited, {parse: true, remove: false});
+            delete response.invited;
 
             // parse birth day from iso-date to readable format
             if(response.birthDay) {

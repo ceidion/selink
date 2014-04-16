@@ -21,15 +21,15 @@ define([], function() {
             var self = this;
 
             // ensure the image are loaded
-            this.$el.find('.isotope').imagesLoaded(function() {
+            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
                 // if the item is newly created one
                 if (index === 0)
                     // prepend new item and reIsotope
-                    self.$el.find('.isotope').append(itemView.$el).isotope('prepended', itemView.$el);
+                    self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
                 // if the item from infinit scroll loading
                 else
                     // append item and reIsotope
-                    self.$el.find('.isotope').append(itemView.$el).isotope('appended', itemView.$el);
+                    self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
             });
         },
 
@@ -39,9 +39,9 @@ define([], function() {
             var self = this;
 
             // use imageLoaded plugin
-            this.$el.find('.isotope').imagesLoaded(function() {
+            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
                 // enable isotope
-                self.$el.find('.isotope').isotope({
+                self.$el.find(self.itemViewContainer).isotope({
                     itemSelector : '.isotope-item',
                     stamp: '.stamp',
                     masonry: {
@@ -67,7 +67,7 @@ define([], function() {
             var self = this;
 
             // attach infinite scroll
-            this.$el.find('.isotope').infinitescroll({
+            this.$el.find(this.itemViewContainer).infinitescroll({
                 navSelector  : '#page_nav',
                 nextSelector : '#page_nav a',
                 dataType: 'json',
@@ -85,8 +85,8 @@ define([], function() {
                 // no more data
                 if (json.length === 0){
                     // destroy infinite scroll, or it will affect other page
-                    self.$el.find('.isotope').infinitescroll('destroy');
-                    self.$el.find('.isotope').data('infinitescroll', null);
+                    self.$el.find(self.itemViewContainer).infinitescroll('destroy');
+                    self.$el.find(self.itemViewContainer).data('infinitescroll', null);
                 } else
                     // add data to collection, don't forget parse the json object
                     // this will trigger 'add' event and will call on
@@ -98,8 +98,8 @@ define([], function() {
         // before close
         onBeforeClose: function() {
             // destroy infinite scroll, or it will affect other page
-            this.$el.find('.isotope').infinitescroll('destroy');
-            this.$el.find('.isotope').data('infinitescroll', null);
+            this.$el.find(this.itemViewContainer).infinitescroll('destroy');
+            this.$el.find(this.itemViewContainer).data('infinitescroll', null);
         },
 
         // re-isotope after collection get synced
@@ -112,9 +112,9 @@ define([], function() {
             if (options && _.has(options, 'reIsotope') && !options.reIsotope) return;
 
             // use imageLoaded plugin
-            this.$el.find('.isotope').imagesLoaded(function() {
+            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
                 // re-isotope
-                self.$el.find('.isotope').isotope({
+                self.$el.find(self.itemViewContainer).isotope({
                     sortBy: 'createDate',
                     sortAscending: false
                 });
@@ -123,7 +123,7 @@ define([], function() {
 
         onRemove: function(event, view) {
 
-            this.$el.find('.isotope').isotope('remove', view.$el).isotope('layout');
+            this.$el.find(this.itemViewContainer).isotope('remove', view.$el).isotope('layout');
 
             view.model.destroy({
                 success: function(model, response) {
@@ -133,7 +133,7 @@ define([], function() {
         },
 
         shiftColumn: function(event, view) {
-            this.$el.find('.isotope').isotope('layout');
+            this.$el.find(this.itemViewContainer).isotope('layout');
         }
 
     });

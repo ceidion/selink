@@ -1,20 +1,17 @@
 define([
     'text!common/template/friend/friend.html',
+    'common/view/composite-isotope',
     'common/collection/base',
     'common/view/friend/empty',
     'common/view/friend/item',
 ], function(
     template,
+    BaseView,
     BaseCollection,
     EmptyView,
     ItemView) {
 
-    var Friends = BaseCollection.extend({
-
-        url: '/friends'
-    });
-
-    return Backbone.Marionette.CompositeView.extend({
+    return BaseView.extend({
 
         // template
         template: template,
@@ -28,22 +25,21 @@ define([
         // empty view
         emptyView: EmptyView,
 
-        // ui
-        ui: {
-            container: '.ace-thumbnails'
-        },
-
-        // // isotope after collection populated
-        // collectionEvents: {
-        //     'sync': 'reIsotope',
-        // },
-
         // initializer
         initialize: function() {
 
-            // create collection
-            this.collection = new Friends();
-            this.collection.fetch();
+            var self = this;
+
+            // use imageLoaded plugin
+            this.$el.find('.ace-thumbnails').imagesLoaded(function() {
+                // enable isotope
+                self.$el.find('.ace-thumbnails').isotope({
+                    itemSelector : '.thumbnail',
+                    masonry: {
+                        columnWidth: '.thumbnail'
+                    }
+                });
+            });
         },
 
         // after show
@@ -53,22 +49,7 @@ define([
                 height: 300,
                 railVisible:true
             });
-        },
+        }
 
-        reIsotope: function() {
-
-            if (this.collection.length === 0)
-                return;
-
-            var self = this;
-
-            this.ui.container.imagesLoaded(function() {
-                self.ui.container.isotope({
-                  // options
-                  itemSelector : 'li',
-                });
-            });
-        },
     });
-
 });

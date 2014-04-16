@@ -7,9 +7,7 @@ var Skill = require('./profile/skill'),
     Employment = require('./profile/employment'),
     Education = require('./profile/education'),
     Qualification = require('./profile/qualification'),
-    Language = require('./profile/language'),
-    Event = require('./event'),
-    Notification = require('./notification');
+    Language = require('./profile/language');
 
 var User = new Schema({
 

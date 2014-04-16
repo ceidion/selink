@@ -10,6 +10,8 @@ define([
 
         tagName: 'li',
 
+        className: 'thumbnail',
+
         onRender: function() {
             this.$el.find('img').popover({
                 html: true,
