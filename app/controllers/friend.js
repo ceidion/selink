@@ -98,24 +98,26 @@ exports.create = function(req, res, next) {
                     });
 
                     // send friend-invitation mail
-                    User.findById(req.body._id, 'email', function(err, target){
+                    User.findById(req.body._id, 'type firstName lastName title photo email createDate', function(err, target){
                         if (err) next(err);
-                        else
+                        else {
+
+                            // log user's activity
+                            Activity.create({
+                                _owner: user.id,
+                                type: 'user-friend-invited',
+                                target: req.body._id
+                            }, function(err, activity) {
+                                // send back requested user's info
+                                if (err) next(err);
+                                else res.json(target);
+                            });
+
                             Mailer.friendInvitation({
                                 from: user,
                                 email: target.email
                             });
-                    });
-
-                    // log user's activity
-                    Activity.create({
-                        _owner: user.id,
-                        type: 'user-friend-invited',
-                        target: req.body._id
-                    }, function(err, activity) {
-                        // send back requested user's info
-                        if (err) next(err);
-                        else res.json(req.body);
+                        }
                     });
                 }
             });

@@ -46,11 +46,11 @@ define([
             var self = this;
 
             // if this person's id in user's friends list
-            if (_.indexOf(selink.userModel.get('friends'), this.model.get('_id')) >= 0)
+            if (selink.userModel.friends.get(this.model.get('_id')))
                 // mark him as user's friend
                 this.model.set('isFriend', true, {silent:true});
             // or if this person's id in user's invitaion list
-            else if (_.indexOf(selink.userModel.get('invited'), this.model.get('_id')) >= 0)
+            else if (selink.userModel.invited.get(this.model.get('_id')))
                 // mark him as user's invited friend
                 this.model.set('isInvited', true, {silent:true});
 
@@ -102,13 +102,6 @@ define([
                 });
             }
 
-            // // if this person have friends
-            // if (this.model.get('friends').length) {
-            //     // show his friends info
-            //     this.friendsView = new FriendsView({
-            //         model: this.model
-            //     });
-            // }
         },
 
         // after render
@@ -167,24 +160,20 @@ define([
             // show loading icon, and prevent user click twice
             this.$el.find('.btn-friend').button('loading');
 
-            // post this person's info for friend creation
-            this.model.save({
+            // create a friend in invited list
+            selink.userModel.invited.create({
                 _id: this.model.get('_id')
-                // firstName: this.model.get('firstName'),
-                // lastName: this.model.get('lastName')
             }, {
-                url: '/friends',
                 success: function() {
-                    // change the button for success info, but won't enable it
+                    // change the label of the add button, but still disabled
                     self.$el.find('.btn-friend')
-                            .removeClass('btn-info btn-friend')
-                            .addClass('btn-success')
-                            .empty()
-                            .html('<i class="icon-ok light-green"></i>&nbsp;友達リクエスト送信済み');
-                    // put him into invited list
-                    selink.userModel.get('invited').push(self.model.get('_id'));
+                        .removeClass('btn-info btn-friend')
+                        .addClass('btn-success')
+                        .empty()
+                        .html('<i class="icon-ok light-green"></i>&nbsp;友達リクエスト送信済み');
                 },
-                patch: true
+                patch: true,
+                wait: true
             });
         },
 
@@ -196,21 +185,16 @@ define([
             // show loading icon, and prevent user click twice
             this.$el.find('.btn-break').button('loading');
 
-            // post this person's id for break up
-            this.model.destroy({
-                url: '/friends/' + this.model.get('_id'),
+            // remove this person from user's friends list
+            selink.userModel.friends.get(this.model.get('_id')).destroy({
+
                 success: function() {
                     // change the button for success info, but won't enable it
                     self.$el.find('.btn-break')
-                            .removeClass('btn-info btn-break')
-                            .addClass('btn-grey')
-                            .empty()
-                            .html('<i class="icon-ok light-green"></i>&nbsp;友達解除しました');
-                    // remove him from friends list
-                    var index = selink.userModel.get('friends').indexOf(self.model.get('_id'));
-                    if (index > -1) {
-                        selink.userModel.get('friends').splice(index, 1);
-                    }
+                        .removeClass('btn-info btn-break')
+                        .addClass('btn-grey')
+                        .empty()
+                        .html('<i class="icon-ok light-green"></i>&nbsp;友達解除しました');
                 }
             });
         }

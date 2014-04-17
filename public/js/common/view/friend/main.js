@@ -61,6 +61,7 @@ define([
 
         // After show
         onShow: function() {
+
             // show invited friends view
             this.regions.invitedRegion.show(this.invitedView);
             // show friends view
@@ -72,6 +73,7 @@ define([
 
         // before close
         onBeforeClose: function() {
+
             // close region manager
             this.rm.close();
 

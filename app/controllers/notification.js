@@ -24,7 +24,7 @@ exports.index = function(req, res, next) {
     // find the notifications of specific user
     Notification.find({_owner: req.user.id, confirmed: {'$ne': req.user.id}})
         .limit(20)
-        .populate('_from', 'firstName lastName photo')
+        .populate('_from', 'type firstName lastName title photo createDate')
         .exec(function(err, notifications) {
             if (err) next(err);
             else res.json(notifications);

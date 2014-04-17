@@ -47,6 +47,7 @@ define([
             this.model.save({result: 'approved'}, {
                 success: function() {
                     self.$el.slideUp(function() {
+                        selink.userModel.friends.add(self.model.get('_from'));
                         self.model.collection.remove(self.model);
                     });
                 },

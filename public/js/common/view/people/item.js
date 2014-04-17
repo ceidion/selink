@@ -18,27 +18,25 @@ define([
 
             var self = this;
 
+            // disable the button, user can't push twice
             this.$el.find('.btn-friend').button('loading');
 
-            this.model.save({
+            // create a friend in invited list
+            selink.userModel.invited.create({
                 _id: this.model.get('_id')
-                // firstName: this.model.get('firstName'),
-                // lastName: this.model.get('lastName')
             }, {
-                url: '/friends',
                 success: function() {
-                    // self.$el.find('.btn-friend').button('reset');
+                    // change the label of the add button, but still disabled
                     self.$el.find('.btn-friend')
-                            .removeClass('btn-info btn-friend')
-                            .addClass('btn-success')
-                            .empty()
-                            .html('<i class="icon-ok light-green"></i>&nbsp;友達リクエスト送信済み');
-                    selink.userModel.get('invited').push(self.model.get('_id'));
+                        .removeClass('btn-info btn-friend')
+                        .addClass('btn-success')
+                        .empty()
+                        .html('<i class="icon-ok light-green"></i>&nbsp;友達リクエスト送信済み');
                 },
-                reIsotope: false,
-                patch: true
+                patch: true,
+                wait: true
             });
-        },
+        }
 
     });
 });
