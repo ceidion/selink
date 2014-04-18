@@ -1,26 +1,10 @@
 define([
     'text!common/template/calendar/main.html',
-    'common/collection/base',
-    'common/model/event',
     'common/view/calendar/event'
 ], function(
     template,
-    BaseCollection,
-    EventModel,
     EventView
 ) {
-
-    var Events = BaseCollection.extend({
-
-        model: EventModel,
-
-        url:  '/events',
-
-        comparator: function(event) {
-            // sort by start desc
-            return Number(event.get('start').valueOf());
-        }
-    });
 
     return Backbone.Marionette.Layout.extend({
 
@@ -34,14 +18,10 @@ define([
             eventModal: '#event-modal'
         },
 
-        // Events
-        events: {
-        },
-
         // Collection events
         collectionEvents: {
-            // 'add': 'createEvent',
-            // 'change': 'updateEvent',
+            'add': 'createEvent',
+            'change': 'updateEvent',
             'remove': 'removeEvent',
         },
 
@@ -52,9 +32,8 @@ define([
 
         // Initializer
         initialize: function() {
-
             // create events model(collection) from user model
-            this.collection = new Events();
+            this.collection = selink.userModel.events;
         },
 
         // After render
@@ -64,17 +43,8 @@ define([
 
         // After show
         onShow: function() {
-
-            var self = this;
-
-            this.collection.fetch({
-                success: function() {
-                    self.initialDefaultEvent();
-                    self.initialCalendar();
-                    self.listenTo(self.collection, 'change', self.updateEvent);
-                    self.listenTo(self.collection, 'add', self.createEvent);
-                }
-            });
+            this.initialDefaultEvent();
+            this.initialCalendar();
         },
 
         // initialize the external events

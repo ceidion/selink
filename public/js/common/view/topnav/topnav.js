@@ -1,7 +1,7 @@
 define([
     'text!common/template/topnav/topnav.html',
-    'common/view/topnav/event/main',
-    'common/view/topnav/notification/main',
+    'common/view/topnav/event/menu',
+    'common/view/topnav/notification/menu',
     'common/view/issue/main',
     'common/view/setting/main',
     'common/view/password/main'

@@ -21,10 +21,19 @@ var Mailer = require('../mailer/mailer.js'),
 // Notification index
 exports.index = function(req, res, next) {
 
-    // find the notifications of specific user
-    Notification.find({_owner: req.user.id, confirmed: {'$ne': req.user.id}})
-        .limit(20)
+    var category = req.query.category || null, // category of request
+        page = req.query.page || 0;            // page number
+
+    var query = Notification.find().where('_owner').equals(req.user.id);
+
+    if (category != 'all')
+        query.where('confirmed').ne(req.user.id);
+
+    query.where('logicDelete').equals(false)
         .populate('_from', 'type firstName lastName title photo createDate')
+        .skip(20*page)  // skip n page
+        .limit(20)
+        .sort('-createDate')
         .exec(function(err, notifications) {
             if (err) next(err);
             else res.json(notifications);
@@ -105,7 +114,7 @@ approve = function(req, res, next, notification) {
                             if (err) next(err);
                             else {
                                 // populate the respond notification with user's info
-                                respond.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
+                                respond.populate({path:'_from', select: 'type firstName lastName title photo createDate'}, function(err, noty) {
 
                                     if(err) next(err);
                                     // send real time message
@@ -163,7 +172,7 @@ decline = function(req, res, next, notification) {
                 if (err) next(err);
                 else {
                     // populate the respond notification with user's info
-                    respond.populate({path:'_from', select: '_id firstName lastName photo'}, function(err, noty) {
+                    respond.populate({path:'_from', select: 'type firstName lastName title photo createDate'}, function(err, noty) {
 
                         if(err) next(err);
                         // send real time message

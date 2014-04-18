@@ -1,19 +1,12 @@
 define([
-    'text!common/template/topnav/event/main.html',
-    'common/collection/base',
+    'text!common/template/topnav/event/menu.html',
     'common/view/topnav/event/item',
     'common/view/topnav/event/empty'
 ], function(
     template,
-    BaseCollection,
     ItemView,
     EmptyView
 ) {
-
-    var Events = BaseCollection.extend({
-
-        url: '/events'
-    });
 
     return Backbone.Marionette.CompositeView.extend({
 
@@ -52,23 +45,17 @@ define([
         // initializer
         initialize: function() {
 
-            var self = this;
-
             this.model = new Backbone.Model();
 
-            this.collection = new Events();
+            this.collection = selink.userModel.events;
 
-            this.collection.fetch({
-                success: function() {
-                    // filter out the past events
-                    var futureEvents = _.filter(self.collection.models, function(event) {
-                        return moment(event.get('start')).isAfter(moment());
-                    });
-
-                    // set the number of future events in the model
-                    self.model.set('eventsNum', futureEvents.length, {silent:true});
-                }
+            // filter out the past events
+            var futureEvents = _.filter(this.collection.models, function(event) {
+                return moment(event.get('start')).isAfter(moment());
             });
+
+            // set the number of future events in the model
+            this.model.set('eventsNum', futureEvents.length, {silent:true});
 
         },
 
@@ -85,6 +72,10 @@ define([
                 height: 300,
                 railVisible:true
             });
+
+            if (this.model.get('eventsNum') > 0)
+                // let the icon swing
+                this.$el.find('.icon-tasks').slJump();
         },
 
         // update the number badge when collection changed
@@ -98,7 +89,7 @@ define([
             // badge
             var $badge = this.$el.find('.dropdown-toggle .badge');
 
-            // if no more events
+            // TODO: this is crap. if no more events
             if (futureEvents === 0)
                 // remove the badge
                 $badge.slFlipOutY().remove();
@@ -119,7 +110,7 @@ define([
 
             if (futureEvents > 0)
                 // let the icon swing
-                this.$el.find('.icon-tasks').addClass('icon-animated-vertical');
+                this.$el.find('.icon-tasks').slJump();
 
         }
     });

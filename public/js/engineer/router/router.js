@@ -11,6 +11,7 @@ define([], function() {
             "friend": "showFriendView",
             "people": "showPeopleView",
             "calendar": "showCalendarView",
+            "notification": "showNotificationView",
             "activity": "showActivityView",
             // "timecard": "showTimecardView",
             // "timecard/:date": "showTimecardView",

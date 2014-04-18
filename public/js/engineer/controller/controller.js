@@ -11,8 +11,7 @@ define([
     'common/view/people/detail',
     'common/view/calendar/main',
     'common/view/activity/main',
-    // 'common/view/timecard/timecard',
-    // 'common/view/mailbox/mailbox',
+    'common/view/topnav/notification/main',
     'common/model/user',
     'common/model/post'
 ], function(
@@ -28,8 +27,7 @@ define([
     PeopleDetailView,
     CalendarView,
     ActivityView,
-    // TimecardView,
-    // MailBoxView,
+    NotificationView,
     UserModel,
     PostModel
 ) {
@@ -166,29 +164,13 @@ define([
             selink.pageContent.show(selink.activityView);
         },
 
-        // // show timecard
-        // showTimecardView: function(date) {
+        // show notification
+        showNotificationView: function() {
 
-        //     var month = date ? moment(date, 'YYYYMM') : moment();
-
-        //     // create timecard view
-        //     selink.timecardView = new TimecardView({
-        //         model: new Backbone.Model({month: month}),
-        //         collection: selink.eventsModel
-        //     });
-        //     // show timecard view
-        //     selink.pageContent.show(selink.timecardView);
-        // },
-
-        // // show mailbox
-        // showMailBoxView: function() {
-
-        //     // create mailbox view
-        //     selink.mailBoxView = new MailBoxView({
-        //         model: selink.userModel
-        //     });
-        //     // show mailbox view
-        //     selink.pageContent.show(selink.mailBoxView);
-        // }
+            // create notification view
+            selink.notificationView = new NotificationView();
+            // show notification view
+            selink.pageContent.show(selink.notificationView);
+        }
     });
 });

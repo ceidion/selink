@@ -1,5 +1,8 @@
 <a class="dropdown-toggle" href="/#" data-toggle="dropdown">
     <span class="icon-tasks"></span>
+    <% if (obj.eventsNum) { %>
+        <span class="badge badge-primary"><%= obj.eventsNum %></span>
+    <% } %>
 </a>
 <ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret">
     <li class="dropdown-header">

@@ -1,5 +1,13 @@
 (function($){
 
+    $.fn.slJump = function(color, callback) {
+        return $(this).slAnimated('icon-animated-vertical', color, callback);
+    };
+
+    $.fn.slShake = function(color, callback) {
+        return $(this).slAnimated('icon-animated-bell', color, callback);
+    };
+
     $.fn.slFlip = function(color, callback) {
         return $(this).slAnimated('flip', color, callback);
     };
