@@ -1,7 +1,7 @@
 define([
-    'text!common/template/topnav/notification/main.html',
+    'text!common/template/notification/main.html',
     'common/collection/base',
-    'common/view/topnav/notification/item'
+    'common/view/notification/item'
 ], function(
     template,
     BaseCollection,

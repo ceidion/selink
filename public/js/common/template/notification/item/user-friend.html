@@ -1,0 +1,71 @@
+<%
+    var iconClass = "",
+        title = ""
+        resultStr = "確認済み";
+
+    if (obj.type == "user-friend-invited") {
+        iconClass = "icon-user";
+        title = "から友達になるリクエストがありました";
+
+        if (obj.result == "approved") 
+            resultStr = "承認済み";
+        else if (obj.result == "declined") 
+            resultStr = "拒否済み";
+        
+    }
+    else if (obj.type == "user-friend-approved") {
+        iconClass = "icon-ok-circle";
+        title = "はあなたの友達リクエストを承認しました";
+    }
+    else if (obj.type == "user-friend-declined") {
+        iconClass = "icon-ban-circle";
+        title = "はあなたの友達リクエストを拒否しました";
+    }
+    else if (obj.type == "user-friend-break") {
+        iconClass = "icon-remove-circle";
+        title = "はあなたと友達を解除しました";
+    }
+%>
+
+<div class="widget-box isotope-item">
+    <div class="widget-header widget-header-flat header-color-blue2">
+        <h5>
+            <i class="<%= iconClass %>"></i>
+            <%= obj._from.firstName %>&nbsp;<%= obj._from.lastName %>
+            &nbsp;<%= title %>
+        </h5>
+        <div class="widget-toolbar">
+            <i class="icon-time"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
+        </div>
+        <a href="#profile/<%= obj._from._id %>" title="<%- obj._from.firstName %>">
+            <img class="avatar" src="<%= obj._from.photo %>">
+        </a>
+    </div>
+
+    <div class="widget-body">
+
+        <div class="widget-main">
+
+            <div class="content">
+                <%= obj.content %>
+            </div>
+
+            <% if (obj.result) { %>
+                <div class="text-muted pull-right"><i class="icon-ok"></i>&nbsp;<%= resultStr %></div>
+            <% } else if (obj.type == "user-friend-invited") { %>
+                <div class="pull-right">
+                    <button class="btn btn-sm btn-pink btn-decline"><i class="icon-remove"></i>&nbsp;拒否</button>
+                    <button class="btn btn-sm btn-success btn-approve"><i class="icon-ok"></i>&nbsp;許可</button>
+                </div>
+            <% } else { %>
+                <div class="pull-right">
+                    <button class="btn btn-sm btn-info btn-acknowledge pull-right"><i class="icon-ok"></i>&nbsp;了解</button>
+                </div>
+            <% } %>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+</div>
+<div class="space"></div>

@@ -1,0 +1,59 @@
+<%
+    var iconClass = "",
+        title = "";
+
+    if (obj.type == "user-post") {
+        iconClass = "icon-edit";
+        title = "は新しい記事を投稿しました";
+    }
+    else if (obj.type == "user-post-liked") {
+        iconClass = "icon-heart";
+        title = "はあなたの投稿に「いいね！」しました";
+    }
+    else if (obj.type == "user-post-bookmarked") {
+        iconClass = "icon-star";
+        title = "はあなたの投稿にブックマークを付けました";
+    }
+    else if (obj.type == "user-post-commented") {
+        iconClass = "icon-comment";
+        title = "はあなたの投稿にコメントしました";
+    }
+%>
+
+<div class="widget-box isotope-item">
+    <div class="widget-header widget-header-flat header-color-green">
+        <h5>
+            <i class="<%= iconClass %>"></i>
+            <%= obj._from.firstName %>&nbsp;<%= obj._from.lastName %>
+            &nbsp;<%= title %>
+        </h5>
+        <div class="widget-toolbar">
+            <i class="icon-time"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
+        </div>
+        <a href="#profile/<%= obj._from._id %>" title="<%- obj._from.firstName %>">
+            <img class="avatar" src="<%= obj._from.photo %>">
+        </a>
+    </div>
+
+    <div class="widget-body">
+
+        <div class="widget-main">
+
+            <div class="content">
+                <%= obj.content %>
+            </div>
+
+            <% if (obj.result) { %>
+                <div class="text-muted pull-right"><i class="icon-ok"></i>&nbsp;確認済み</div>
+            <% } else { %>
+                <div class="pull-right">
+                    <button class="btn btn-sm btn-info btn-acknowledge pull-right"><i class="icon-ok"></i>&nbsp;了解</button>
+                </div>
+            <% } %>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+</div>
+<div class="space"></div>

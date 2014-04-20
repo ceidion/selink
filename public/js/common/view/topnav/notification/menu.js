@@ -31,13 +31,6 @@ define([
             'remove': 'updateBadge'
         },
 
-        // override appendHtml
-        appendHtml: function(collectionView, itemView, index) {
-
-            // insert sub view before dropdown menu's footer (this is imply a order of items)
-            this.$el.find('.dropdown-body').prepend(itemView.el);
-        },
-
         // initializer
         initialize: function() {
 
@@ -89,6 +82,8 @@ define([
                 });
                 // add the notification to collection
                 self.collection.add(data);
+                // sync with local user model
+                selink.userModel.invited.remove(data._from._id);
             });
 
             selink.socket.on('user-friend-break', function(data) {
@@ -168,6 +163,12 @@ define([
 
         // after show
         onShow: function() {
+
+            // override appendHtml after the view been shown
+            this.appendHtml = function(collectionView, itemView, index) {
+                // insert new item into the very begining of the list
+                this.$el.find('.dropdown-body').prepend(itemView.el);
+            };
 
             // keep dropdown menu open when click on the menu items.
             this.$el.find('.dropdown-menu').on('click', function(e){

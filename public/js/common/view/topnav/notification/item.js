@@ -1,17 +1,11 @@
 define([
     'text!common/template/topnav/notification/item/user-friend.html',
-    'text!common/template/topnav/notification/item/user-friend-menu.html',
     'text!common/template/topnav/notification/item/user-post.html',
-    'text!common/template/topnav/notification/item/user-post-menu.html',
     'text!common/template/topnav/notification/item/user-job.html',
-    'text!common/template/topnav/notification/item/user-job-menu.html',
 ], function(
     friendTemplate,
-    friendMenuTemplate,
     postTemplate,
-    postMenuTemplate,
-    jobTemplate,
-    jobMenuTemplate
+    jobTemplate
 ) {
 
     return Backbone.Marionette.ItemView.extend({
@@ -36,11 +30,11 @@ define([
             var type = this.model.get("type");
 
             if (_.indexOf(this.userTargetNotification, type) >= 0)
-                return this.options.mode === "page" ? friendTemplate : friendMenuTemplate;
+                return friendTemplate;
             else if (_.indexOf(this.postTargetNotification, type) >= 0)
-                return this.options.mode === "page" ? postTemplate : postMenuTemplate;
+                return postTemplate;
             else if (_.indexOf(this.jobTargetNotification, type) >= 0)
-                return this.options.mode === "page" ? jobTemplate : jobMenuTemplate;
+                return jobTemplate;
         },
 
         onApproveClick: function(e) {

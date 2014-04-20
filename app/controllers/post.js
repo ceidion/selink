@@ -89,7 +89,21 @@ exports.create = function(req, res, next) {
                 type: 'user-post',
                 target: newPost._id
             }, function(err, notification) {
-                if (err) next(err);
+                if (err) next(err)
+                else {
+                    // populate the respond notification with user's info
+                    notification.populate({
+                        path:'_from',
+                        select: 'firstName lastName photo'
+                    }, function(err, noty) {
+                        if(err) next(err);
+                        // send real time message
+                        else 
+                            req.user.friends.forEach(function(room) {
+                                sio.sockets.in(room).emit('user-post', noty);
+                            });
+                    });
+                }
             });
 
             // return the crearted post
@@ -196,7 +210,7 @@ exports.like = function(req, res, next){
                                 // populate the respond notification with user's info
                                 notification.populate({
                                     path:'_from',
-                                    select: '_id firstName lastName photo'
+                                    select: 'firstName lastName photo'
                                 }, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
@@ -257,7 +271,7 @@ exports.bookmark = function(req, res, next){
                                 // populate the respond notification with user's info
                                 notification.populate({
                                     path:'_from',
-                                    select: '_id firstName lastName photo'
+                                    select: 'firstName lastName photo'
                                 }, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
@@ -326,7 +340,7 @@ exports.comment = function(req, res, next) {
                                 // populate the respond notification with user's info
                                 notification.populate({
                                     path:'_from',
-                                    select: '_id firstName lastName photo'
+                                    select: 'firstName lastName photo'
                                 }, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
@@ -339,7 +353,7 @@ exports.comment = function(req, res, next) {
                     // populate the comment owner and send saved post back
                     User.populate(comment, {
                         path: '_owner',
-                        select: '_id firstName lastName photo'
+                        select: 'firstName lastName photo'
                     }, function(err, newComment) {
                         if (err) next(err);
                         else res.json(newComment);

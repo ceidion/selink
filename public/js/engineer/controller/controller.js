@@ -11,7 +11,7 @@ define([
     'common/view/people/detail',
     'common/view/calendar/main',
     'common/view/activity/main',
-    'common/view/topnav/notification/main',
+    'common/view/notification/main',
     'common/model/user',
     'common/model/post'
 ], function(
