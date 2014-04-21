@@ -8,7 +8,7 @@
     }
 %>
 
-<div class="widget-box">
+<div class="widget-box" data-create-date="<%= moment(obj.createDate).valueOf() %>">
     <div class="widget-header widget-header-flat">
         <a href="#profile/<%= obj._id %>" title="<%= obj.firstName %>"><img class="avatar" src="<%= avatar %>"></a>
         <h4>

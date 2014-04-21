@@ -4,7 +4,7 @@ define([
     'common/model/post',
     'common/view/composite-isotope',
     'common/view/post/item',
-    'common/view/people/history/main',
+    // 'common/view/people/history/main',
     'common/view/friend/friend'
 ], function(
     template,
@@ -12,11 +12,11 @@ define([
     PostModel,
     BaseView,
     ItemView,
-    HistoryView,
+    // HistoryView,
     FriendsView
 ) {
 
-    var PostsCollection = BaseCollection.extend({
+    var Posts = BaseCollection.extend({
 
         model: PostModel,
 
@@ -54,53 +54,56 @@ define([
                 // mark him as user's invited friend
                 this.model.set('isInvited', true, {silent:true});
 
+            // create firends view
+            this.friendsView = new FriendsView({collection: this.model.friends});
+
             // create post collection
-            this.collection = new PostsCollection(null, {document: this.model});
+            this.collection = new Posts(null, {document: this.model});
 
             // call super initializer
             BaseView.prototype.initialize.apply(this);
 
-            var employments = this.model.employments ? this.model.employments.toJSON() : [],
-                educations = this.model.educations ? this.model.educations.toJSON() : [],
-                qualifications = this.model.qualifications ? this.model.qualifications.toJSON() : [];
+            // var employments = this.model.employments ? this.model.employments.toJSON() : [],
+            //     educations = this.model.educations ? this.model.educations.toJSON() : [],
+            //     qualifications = this.model.qualifications ? this.model.qualifications.toJSON() : [];
 
-            // for create this person's timeline, combine his employments, educations, qualification together
-            var unionHistory = _.union(employments, educations, qualifications);
+            // // for create this person's timeline, combine his employments, educations, qualification together
+            // var unionHistory = _.union(employments, educations, qualifications);
 
-            // filter out the item which do not have time information
-            var filterHistory = _.filter(unionHistory, function(history) {
-                return history.startDate || history.acquireDate;
-            });
-            // if this person have history item
-            if (filterHistory.length) {
+            // // filter out the item which do not have time information
+            // var filterHistory = _.filter(unionHistory, function(history) {
+            //     return history.startDate || history.acquireDate;
+            // });
+            // // if this person have history item
+            // if (filterHistory.length) {
 
-                // group his history item by year-month
-                var groupHistory = _.groupBy(filterHistory, function(history) {
-                    if (history.startDate)
-                        return moment(history.startDate).format('YYYY/MM');
-                    else if (history.acquireDate)
-                        return moment(history.acquireDate).format('YYYY/MM');
-                });
-                // create array hold the model for history timeline
-                var historyModels = [];
-                // fill the array
-                for(var date in groupHistory) {
-                    historyModels.push({
-                        date: date,
-                        history: groupHistory[date]
-                    });
-                }
-                // create history timeline view the model above
-                this.historyView = new HistoryView({
-                    // sort items
-                    collection: new Backbone.Collection(historyModels, {
-                        comparator: function(history) {
-                            // by date desc
-                            return 0 - Number(moment(history.get('date'), 'YYYY/MM').toDate().valueOf());
-                        }
-                    })
-                });
-            }
+            //     // group his history item by year-month
+            //     var groupHistory = _.groupBy(filterHistory, function(history) {
+            //         if (history.startDate)
+            //             return moment(history.startDate).format('YYYY/MM');
+            //         else if (history.acquireDate)
+            //             return moment(history.acquireDate).format('YYYY/MM');
+            //     });
+            //     // create array hold the model for history timeline
+            //     var historyModels = [];
+            //     // fill the array
+            //     for(var date in groupHistory) {
+            //         historyModels.push({
+            //             date: date,
+            //             history: groupHistory[date]
+            //         });
+            //     }
+            //     // create history timeline view the model above
+            //     this.historyView = new HistoryView({
+            //         // sort items
+            //         collection: new Backbone.Collection(historyModels, {
+            //             comparator: function(history) {
+            //                 // by date desc
+            //                 return 0 - Number(moment(history.get('date'), 'YYYY/MM').toDate().valueOf());
+            //             }
+            //         })
+            //     });
+            // }
 
         },
 
@@ -110,7 +113,7 @@ define([
             this.rm = new Backbone.Marionette.RegionManager();
             // create regions
             this.regions = this.rm.addRegions({
-                historyRegion: '#history',
+                // historyRegion: '#history',
                 friendsRegion: '#friends'
             });
         },
@@ -121,29 +124,29 @@ define([
             // some effect
             this.$el.addClass('animated fadeInRight');
 
-            // // show friends view
-            // if (this.friendsView)
-            //     this.regions.friendsRegion.show(this.friendsView);
+            // show friends view
+            if (this.friendsView)
+                this.regions.friendsRegion.show(this.friendsView);
 
-            // show history view
-            if (this.historyView)
-                this.regions.historyRegion.show(this.historyView);
+            // // show history view
+            // if (this.historyView)
+            //     this.regions.historyRegion.show(this.historyView);
 
-            // decorate pie chart
-            $('.easy-pie-chart.percentage').each(function(){
-                var barColor = $(this).data('color') || '#555';
-                var trackColor = '#E2E2E2';
-                var size = parseInt($(this).data('size')) || 72;
-                $(this).easyPieChart({
-                    barColor: barColor,
-                    trackColor: trackColor,
-                    scaleColor: false,
-                    lineCap: 'butt',
-                    lineWidth: parseInt(size/10),
-                    animate:false,
-                    size: size
-                }).css('color', barColor);
-            });
+            // // decorate pie chart
+            // $('.easy-pie-chart.percentage').each(function(){
+            //     var barColor = $(this).data('color') || '#555';
+            //     var trackColor = '#E2E2E2';
+            //     var size = parseInt($(this).data('size')) || 72;
+            //     $(this).easyPieChart({
+            //         barColor: barColor,
+            //         trackColor: trackColor,
+            //         scaleColor: false,
+            //         lineCap: 'butt',
+            //         lineWidth: parseInt(size/10),
+            //         animate:false,
+            //         size: size
+            //     }).css('color', barColor);
+            // });
         },
 
         // before close

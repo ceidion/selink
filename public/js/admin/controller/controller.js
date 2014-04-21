@@ -11,6 +11,7 @@ define([
     'common/view/people/detail',
     'common/view/calendar/main',
     'common/view/activity/main',
+    'common/view/notification/main',
     'admin/view/data/skill/main',
     'admin/view/announcement/main',
     'admin/view/issue/main',
@@ -29,6 +30,7 @@ define([
     PeopleDetailView,
     CalendarView,
     ActivityView,
+    NotificationView,
     SkillsView,
     AnnouncementView,
     IssueView,
@@ -95,6 +97,8 @@ define([
                 var people = new UserModel({_id: id});
                 people.fetch({
                     success: function() {
+
+                        console.log(people);
                         selink.peopleDetailView = new PeopleDetailView({
                             model: people
                         });
@@ -166,6 +170,15 @@ define([
             selink.activityView = new ActivityView();
             // show activity view
             selink.pageContent.show(selink.activityView);
+        },
+
+        // show notification
+        showNotificationView: function() {
+
+            // create notification view
+            selink.notificationView = new NotificationView();
+            // show notification view
+            selink.pageContent.show(selink.notificationView);
         },
 
         showSkillsView: function() {

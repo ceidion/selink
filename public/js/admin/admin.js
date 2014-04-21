@@ -1,12 +1,33 @@
 define([
+    'common/collection/base',
+    'common/model/event',
     'common/model/user',
     'admin/router/router',
     'admin/controller/controller'
 ], function(
+    BaseCollection,
+    EventModel,
     UserModel,
     Router,
     Controller
 ) {
+
+    var Events = BaseCollection.extend({
+
+        model: EventModel,
+
+        url:  '/events',
+
+        comparator: function(event) {
+            // sort by start desc
+            return Number(event.get('start').valueOf());
+        }
+    });
+
+    var Notifications = BaseCollection.extend({
+
+        url: '/notifications'
+    });
 
     // create application instance
     window.selink = new Backbone.Marionette.Application();
@@ -88,16 +109,30 @@ define([
             // on success
             success: function() {
 
-                // make controller
-                self.controller = new Controller();
+                self.userModel.events = new Events();
+                self.userModel.events.fetch({
 
-                // setup router
-                self.router = new Router({
-                    controller: self.controller
+                    success: function() {
+
+                        self.userModel.notifications = new Notifications();
+                        self.userModel.notifications.fetch({
+
+                            success: function() {
+
+                                // make controller
+                                self.controller = new Controller();
+
+                                // setup router
+                                self.router = new Router({
+                                    controller: self.controller
+                                });
+
+                                // start history
+                                Backbone.history.start();
+                            }
+                        });
+                    }
                 });
-
-                // start history
-                Backbone.history.start();
             },
 
             // on error

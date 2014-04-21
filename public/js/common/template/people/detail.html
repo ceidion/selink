@@ -1,9 +1,18 @@
-<div class="row">
+<div class="row alert alert-info">
 
     <div class="col-md-3 center">
         <!-- photo -->
-        <div class="profile-picture ace-thumbnails">
+        <div class="profile-picture ace-thumbnails" style="position: relative;">
             <img class="img-responsive" src="<%= obj.photo %>">
+            <div class="tags" style="position: absolute; background-color: transparent; border: 0; bottom: 0; right: 0; margin: 0; padding: 0;">
+                <span class="label-holder">
+                    <span class="label label-lg label-primary arrowed"><%= obj.title %></span>
+                </span>
+            </div>
+        </div>
+        <!-- name -->
+        <div class="bigger-150">
+            <%= obj.firstName %>&nbsp;<%= obj.lastName %>
         </div>
         <% if (obj.isFriend) { %>
             <button class="btn btn-danger btn-block btn-break"
@@ -24,25 +33,6 @@
 
     <div class="col-md-9">
 
-        <!-- name -->
-        <div class="bigger-150">
-            <%= obj.firstName %>&nbsp;<%= obj.lastName %>
-        </div>
-
-        <!-- title -->
-        <% if (obj.title) { %>
-            <div class="label label-xlg label-primary arrowed-in arrowed-in-right sl-title">
-                <span><%= obj.title %></span>
-            </div>
-        <% } %>
-
-        <!-- bio -->
-        <% if (obj.birthDayDisplay) { %>
-            <div>
-                <!-- <h4 class="lighter"><i class="icon-quote-left"></i></h4> -->
-                <%= obj.bio %>
-            </div>
-        <% } %>
 
     </div>
 
@@ -52,146 +42,6 @@
 
 <div class="row isotope">
 
-    <div class="isotope-item col-md-4">
-        <div class="widget-box transparent">
-
-            <div class="widget-header">
-                <h5>基本情報</h5>
-            </div>
-
-            <div class="widget-body">
-                <div class="widget-main">
-
-                    <!-- telNo -->
-                    <% if (obj.telNo) { %>
-                        <div class="row" style="min-height: 40px; line-height: 40px;">
-                            <div class="col-xs-4 align-right"><i class="icon-phone bigger-120 pink"></i>&nbsp;Tel.</div>
-                            <div class="col-xs-8 align-left"><%= obj.telNo%></div>
-                        </div>
-                    <% } %>
-
-                    <!-- email -->
-                    <% if (obj.email) { %>
-                        <div class="row" style="min-height: 40px; line-height: 40px;">
-                            <div class="col-xs-4 align-right"><i class="icon-envelope bigger-120 green"></i>&nbsp;E-Mail</div>
-                            <div class="col-xs-8 align-left"><%= obj.email%></div>
-                        </div>
-                    <% } %>
-
-                    <!-- website -->
-                    <% if (obj.webSite) { %>
-                        <div class="row" style="min-height: 40px; line-height: 40px;">
-                            <div class="col-xs-4 align-right"><i class="icon-globe bigger-120 blue"></i>&nbsp;個人サイト</div>
-                            <div class="col-xs-8 align-left"><%= obj.webSite%></div>
-                        </div>
-                    <% } %>
-
-                    <!-- address -->
-                    <% if (obj.address) { %>
-                        <div class="row" style="min-height: 40px; line-height: 40px;">
-                            <div class="col-xs-4 align-right"><i class="icon-map-marker bigger-120 orange"></i>&nbsp;住所</div>
-                            <div class="col-xs-8 align-left"><%= obj.address%></div>
-                        </div>
-                    <% } %>
-
-                    <!-- station -->
-                    <% if (obj.nearestSt) { %>
-                        <div class="row" style="min-height: 40px; line-height: 40px;">
-                            <div class="col-xs-4 align-right"><i class="icon-road bigger-120 orange"></i>&nbsp;最寄駅</div>
-                            <div class="col-xs-8 align-left"><%= obj.nearestSt%></div>
-                        </div>
-                    <% } %>
-
-                    <!-- birth day -->
-                    <% if (obj.birthDayDisplay) { %>
-                        <div class="row" style="min-height: 40px; line-height: 40px;">
-                            <div class="col-xs-4 align-right"><i class="icon-calendar bigger-120"></i>&nbsp;生年月日</div>
-                            <div class="col-xs-8 align-left"><%= obj.birthDayDisplay%></div>
-                        </div>
-                    <% } %>
-
-                    <!-- nationality -->
-                    <% if (obj.nationality) { %>
-                        <div class="row" style="min-height: 40px; line-height: 40px;">
-                            <div class="col-xs-4 align-right"><i class="icon-flag bigger-120"></i>&nbsp;国籍</div>
-                            <div class="col-xs-8 align-left"><%= obj.nationality%></div>
-                        </div>
-                    <% } %>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="friends" class="isotope-item col-xs-12 col-sm-6 col-lg-4">
-        <div class="widget-box">
-            <div class="widget-header widget-header-small header-color-green">
-                <h5><i class="icon-group"></i>&nbsp;お友達</h5>
-            </div>
-
-            <div class="widget-body">
-                <div class="widget-main">
-                    <ul class="ace-thumbnails">
-                        <% _.each(obj.friends, function(friend){ %>
-                        <li>
-                            <a href="#profile/<%= friend._id %>" style="margin: 5px;">
-                                <img alt="" src="<%= friend.photo %>" style="min-width: 70px; max-width: 70px;"/>
-                                <div class="tags">
-                                <% if (friend.type == "employer") { %>
-                                    <span class="label-holder">
-                                        <span class="label label-success arrowed">営業担当</span>
-                                    </span>
-                                <% } else if (friend.type == "admin") { %>
-                                    <span class="label-holder">
-                                        <span class="label label-warning arrowed">管理者</span>
-                                    </span>
-                                <% } %>
-                                </div>
-                            </a>
-                        </li>
-                        <% }); %>
-                    </ul>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="history" class="isotope-item col-xs-12 col-sm-6 col-lg-4"></div>
-
-    <div class="isotope-item col-xs-12 col-sm-6 col-lg-4">
-        <div class="widget-box transparent">
-
-            <div class="widget-header">
-                <h5>スキル</h5>
-            </div>
-
-            <div class="widget-body">
-                <div class="widget-main">
-                    <div class="clearfix">
-                    <% _.each(obj.languages, function(language){ %>
-                        <div class="grid3 center">
-                            <div class="easy-pie-chart percentage" data-percent="<%= language.weight %>" data-color="#CA5952">
-                                <span class="percent"><%= language.weight %></span>%
-                            </div>
-                            <div class="space-2"></div>
-                            <%= language.language %>
-                        </div>
-                    <% }); %>
-                    </div>
-                    <div class="hr hr-16"></div>
-                    <div class="profile-skills">
-                    <% _.each(obj.skills, function(skill){ %>
-                        <div class="progress">
-                            <div class="progress-bar" style="width:<%= skill.weight %>%">
-                                <span class="pull-left"><%= skill.skill %></span>
-                                <span class="pull-right"><%= skill.weight %></span>
-                            </div>
-                        </div>
-                    <% }); %>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+    <div id="friends" class="stamp col-xs-12 col-sm-6 col-lg-4"></div>
 
 </div>
