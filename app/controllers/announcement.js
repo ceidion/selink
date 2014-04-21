@@ -1,5 +1,7 @@
 var _ = require('underscore'),
+    Mailer = require('../mailer/mailer.js'),
     mongoose = require('mongoose'),
+    User = mongoose.model('User'),
     Announcement = mongoose.model('Announcement');
 
 exports.index = function(req, res, next) {
@@ -29,7 +31,19 @@ exports.create = function(req, res, next) {
         else {
             announcement.populate('_owner', 'firstName lastName photo', function(err, announcement){
                 if (err) next(err);
-                else res.json(announcement);
+                else {
+
+                    // send email to all users
+                    User.find()
+                        .where('title').ne('fake user')
+                        .select('email')
+                        .exec(function(err, users) {
+                            // send new-announcement mail
+                            Mailer.newAnnouncement(users, announcement);
+                        });
+
+                    res.json(announcement);
+                }
             });
         }
     });

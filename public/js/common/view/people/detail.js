@@ -54,8 +54,9 @@ define([
                 // mark him as user's invited friend
                 this.model.set('isInvited', true, {silent:true});
 
-            // create firends view
-            this.friendsView = new FriendsView({collection: this.model.friends});
+            if (this.model.friends.length)
+                // create firends view
+                this.friendsView = new FriendsView({collection: this.model.friends});
 
             // create post collection
             this.collection = new Posts(null, {document: this.model});

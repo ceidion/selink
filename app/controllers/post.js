@@ -1,5 +1,6 @@
 var _ = require('underscore'),
-    S = require('string'),
+    _s = require('underscore.string'),
+    Mailer = require('../mailer/mailer.js'),
     request = require('request'),
     mongoose = require('mongoose'),
     Post = mongoose.model('Post'),
@@ -56,12 +57,12 @@ exports.show = function(req, res, next) {
 exports.create = function(req, res, next) {
 
     // strip out the tags in content
-    var contentStripTag = S(req.body.content).stripTags();
+    var contentStripTag = _s.stripTags(req.body.content);
 
-    // if content is longer than 150
-    if (contentStripTag.length > 150) {
-        // cut it in 150
-        contentStripTag = contentStripTag.truncate(150).s;
+    // if content is longer than 350
+    if (contentStripTag.length > 350) {
+        // cut it in 350
+        contentStripTag = _s.truncate(contentStripTag, 350);
     }
 
     // create post
@@ -83,6 +84,7 @@ exports.create = function(req, res, next) {
                 if (err) next(err);
             });
 
+            // send notificaton to all friends
             Notification.create({
                 _owner: req.user.friends,
                 _from: req.user.id,
@@ -105,6 +107,20 @@ exports.create = function(req, res, next) {
                     });
                 }
             });
+
+            // send email to all friends
+            User.find()
+                .select('email')
+                .where('_id').in(req.user.friends)
+                .exec(function(err, users) {
+                    // send new-post mail
+                    Mailer.newPost(users, {
+                        _id: newPost._id,
+                        authorName: req.user.firstName + ' ' + req.user.lastName,
+                        authorPhoto: req.user.photo,
+                        summary: newPost.summary
+                    });
+                });
 
             // return the crearted post
             newPost.populate({

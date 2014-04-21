@@ -134,3 +134,105 @@ exports.friendApprove = function(recipient) {
         }
     });
 };
+
+exports.newPost = function(recipients, post) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) {
+            console.log(err);
+        } else {
+
+            var Render = function(recipient, post) {
+
+                this.locals = {
+                    recipient: recipient,
+                    post: post
+                };
+
+                this.send = function(err, html, text) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                            transport.sendMail({
+                            from: 'SELink <noreply@selink.jp>',
+                            to: recipient.email,
+                            subject: post.authorName + 'さんは新しい記事を投稿しました',
+                            html: html,
+                            text: text
+                        }, function(err, responseStatus) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log(responseStatus.message);
+                            }
+                        });
+                    }
+                };
+
+                this.batch = function(batch) {
+                    batch(this.locals, templatesDir, this.send);
+                };
+            };
+
+            // Load the template and send the emails
+            template('new-post', true, function(err, batch) {
+                for(recipient in recipients) {
+                    var render = new Render(recipients[recipient], post);
+                    render.batch(batch);
+                }
+            });
+        }
+    });
+};
+
+exports.newAnnouncement = function(recipients, announcement) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) {
+            console.log(err);
+        } else {
+
+            var Render = function(recipient, announcement) {
+
+                this.locals = {
+                    recipient: recipient,
+                    announcement: announcement
+                };
+
+                this.send = function(err, html, text) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                            transport.sendMail({
+                            from: 'SELink <noreply@selink.jp>',
+                            to: recipient.email,
+                            subject: 'SELinkからのお知らせです',
+                            html: html,
+                            text: text
+                        }, function(err, responseStatus) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log(responseStatus.message);
+                            }
+                        });
+                    }
+                };
+
+                this.batch = function(batch) {
+                    batch(this.locals, templatesDir, this.send);
+                };
+            };
+
+            // Load the template and send the emails
+            template('new-announcement', true, function(err, batch) {
+                for(recipient in recipients) {
+                    var render = new Render(recipients[recipient], announcement);
+                    render.batch(batch);
+                }
+            });
+        }
+    });
+};
