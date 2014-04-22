@@ -112,6 +112,7 @@ exports.create = function(req, res, next) {
             User.find()
                 .select('email')
                 .where('_id').in(req.user.friends)
+                .where('logicDelete').equals(false)
                 .exec(function(err, users) {
                     // send new-post mail
                     Mailer.newPost(users, {

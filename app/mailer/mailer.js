@@ -208,7 +208,7 @@ exports.newAnnouncement = function(recipients, announcement) {
                             transport.sendMail({
                             from: 'SELink <noreply@selink.jp>',
                             to: recipient.email,
-                            subject: 'SELinkからのお知らせです',
+                            subject: 'SELinkからのお知らせ',
                             html: html,
                             text: text
                         }, function(err, responseStatus) {
@@ -230,6 +230,57 @@ exports.newAnnouncement = function(recipients, announcement) {
             template('new-announcement', true, function(err, batch) {
                 for(recipient in recipients) {
                     var render = new Render(recipients[recipient], announcement);
+                    render.batch(batch);
+                }
+            });
+        }
+    });
+};
+
+exports.newUser = function(recipients, user) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) {
+            console.log(err);
+        } else {
+
+            var Render = function(recipient, user) {
+
+                this.locals = {
+                    recipient: recipient,
+                    user: user
+                };
+
+                this.send = function(err, html, text) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                            transport.sendMail({
+                            from: 'SELink <noreply@selink.jp>',
+                            to: recipient.email,
+                            subject: '新しいユーザが登録しました',
+                            html: html,
+                            text: text
+                        }, function(err, responseStatus) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log(responseStatus.message);
+                            }
+                        });
+                    }
+                };
+
+                this.batch = function(batch) {
+                    batch(this.locals, templatesDir, this.send);
+                };
+            };
+
+            // Load the template and send the emails
+            template('new-user', true, function(err, batch) {
+                for(recipient in recipients) {
+                    var render = new Render(recipients[recipient], user);
                     render.batch(batch);
                 }
             });

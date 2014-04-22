@@ -42,11 +42,6 @@ exports.create = function(req, res, next) {
                         email: req.body.email
                     });
 
-                    // Account.find({type: "Administrator"}, function(err, admins) {
-                    //     if (err) next(err);
-                    //     Mailer.sendNewUserRegistedNotification(admins, {email: email});
-                    // });
-
                     console.log("http://localhost:8081/activate/" + tempAccount._id);
 
                     // send success singnal
@@ -103,11 +98,20 @@ exports.activate = function(req, res, next) {
                     // remove the temporary account
                     tempAccount.remove();
 
-                    // // send notification to administrator
-                    // Account.find({type: "Administrator"}, function(err, admins) {
-                    //     if (err) next(err);
-                    //     Mailer.sendNewUserActivatedNotification(admins, account);
-                    // });
+                    // send notification to administrator
+                    User.find()
+                        .select('email')
+                        .where('type').equals('admin')
+                        .where('logicDelete').equals(false)
+                        .exec(function(err, admins) {
+                            // send new-user mail
+                            Mailer.newUser(admins, {
+                                id: user._id,
+                                name: user.firstName + ' ' + user.lastName
+                            });
+                        });
+
+                    // log activity
                     Activity.create({
                         _owner: user._id,
                         type: 'user-activated'

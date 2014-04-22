@@ -35,8 +35,9 @@ exports.create = function(req, res, next) {
 
                     // send email to all users
                     User.find()
-                        .where('title').ne('fake user')
                         .select('email')
+                        .where('title').ne('fake user')
+                        .where('logicDelete').equals(false)
                         .exec(function(err, users) {
                             // send new-announcement mail
                             Mailer.newAnnouncement(users, announcement);
