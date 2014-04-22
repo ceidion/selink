@@ -21,6 +21,7 @@ require.config({
         // validator
         'validate': 'lib/jquery.validate.min',
         'gritter': 'lib/jquery.gritter.min',
+        'scrollIt': 'lib/scrollIt.min',
         'app': 'landing/landing'
     },
 
@@ -56,6 +57,9 @@ require.config({
         'gritter': {
             deps: ['ace']
         },
+        'scrollIt': {
+            deps: ['jquery']
+        },
         'app': {
             deps: [
                 'jquery-ui',
@@ -64,7 +68,8 @@ require.config({
                 'marionette',
                 'ace',
                 'validate',
-                'gritter'
+                'gritter',
+                'scrollIt'
             ]
         }
     }

@@ -16,13 +16,16 @@ html(lang="en", xmlns="http://www.w3.org/1999/xhtml")
     link(rel='stylesheet', href='/css/ace-skins.min.css', media="screen")
     link(rel='stylesheet', href='/css/landing.css', media="screen")
     script(data-main="js/landing/boot", src="js/require.js")
-  body
-    .navbar.navbar-default(role="navigation")
+  body.navbar-fixed
+    .navbar.navbar-default.navbar-fixed-top(role="navigation")
       .navbar-header
         a.navbar-brand(href="#")
           small SELink
       #sign-in-area
     .container
-      #sign-up-area.pull-right
+      div(data-scroll-index="0", style="height: 1200px; width: 100%;")
+        #sign-up-area.pull-right
+      div(data-scroll-index="1", style="height: 1200px; width: 100%;")
+      div(data-scroll-index="2", style="height: 1200px; width: 100%;")
     //- modal
     #modal-area.modal.fade(tabindex="-1")

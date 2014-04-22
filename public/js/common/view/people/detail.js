@@ -129,6 +129,9 @@ define([
             if (this.friendsView)
                 this.regions.friendsRegion.show(this.friendsView);
 
+            // call super initializer
+            BaseView.prototype.onShow.apply(this);
+
             // // show history view
             // if (this.historyView)
             //     this.regions.historyRegion.show(this.historyView);

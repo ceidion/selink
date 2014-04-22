@@ -46,6 +46,10 @@ define([
 
         var signUpView = new SignUpView();
         this.signUpArea.show(signUpView);
+
+        $.scrollIt({
+            topOffset: 50
+        });
     });
 
     return selink;

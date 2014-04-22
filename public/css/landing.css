@@ -1,5 +1,5 @@
 
-body{background-color:white}
+body{background-color:white;background:url('/asset/patterns/retina_wood_@2X.png') repeat center top}
 .navbar-brand{padding-top:15px !important}
 .navbar-form input,.navbar-form button{margin-right:2px}
 .gritter-item{font-size:12px}
