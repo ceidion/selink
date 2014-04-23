@@ -131,6 +131,15 @@ define([
         // show friends
         showFriendView: function() {
 
+            // if the user don't have any friend
+            if (!selink.userModel.friends.length) {
+
+                // go to people view
+                this.showPeopleView();
+
+                return;
+            }
+
             // create friend view
             selink.friendView = new FriendView();
             // show friend view

@@ -80,6 +80,14 @@ define([], function() {
                 },
                 state: {
                     currPage: 0
+                },
+                // the default determine path fuction is not fit selink,
+                // here just use the specific one. (from infinitescroll.js line 283)
+                pathParse: function(path) {
+                    if (path.match(/^(.*?page=)1(\/.*|$)/)) {
+                        path = path.match(/^(.*?page=)1(\/.*|$)/).slice(1);
+                        return path;
+                    }
                 }
             }, function(json, opts) {
                 // no more data

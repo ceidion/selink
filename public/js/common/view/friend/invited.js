@@ -41,9 +41,8 @@ define([
         // after show
         onShow: function() {
             // make container scrollable
-            this.$el.find('.widget-main').slimScroll({
-                height: 300,
-                railVisible:true
+            this.$el.find('.widget-main').niceScroll({
+                horizrailenabled: false
             });
         }
 

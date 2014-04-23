@@ -47,7 +47,7 @@ require.config({
         'bridget': 'lib/uncompressed/jquery.bridget',
         'imagesloaded': 'lib/imagesloaded.pkgd.min',
         'isotope': 'lib/isotope.pkgd.min',
-        'slim-scroll': 'lib/jquery.slimscroll.min',
+        'nicescroll': 'lib/jquery.nicescroll.min',
         'infinite-scroll': 'lib/jquery.infinitescroll.min',
         'tag': 'lib/uncompressed/bootstrap-tag',
         'typeahead': 'lib/uncompressed/typeahead.bundle',
@@ -140,7 +140,7 @@ require.config({
         'isotope': {
             deps: ['jquery', 'bridget', 'imagesloaded']
         },
-        'slim-scroll': {
+        'nicescroll': {
             deps: ['jquery']
         },
         'infinite-scroll': {
@@ -178,8 +178,10 @@ require.config({
                 'gritter',
                 'knob',
                 'wysiwyg',
+                'bridget',
+                'imagesloaded',
                 'isotope',
-                'slim-scroll',
+                'nicescroll',
                 'infinite-scroll',
                 'tag',
                 'typeahead',

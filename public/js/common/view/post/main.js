@@ -62,6 +62,8 @@ define([
                     return $(this).closest('.widget-box').find('.btn-toolbar').prepend(toolbar).children(0).addClass('inline');
                 }
             }).prev().addClass('wysiwyg-style3');
+
+            this.ui.newPost.niceScroll();
         },
 
         // change the status of post button

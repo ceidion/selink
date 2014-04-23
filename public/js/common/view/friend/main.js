@@ -34,11 +34,13 @@ define([
         // Initializer
         initialize: function() {
 
-            // create invited friends view
-            this.invitedView = new InvitedView({collection: selink.userModel.invited});
+            if (selink.userModel.invited.length)
+                // create invited friends view
+                this.invitedView = new InvitedView({collection: selink.userModel.invited});
 
-            // create firends view
-            this.friendsView = new FriendsView({collection: selink.userModel.friends});
+            if (selink.userModel.friends.length)
+                // create firends view
+                this.friendsView = new FriendsView({collection: selink.userModel.friends});
 
             // create posts collection
             this.collection = new PostsCollection();
@@ -62,10 +64,13 @@ define([
         // After show
         onShow: function() {
 
-            // show invited friends view
-            this.regions.invitedRegion.show(this.invitedView);
-            // show friends view
-            this.regions.friendsRegion.show(this.friendsView);
+            if (this.invitedView)
+                // show invited friends view
+                this.regions.invitedRegion.show(this.invitedView);
+
+            if (this.friendsView)
+                // show friends view
+                this.regions.friendsRegion.show(this.friendsView);
 
             // call super onShow
             BaseView.prototype.onShow.apply(this);

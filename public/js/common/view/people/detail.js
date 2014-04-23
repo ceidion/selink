@@ -123,11 +123,16 @@ define([
         onShow: function() {
 
             // some effect
-            this.$el.addClass('animated fadeInRight');
+            // this.$el.addClass('animated fadeInRight');
 
             // show friends view
             if (this.friendsView)
                 this.regions.friendsRegion.show(this.friendsView);
+
+            // make container scrollable
+            this.$el.find('#bio-area').niceScroll({
+                horizrailenabled: false
+            });
 
             // call super initializer
             BaseView.prototype.onShow.apply(this);

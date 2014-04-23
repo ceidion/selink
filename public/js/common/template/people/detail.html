@@ -2,17 +2,15 @@
 
     <div class="widget-header row">
 
-        <div class="col-sm-3 center" style="margin-bottom: 15px;">
+        <div class="col-md-3 center" style="margin-bottom: 15px;">
             <!-- photo -->
             <div class="profile-picture ace-thumbnails" style="position: relative;">
                 <img class="img-responsive" src="<%= obj.photo %>">
-                <div class="tags" style="position: absolute; background-color: transparent; border: 0; bottom: 0; right: 0; margin: 0; padding: 0;">
+                <div class="tags" style="position: absolute; background-color: transparent; border: 0; top: 0; right: 0; margin: 0; padding: 0;">
                     <span class="label-holder">
                         <span class="label label-lg label-primary arrowed"><%= obj.title %></span>
                     </span>
                 </div>
-            </div>
-
             <% if (obj.isFriend) { %>
                 <button class="btn btn-danger btn-block btn-break"
                         data-loading-text="<i class='icon-spinner icon-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
@@ -28,10 +26,14 @@
                     <i class="icon-plus"></i>&nbsp;友達にする
                 </button>
             <% } %>
+            </div>
+
         </div>
 
-        <div class="col-sm-9" style="margin-bottom: 15px;">
+        <div class="col-md-9" style="margin-bottom: 15px; height: 250px;">
             <div class="bigger-200"><%= obj.firstName %>&nbsp;<%= obj.lastName %></div>
+            <div><i class="icon-map-marker bigger-120 orange"></i>&nbsp;<%= obj.address %></div>
+            <div id="bio-area" style="position: absolute; bottom: 0; max-height: 150px; overflow: auto;"><%= obj.bio %></div>
         </div>
 
         <div class="widget-toolbar no-border" style="position: absolute; bottom: 0; right: 0; margin-bottom: 5px;">
@@ -51,7 +53,7 @@
 
                 <div id="user-post" class="tab-pane in active">
                     <div class="isotope">
-                        <div id="friends" class="stamp col-xs-12 col-sm-6 col-lg-4"></div>
+                        <div id="friends" class="stamp col-xs-12 col-sm-6 col-lg-4" style="float: right;"></div>
                     </div>
                 </div>
 

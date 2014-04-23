@@ -196,8 +196,8 @@ exports.newsfeed = function(req, res, next) {
         .populate('_owner', 'firstName lastName photo')
         .populate('comments._owner', 'firstName lastName photo')
         .sort('-createDate')
-        .skip(20*page)  // skip n page
-        .limit(20)
+        .skip(10*page)  // skip n page
+        .limit(10)
         .exec(function(err, posts) {
             if (err) next(err);
             else {
@@ -207,8 +207,8 @@ exports.newsfeed = function(req, res, next) {
                     .where('expiredDate').gt(new Date())
                     .populate('_owner', 'firstName lastName photo')
                     .sort('-createDate')
-                    .skip(20*page)  // skip n page
-                    .limit(20)
+                    .skip(10*page)  // skip n page
+                    .limit(10)
                     .exec(function(err, jobs) {
                         if (err) next(err);
                         else {
@@ -217,8 +217,8 @@ exports.newsfeed = function(req, res, next) {
                                 .where('logicDelete').equals(false)
                                 .where('expiredDate').gt(new Date())
                                 .sort('-createDate')
-                                .skip(20*page)  // skip n page
-                                .limit(20)
+                                .skip(10*page)  // skip n page
+                                .limit(10)
                                 .exec(function(err, announcements) {
                                     if (err) next(err);
                                     else res.json(_.union(jobs, posts, announcements));

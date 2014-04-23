@@ -68,10 +68,7 @@ define([
             });
 
             // make dropdown menu scrollable
-            this.$el.find('.dropdown-body').slimScroll({
-                height: 300,
-                railVisible:true
-            });
+            this.$el.find('.dropdown-body').niceScroll();
 
             if (this.model.get('eventsNum') > 0)
                 // let the icon swing
