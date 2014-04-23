@@ -89,8 +89,8 @@ define([
         });
 
         $("html").niceScroll({
-            scrollspeed: 120,
-            mousescrollstep: 80,
+            // scrollspeed: 120,
+            // mousescrollstep: 80,
             horizrailenabled: false
         });
 

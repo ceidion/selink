@@ -93,8 +93,9 @@ define([
         });
 
         $("html").niceScroll({
-            scrollspeed: 120,
-            mousescrollstep: 80
+            // scrollspeed: 120,
+            // mousescrollstep: 80,
+            horizrailenabled: false
         });
 
         // body listen to click event, for close sl-editor, if any
