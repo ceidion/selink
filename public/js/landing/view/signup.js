@@ -203,7 +203,7 @@ define([
                         placement: 'bottom',
                         title: errors[key]
                     })
-                    .closest('.input-group')
+                    .closest('.form-group')
                     .addClass('has-error')
                     .find('i')
                     .addClass('animated-input-error');
@@ -216,7 +216,7 @@ define([
             this.$el.find('input')
                 .removeClass('tooltip-error')
                 .tooltip('destroy')
-                .closest('.input-group')
+                .closest('.form-group')
                 .removeClass('has-error')
                 .find('i')
                 .removeClass('animated-input-error');

@@ -2,10 +2,24 @@ define(['common/model/base'], function(BaseModel) {
 
     return BaseModel.extend({
 
+        // Url root
+        urlRoot: '/messages',
+
         validation: {
+
+            recipient: {
+                required: true,
+                msg: "宛先をご入力ください"
+            },
+
             subject: {
                 required: true,
                 msg: "メッセージタイトルをご入力ください"
+            },
+
+            message: {
+                required: true,
+                msg: "本文をご入力ください"
             }
         },
 

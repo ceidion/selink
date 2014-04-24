@@ -1,14 +1,15 @@
-<a href="#profile/<%= obj._id %>" style="margin: 2px;">
-    <img alt="" src="<%= obj.photo %>" style="min-width: 70px; max-width: 70px;"/>
-    <div class="tags">
-    <% if (obj.type == "employer") { %>
-        <span class="label-holder">
-            <span class="label label-success arrowed">営業担当</span>
-        </span>
-    <% } else if (obj.type == "admin") { %>
-        <span class="label-holder">
-            <span class="label label-warning arrowed">管理者</span>
-        </span>
-    <% } %>
-    </div>
+<a href="#profile/<%= obj._id %>">
+    <img src="<%= obj.photo %>" />
 </a>
+<div class="tags" style="">
+    <span class="label-holder">
+    <% if (obj.type == "employer") { %>
+        <span class="label label-success arrowed">営業担当</span>
+    <% } else if (obj.type == "admin") { %>
+        <span class="label label-warning arrowed">管理者</span>
+    <% } %>
+    </span>
+    <span class="label-holder">
+        <span class="label label-info"><%= obj.firstName %>&nbsp;<%= obj.lastName %></span>
+    </span>
+</div>

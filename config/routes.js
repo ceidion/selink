@@ -5,6 +5,7 @@ var tag = require('../app/controllers/tag'),
     issue = require('../app/controllers/issue'),
     friend = require('../app/controllers/friend'),
     address = require('../app/controllers/address'),
+    message = require('../app/controllers/message'),
     resetPs = require('../app/controllers/resetpassword'),
     activity = require('../app/controllers/activity'),
     userEvent = require('../app/controllers/event'),
@@ -95,6 +96,15 @@ module.exports = function(app, sio) {
     app.patch('/friends', checkLoginStatus, friend.create);
     // Remove friend
     app.delete('/friends/:friend', checkLoginStatus, friend.remove);
+
+    // Get messages
+    app.get('/messages', checkLoginStatus, message.index);
+    // Create new message
+    app.post('/messages', checkLoginStatus, message.create);
+    // Update messages
+    app.patch('/messages/:message', checkLoginStatus, message.update);
+    // Remove message
+    app.delete('/messages/:message', checkLoginStatus, message.remove);
 
     // Get events
     app.get('/events', checkLoginStatus, userEvent.index);

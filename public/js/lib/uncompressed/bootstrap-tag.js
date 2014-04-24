@@ -25,6 +25,7 @@
     this.element = $(element)
     this.options = $.extend(true, {}, $.fn.tag.defaults, options)
     this.values = $.grep($.map(this.element.val().split(','), $.trim), function ( value ) { return value.length > 0 })
+    this.models = []
     this.show()
   }
 
@@ -34,7 +35,8 @@
   , show: function () {
       var that = this
 
-      that.element.parent().prepend(that.element.detach().hide())
+      // that.element.parent().prepend(that.element.detach().hide())
+      that.element.parent().append(that.element.detach().hide())
       that.element
         .wrap($('<div class="tags">'))
         .parent()
@@ -87,32 +89,18 @@
             that.element.siblings('.tag').removeClass('tag-important')
           }
         })
-        .typeahead({highlight: true}, {
-          name: 'countries',
-          displayKey: function(d) {
-            return d.firstName + ' ' + d.lastName
-          },
-          source: that.options.source,
-          templates: {
-              suggestion: _.template([
-                '<div>',
-                '<p class="repo-language" style="margin-right: 8px;"><img src="./asset/images/no_photo_male.gif"></p>',
-                '<p class="repo-name"><%= obj.firstName %>&nbsp;<%= obj.lastName %></p>',
-                '<p class="repo-description"><%= obj._owner.email %></p>',
-                '<div style="clear: both"></div>',
-                '</div>'
-              ].join(''))
-            }
-        // , matcher: function ( value ) {
-        //     return ~value.toLowerCase().indexOf(this.query.toLowerCase()) && (that.inValues(value) == -1 || that.options.allowDuplicates)
-        //   }
-        // , updater: $.proxy(that.add, that)
-        })
-        .on('typeahead:selected', function() {
-          console.log(arguments)
-          that.process()
-        })
 
+        // custom: attach typeahead
+        if (that.options.ttOptions && that.options.ttSource) {
+          that.input.typeahead(that.options.ttOptions, that.options.ttSource)
+              .on('typeahead:selected', function(event, suggestion, dataset) {
+                that.process(suggestion)
+                // delegate the typeahead selected event, so the view can listen on it
+                // that.element.trigger('typeahead:selected', suggestion)
+              })
+        }
+
+        // custom: delete
       // $(that.input.data('typeahead').$menu).on('mousedown', function() {
       //   that.skip = true
       // })
@@ -133,13 +121,14 @@
         return $.inArray(value, this.values)
       }
     }
-  , createBadge: function ( value ) {
+  , createBadge: function (model) {
     var that = this
 
       $('<span/>', {
-        'class' : "tag"
+        'class' : "tag",
+        'data-id' : model.id
       })
-      .text(value)
+      .text(model.get('firstName') + ' ' + model.get('lastName'))
       .append($('<button type="button" class="close">&times;</button>')
         .on('click', function () {
           that.remove(that.element.siblings('.tag').index($(this).closest('.tag')))
@@ -147,41 +136,67 @@
       )
       .insertBefore(that.element)
   }
-  , add: function ( value ) {
+  , add: function (value, model) {
       var that = this
 
       if ( !that.options.allowDuplicates ) {
-        var index = that.inValues(value)
-        if ( index != -1 ) {
-          var badge = that.element.siblings('.tag:eq(' + index + ')')
-          badge.addClass('tag-warning')
-          setTimeout(function () {
-            $(badge).removeClass('tag-warning')
-          }, 500)
-          return
-        }
+        // var index = that.inValues(value)
+        // if ( index != -1 ) {
+        //   var badge = that.element.siblings('.tag:eq(' + index + ')')
+        //   badge.addClass('tag-warning')
+        //   setTimeout(function () {
+        //     $(badge).removeClass('tag-warning')
+        //   }, 500)
+        //   return
+        // }
+
+        var dup = _.find(this.models, function(current) {
+          if (current.id === model.id) {
+            var badge = that.element.siblings('[data-id="' + current.id + '"]')
+            badge.addClass('tag-warning')
+            setTimeout(function () {
+              $(badge).removeClass('tag-warning')
+            }, 500)
+            return current
+          }
+        })
+
+        if (dup) return
       }
 
       this.values.push(value)
-      this.createBadge(value)
+      this.models.push(model)
+      // this.createBadge(value)
+      this.createBadge(model)
 
       this.element.val(this.values.join(', '))
-      this.element.trigger('added', [value])
+      this.element.data('models', this.models);
+
+      this.element.trigger('added', model)
     }
   , remove: function ( index ) {
       if ( index >= 0 ) {
         var value = this.values.splice(index, 1)
+
+        var id = this.element.siblings('.tag:eq(' + index + ')').attr('data-id')
+
         this.element.siblings('.tag:eq(' + index + ')').remove()
+
         this.element.val(this.values.join(', '))
+
+        this.models = _.reject(this.models, function(model) {
+          return model.id === id
+        })
+        this.element.data('models', this.models)
 
         this.element.trigger('removed', [value])
       }
     }
-  , process: function () {
+  , process: function (suggestion) {
       var values = $.grep($.map(this.input.val().split(','), $.trim), function ( value ) { return value.length > 0 }),
           that = this
       $.each(values, function() {
-        that.add(this)
+        that.add(this, suggestion)
       })
       this.input.val('')
     }

@@ -9,7 +9,8 @@ define([
     BaseView,
     BaseCollection,
     EmptyView,
-    ItemView) {
+    ItemView
+) {
 
     return BaseView.extend({
 
@@ -17,7 +18,7 @@ define([
         template: template,
 
         // item view container
-        itemViewContainer: '.ace-thumbnails',
+        itemViewContainer: '.widget-main',
 
         // item view
         itemView: ItemView,
@@ -31,12 +32,12 @@ define([
             var self = this;
 
             // use imageLoaded plugin
-            this.$el.find('.ace-thumbnails').imagesLoaded(function() {
+            this.$el.find('.widget-main').imagesLoaded(function() {
                 // enable isotope
-                self.$el.find('.ace-thumbnails').isotope({
-                    itemSelector : '.thumbnail',
+                self.$el.find('.widget-main').isotope({
+                    itemSelector : '.photo-item',
                     masonry: {
-                        columnWidth: '.thumbnail'
+                        columnWidth: '.photo-item'
                     }
                 });
             });

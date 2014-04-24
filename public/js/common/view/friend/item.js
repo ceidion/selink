@@ -8,18 +8,23 @@ define([
 
         template: template,
 
-        tagName: 'li',
+        // tagName: 'li',
 
-        className: 'thumbnail',
+        className: 'photo-item',
 
         onRender: function() {
             // this.$el.find('img').popover({
-            //     html: true,
             //     placement: 'auto',
+            //     html: true,
             //     trigger: 'hover',
+            //     container: 'body',
             //     title: this.model.get('firstName') + " " + this.model.get('lastName'),
-            //     content: "123",
-            //     container: 'body'
+            //     content: "123"
+            // });
+
+            // this.$el.find('img').tooltip({
+            //     title: this.model.get('firstName') + " " + this.model.get('lastName'),
+            //     placement: 'left'
             // });
         }
     });
