@@ -4,11 +4,23 @@ var _ = require('underscore'),
 
 exports.index = function(req, res, next) {
 
-    Message.find({_owner: req.user.id}, function(err, messages) {
+    var category = req.query.category || null, // category of request
+        page = req.query.page || 0;            // page number
 
-        if (err) next(err);
-        else res.json(messages);
-    });
+    var query = Message.find().where('_recipient').equals(req.user.id);
+
+    if (category != 'all')
+        query.where('opened').ne(req.user.id);
+
+    query.where('logicDelete').equals(false)
+        .populate('_from', 'type firstName lastName title photo createDate')
+        .skip(20*page)  // skip n page
+        .limit(20)
+        .sort('-createDate')
+        .exec(function(err, messages) {
+            if (err) next(err);
+            else res.json(messages);
+        });
 };
 
 exports.create = function(req, res, next) {

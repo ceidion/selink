@@ -15,7 +15,7 @@ define([], function() {
             "activity": "showActivityView",
             // "timecard": "showTimecardView",
             // "timecard/:date": "showTimecardView",
-            // "mailbox": "showMailBoxView",
+            "mailbox": "showMailBoxView",
         }
     });
 

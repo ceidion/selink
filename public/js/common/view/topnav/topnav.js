@@ -1,6 +1,7 @@
 define([
     'text!common/template/topnav/topnav.html',
     'common/view/topnav/event/menu',
+    'common/view/topnav/message/menu',
     'common/view/topnav/notification/menu',
     'common/view/issue/main',
     'common/view/setting/main',
@@ -8,6 +9,7 @@ define([
 ], function(
     template,
     EventMenu,
+    MessageMenu,
     NotificationMenu,
     IssueView,
     SettingView,
@@ -57,6 +59,10 @@ define([
             notificationNavRegion: {
                 selector: '#notification-nav',
                 regionType: ReplaceRegion
+            },
+            messageNavRegion: {
+                selector: '#message-nav',
+                regionType: ReplaceRegion
             }
         },
 
@@ -71,6 +77,9 @@ define([
             // create notification menu
             this.notificationNav = new NotificationMenu();
 
+            // create message menu
+            this.messageNav = new MessageMenu();
+
             this.model.set({'completeness': this.model.completeness()}, {silent: true});
         },
 
@@ -80,6 +89,7 @@ define([
             // show every menu
             this.eventNavRegion.show(this.eventNav);
             this.notificationNavRegion.show(this.notificationNav);
+            this.messageNavRegion.show(this.messageNav);
         },
 
         showIssueView: function(event) {

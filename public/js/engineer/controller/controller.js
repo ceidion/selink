@@ -12,6 +12,7 @@ define([
     'common/view/calendar/main',
     'common/view/activity/main',
     'common/view/notification/main',
+    'common/view/mailbox/main',
     'common/model/user',
     'common/model/post'
 ], function(
@@ -28,6 +29,7 @@ define([
     CalendarView,
     ActivityView,
     NotificationView,
+    MailBoxView,
     UserModel,
     PostModel
 ) {
@@ -180,6 +182,15 @@ define([
             selink.notificationView = new NotificationView();
             // show notification view
             selink.pageContent.show(selink.notificationView);
+        },
+
+        // show mailbox
+        showMailBoxView: function() {
+
+            // create mailbox view
+            selink.mailboxView = new MailBoxView();
+            // show mailbox view
+            selink.pageContent.show(selink.mailboxView);
         }
     });
 });

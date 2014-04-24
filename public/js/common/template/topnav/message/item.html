@@ -1,0 +1,16 @@
+<a href="#message/<%= obj._id %>">
+    <img src="<%= obj._from.photo %>" class="msg-photo" alt="">
+    <span class="msg-body">
+        <span class="msg-title">
+            <span class="blue">
+                <%= obj._from.firstName %>&nbsp;
+                <%= obj._from.lastName %>&nbsp;
+            </span>
+            <br>
+            <p><%= obj.subject %></p>
+        </span>
+        <span class="msg-time">
+            <i class="icon-time"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>
+        </span>
+    </span>
+</a>

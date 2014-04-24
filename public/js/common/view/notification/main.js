@@ -24,11 +24,6 @@ define([
         // item view
         itemView: ItemView,
 
-        // item view opotions
-        itemViewOptions: {
-            mode: "page"
-        },
-
         // initializer
         initialize: function() {
             this.collection = new Notifications();

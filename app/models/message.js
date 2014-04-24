@@ -32,6 +32,12 @@ var Message = new Schema({
         required: true
     },
 
+    // message opened
+    opened: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
     // Logical Delete flag
     logicDelete: {
         type: Boolean,

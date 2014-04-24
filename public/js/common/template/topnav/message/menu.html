@@ -1,0 +1,18 @@
+<a class="dropdown-toggle" href="/#" data-toggle="dropdown">
+    <span class="icon-envelope"></span>
+    <% if (obj.messagesNum > 0) { %>
+        <span class="badge badge-success"><%= obj.messagesNum %></span>
+    <% } %>
+</a>
+<ul class="pull-right dropdown-navbar dropdown-menu dropdown-caret navbar-green">
+    <li class="dropdown-header">
+        <i class="icon-envelope-alt"></i>&nbsp;メッセージ（<span class="title-num"><%= obj.messagesNum %></span>件）
+    </li>
+    <div class="dropdown-body navbar-green"></div>
+    <li class="dropdown-footer center">
+        <a href="#mailbox" class="blue">
+            受信トレイへ
+            <i class="icon-arrow-right"></i>
+        </a>
+    </li>
+</ul>
