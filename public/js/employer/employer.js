@@ -1,12 +1,14 @@
 define([
     'common/collection/base',
     'common/model/event',
+    'common/model/message',
     'common/model/user',
     'employer/router/router',
     'employer/controller/controller'
 ], function(
     BaseCollection,
     EventModel,
+    MessageModel,
     UserModel,
     Router,
     Controller
@@ -27,6 +29,18 @@ define([
     var Notifications = BaseCollection.extend({
 
         url: '/notifications'
+    });
+
+    var Messages = BaseCollection.extend({
+
+        model: MessageModel,
+
+        url:  '/messages',
+
+        comparator: function(event) {
+            // sort by start desc
+            return Number(event.get('createDate').valueOf());
+        }
     });
 
     // create application instance
@@ -57,13 +71,6 @@ define([
                 throw err;
             }
             return template;
-        };
-
-        // switch page with fade effect
-        Backbone.Marionette.Region.prototype.open = function(view){
-            this.$el.hide();
-            this.$el.html(view.el);
-            this.$el.fadeIn();
         };
 
         // change datetime language
@@ -129,16 +136,23 @@ define([
 
                             success: function() {
 
-                                // make controller
-                                self.controller = new Controller();
+                                self.userModel.messages = new Messages();
+                                self.userModel.messages.fetch({
 
-                                // setup router
-                                self.router = new Router({
-                                    controller: self.controller
+                                    success: function() {
+
+                                        // make controller
+                                        self.controller = new Controller();
+
+                                        // setup router
+                                        self.router = new Router({
+                                            controller: self.controller
+                                        });
+
+                                        // start history
+                                        Backbone.history.start();
+                                    }
                                 });
-
-                                // start history
-                                Backbone.history.start();
                             }
                         });
                     }

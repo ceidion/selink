@@ -13,6 +13,7 @@ define([], function() {
             "calendar": "showCalendarView",
             "notification": "showNotificationView",
             "activity": "showActivityView",
+            "mailbox": "showMailBoxView",
             "skill": "showSkillsView",
             "announcement": "showAnnouncementView",
             "issue": "showIssueView",

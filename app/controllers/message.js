@@ -7,10 +7,17 @@ exports.index = function(req, res, next) {
     var category = req.query.category || null, // category of request
         page = req.query.page || 0;            // page number
 
-    var query = Message.find().where('_recipient').equals(req.user.id);
+    var query = Message.find();
 
-    if (category != 'all')
-        query.where('opened').ne(req.user.id);
+    if (category == 'sent')
+        query.where('_from').equals(req.user.id);
+
+    else if (category == 'unread')
+        query.where('_recipient').equals(req.user.id)
+             .where('opened').ne(req.user.id);
+
+    else
+        query.where('_recipient').equals(req.user.id);
 
     query.where('logicDelete').equals(false)
         .populate('_from', 'type firstName lastName title photo createDate')
@@ -36,13 +43,29 @@ exports.create = function(req, res, next) {
 
 exports.update = function(req, res, next) {
 
-    var newMessage = _.omit(req.body, '_id');
+    // no way to update a sent message, the only updatable field is 'opened'
+    if (req.body.opened) {
 
-    Message.findByIdAndUpdate(req.params.message, newMessage, function(err, message) {
+        // find that message
+        Message.findById(req.params.message, function(err, message) {
 
-        if (err) next(err);
-        else res.json(message);
-    });
+            if (err) next(err);
+            else {
+
+                // add user to the opened list
+                message.opened.addToSet(req.user.id);
+
+                message.save(function(err, newMessage) {
+                    if (err) next(err);
+                    else res.json(newMessage);
+                });
+            }
+        });
+
+    // send 'bad request'
+    } else {
+        res.json(400, {});
+    }
 };
 
 exports.remove = function(req, res, next) {

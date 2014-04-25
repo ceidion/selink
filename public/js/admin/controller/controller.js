@@ -12,6 +12,7 @@ define([
     'common/view/calendar/main',
     'common/view/activity/main',
     'common/view/notification/main',
+    'common/view/mailbox/main',
     'admin/view/data/skill/main',
     'admin/view/announcement/main',
     'admin/view/issue/main',
@@ -31,6 +32,7 @@ define([
     CalendarView,
     ActivityView,
     NotificationView,
+    MailBoxView,
     SkillsView,
     AnnouncementView,
     IssueView,
@@ -139,6 +141,15 @@ define([
         // show friends
         showFriendView: function() {
 
+            // if the user don't have any friend
+            if (!selink.userModel.friends.length) {
+
+                // go to people view
+                this.showPeopleView();
+
+                return;
+            }
+
             // create friend view
             selink.friendView = new FriendView();
             // show friend view
@@ -179,6 +190,15 @@ define([
             selink.notificationView = new NotificationView();
             // show notification view
             selink.pageContent.show(selink.notificationView);
+        },
+
+        // show mailbox
+        showMailBoxView: function() {
+
+            // create mailbox view
+            selink.mailboxView = new MailBoxView();
+            // show mailbox view
+            selink.pageContent.show(selink.mailboxView);
         },
 
         showSkillsView: function() {

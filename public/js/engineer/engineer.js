@@ -35,7 +35,7 @@ define([
 
         model: MessageModel,
 
-        url:  '/messages',
+        url:  '/messages?category=unread',
 
         comparator: function(event) {
             // sort by start desc
@@ -71,13 +71,6 @@ define([
                 throw err;
             }
             return template;
-        };
-
-        // switch page with fade effect
-        Backbone.Marionette.Region.prototype.open = function(view){
-            this.$el.hide();
-            this.$el.html(view.el);
-            this.$el.fadeIn();
         };
 
         // change datetime language

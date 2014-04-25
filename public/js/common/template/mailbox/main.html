@@ -1,3 +1,37 @@
-<nav id="page_nav">
-  <a href="/messages?category=all&page=1"></a>
-</nav>
+<ul class="inbox-tabs nav nav-tabs padding-16 tab-size-bigger">
+
+    <li class="li-new-mail pull-right">
+        <span class="btn btn-small btn-success no-border">
+            <i class=" icon-envelope bigger-130"></i>
+            <span class="bigger-110">メッセージ作成</span>
+        </span>
+    </li>
+
+    <li class="active">
+        <a data-toggle="tab" href="#inbox">
+            <i class="blue icon-inbox bigger-130"></i>
+            <span class="bigger-110">受信トレイ</span>
+        </a>
+    </li>
+
+    <li>
+        <a data-toggle="tab" href="#sentbox">
+            <i class="orange icon-location-arrow bigger-130"></i>
+            <span class="bigger-110">送信済み</span>
+        </a>
+    </li>
+
+    <li>
+        <a data-toggle="tab" href="#draftbox">
+            <i class="green icon-pencil bigger-130"></i>
+            <span class="bigger-110">下書き</span>
+        </a>
+    </li>
+
+</ul>
+
+<div class="tab-content no-border no-padding">
+    <div id="inbox" class="tab-pane active"></div>
+    <div id="sentbox" class="tab-pane"></div>
+    <div id="draftbox" class="tab-pane"></div>
+</div>

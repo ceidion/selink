@@ -1,78 +1,48 @@
 define([
     'text!common/template/mailbox/main.html',
     'common/collection/base',
-    'common/view/mailbox/item'
+    'common/view/mailbox/inbox',
+    'common/view/mailbox/sentbox'
 ], function(
     template,
     BaseCollection,
-    ItemView
+    InBoxView,
+    SentBoxView
 ) {
 
-    var Messages = BaseCollection.extend({
+    return Backbone.Marionette.Layout.extend({
 
-        url: '/messages?category=all'
-    });
-
-    return Backbone.Marionette.CompositeView.extend({
-
-        className: 'message-list',
+        className: 'tabbable',
 
         // template
         template: template,
 
-        // item view container
-        itemViewContainer: this.$el,
-
-        // item view
-        itemView: ItemView,
+        // regions
+        regions: {
+            inBoxRegion: '#inbox',
+            sentBoxRegion: '#sentbox',
+            draftBoxRegion: '#draftbox'
+        },
 
         // initializer
         initialize: function() {
-            this.collection = new Messages();
-            this.collection.fetch();
+            // create component
+            this.inBox = new InBoxView();
+            this.sentBox = new SentBoxView();
+            // this.draftBox = new DraftBoxView({model: this.model});
         },
 
-        // After show
+        // after render
+        onRender: function() {
+            // show every component
+            this.inBoxRegion.show(this.inBox);
+            this.sentBoxRegion.show(this.sentBox);
+            // this.draftBoxRegion.show(this.draftBox);
+        },
+
+        // after show
         onShow: function() {
-
-            var self = this;
-
-            // attach infinite scroll
-            this.$el.infinitescroll({
-                navSelector  : '#page_nav',
-                nextSelector : '#page_nav a',
-                dataType: 'json',
-                appendCallback: false,
-                loading: {
-                    msgText: '<em>読込み中・・・</em>',
-                    finishedMsg: 'No more pages to load.',
-                    img: 'http://i.imgur.com/qkKy8.gif',
-                    speed: 'slow',
-                },
-                state: {
-                    currPage: 0
-                }
-            }, function(json, opts) {
-                // no more data
-                if (json.length === 0){
-                    // destroy infinite scroll, or it will affect other page
-                    self.$el.infinitescroll('destroy');
-                    self.$el.data('infinitescroll', null);
-                } else {
-
-                    // add data to collection
-                    // this will trigger 'add' event and will call on
-                    // the appendHtml method that changed on initialization
-                    self.collection.add(json);
-                }
-            });
-        },
-
-        // before close
-        onBeforeClose: function() {
-            // destroy infinite scroll, or it will affect other page
-            this.$el.infinitescroll('destroy');
-            this.$el.data('infinitescroll', null);
+            this.$el.addClass('animated fadeInUp');
         }
 
     });

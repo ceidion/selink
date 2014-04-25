@@ -4,15 +4,54 @@
 </label>
 
 <i class="message-star icon-star-empty light-grey"></i>
-<span class="sender" title="{{sender}}">Joe Hetfield<span class="light-grey">3</span></span>
-<span class="time">13:33</span>
-<span class="attachment">
-    <i class="icon-paper-clip"></i>
+
+<span class="sender" title="<%= obj._from.firstName %> <%= obj._from.lastName %>">
+    <%= obj._from.firstName %>&nbsp;<%= obj._from.lastName %>
 </span>
+
+<span class="time"><%= moment(obj.createDate).calendar() %></span>
 
 <span class="summary">
     <span class="badge badge-green mail-tag"></span>
     <span class="text">
-    hello
+        <%= obj.subject %>
     </span>
 </span>
+
+<div class="message-content" style="display: none;">
+    <div class="message-header clearfix">
+        <div class="pull-left">
+            <img class="pull-left" src="<%= obj._from.photo %>" style="max-width: 100px; max-height: 100px; margin-right: 15px;" />
+            <span class="blue bigger-125">
+                <%= obj.subject %>
+            </span>
+            <i class="icon-star orange2"></i>
+
+            <div class="space-4"></div>
+
+            <div>
+                <a href="#" class="sender"><%= obj._from.firstName %>&nbsp;<%= obj._from.lastName %></a>
+            </div>
+
+        </div>
+
+        <div class="action-buttons pull-right">
+            <a href="#">
+                <i class="icon-reply green icon-only bigger-130"></i>
+            </a>
+            <a href="#">
+                <i class="icon-mail-forward blue icon-only bigger-130"></i>
+            </a>
+            <a href="#">
+                <i class="icon-trash red icon-only bigger-130"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="hr hr-double"></div>
+
+    <div class="message-body">
+        <%= obj.content %>
+    </div>
+
+</div>
