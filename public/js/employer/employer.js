@@ -35,7 +35,7 @@ define([
 
         model: MessageModel,
 
-        url:  '/messages',
+        url:  '/messages?category=unread',
 
         comparator: function(event) {
             // sort by start desc

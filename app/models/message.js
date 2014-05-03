@@ -32,6 +32,12 @@ var Message = new Schema({
         required: true
     },
 
+    // message reference
+    reference: {
+        type: Schema.Types.ObjectId,
+        ref: 'Message',
+    },
+
     // message opened
     opened: [{
         type: Schema.Types.ObjectId,
@@ -39,10 +45,10 @@ var Message = new Schema({
     }],
 
     // Logical Delete flag
-    logicDelete: {
-        type: Boolean,
-        default: false
-    },
+    logicDelete: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
 
     // Create Date
     createDate: {

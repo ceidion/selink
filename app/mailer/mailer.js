@@ -186,6 +186,57 @@ exports.newPost = function(recipients, post) {
     });
 };
 
+exports.newMessage = function(recipients, message) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) {
+            console.log(err);
+        } else {
+
+            var Render = function(recipient, message) {
+
+                this.locals = {
+                    recipient: recipient,
+                    message: message
+                };
+
+                this.send = function(err, html, text) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                            transport.sendMail({
+                            from: 'SELink <noreply@selink.jp>',
+                            to: recipient.email,
+                            subject: message.authorName + 'さんから新しいメッセージ',
+                            html: html,
+                            text: text
+                        }, function(err, responseStatus) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log(responseStatus.message);
+                            }
+                        });
+                    }
+                };
+
+                this.batch = function(batch) {
+                    batch(this.locals, templatesDir, this.send);
+                };
+            };
+
+            // Load the template and send the emails
+            template('new-message', true, function(err, batch) {
+                for(recipient in recipients) {
+                    var render = new Render(recipients[recipient], message);
+                    render.batch(batch);
+                }
+            });
+        }
+    });
+};
+
 exports.newAnnouncement = function(recipients, announcement) {
 
     emailTemplates(templatesDir, function(err, template) {

@@ -22,14 +22,16 @@
             <div class="form-group col-xs-12 col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon"><i class="icon-comment bigger-110"></i></span>
-                    <input class="form-control" type="text" name="subject" placeholder="タイトル"/>
+                    <input class="form-control" type="text" name="subject" placeholder="タイトル" value="<%= obj.subject %>"/>
                 </div>
             </div>
         </div>
 
         <div class="hr hr-double dotted"></div>
 
-        <div class="wysiwyg-editor"></div>
+        <div class="wysiwyg-editor">
+            <%= obj.content %>
+        </div>
 
     </div>
 

@@ -26,14 +26,27 @@ define(['common/model/base'], function(BaseModel) {
         // Parse data
         parse: function(response, options) {
 
-            // parse date from ISO8601 date to javascript date
-            // if(response.start) {
-            //     response.start = moment(response.start).toDate();
-            // }
+            var userId = selink.userModel.get('_id');
 
-            // if(response.end) {
-            //     response.end = moment(response.end).toDate();
-            // }
+            // if the message belong to the user
+            if (response._from._id == userId)
+                // mark as 'my message'
+                response.isMine = true;                
+            else 
+                response.isMine = false;
+
+            // if the message not belong to the user
+            // or user's id exists in message's opened list
+            if (response._from._id != userId
+                && _.indexOf(response.opened, userId) < 0) {
+
+                // mark as unread
+                response.isUnread = true;
+
+            // or
+            } else
+                // mark as read
+                response.isUnread = false;
 
             return response;
         }

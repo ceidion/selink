@@ -35,7 +35,7 @@ define([
 
         model: MessageModel,
 
-        url:  '/messages',
+        url:  '/messages?category=unread',
 
         comparator: function(event) {
             // sort by start desc
@@ -140,10 +140,10 @@ define([
                                         // make controller
                                         self.controller = new Controller();
 
-                                // setup router
-                                self.router = new Router({
-                                    controller: self.controller
-                                });
+                                        // setup router
+                                        self.router = new Router({
+                                            controller: self.controller
+                                        });
 
                                         // start history
                                         Backbone.history.start();

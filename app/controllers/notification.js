@@ -16,6 +16,7 @@ var Mailer = require('../mailer/mailer.js'),
     7. user-post-bookmarked
     8. user-post-commented
     9. user-job
+    10. user-message
 */
 
 // Notification index

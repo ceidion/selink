@@ -49,7 +49,7 @@ define([], function() {
                     },
                     getSortData: {
                         createDate: function(elem) {
-                            return $(elem).find('.widget-box').data('create-date');
+                            return $(elem).find('[data-create-date]').data('create-date');
                         }
                     },
                     sortBy: 'createDate',
@@ -68,8 +68,8 @@ define([], function() {
 
             // attach infinite scroll
             this.$el.find(this.itemViewContainer).infinitescroll({
-                navSelector  : '#page_nav',
-                nextSelector : '#page_nav a',
+                navSelector  : this.navSelector || '#page_nav',
+                nextSelector : this.nextSelector || '#page_nav a',
                 dataType: 'json',
                 appendCallback: false,
                 loading: {

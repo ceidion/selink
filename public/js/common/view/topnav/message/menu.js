@@ -44,17 +44,23 @@ define([
             // set the number of messages in the model
             this.model.set('messagesNum', this.collection.length, {silent:true});
 
-            // selink.socket.on('user-post', function(data) {
-            //     $.gritter.add({
-            //         title: data._from.firstName + ' ' + data._from.lastName,
-            //         text: '新しい記事を投稿しました。',
-            //         image: data._from.photo,
-            //         time: 8000,
-            //         class_name: 'gritter-success'
-            //     });
-            //     // add the notification to collection
-            //     self.collection.add(data);
-            // });
+            selink.socket.on('user-message', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: data.subject,
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-success'
+                });
+
+                // add the notification to collection
+                self.collection.add(data);
+
+                // if the mailboxView were displayed
+                if (selink.mailboxView)
+                    // add new message at the head of list
+                    selink.mailboxView.inBox.collection.add(data, {at: 0, parse: true});
+            });
         },
 
         // after show
@@ -94,7 +100,7 @@ define([
             // if badge not exists
             else if ($badge.length === 0)
                 // create badge and show it
-                $('<span class="badge badge-danger">' + msgNum + '</span>')
+                $('<span class="badge badge-success">' + msgNum + '</span>')
                     .appendTo(this.$el.find('.dropdown-toggle')).slFlipInY();
             // or
             else

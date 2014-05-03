@@ -99,8 +99,6 @@ define([
                 var people = new UserModel({_id: id});
                 people.fetch({
                     success: function() {
-
-                        console.log(people);
                         selink.peopleDetailView = new PeopleDetailView({
                             model: people
                         });

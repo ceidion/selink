@@ -1,5 +1,5 @@
 define([
-    'text!common/template/message/edit.html',
+    'text!common/template/mailbox/edit.html',
     'common/model/message'
 ], function(
     template,
@@ -29,7 +29,8 @@ define([
         // initializer
         initialize: function() {
 
-            this.model = new MessageModel();
+            if (!this.model)
+                this.model = new MessageModel();
         },
 
         onRender: function() {
@@ -39,16 +40,16 @@ define([
 
             // instantiate the bloodhound suggestion engine
             var userName = new Bloodhound({
-              datumTokenizer: function(d) {
+                datumTokenizer: function(d) {
 
                 if (d.has('firstName')) {
                     return Bloodhound.tokenizers.whitespace(d.get('firstName') + ' ' + d.get('lastName'));
                 }
                     else return '';
                 },
-              queryTokenizer: Bloodhound.tokenizers.whitespace,
-              // remote: '/suggestUser?initial=%QUERY'
-              local: selink.userModel.friends.models
+                queryTokenizer: Bloodhound.tokenizers.whitespace,
+                // remote: '/suggestUser?initial=%QUERY'
+                local: selink.userModel.friends.models
             });
 
             // initialize the bloodhound suggestion engine
@@ -57,6 +58,7 @@ define([
             // in the recipient field, enable the tag input
             this.$el.find('input[name="recipient"]').tag({
                 placeholder: "宛先（氏名）",
+                recipient: this.options.recipient,
                 ttOptions: {
                     highlight: true
                 },
@@ -70,7 +72,7 @@ define([
                         suggestion: function(d) {
                             return _.template([
                                 '<div>',
-                                '<p class="repo-language" style="margin-right: 8px;"><img src="<%= photo %>"></p>',
+                                '<p class="repo-language" style="margin-right: 8px;"><img src="<%= photo %>" style="max-width: 50px;"></p>',
                                 '<p class="repo-name"><%= firstName %>&nbsp;<%= lastName %></p>',
                                 '<div style="clear: both"></div>',
                                 '</div>'

@@ -6,7 +6,7 @@ define([
     'common/view/post/item',
     // 'common/view/people/history/main',
     'common/view/friend/friend',
-    'common/view/message/edit'
+    'common/view/mailbox/edit'
 ], function(
     template,
     BaseCollection,
@@ -103,7 +103,9 @@ define([
 
         showMessageEditor: function() {
 
-            var messageEditor = new MessageEditView();
+            var messageEditor = new MessageEditView({
+                recipient: [this.model]
+            });
 
             selink.modalArea.show(messageEditor);
             selink.modalArea.$el.modal('show');

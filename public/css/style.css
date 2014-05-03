@@ -50,9 +50,10 @@ img{max-width:100%}
 #event-modal .checkbox{margin-top:4px;margin-bottom:0px}
 #event-modal .wysiwyg-editor{margin:0 15px;height:150px}
 #event-modal .wysiwyg-toolbar{margin:0 15px !important}
-.message-item .message-star{vertical-align:top}
-.message-item .sender{width:150px}
-.message-item .time{width:120px}
+.message-item{padding:12px}.message-item .message-star{vertical-align:top}
+.message-item .sender{width:120px;margin-top:2px}
+.message-item .text{margin-top:2px}
+.message-item .time{width:130px;margin-top:4px;text-align:right}
 .gritter-item{font-size:12px}
 .gritter-image{height:auto}
 #gritter-notice-wrapper{top:50px}

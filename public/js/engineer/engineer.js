@@ -74,7 +74,16 @@ define([
         };
 
         // change datetime language
-        moment.lang('ja');
+        moment.lang('ja',{
+            calendar: {
+                sameDay : '[今日] H:mm',
+                nextDay : '[明日] H:mm',
+                nextWeek : '[来週]dddd H:mm',
+                lastDay : '[昨日] H:mm',
+                lastWeek : '[前週]dddd H:mm',
+                sameElse : 'L'
+            }
+        });
 
         // custom validation method
         _.extend(Backbone.Validation.validators, {

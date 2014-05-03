@@ -17,6 +17,7 @@ var request = require('request'),
     10. | user-post-bookmarked | post   | post summary
     11. | user-post-commented  | post   | comment summary
     12. | user-job             | job    | job name
+    12. | user-message         | message| message subject
 */
 
 // Activity index
@@ -35,7 +36,7 @@ exports.index = function(req, res, next) {
     // find the activities of all users
     Activity.find()
         .where('_owner').ne(req.user.id).in(req.user.friends)
-        .where('type').nin(['user-login', 'user-logout', 'user-friend-declined'])
+        .where('type').nin(['user-login', 'user-logout', 'user-friend-declined', 'user-message'])
         .sort('-createDate')
         .skip(20*page)  // skip n page
         .limit(20)  // 20 user per page

@@ -25,7 +25,8 @@
     this.element = $(element)
     this.options = $.extend(true, {}, $.fn.tag.defaults, options)
     this.values = $.grep($.map(this.element.val().split(','), $.trim), function ( value ) { return value.length > 0 })
-    this.models = []
+    this.models = options.recipient || []
+    this.element.data('models', this.models)
     this.show()
   }
 
@@ -38,14 +39,14 @@
       // that.element.parent().prepend(that.element.detach().hide())
       that.element.parent().append(that.element.detach().hide())
       that.element
-        .wrap($('<div class="tags">'))
+        .wrap($('<div class="tags" style="width: 100%;">'))
         .parent()
         .on('click', function () {
           that.input.focus()
         })
 
-      if (that.values.length) {
-        $.each(that.values, function () {
+      if (that.models.length) {
+        $.each(that.models, function () {
           that.createBadge(this)
         })
       }
@@ -170,7 +171,7 @@
       this.createBadge(model)
 
       this.element.val(this.values.join(', '))
-      this.element.data('models', this.models);
+      this.element.data('models', this.models)
 
       this.element.trigger('added', model)
     }
