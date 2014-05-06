@@ -24,7 +24,7 @@ define([
 
         postTargetActivity: ['user-post', 'user-post-liked', 'user-post-bookmarked', 'user-post-commented'],
 
-        jobTargetActivity: ['user-job'],
+        jobTargetActivity: ['user-job', 'user-job-bookmarked'],
 
         // template
         getTemplate: function(){

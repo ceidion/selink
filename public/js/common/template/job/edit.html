@@ -26,7 +26,7 @@
             <div class="form-group">
                 <div class="input-group input-daterange">
                     <span class="input-group-addon sl-input-group-addon"><i class="icon-calendar bigger-110"></i></span>
-                    <input type="text" class="input-medium" placeholder="応募締日" name="expiredDate" value="<%= obj.expiredDateInput %>">
+                    <input type="text" class="input-medium" placeholder="応募締日" name="expiredDate" value="<%= obj.expiredDate ? moment(obj.expiredDate).format('L') : '' %>">
                     <span class="input-group-addon"><i class="icon-time bigger-110"></i></span>
                     <div class="bootstrap-timepicker">
                         <input type="text" class="input-medium " placeholder="時間" name="expiredTime" value="<%= obj.expiredTime %>">
@@ -36,9 +36,9 @@
             <div class="form-group">
                 <div id="duration" class="input-group input-daterange">
                     <span class="input-group-addon sl-input-group-addon"><i class="icon-flag-alt bigger-110"></i></span>
-                    <input type="text" placeholder="作業開始日" name="startDate" value="<%= obj.startDateInput %>">
+                    <input type="text" placeholder="作業開始日" name="startDate" value="<%= obj.startDate ? moment(obj.startDate).format('L') : '' %>">
                     <span class="input-group-addon"><i class="icon-arrow-right bigger-110"></i></span>
-                    <input type="text" placeholder="作業終了日" name="endDate" value="<%= obj.endDateInput %>">
+                    <input type="text" placeholder="作業終了日" name="endDate" value="<%= obj.endDate ? moment(obj.endDate).format('L') : '' %>">
                 </div>
             </div>
             <div class="form-group">
@@ -93,7 +93,7 @@
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-sm btn-success btn-save"><i class="icon-ok"></i> 保存</button>
-        <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> 取消</button>
+        <button class="btn btn-sm btn-success btn-save"><i class="icon-ok"></i>&nbsp;保存</button>
+        <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i>&nbsp;取消</button>
     </div>
 </div>

@@ -9,3 +9,11 @@ lessc home.less > ../public/stylesheets/home.css
 lessc admin.less > ../public/stylesheets/admin.css
 lessc landing.less > ../public/stylesheets/landing.css
 lessc resetpassword.less > ../public/stylesheets/resetpassword.css
+
+note:
+
+1. in the e-mail template, change the 'localhost:8081'
+2. in the config.js, change the mail server setting
+3. back-up user photo
+4. build app
+5. in the jade template, refer the built app

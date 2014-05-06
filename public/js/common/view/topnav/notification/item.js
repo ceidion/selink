@@ -14,7 +14,7 @@ define([
 
         postTargetNotification: ['user-post', 'user-post-liked', 'user-post-bookmarked', 'user-post-commented'],
 
-        jobTargetNotification: ['user-job'],
+        jobTargetNotification: ['user-job', 'user-job-bookmarked'],
 
         tagName: 'li',
 

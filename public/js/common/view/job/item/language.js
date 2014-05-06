@@ -12,6 +12,10 @@ define([
         // class name
         className: 'center',
 
+        ui: {
+            'pieChart': '.easy-pie-chart.percentage'
+        },
+
         // initializer
         initialize: function() {
 
@@ -22,8 +26,10 @@ define([
         },
 
         onShow: function() {
+
             // decorate pie chart
-            $('.easy-pie-chart.percentage').each(function(){
+            this.ui.pieChart.each(function(){
+
                 var barColor = $(this).data('color') || '#555';
                 var trackColor = '#E2E2E2';
                 var size = parseInt($(this).data('size')) || 72;

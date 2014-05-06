@@ -1,76 +1,16 @@
 define([
-    'common/model/base',
-    'common/collection/base',
-    'common/model/language',
-    'common/model/skill'
+    'common/model/base'
 ], function(
-    BaseModel,
-    BaseCollection,
-    LanguageModel,
-    SkillModel
+    BaseModel
 ) {
-
-    // Languages Collection
-    var Languages = BaseCollection.extend({
-
-        model: LanguageModel,
-
-        url: function() {
-            return this.document.url() + '/languages';
-        },
-
-        comparator: function(language) {
-            // sort by weight desc
-            if (language.get('weight'))
-                return 0 - Number(language.get('weight'));
-            else
-                return 0;
-        }
-    });
-
-    // Skills Collection
-    var Skills = BaseCollection.extend({
-
-        model: SkillModel,
-
-        url:  function() {
-            return this.document.url() + '/skills';
-        },
-
-        comparator: function(skill) {
-            // sort by weight desc
-            if (skill.get('weight'))
-                return 0 - Number(skill.get('weight'));
-            else
-                return 0;
-        }
-    });
 
     return BaseModel.extend({
 
-        // Constructor
-        constructor: function() {
-
-            // create languages collection inside model
-            this.languages = new Languages(null, {document: this});
-
-            // create skills collection inside model
-            this.skills = new Skills(null, {document: this});
-
-            // call super constructor
-            Backbone.Model.apply(this, arguments);
-        },
+        // Url root
+        urlRoot: '/jobs',
 
         // Parse data
         parse: function(response, options) {
-
-            // populate languages collection
-            this.languages.set(response.languages, {parse: true, remove: false});
-            delete response.languages;
-
-            // populate skills collection
-            this.skills.set(response.skills, {parse: true, remove: false});
-            delete response.skills;
 
             // parse date from iso-date to readable format
             if(response.expiredDate) {
@@ -92,6 +32,22 @@ define([
                 response.createDateDisplay = moment(response.createDate).format('LL');
                 response.createDateInput = moment(response.createDate).format('L');
             }
+
+            var userId = selink.userModel.get('_id');
+
+            // if the owner's id is user's id
+            if (response._owner._id == userId)
+                // mark as 'my' job
+                response.isMine = true;
+            else
+                response.isMine = false;
+
+            // if user's id exists in post's bookmark list
+            if (_.indexOf(response.bookmarked, userId) >= 0)
+                // mark as marked
+                response.isMarked = true;
+            else
+                response.isMarked = false;
 
             return response;
         },

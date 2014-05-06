@@ -1,4 +1,5 @@
 var _ = require('underscore'),
+    Mailer = require('../mailer/mailer.js'),
     mongoose = require('mongoose'),
     Job = mongoose.model('Job'),
     User = mongoose.model('User'),
@@ -21,7 +22,7 @@ exports.index = function(req, res, next) {
 
     query.where('_owner').equals(req.user.id)
         .where('logicDelete').equals(false)
-        .populate('_owner', 'firstName lastName photo')
+        .populate('_owner', 'type firstName lastName title photo createDate')
         .skip(20*page)  // skip n page
         .limit(20)
         .sort('-createDate')
@@ -31,7 +32,7 @@ exports.index = function(req, res, next) {
         });
 };
 
-// Show single post
+// Show single job
 exports.show = function(req, res, next) {
 
     Job.findById(req.params.job)
@@ -68,26 +69,50 @@ exports.create = function(req, res, next) {
                 _owner: req.user.friends,
                 _from: req.user.id,
                 type: 'user-job',
-                content: req.body.name,
-                link: 'user/' + req.user.id + '/posts/' + job._id
+                target: job.id
             }, function(err, notification) {
 
                 if (err) next(err);
                 else {
+
                     // populate the respond notification with user's info
                     notification.populate({
                         path:'_from',
-                        select: 'firstName lastName photo'
+                        select: 'type firstName lastName title photo createDate'
                     }, function(err, noty) {
                         if(err) next(err);
                         // send real time message
-                        sio.sockets.emit('user-job', noty);
+                        else 
+                            req.user.friends.forEach(function(room) {
+                                sio.sockets.in(room).emit('user-job', noty);
+                            });
                     });
                 }
             });
 
+            // send email to all friends
+            User.find()
+                .select('email')
+                .where('_id').in(req.user.friends)
+                .where('logicDelete').equals(false)
+                .exec(function(err, users) {
+                    // send new-job mail
+                    Mailer.newJob(users, {
+                        _id: job._id,
+                        authorName: req.user.firstName + ' ' + req.user.lastName,
+                        authorPhoto: req.user.photo,
+                        name: job.name,
+                        summary: job.remark
+                    });
+                });
+
             // send saved job back
-            res.json(job);
+            job.populate('_owner', 'type firstName lastName title photo createDate', function(err, job) {
+
+                if (err) next(err);
+                else res.json(job);
+            });
+            
         }
     });
 
@@ -98,13 +123,19 @@ exports.update = function(req, res, next) {
 
     // TODO: check ownership
 
-    console.log("message##############");
-
     var newJob = _.omit(req.body, '_id');
 
     Job.findByIdAndUpdate(req.params.job, newJob, function(err, job) {
         if (err) next(err);
-        else res.json(job);
+        else {
+            
+            // send saved job back
+            job.populate('_owner', 'type firstName lastName title photo createDate', function(err, job) {
+
+                if (err) next(err);
+                else res.json(job);
+            });
+        }
     });
 };
 
@@ -124,10 +155,71 @@ exports.news = function(req, res, next) {
     Job.find()
         .where('logicDelete').equals(false)
         .where('expiredDate').gt(new Date())
-        .populate('_owner', 'firstName lastName photo')
+        .populate('_owner', 'type firstName lastName title photo createDate')
         .sort('-createDate')
         .exec(function(err, jobs) {
             if (err) next(err);
             res.json(jobs);
         });
+};
+
+// bookmark job
+exports.bookmark = function(req, res, next){
+
+    // find job
+    Job.findById(req.params.job, function(err, job) {
+
+        if (err) next(err);
+        else {
+
+            // add one bookmarked people id
+            job.bookmarked.addToSet(req.body.bookmarked);
+
+            // save the job
+            job.save(function(err, newJob) {
+
+                if (err) next(err);
+                else {
+
+                    // if someone not job owner bookmarked this job
+                    if (newJob._owner != req.user.id) {
+
+                        // create activity
+                        Activity.create({
+                            _owner: req.body.bookmarked,
+                            type: 'user-job-bookmarked',
+                            target: newJob._id
+                        }, function(err, activity) {
+                            if (err) next(err);
+                        });
+
+                        // create notification for job owner
+                        Notification.create({
+                            _owner: [newJob._owner],
+                            _from: req.body.bookmarked,
+                            type: 'user-job-bookmarked',
+                            target: newJob._id
+                        }, function(err, notification) {
+
+                            if (err) next(err);
+                            else {
+                                // populate the respond notification with user's info
+                                notification.populate({
+                                    path:'_from',
+                                    select: 'firstName lastName photo'
+                                }, function(err, noty) {
+                                    if(err) next(err);
+                                    // send real time message
+                                    sio.sockets.in(newJob._owner).emit('user-job-bookmarked', noty);
+                                });
+                            }
+                        });
+                    }
+
+                    // return the saved job
+                    res.json(newJob);
+                }
+            });
+        }
+    });
 };

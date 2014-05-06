@@ -1,9 +1,11 @@
 define([
     'common/view/job/composite-base',
+    'common/view/job/collection/languages',
     'text!common/template/profile/languages.html',
     'common/view/job/edit/language'
 ], function(
     BaseView,
+    Languages,
     template,
     ItemView
 ) {
@@ -30,7 +32,7 @@ define([
         // initializer
         initialize: function() {
             // make the collection from user model
-            this.collection = this.model.languages;
+            this.collection = new Languages(this.model.get('languages'))
         },
 
         // on render

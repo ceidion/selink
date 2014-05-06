@@ -18,6 +18,7 @@ define([
         // this view is a modal dialog
         className: 'modal-dialog job-modal',
 
+        // ui
         ui: {
             'name': 'input[name="name"]',
             'address': 'input[name="address"]',
@@ -33,11 +34,13 @@ define([
             'remark': '.wysiwyg-editor'
         },
 
+        // regions
         regions: {
             languageRegion: '#languages',
             skillRegion: '#skills',
         },
 
+        // events
         events: {
             'click .btn-save': 'onSave'
         },
@@ -45,19 +48,24 @@ define([
         // initializer
         initialize: function() {
 
+            // if no model define
             if (!this.model) {
+                // create a new model
                 this.model = new JobModel();
-                // this.model.colleciton = this.collection;
             }
 
+            // create language area
             this.languageComposite = new LanguageComposite({model: this.model});
+            // create skill area
             this.skillComposite = new SkillComposite({model: this.model});
         },
 
         // after render
         onRender: function() {
 
+            // show language area
             this.languageRegion.show(this.languageComposite);
+            // show skill area
             this.skillRegion.show(this.skillComposite);
 
             // append data picker
@@ -69,6 +77,7 @@ define([
                 language: 'ja'
             });
 
+            // append time picker
             this.ui.expiredTime.timepicker({
                 minuteStep: 5,
                 showMeridian: false,
@@ -76,6 +85,7 @@ define([
                 // defaultTime: moment().format('h:m A')
             });
 
+            // append duration picker
             this.$el.find('#duration').datepicker({
                 autoclose: true,
                 forceParse: false,
@@ -103,13 +113,23 @@ define([
             // if input value checking ok
             if (this.inputValid()) {
 
-                // if this model is a new event
+                // if this model is a new job
                 if (this.model.isNew()) {
-                    // add it to eventcollection
-                    this.collection.add(this.getInputData());
+                    // trigger createNewJob event, let main view create the job
+                    this.trigger('createNewJob', this.getInputData());
                 } else {
-                    // set value to model
-                    this.model.set(this.getInputData());
+                    // // set value to model
+                    // this.model.set(this.getInputData());
+
+                    // update the job
+                    this.model.save(this.getInputData(), {
+                        // job saved successful
+                        success: function(model, response, options) {
+                            selink.modalArea.$el.modal('hide');
+                        },
+                        patch: true,
+                        wait: true
+                    });
                 }
             }
         },
@@ -122,8 +142,6 @@ define([
                 .removeClass('tooltip-error').tooltip('destroy')
                 .closest('.form-group').removeClass('has-error')
                 .find('i').removeClass('animated-input-error');
-
-            console.log(this.getInputData());
 
             var userInput = this.getInputData(),
                 startDate,

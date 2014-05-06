@@ -151,7 +151,19 @@ define([
             selink.socket.on('user-job', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
-                    text: data.content,
+                    text: '新しい仕事情報を投稿しました。',
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-success'
+                });
+                // add the notification to collection
+                self.collection.add(data);
+            });
+
+            selink.socket.on('user-job-bookmarked', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: 'あなたの仕事情報にブックマーク付けました。',
                     image: data._from.photo,
                     time: 8000,
                     class_name: 'gritter-success'

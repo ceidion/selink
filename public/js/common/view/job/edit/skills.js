@@ -1,9 +1,11 @@
 define([
     'common/view/job/composite-base',
+    'common/view/job/collection/skills',
     'text!common/template/profile/skills.html',
     'common/view/job/edit/skill'
 ], function(
     BaseView,
+    Skills,
     template,
     ItemView
 ) {
@@ -30,7 +32,7 @@ define([
         // initializer
         initialize: function() {
             // make the collection from user model
-            this.collection = this.model.skills;
+            this.collection = new Skills(this.model.get('skills'))
         },
 
         // on render

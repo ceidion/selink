@@ -79,14 +79,10 @@ module.exports = function(app, sio) {
     app.post('/jobs', checkLoginStatus, job.create);
     // Update jobs
     app.patch('/jobs/:job', checkLoginStatus, job.update);
-    // Like a job
-    app.patch('/jobs/:job/like', checkLoginStatus, job.update);
     // bookmark a job
-    app.patch('/jobs/:job/bookmark', checkLoginStatus, job.update);
+    app.patch('/jobs/:job/bookmark', checkLoginStatus, job.bookmark);
     // Remove jobs
     app.delete('/jobs/:job', checkLoginStatus, job.remove);
-    // Comment a job
-    app.post('/jobs/:job/comments', checkLoginStatus, job.create);
 
     // Introduce friend
     app.get('/people', checkLoginStatus, friend.introduce);

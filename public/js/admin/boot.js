@@ -202,6 +202,7 @@ require([
     'bridget',
     'imagesloaded',
     'isotope',
+    'nicescroll',
     'app'
 ], function(
     deepModel,
@@ -213,6 +214,7 @@ require([
     bridget,
     imagesloaded,
     isotope,
+    nicescroll,
     admin
 ) {
     $.bridget( 'isotope', isotope );

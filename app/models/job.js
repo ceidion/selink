@@ -87,6 +87,18 @@ var Job = new Schema({
         validate: validate('len', 0, 5000)
     },
 
+    // Job applicants
+    applicants: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
+    // People who bookmarked this job
+    bookmarked: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
     // Publish status
     public: {
         type: Boolean,

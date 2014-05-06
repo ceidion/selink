@@ -3,13 +3,15 @@ define([
     'common/view/composite-isotope',
     'common/collection/base',
     'common/model/message',
-    'common/view/mailbox/item'
+    'common/view/mailbox/item',
+    'common/view/mailbox/empty'
 ], function(
     template,
     BaseView,
     BaseCollection,
     MessageModel,
-    ItemView
+    ItemView,
+    EmptyView
 ) {
 
     var Messages = BaseCollection.extend({
@@ -31,6 +33,9 @@ define([
 
         // item view
         itemView: ItemView,
+
+        // empty view
+        // emptyView: EmptyView,
 
         // select item
         selectedItem: new Messages(),

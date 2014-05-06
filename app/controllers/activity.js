@@ -17,7 +17,8 @@ var request = require('request'),
     10. | user-post-bookmarked | post   | post summary
     11. | user-post-commented  | post   | comment summary
     12. | user-job             | job    | job name
-    12. | user-message         | message| message subject
+    13. | user-job-bookmarked  | job    | job name
+    14. | user-message         | message| message subject
 */
 
 // Activity index

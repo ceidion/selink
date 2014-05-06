@@ -33,7 +33,7 @@
             <i class="icon-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
         </h5>
         <h5 class="smaller">
-            <i class="icon-time"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
+            <i class="icon-time"></i>&nbsp;<%= moment(obj.createDate).calendar() %>
         </h5>
         <div class="clearfix"></div>
     </div>

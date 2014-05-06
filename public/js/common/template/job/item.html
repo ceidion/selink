@@ -2,16 +2,17 @@
     var widgetColor = "";
 
     if (moment(obj.expiredDate).isBefore(moment()))
-        widgetColor = "header-color-orange";
+        widgetColor = "header-color-grey";
 %>
 
 <div class="widget-box" data-create-date="<%= moment(obj.createDate).valueOf() %>">
     <div class="widget-header widget-header-flat <%= widgetColor %>">
 
-        <a href="#profile/<%= obj._owner.id %>">
+        <a href="#profile/<%= obj._owner._id %>">
             <img class="avatar" src="<%= obj._owner.photo %>">
         </a>
 
+        <% if (obj.isMine) { %>
         <div class="widget-toolbar no-border hidden">
             <a class="yellow dropdown-toggle" data-toggle="dropdown">
                 <i class="icon-chevron-down"></i>
@@ -21,30 +22,21 @@
                 <li><a href="#" class="btn-remove"><i class="icon-trash red bigger-110"></i>&nbsp;&nbsp;削除</a></li>
             </ul>
         </div>
+        <% } %>
 
         <!-- job name -->
-        <h5 class="bigger lighter"><%= obj.name %></h5>
+        <h5>
+            <i class="icon-briefcase"></i>&nbsp;
+            <span class="name-value"><%= obj.name %></span>
+        </h5>
 
-        <!-- address -->
-        <% if (obj.address) { %>
-            <span class="label label-lg label-primary arrowed arrowed-right">
-                <i class="icon-map-marker bigger-120"></i>&nbsp;&nbsp;<%= obj.address%>
-            </span>
-        <% } %>
+        <h5>
+            <i class="icon-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
+        </h5>
 
-        <!-- duration -->
-        <% if (obj.startDate || obj.endDate) { %>
-            <span class="label label-lg label-pink arrowed arrowed-right">
-                <i class="icon-calendar bigger-120"></i>&nbsp;&nbsp;<%= obj.startDateInput %>～<%= obj.endDateInput %>
-            </span>
-        <% } %>
-
-        <!-- price -->
-        <% if (obj.priceBottom || obj.priceTop) { %>
-            <span class="label label-lg label-success arrowed arrowed-right">
-                <i class="icon-jpy bigger-120"></i>&nbsp;&nbsp;<%= obj.priceBottom %>～<%= obj.priceTop %>万円
-            </span>
-        <% } %>
+        <h5>
+            <i class="icon-time"></i>&nbsp;<%= moment(obj.createDate).calendar() %>
+        </h5>
 
         <div class="clearfix"></div>
     </div>
@@ -53,56 +45,94 @@
 
         <div class="widget-main">
 
+            <% if (obj.isMine) { %>
             <div class="alert alert-danger clearfix" style="display: none;">
                 <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
                 この案件を削除します、よろしいですか？
                 <br />
                 <br />
-                <p>
-                    <button class="btn btn-sm btn-warning btn-remove-cancel pull-right">取消</button>
-                    <button class="btn btn-sm btn-danger btn-remove-comfirm pull-right">削除</button>
+                <p class="pull-right">
+                    <button class="btn btn-sm btn-warning btn-remove-cancel">取消</button>
+                    <button class="btn btn-sm btn-danger btn-remove-comfirm">削除</button>
                 </p>
             </div>
+            <% } %>
+
+            <!-- address -->
+            <h6 class="text-primary <%= obj.address ? '' : 'hide' %>">
+                <i class="icon-map-marker bigger-120"></i>&nbsp;&nbsp;作業場所：
+                <span class="address-value"><%= obj.address %></span>
+            </h6>
+
+            <!-- duration -->
+            <h6 class="text-primary <%= (obj.startDate || obj.endDate) ? '' : 'hide' %>">
+                <i class="icon-calendar bigger-120"></i>&nbsp;&nbsp;作業期間：
+                <span class="duration-value"><%= obj.startDateInput %>～<%= obj.endDateInput %></span>
+            </h6>
+
+            <!-- price -->
+            <h6 class="text-warning <%= (obj.priceBottom || obj.priceTop) ? '' : 'hide' %>">
+                <i class="icon-jpy bigger-120"></i>&nbsp;&nbsp;単金：
+                <span class="price-value"><%= obj.priceBottom %>～<%= obj.priceTop %>万円</span>
+            </h6>
+
+            <h6 class="text-danger">
+                <i class="icon-ban-circle bigger-120"></i>&nbsp;&nbsp;応募締日：
+                <span class="expired-value"><%= moment(obj.expiredDate).calendar() %></span>
+            </h6>
 
             <!-- remark -->
-            <% if (obj.remark) { %>
-                <div>
-                    <%= obj.remark %>
-                </div>
-            <% } %>
+            <div class="remark-value">
+                <%= obj.remark %>
+            </div>
 
             <!-- recruitNum -->
-            <% if (obj.recruitNum) { %>
-                <span class="label label-lg label-purple arrowed arrowed-right">
-                    <i class="icon-bullhorn bigger-120"></i>&nbsp;&nbsp;募集<%= obj.recruitNum %>人
-                </span>
-            <% } %>
+            <span class="recruit-value label label-lg label-purple arrowed arrowed-right <%= obj.recruitNum ? '' : 'hide' %>">
+                募集<%= obj.recruitNum %>人
+            </span>
 
             <!-- interviewNum -->
-            <% if (obj.interviewNum) { %>
-                <span class="label label-lg label-warning arrowed arrowed-right">
-                    <i class="icon-microphone bigger-120"></i>&nbsp;&nbsp;面接<%= obj.interviewNum %>回
-                </span>
-            <% } %>
+            <span class="interview-value label label-lg label-warning arrowed arrowed-right <%= obj.interviewNum ? '' : 'hide' %>">
+                面接<%= obj.interviewNum %>回
+            </span>
 
             <!-- foreignerAllowed -->
-            <% if (!obj.foreignerAllowed) { %>
-                <span class="label label-lg label-danger arrowed arrowed-right">
-                    <i class="icon-globe bigger-120"></i>&nbsp;&nbsp;外国籍不可
-                </span>
+            <span class="foreigner-value label label-lg label-danger arrowed arrowed-right <%= obj.foreignerAllowed ? 'hide' : '' %>">
+                外国籍不可
+            </span>
+
+            <div class="pull-right">
+
+                <% if (obj.isMarked) { %>
+                    <div class="inline btn-bookmark orange tooltip-warning">
+                        <i class="icon-star bigger-110"></i>
+                        <span><%= obj.bookmarked.length %></span>
+                    </div>
+                <% } else { %>
+                    <div class="inline btn-bookmark orange tooltip-warning">
+                        <i class="icon-star-empty bigger-110"></i>
+                        <span><%= obj.bookmarked.length %></span>
+                    </div>
+                <% } %>
+
+            </div>
+
+            <!-- languages -->
+            <% if (obj.languages.length) { %>
+            <div class="hr hr8 hr-double"></div>
             <% } %>
+            <div class="language"></div>
 
-            <div id="language"></div>
-
-            <div id="skill"></div>
+            <!-- skills -->
+            <% if (obj.skills.length) { %>
+            <div class="hr hr8 hr-double"></div>
+            <% } %>
+            <div class="skill"></div>
 
         </div>
 
         <div class="widget-toolbox padding-8 clearfix">
-            <span class="text-warning">
-                <i class="icon-ban-circle bigger-110"></i>&nbsp;応募締日：
-                <%= moment(obj.expiredDate).fromNow() %>
-            </span>
+
         </div>
 
     </div>
