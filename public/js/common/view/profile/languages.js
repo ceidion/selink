@@ -29,6 +29,7 @@ define([
 
         // initializer
         initialize: function() {
+
             // make the collection from user model
             this.collection = this.model.languages;
         },

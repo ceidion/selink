@@ -6,6 +6,7 @@ define([
     'common/view/post/item',
     // 'common/view/people/history/main',
     'common/view/friend/friend',
+    'common/view/people/detail/languages',
     'common/view/mailbox/edit'
 ], function(
     template,
@@ -15,6 +16,7 @@ define([
     ItemView,
     // HistoryView,
     FriendsView,
+    LanguagesView,
     MessageEditView
 ) {
 
@@ -57,9 +59,13 @@ define([
                 // mark him as user's invited friend
                 this.model.set('isInvited', true, {silent:true});
 
+            // create friends view
             if (this.model.friends.length)
-                // create firends view
                 this.friendsView = new FriendsView({collection: this.model.friends});
+
+            // create languages view
+            if (this.model.languages.length)
+                this.languagesView = new LanguagesView({collection: this.model.languages});
 
             // create post collection
             this.collection = new Posts(null, {document: this.model});
@@ -75,7 +81,12 @@ define([
             // create regions
             this.regions = this.rm.addRegions({
                 // historyRegion: '#history',
-                friendsRegion: '#friends'
+                friendsRegion: '#friends',
+                languagesRegion: '#languages',
+                skillsRegion: '#skills',
+                qualificationsRegion: '#qualifications',
+                educationsRegion: '#educations',
+                employmentsRegion: '#employments',
             });
         },
 
@@ -85,6 +96,10 @@ define([
             // show friends view
             if (this.friendsView)
                 this.regions.friendsRegion.show(this.friendsView);
+
+            // show languages view
+            if (this.languagesView)
+                this.regions.languagesRegion.show(this.languagesView);
 
             // make container scrollable
             this.$el.find('#bio-area').niceScroll({
