@@ -113,8 +113,8 @@ define([
         // get user input data
         getData: function() {
 
-            var startDate = this.ui.startDate.val() ? moment(this.ui.startDate.val()).toJSON() : "",
-                endDate = this.ui.endDate.val() ? moment(this.ui.endDate.val()).toJSON() : "";
+            var startDate = this.ui.startDate.val() ? moment(this.ui.startDate.val(), 'YYYY/MM').toJSON() : "",
+                endDate = this.ui.endDate.val() ? moment(this.ui.endDate.val(), 'YYYY/MM').toJSON() : "";
 
             return {
                 company: this.ui.company.val(),

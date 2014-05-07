@@ -93,7 +93,7 @@ define([
         // get user input data
         getData: function() {
 
-            var acquireDate = this.ui.date.val() ? moment(this.ui.date.val()).toJSON() : "";
+            var acquireDate = this.ui.date.val() ? moment(this.ui.date.val(), 'YYYY/MM').toJSON() : "";
 
             return {
                 name: this.ui.name.val(),

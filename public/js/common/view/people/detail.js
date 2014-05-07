@@ -7,6 +7,10 @@ define([
     // 'common/view/people/history/main',
     'common/view/friend/friend',
     'common/view/people/detail/languages',
+    'common/view/people/detail/skills',
+    'common/view/people/detail/qualifications',
+    'common/view/people/detail/educations',
+    'common/view/people/detail/employments',
     'common/view/mailbox/edit'
 ], function(
     template,
@@ -17,6 +21,10 @@ define([
     // HistoryView,
     FriendsView,
     LanguagesView,
+    SkillsView,
+    QualificationsView,
+    EducationsView,
+    EmploymentsView,
     MessageEditView
 ) {
 
@@ -67,6 +75,22 @@ define([
             if (this.model.languages.length)
                 this.languagesView = new LanguagesView({collection: this.model.languages});
 
+            // create skills view
+            if (this.model.skills.length)
+                this.skillsView = new SkillsView({collection: this.model.skills});
+
+            // create qualifications view
+            if (this.model.qualifications.length)
+                this.qualificationsView = new QualificationsView({collection: this.model.qualifications});
+
+            // create educations view
+            if (this.model.educations.length)
+                this.educationsView = new EducationsView({collection: this.model.educations});
+
+            // create employments view
+            if (this.model.employments.length)
+                this.employmentsView = new EmploymentsView({collection: this.model.employments});
+
             // create post collection
             this.collection = new Posts(null, {document: this.model});
 
@@ -100,6 +124,22 @@ define([
             // show languages view
             if (this.languagesView)
                 this.regions.languagesRegion.show(this.languagesView);
+
+            // show skills view
+            if (this.skillsView)
+                this.regions.skillsRegion.show(this.skillsView);
+
+            // show qualifications view
+            if (this.qualificationsView)
+                this.regions.qualificationsRegion.show(this.qualificationsView);
+
+            // show educations view
+            if (this.educationsView)
+                this.regions.educationsRegion.show(this.educationsView);
+
+            // show employments view
+            if (this.employmentsView)
+                this.regions.employmentsRegion.show(this.employmentsView);
 
             // make container scrollable
             this.$el.find('#bio-area').niceScroll({
