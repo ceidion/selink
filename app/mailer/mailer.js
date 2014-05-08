@@ -208,7 +208,7 @@ exports.newJob = function(recipients, job) {
                             transport.sendMail({
                             from: 'SELink <noreply@selink.jp>',
                             to: recipient.email,
-                            subject: job.authorName + 'さんは新しい記事を投稿しました',
+                            subject: job.authorName + 'さんは仕事情報を投稿しました',
                             html: html,
                             text: text
                         }, function(err, responseStatus) {

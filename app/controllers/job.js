@@ -1,10 +1,17 @@
 var _ = require('underscore'),
+    _s = require('underscore.string'),
     Mailer = require('../mailer/mailer.js'),
     mongoose = require('mongoose'),
+    solr = require('solr-client').createClient({
+        host: 'localhost',
+        port: '8080'
+    }),
     Job = mongoose.model('Job'),
     User = mongoose.model('User'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
+
+solr.autoCommit = true;
 
 // Job Index
 exports.index = function(req, res, next) {
@@ -82,12 +89,21 @@ exports.create = function(req, res, next) {
                     }, function(err, noty) {
                         if(err) next(err);
                         // send real time message
-                        else 
+                        else
                             req.user.friends.forEach(function(room) {
                                 sio.sockets.in(room).emit('user-job', noty);
                             });
                     });
                 }
+            });
+
+            solr.add({
+                id: job.id,
+                name: job.name,
+                remark: _s.stripTags(job.remark)
+            }, function(err, solrJob) {
+                if (err) next(err);
+                else console.log(solrJob);
             });
 
             // send email to all friends
@@ -112,7 +128,7 @@ exports.create = function(req, res, next) {
                 if (err) next(err);
                 else res.json(job);
             });
-            
+
         }
     });
 
@@ -128,7 +144,7 @@ exports.update = function(req, res, next) {
     Job.findByIdAndUpdate(req.params.job, newJob, function(err, job) {
         if (err) next(err);
         else {
-            
+
             // send saved job back
             job.populate('_owner', 'type firstName lastName title photo createDate', function(err, job) {
 
