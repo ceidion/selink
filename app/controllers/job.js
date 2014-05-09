@@ -2,16 +2,10 @@ var _ = require('underscore'),
     _s = require('underscore.string'),
     Mailer = require('../mailer/mailer.js'),
     mongoose = require('mongoose'),
-    solr = require('solr-client').createClient({
-        host: 'localhost',
-        port: '8080'
-    }),
     Job = mongoose.model('Job'),
     User = mongoose.model('User'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
-
-solr.autoCommit = true;
 
 // Job Index
 exports.index = function(req, res, next) {
@@ -97,15 +91,6 @@ exports.create = function(req, res, next) {
                 }
             });
 
-            solr.add({
-                id: job.id,
-                name: job.name,
-                remark: _s.stripTags(job.remark)
-            }, function(err, solrJob) {
-                if (err) next(err);
-                else console.log(solrJob);
-            });
-
             // send email to all friends
             User.find()
                 .select('email')
@@ -126,7 +111,10 @@ exports.create = function(req, res, next) {
             job.populate('_owner', 'type firstName lastName title photo createDate', function(err, job) {
 
                 if (err) next(err);
-                else res.json(job);
+                else {
+                    commitToSolr(job, next);
+                    res.json(job);
+                }
             });
 
         }
@@ -149,7 +137,10 @@ exports.update = function(req, res, next) {
             job.populate('_owner', 'type firstName lastName title photo createDate', function(err, job) {
 
                 if (err) next(err);
-                else res.json(job);
+                else {
+                    commitToSolr(job, next);
+                    res.json(job);
+                }
             });
         }
     });
@@ -162,7 +153,10 @@ exports.remove = function(req, res, next) {
 
     Job.findByIdAndUpdate(req.params.job, {logicDelete: true}, function(err, job) {
         if (err) next(err);
-        else res.json(job);
+        else {
+            commitToSolr(job, next);
+            res.json(job);
+        }
     });
 };
 
@@ -237,5 +231,28 @@ exports.bookmark = function(req, res, next){
                 }
             });
         }
+    });
+};
+
+commitToSolr = function(job, next) {
+
+    solr.add({
+        type: 'job',
+        id: job.id,
+        name: job.name,
+        expiredDate: job.expiredDate,
+        startDate: job.startDate,
+        endDate: job.endDate,
+        priceTop: job.priceTop,
+        priceBottom: job.priceBottom,
+        address: job.address,
+        foreignerAllowed: job.foreignerAllowed,
+        // languages: job.languages,
+        // skills: job.skills,
+        remark: _s.stripTags(job.remark),
+        logicDelete: job.logicDelete
+    }, function(err, solrJob) {
+        if (err) next(err);
+        else console.log(solrJob);
     });
 };

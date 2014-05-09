@@ -5,6 +5,11 @@ module.exports = {
 
     test: {
         db: 'mongodb://localhost/selink_test',
+        solr: {
+            host: 'localhost',
+            port: '8080',
+            core : 'selink_test',
+        },
         mail: {
             service: "Gmail",
             auth: {
@@ -20,6 +25,11 @@ module.exports = {
 
     development: {
         db: 'mongodb://localhost/selink',
+        solr: {
+            host: 'localhost',
+            port: '8080',
+            core : 'selink',
+        },
         mail: {
             service: "Gmail",
             auth: {
@@ -35,8 +45,13 @@ module.exports = {
 
     staging: {
         db: 'mongodb://localhost/selink',
+        solr: {
+            host: 'localhost',
+            port: '8080',
+            core : 'selink',
+        },
         mail: {
-            service: "Gmail",
+            port: 587,
             auth: {
                 user: "administrator@selink.jp",
                 pass: "ZSkikuD2O5"
@@ -50,6 +65,11 @@ module.exports = {
 
     production: {
         db: 'mongodb://localhost/selink',
+        solr: {
+            host: 'localhost',
+            port: '8080',
+            core : 'selink',
+        },
         mail: {
             port: 587,
             auth: {

@@ -8,13 +8,24 @@ var env = process.env.NODE_ENV || 'development',
     connect = require('connect'),
     express = require('express'),
     http = require('http'),
-    io = require('socket.io');
+    io = require('socket.io'),
+    solrClient = require('solr-client');
 
 // Connect to database
 mongoose.connect(config.db);
 mongoose.connection.on('open', function() {
     mongoose.set('debug', true);
     console.log("DataBase " + config.db + " connected.");
+});
+
+// Create Solr client
+GLOBAL.solr = solrClient.createClient(config.solr);
+solr.ping(function(err, obj) {
+    if (err) console.log(err);
+    else {
+        solr.autoCommit = true;
+        console.log("Solr " + config.solr.host + ':' + config.solr.port + '/' + config.solr.core + " connected");
+    }
 });
 
 // Bootstrap models
