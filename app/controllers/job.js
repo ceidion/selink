@@ -1,5 +1,6 @@
 var _ = require('underscore'),
     _s = require('underscore.string'),
+    util = require('util'),
     Mailer = require('../mailer/mailer.js'),
     mongoose = require('mongoose'),
     Job = mongoose.model('Job'),
@@ -29,7 +30,31 @@ exports.index = function(req, res, next) {
         .sort('-createDate')
         .exec(function(err, jobs) {
             if (err) next(err);
-            res.json(jobs);
+            else {
+                jobs.forEach(function(job) {
+
+                    var solrQuery = solr.createQuery().q({id: job.id})
+                                        .mlt({
+                                            fl: 'text',
+                                            mintf : 1,
+                                            maxqt: 100,
+                                        });
+
+                    console.log(solrQuery.build());
+
+                    solr.search(solrQuery, function(err, obj) {
+                        if (err) next(err);
+                        else {
+                            console.log("#################");
+                            // console.log(job);
+                            console.log(util.inspect(obj));
+                            // console.log(util.inspect(obj.moreLikeThis[job.id].docs));
+                            console.log("#################");
+                        }
+                    });
+                })
+                res.json(jobs);
+            }
         });
 };
 
@@ -236,23 +261,14 @@ exports.bookmark = function(req, res, next){
 
 commitToSolr = function(job, next) {
 
-    solr.add({
-        type: 'job',
-        id: job.id,
-        name: job.name,
-        expiredDate: job.expiredDate,
-        startDate: job.startDate,
-        endDate: job.endDate,
-        priceTop: job.priceTop,
-        priceBottom: job.priceBottom,
-        address: job.address,
-        foreignerAllowed: job.foreignerAllowed,
-        // languages: job.languages,
-        // skills: job.skills,
-        remark: _s.stripTags(job.remark),
-        logicDelete: job.logicDelete
-    }, function(err, solrJob) {
+    solr.add(job.toSolr(), function(err, solrResult) {
         if (err) next(err);
-        else console.log(solrJob);
+        else {
+            console.log(solrResult);
+            solr.commit(function(err,res){
+               if(err) console.log(err);
+               if(res) console.log(res);
+            });
+        } 
     });
 };

@@ -1,6 +1,7 @@
-var mongoose = require('mongoose');
-var validate = require('mongoose-validator').validate;
-var Schema = mongoose.Schema;
+var _s = require('underscore.string'),
+    mongoose = require('mongoose'),
+    validate = require('mongoose-validator').validate,
+    Schema = mongoose.Schema;
 
 var Message = new Schema({
 
@@ -56,5 +57,18 @@ var Message = new Schema({
         default: Date.now
     }
 });
+
+Message.methods.toSolr = function() {
+    return {
+        type: 'message',
+        id: this.id,
+        // recipient:
+        // from:
+        subject: this.subject,
+        content: _s.stripTags(this.content),
+        // logicDelete is special for message
+        // logicDelete: this.logicDelete
+    };
+};
 
 mongoose.model('Message', Message);

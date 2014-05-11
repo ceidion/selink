@@ -14,7 +14,8 @@ define([], function() {
             "notification": "showNotificationView",
             "activity": "showActivityView",
             "mailbox": "showMailBoxView",
-            "skill": "showSkillsView",
+            "tag": "showSkillsView",
+            "solr": "showSolrView",
             "announcement": "showAnnouncementView",
             "issue": "showIssueView",
         }

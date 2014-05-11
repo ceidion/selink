@@ -1,6 +1,7 @@
-var mongoose = require('mongoose');
-var validate = require('mongoose-validator').validate;
-var Schema = mongoose.Schema;
+var _s = require('underscore.string'),
+    mongoose = require('mongoose'),
+    validate = require('mongoose-validator').validate,
+    Schema = mongoose.Schema;
 
 var Announcement = new Schema({
 
@@ -39,5 +40,17 @@ var Announcement = new Schema({
         default: Date.now
     }
 });
+
+Announcement.methods.toSolr = function() {
+    return {
+        type: 'announcement',
+        id: this.id,
+        // owner:
+        title: this.title,
+        content: _s.stripTags(this.content),
+        expiredDate: this.expiredDate,
+        logicDelete: this.logicDelete
+    };
+};
 
 mongoose.model('Announcement', Announcement);

@@ -1,4 +1,5 @@
-var mongoose = require('mongoose'),
+var _s = require('underscore.string'),
+    mongoose = require('mongoose'),
     validate = require('mongoose-validator').validate,
     Schema = mongoose.Schema;
 
@@ -68,5 +69,16 @@ var Post = new Schema({
         default: Date.now
     }
 });
+
+Post.methods.toSolr = function() {
+    return {
+        type: 'post',
+        id: this.id,
+        // owner: this._owner.firstName + ' ' + this._owner.lastName,
+        // comments: this.comments,
+        content: _s.stripTags(this.content),
+        logicDelete: this.logicDelete
+    };
+};
 
 mongoose.model('Post', Post);

@@ -14,6 +14,7 @@ define([
     'common/view/notification/main',
     'common/view/mailbox/main',
     'admin/view/data/skill/main',
+    'admin/view/data/solr/main',
     'admin/view/announcement/main',
     'admin/view/issue/main',
     'common/model/user',
@@ -34,6 +35,7 @@ define([
     NotificationView,
     MailBoxView,
     SkillsView,
+    SolrView,
     AnnouncementView,
     IssueView,
     UserModel,
@@ -201,15 +203,23 @@ define([
 
         showSkillsView: function() {
 
-            // create home view
+            // create tag view
             selink.skillsView = new SkillsView();
             // show main page
             selink.pageContent.show(selink.skillsView);
         },
 
+        showSolrView: function() {
+
+            // create solr view
+            selink.solrView = new SolrView();
+            // show main page
+            selink.pageContent.show(selink.solrView);
+        },
+
         showAnnouncementView: function() {
 
-            // create home view
+            // create announcement view
             selink.announcementView = new AnnouncementView();
             // show main page
             selink.pageContent.show(selink.announcementView);
@@ -217,7 +227,7 @@ define([
 
         showIssueView: function() {
 
-            // create home view
+            // create issue view
             selink.issueView = new IssueView();
             // show main page
             selink.pageContent.show(selink.issueView);

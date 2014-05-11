@@ -1,5 +1,4 @@
-var request = require('request'),
-    mongoose = require('mongoose'),
+var mongoose = require('mongoose'),
     Activity = mongoose.model('Activity');
 
 /*
@@ -23,13 +22,6 @@ var request = require('request'),
 
 // Activity index
 exports.index = function(req, res, next) {
-
-    // request({
-    //     url: 'http://localhost:8080/selink/mobile/api/employee.htm?pageAction=getEmployeeList',
-    //     json: true
-    // }, function(err, response, body) {
-    //     console.log(body);
-    // });
 
     // page number
     var page = req.query.page || 0;

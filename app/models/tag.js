@@ -1,6 +1,7 @@
-var mongoose = require('mongoose');
-var validate = require('mongoose-validator').validate;
-var Schema = mongoose.Schema;
+var _s = require('underscore.string'),
+    mongoose = require('mongoose'),
+    validate = require('mongoose-validator').validate,
+    Schema = mongoose.Schema;
 
 var Tag = new Schema({
     name: {
@@ -27,5 +28,16 @@ var Tag = new Schema({
         default: Date.now
     }
 });
+
+Tag.methods.toSolr = function() {
+    return {
+        type: 'tag',
+        id: this.id,
+        // owner:
+        name: this.name,
+        wikis: _s.stripTags(this.wikis),
+        logicDelete: this.logicDelete
+    };
+};
 
 mongoose.model('Tag', Tag);

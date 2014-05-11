@@ -169,22 +169,22 @@
    <!-- SELink Fields TODO: add language detection -->
    <!-- job -->
    <field name="type" type="text_general" indexed="true" stored="true"/>
-   <field name="name" type="text_ja" indexed="true" stored="true"/>
+   <field name="name" type="text_ja" indexed="true" stored="true" termVectors="true"/>
    <field name="expiredDate" type="date" indexed="true" stored="true"/>
    <field name="startDate" type="date" indexed="true" stored="true"/>
    <field name="endDate" type="date" indexed="true" stored="true"/>
    <field name="priceTop" type="float" indexed="true" stored="true"/>
    <field name="priceBottom" type="float" indexed="true" stored="true"/>
-   <field name="address" type="text_ja" indexed="true" stored="true"/>
+   <field name="address" type="text_ja" indexed="true" stored="true" termVectors="true"/>
    <field name="foreignerAllowed" type="boolean" indexed="true" stored="true"/>
    <field name="languages" type="text_general" indexed="true" stored="true"/>
    <field name="skills" type="text_general" indexed="true" stored="true"/>
-   <field name="remark" type="text_ja" indexed="true" stored="true"/>
+   <field name="remark" type="text_ja" indexed="true" stored="true" termVectors="true"/>
    <field name="logicDelete" type="boolean" indexed="true" stored="true"/>
 
    <!-- user -->
    <field name="email" type="text_general" indexed="true" stored="true"/>
-   <field name="title" type="text_general" indexed="true" stored="true"/>
+   <field name="title" type="text_general" indexed="true" stored="true" termVectors="true"/>
    <field name="birthDay" type="date" indexed="true" stored="true"/>
    <field name="gender" type="text_general" indexed="true" stored="true"/>
    <field name="nationality" type="text_general" indexed="true" stored="true"/>
@@ -192,18 +192,18 @@
    <field name="telNo" type="text_general" indexed="true" stored="true"/>
    <field name="webSite" type="text_general" indexed="true" stored="true"/>
    <field name="zipCode" type="text_general" indexed="true" stored="true"/>
-   <field name="nearestSt" type="text_ja" indexed="true" stored="true"/>
-   <field name="bio" type="text_ja" indexed="true" stored="true"/>
+   <field name="nearestSt" type="text_ja" indexed="true" stored="true" termVectors="true"/>
+   <field name="bio" type="text_ja" indexed="true" stored="true" termVectors="true"/>
 
    <!-- post, message, announcement, tags -->
-   <field name="subject" type="text_ja" indexed="true" stored="true"/>
-   <field name="content" type="text_ja" indexed="true" stored="true"/>
-   <field name="wikis" type="text_ja" indexed="true" stored="true"/>
+   <field name="subject" type="text_ja" indexed="true" stored="true" termVectors="true"/>
+   <field name="content" type="text_ja" indexed="true" stored="true" termVectors="true"/>
+   <field name="wikis" type="text_ja" indexed="true" stored="true" termVectors="true"/>
    <!-- SELink Fields End -->
 
    <!-- catchall field, containing all other searchable text fields (implemented
         via copyField further on in this schema  -->
-   <field name="text" type="text_general" indexed="true" stored="false" multiValued="true"/>
+   <field name="text" type="text_ja" indexed="true" stored="false" multiValued="true" termVectors="true"/>
 
    <!-- catchall text field that indexes tokens both normally and in reverse for efficient
         leading wildcard queries. -->

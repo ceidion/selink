@@ -11,7 +11,8 @@ var tag = require('../app/controllers/tag'),
     userEvent = require('../app/controllers/event'),
     tempaccount = require('../app/controllers/tempaccount'),
     notification = require('../app/controllers/notification'),
-    announcement = require('../app/controllers/announcement');
+    announcement = require('../app/controllers/announcement'),
+    solrController = require('../app/controllers/solr');
 
 module.exports = function(app, sio) {
 
@@ -163,6 +164,14 @@ module.exports = function(app, sio) {
     app.post('/stack', checkLoginStatus, tag.create);
     // import data from SELink1.0
     app.post('/import', checkLoginStatus, user.import);
+
+    // Solr index
+    app.get('/solr/user', checkLoginStatus, solrController.user);
+    app.get('/solr/job', checkLoginStatus, solrController.job);
+    app.get('/solr/post', checkLoginStatus, solrController.post);
+    app.get('/solr/message', checkLoginStatus, solrController.message);
+    app.get('/solr/announcement', checkLoginStatus, solrController.announcement);
+    app.get('/solr/tag', checkLoginStatus, solrController.tag);
 };
 
 checkLoginStatus = function(req, res, next) {

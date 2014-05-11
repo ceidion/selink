@@ -1,6 +1,7 @@
 var _ = require('underscore'),
     _s = require('underscore.string'),
     Mailer = require('../mailer/mailer.js'),
+    util = require('util'),
     request = require('request'),
     mongoose = require('mongoose'),
     Post = mongoose.model('Post'),
@@ -122,6 +123,28 @@ exports.create = function(req, res, next) {
                         summary: newPost.summary
                     });
                 });
+
+
+            var solrQuery = solr.createQuery().q({remark: '日中関係'})
+                            .mlt({
+                                fl: 'text',
+                                //count: 1,
+                                mintf : 1,
+                                maxqt: 100,
+                                // mindf : 1
+                            })
+
+            console.log(solrQuery.build());
+
+            solr.search(solrQuery, function(err, obj) {
+                if (err) next(err);
+                else {
+                    console.log("#################");
+                    // console.log(util.inspect(obj.moreLikeThis['536ce94b871034190300000b'].docs));
+                    console.log(util.inspect(obj));
+                    console.log("#################");
+                }
+            });
 
             // return the crearted post
             newPost.populate({

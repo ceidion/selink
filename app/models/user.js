@@ -1,4 +1,5 @@
-var mongoose = require('mongoose'),
+var _s = require('underscore.string'),
+    mongoose = require('mongoose'),
     validate = require('mongoose-validator').validate,
     Schema = mongoose.Schema;
 
@@ -224,5 +225,30 @@ var User = new Schema({
         default: Date.now
     }
 });
+
+User.methods.toSolr = function() {
+    return {
+        type: 'user',
+        id: this.id,
+        name: this.firstName + ' ' + this.lastName,
+        email: this.email,
+        title: this.title,
+        birthDay: this.birthDay,
+        gender: this.gender,
+        nationality: this.nationality,
+        marriage: this.marriage,
+        telNo: this.telNo,
+        webSite: this.webSite,
+        address: this.address,
+        nearestSt: this.nearestSt,
+        // skills: this.skills,
+        // languages: this.languages,
+        // educations: this.educations,
+        // employments: this.employments,
+        // qualifications: this.qualifications,
+        bio: _s.stripTags(this.bio),
+        logicDelete: this.logicDelete
+    };
+};
 
 mongoose.model('User', User);

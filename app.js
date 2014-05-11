@@ -23,7 +23,7 @@ GLOBAL.solr = solrClient.createClient(config.solr);
 solr.ping(function(err, obj) {
     if (err) console.log(err);
     else {
-        solr.autoCommit = true;
+        // solr.autoCommit = true;
         console.log("Solr " + config.solr.host + ':' + config.solr.port + '/' + config.solr.core + " connected");
     }
 });

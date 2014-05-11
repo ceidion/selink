@@ -1,4 +1,5 @@
-var mongoose = require('mongoose'),
+var _s = require('underscore.string'),
+    mongoose = require('mongoose'),
     validate = require('mongoose-validator').validate,
     Schema = mongoose.Schema;
 
@@ -117,5 +118,24 @@ var Job = new Schema({
         default: Date.now
     }
 });
+
+Job.methods.toSolr = function() {
+    return {
+        type: 'job',
+        id: this.id,
+        name: this.name,
+        expiredDate: this.expiredDate,
+        startDate: this.startDate,
+        endDate: this.endDate,
+        priceTop: this.priceTop,
+        priceBottom: this.priceBottom,
+        address: this.address,
+        foreignerAllowed: this.foreignerAllowed,
+        // languages: this.languages,
+        // skills: this.skills,
+        remark: _s.stripTags(this.remark),
+        logicDelete: this.logicDelete
+    };
+};
 
 mongoose.model('Job', Job);
