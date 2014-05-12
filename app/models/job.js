@@ -1,4 +1,6 @@
-var _s = require('underscore.string'),
+var _ = require('underscore'),
+    _s = require('underscore.string'),
+    util = require('util'),
     mongoose = require('mongoose'),
     validate = require('mongoose-validator').validate,
     Schema = mongoose.Schema;
@@ -100,6 +102,11 @@ var Job = new Schema({
         ref: 'User'
     }],
 
+    match: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
     // Publish status
     public: {
         type: Boolean,
@@ -120,6 +127,15 @@ var Job = new Schema({
 });
 
 Job.methods.toSolr = function() {
+
+    var languages = _.map(this.languages, function(language) {
+        return language.language + '(' + language.weight + ')';
+    });
+
+    var skills = _.map(this.skills, function(skill) {
+        return skill.skill + '(' + skill.weight + ')';
+    });
+
     return {
         type: 'job',
         id: this.id,
@@ -131,11 +147,27 @@ Job.methods.toSolr = function() {
         priceBottom: this.priceBottom,
         address: this.address,
         foreignerAllowed: this.foreignerAllowed,
-        // languages: this.languages,
-        // skills: this.skills,
+        languages: languages,
+        skills: skills,
         remark: _s.stripTags(this.remark),
         logicDelete: this.logicDelete
     };
 };
+
+Job.post('save', function (job) {
+
+    solr.add(job.toSolr(), function(err, solrResult) {
+        if (err) next(err);
+        else {
+            console.log(solrResult);
+            solr.commit(function(err,res){
+               if(err) console.log(err);
+               if(res) console.log(res);
+            });
+        }
+    });
+
+    console.log('Job %s has been indexed', job._id);
+});
 
 mongoose.model('Job', Job);

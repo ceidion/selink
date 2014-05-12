@@ -1,4 +1,5 @@
-var _s = require('underscore.string'),
+var _ = require('underscore'),
+    _s = require('underscore.string'),
     mongoose = require('mongoose'),
     validate = require('mongoose-validator').validate,
     Schema = mongoose.Schema;
@@ -227,6 +228,15 @@ var User = new Schema({
 });
 
 User.methods.toSolr = function() {
+
+    var languages = _.map(this.languages, function(language) {
+        return language.language + '(' + language.weight + ')';
+    });
+
+    var skills = _.map(this.skills, function(skill) {
+        return skill.skill + '(' + skill.weight + ')';
+    });
+
     return {
         type: 'user',
         id: this.id,
@@ -241,8 +251,8 @@ User.methods.toSolr = function() {
         webSite: this.webSite,
         address: this.address,
         nearestSt: this.nearestSt,
-        // skills: this.skills,
-        // languages: this.languages,
+        skills: skills,
+        languages: languages,
         // educations: this.educations,
         // employments: this.employments,
         // qualifications: this.qualifications,

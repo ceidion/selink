@@ -30,7 +30,8 @@ define([
             'click .btn-remove-comfirm': 'onRemove',
             'mouseover': 'toggleMenuIndicator',
             'mouseout': 'toggleMenuIndicator',
-            'click .btn-bookmark': 'onBookmark'
+            'click .btn-bookmark': 'onBookmark',
+            'click .btn-match': 'onMatch',
         },
 
         // modelEvent
@@ -154,6 +155,17 @@ define([
             });
         },
 
+        onMatch: function() {
+            $.ajax({
+                type: 'GET',
+                url: '/jobs/' + this.model.get('_id') + '/match',
+                dataType: 'json',
+                success: function(data) {
+                    console.log(data);
+                }
+            });
+        },
+
         renderBookmark: function() {
 
             // update the bookmark number
@@ -174,7 +186,7 @@ define([
         renderName: function(model, value, options) {
             this.$el.find('.name-value').empty().text(value);
         },
-        
+
         renderExpired: function(model, value, options) {
             this.$el.find('.expired-value').empty().text(moment(value).calendar());
 
@@ -184,7 +196,7 @@ define([
                 this.$el.find('.widget-header').removeClass('header-color-grey');
 
         },
-        
+
         renderDuration: function(model, value, options) {
 
             var $duration = this.$el.find('.duration-value'),
@@ -236,7 +248,7 @@ define([
             else
                 $address.empty().text(value).parent().removeClass('hide');
         },
-        
+
         renderRemark: function(model, value, options) {
             this.$el.find('.remark-value').empty().html(value);
         },
@@ -250,7 +262,7 @@ define([
             else
                 $foreigner.removeClass('hide');
         },
-        
+
         renderRecruit: function(model, value, options) {
 
             var $recruit = this.$el.find('.recruit-value');

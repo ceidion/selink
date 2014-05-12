@@ -30,31 +30,7 @@ exports.index = function(req, res, next) {
         .sort('-createDate')
         .exec(function(err, jobs) {
             if (err) next(err);
-            else {
-                jobs.forEach(function(job) {
-
-                    var solrQuery = solr.createQuery().q({id: job.id})
-                                        .mlt({
-                                            fl: 'text',
-                                            mintf : 1,
-                                            maxqt: 100,
-                                        });
-
-                    console.log(solrQuery.build());
-
-                    solr.search(solrQuery, function(err, obj) {
-                        if (err) next(err);
-                        else {
-                            console.log("#################");
-                            // console.log(job);
-                            console.log(util.inspect(obj));
-                            // console.log(util.inspect(obj.moreLikeThis[job.id].docs));
-                            console.log("#################");
-                        }
-                    });
-                })
-                res.json(jobs);
-            }
+            else res.json(jobs);
         });
 };
 
@@ -136,10 +112,7 @@ exports.create = function(req, res, next) {
             job.populate('_owner', 'type firstName lastName title photo createDate', function(err, job) {
 
                 if (err) next(err);
-                else {
-                    commitToSolr(job, next);
-                    res.json(job);
-                }
+                else res.json(job);
             });
 
         }
@@ -162,10 +135,7 @@ exports.update = function(req, res, next) {
             job.populate('_owner', 'type firstName lastName title photo createDate', function(err, job) {
 
                 if (err) next(err);
-                else {
-                    commitToSolr(job, next);
-                    res.json(job);
-                }
+                else res.json(job);
             });
         }
     });
@@ -178,10 +148,7 @@ exports.remove = function(req, res, next) {
 
     Job.findByIdAndUpdate(req.params.job, {logicDelete: true}, function(err, job) {
         if (err) next(err);
-        else {
-            commitToSolr(job, next);
-            res.json(job);
-        }
+        else res.json(job);
     });
 };
 
@@ -259,16 +226,64 @@ exports.bookmark = function(req, res, next){
     });
 };
 
-commitToSolr = function(job, next) {
+exports.match = function(req, res, next) {
 
-    solr.add(job.toSolr(), function(err, solrResult) {
+    // find job
+    Job.findById(req.params.job, function(err, job) {
+
         if (err) next(err);
         else {
-            console.log(solrResult);
-            solr.commit(function(err,res){
-               if(err) console.log(err);
-               if(res) console.log(res);
+
+            var languages = _.map(job.languages, function(language) {
+                return language.language;
             });
-        } 
+
+            var skills = _.map(job.skills, function(skill) {
+                return skill.skill;
+            });
+
+            var solrQuery = solr.createQuery()
+                                .q({
+                                    languages: languages,
+                                    skills: skills
+                                })
+                                .matchFilter('type', 'user')
+                                .fl('id,score');
+
+            console.log(solrQuery.build());
+
+            solr.search(solrQuery, function(err, obj) {
+                if (err) console.log(err);
+                else {
+
+                    console.log("#################");
+                    console.log(util.inspect(obj));
+                    console.log(util.inspect(obj.response.docs));
+                    console.log("#################");
+
+                    User.find()
+                        .select('type firstName lastName title photo createDate')
+                        .where('_id').in(_.pluck(obj.response.docs, 'id'))
+                        .exec(function(err, users) {
+                            if (err) next(err);
+                            else res.json(users);
+                        });
+                }
+            });
+        }
     });
 };
+
+// commitToSolr = function(job, next) {
+
+//     solr.add(job.toSolr(), function(err, solrResult) {
+//         if (err) next(err);
+//         else {
+//             console.log(solrResult);
+//             solr.commit(function(err,res){
+//                if(err) console.log(err);
+//                if(res) console.log(res);
+//             });
+//         }
+//     });
+// };

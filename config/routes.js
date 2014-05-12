@@ -74,8 +74,10 @@ module.exports = function(app, sio) {
     app.get('/jobs', checkLoginStatus, job.index);
     // Get new jobs (for home)
     app.get('/jobs/news', checkLoginStatus, job.news);
-    // Get specific posts
+    // Get specific job
     app.get('/jobs/:job', checkLoginStatus, job.show);
+    // Match specific job
+    app.get('/jobs/:job/match', checkLoginStatus, job.match);
     // Create jobs
     app.post('/jobs', checkLoginStatus, job.create);
     // Update jobs
