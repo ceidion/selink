@@ -41,6 +41,8 @@ img{max-width:100%}
 #employments .row{margin-top:5px}#employments .row:first-child{margin-top:0px}
 .photo-item{margin:5px}.photo-item img{min-width:100px;max-width:100px}
 .photo-item .tags{position:absolute;background-color:transparent;border:0;bottom:0;right:0;left:0;overflow:visible;direction:rtl;margin:0;padding:0}.photo-item .tags>.label-holder{opacity:.92;filter:alpha(opacity=92);display:table;margin:1px 0 0 0;direction:ltr;text-align:left}.photo-item .tags>.label-holder:hover{opacity:1;filter:alpha(opacity=100)}
+.match-item{position:relative;float:left;margin:5px}.match-item img{max-height:100px}
+.match-item .tags{position:absolute;background-color:transparent;border:0;bottom:0;right:0;left:0;overflow:visible;direction:rtl;margin:0;padding:0}.match-item .tags>.label-holder{opacity:.92;filter:alpha(opacity=92);display:table;margin:1px 0 0 0;direction:ltr;text-align:left}.match-item .tags>.label-holder:hover{opacity:1;filter:alpha(opacity=100)}
 .isotope-item{margin:0px !important;word-wrap:break-word}.isotope-item div{max-width:100%}
 .isotope-item .avatar{max-width:100px;max-height:100px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
 .isotope-item .widget-header .label{margin-bottom:5px}

@@ -230,11 +230,19 @@ var User = new Schema({
 User.methods.toSolr = function() {
 
     var languages = _.map(this.languages, function(language) {
-        return language.language + '(' + language.weight + ')';
+        return {
+            id: language._id,
+            language: language.language,
+            weight: language.weight
+        };
     });
 
     var skills = _.map(this.skills, function(skill) {
-        return skill.skill + '(' + skill.weight + ')';
+        return {
+            id: skill._id,
+            skill: skill.skill,
+            weight: skill.weight
+        };
     });
 
     return {
@@ -251,8 +259,7 @@ User.methods.toSolr = function() {
         webSite: this.webSite,
         address: this.address,
         nearestSt: this.nearestSt,
-        skills: skills,
-        languages: languages,
+        _childDocuments_: _.union(languages, skills),
         // educations: this.educations,
         // employments: this.employments,
         // qualifications: this.qualifications,

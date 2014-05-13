@@ -141,7 +141,12 @@ define([], function() {
         },
 
         shiftColumn: function(event, view) {
-            this.$el.find(this.itemViewContainer).isotope('layout');
+
+            var self = this;
+
+            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
+                self.$el.find(self.itemViewContainer).isotope('layout');
+            });
         }
 
     });

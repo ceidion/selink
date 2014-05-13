@@ -1,16 +1,20 @@
 define([
     'text!common/template/job/item.html',
+    'common/collection/base',
     'common/view/job/collection/languages',
     'common/view/job/collection/skills',
     'common/view/job/item/languages',
     'common/view/job/item/skills',
+    'common/view/job/item/matches',
     'common/view/job/edit'
 ], function(
     template,
+    BaseCollection,
     Languages,
     Skills,
     LanguagesView,
     SkillsView,
+    MatchesView,
     EditView
 ) {
 
@@ -55,18 +59,19 @@ define([
         // regions
         regions: {
             'languageArea': '.language',
-            'skillArea': '.skill'
+            'skillArea': '.skill',
+            'matchingArea': '.matching'
         },
 
         // initializer
         initialize: function() {
 
-            // create language area
+            // create language view
             this.languagesView = new LanguagesView({
                 collection: new Languages(this.model.get('languages'))
             });
 
-            // create skill area
+            // create skill view
             this.skillsView = new SkillsView({
                 collection: new Skills(this.model.get('skills'))
             });
@@ -87,6 +92,8 @@ define([
             this.languageArea.show(this.languagesView);
             // show skill area
             this.skillArea.show(this.skillsView);
+
+            this.onMatch();
         },
 
         // edit job
@@ -156,12 +163,27 @@ define([
         },
 
         onMatch: function() {
+
+            var self = this;
+
             $.ajax({
                 type: 'GET',
                 url: '/jobs/' + this.model.get('_id') + '/match',
                 dataType: 'json',
                 success: function(data) {
-                    console.log(data);
+
+                    if (data.length)
+                        self.$el.find('.widget-header').addClass('header-color-green');
+
+                    // create match view
+                    self.matchesView = new MatchesView({
+                        collection: new BaseCollection(data)
+                    });
+
+                    // show language view
+                    self.matchingArea.show(self.matchesView);
+
+                    self.trigger("shiftColumn");
                 }
             });
         },

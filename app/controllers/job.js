@@ -234,21 +234,20 @@ exports.match = function(req, res, next) {
         if (err) next(err);
         else {
 
-            var languages = _.map(job.languages, function(language) {
-                return language.language;
-            });
-
-            var skills = _.map(job.skills, function(skill) {
-                return skill.skill;
-            });
-
             var solrQuery = solr.createQuery()
-                                .q({
-                                    languages: languages,
-                                    skills: skills
-                                })
-                                .matchFilter('type', 'user')
+                                .q('*:*')
+                                // .matchFilter('type', 'user')
                                 .fl('id,score');
+
+            _.map(job.languages, function(language) {
+                var bottom = Number(language.weight) - 20;
+                solrQuery.fq("{!parent which='type:user'}language:" + language.language + " AND weight:[" + bottom +" TO *]");
+            });
+
+            _.map(job.skills, function(skill) {
+                var bottom = Number(skill.weight) - 20;
+                solrQuery.fq("{!parent which='type:user'}skill:" + skill.skill + " AND weight:[" + bottom + " TO *]");
+            });
 
             console.log(solrQuery.build());
 
@@ -261,29 +260,17 @@ exports.match = function(req, res, next) {
                     console.log(util.inspect(obj.response.docs));
                     console.log("#################");
 
-                    User.find()
-                        .select('type firstName lastName title photo createDate')
-                        .where('_id').in(_.pluck(obj.response.docs, 'id'))
-                        .exec(function(err, users) {
-                            if (err) next(err);
-                            else res.json(users);
-                        });
+                    if (obj.response.numFound > 0)
+                        User.find()
+                            .select('type firstName lastName title photo createDate')
+                            .where('_id').in(_.pluck(obj.response.docs, 'id'))
+                            .exec(function(err, users) {
+                                if (err) next(err);
+                                else res.json(users);
+                            });
+                    else res.json([]);
                 }
             });
         }
     });
 };
-
-// commitToSolr = function(job, next) {
-
-//     solr.add(job.toSolr(), function(err, solrResult) {
-//         if (err) next(err);
-//         else {
-//             console.log(solrResult);
-//             solr.commit(function(err,res){
-//                if(err) console.log(err);
-//                if(res) console.log(res);
-//             });
-//         }
-//     });
-// };

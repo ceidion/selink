@@ -129,11 +129,19 @@ var Job = new Schema({
 Job.methods.toSolr = function() {
 
     var languages = _.map(this.languages, function(language) {
-        return language.language + '(' + language.weight + ')';
+        return {
+            id: language._id,
+            language: language.language,
+            weight: language.weight
+        };
     });
 
     var skills = _.map(this.skills, function(skill) {
-        return skill.skill + '(' + skill.weight + ')';
+        return {
+            id: skill._id,
+            skill: skill.skill,
+            weight: skill.weight
+        };
     });
 
     return {
@@ -147,8 +155,7 @@ Job.methods.toSolr = function() {
         priceBottom: this.priceBottom,
         address: this.address,
         foreignerAllowed: this.foreignerAllowed,
-        languages: languages,
-        skills: skills,
+        _childDocuments_: _.union(languages, skills),
         remark: _s.stripTags(this.remark),
         logicDelete: this.logicDelete
     };
