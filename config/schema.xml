@@ -179,8 +179,8 @@
    <field name="foreignerAllowed" type="boolean" indexed="true" stored="true"/>
    <!-- <field name="languages" type="text_ja" indexed="true" stored="true" multiValued="true" termVectors="true"/> -->
    <!-- <field name="skills" type="text_ja" indexed="true" stored="true" multiValued="true" termVectors="true"/> -->
-   <field name="language" type="text_ja" indexed="true" stored="true" termVectors="true"/>
-   <field name="skill" type="text_ja" indexed="true" stored="true" termVectors="true"/>
+   <field name="language" type="string" indexed="true" stored="true" termVectors="true"/>
+   <field name="skill" type="string" indexed="true" stored="true" termVectors="true"/>
    <field name="weight" type="int" indexed="true" stored="true"/>
    <field name="remark" type="text_ja" indexed="true" stored="true" termVectors="true"/>
    <field name="logicDelete" type="boolean" indexed="true" stored="true"/>

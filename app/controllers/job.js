@@ -236,8 +236,11 @@ exports.match = function(req, res, next) {
 
             var solrQuery = solr.createQuery()
                                 .q('*:*')
+                                // .edismax()
+                                // .pf({language: 1, skill: 1})
                                 // .matchFilter('type', 'user')
-                                .fl('id,score');
+                                .fl('id,score')
+                                .fq('type:user');
 
             _.map(job.languages, function(language) {
                 var bottom = Number(language.weight) - 20;
