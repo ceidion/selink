@@ -40,6 +40,7 @@ define([
 
         // modelEvent
         modelEvents: {
+            'change': 'onMatch',
             'change:name': 'renderName',
             'change:expiredDate': 'renderExpired',
             'change:startDate': 'renderDuration',
@@ -171,9 +172,6 @@ define([
                 url: '/jobs/' + this.model.get('_id') + '/match',
                 dataType: 'json',
                 success: function(data) {
-
-                    if (data.length)
-                        self.$el.find('.widget-header').addClass('header-color-green');
 
                     // create match view
                     self.matchesView = new MatchesView({

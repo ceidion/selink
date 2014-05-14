@@ -112,7 +112,22 @@ exports.create = function(req, res, next) {
             job.populate('_owner', 'type firstName lastName title photo createDate', function(err, job) {
 
                 if (err) next(err);
-                else res.json(job);
+                else {
+
+                    // index job in solr
+                    solr.add(job.toSolr(), function(err, solrResult) {
+                        if (err) next(err);
+                        else {
+                            console.log(solrResult);
+                            solr.commit(function(err,res){
+                               if(err) console.log(err);
+                               if(res) console.log(res);
+                            });
+                        }
+                    });
+
+                    res.json(job);
+                }
             });
 
         }
@@ -135,7 +150,22 @@ exports.update = function(req, res, next) {
             job.populate('_owner', 'type firstName lastName title photo createDate', function(err, job) {
 
                 if (err) next(err);
-                else res.json(job);
+                else {
+
+                    // index job in solr
+                    solr.add(job.toSolr(), function(err, solrResult) {
+                        if (err) next(err);
+                        else {
+                            console.log(solrResult);
+                            solr.commit(function(err,res){
+                               if(err) console.log(err);
+                               if(res) console.log(res);
+                            });
+                        }
+                    });
+
+                    res.json(job);
+                }
             });
         }
     });
@@ -148,7 +178,22 @@ exports.remove = function(req, res, next) {
 
     Job.findByIdAndUpdate(req.params.job, {logicDelete: true}, function(err, job) {
         if (err) next(err);
-        else res.json(job);
+        else {
+
+            // index job in solr
+            solr.add(job.toSolr(), function(err, solrResult) {
+                if (err) next(err);
+                else {
+                    console.log(solrResult);
+                    solr.commit(function(err,res){
+                       if(err) console.log(err);
+                       if(res) console.log(res);
+                    });
+                }
+            });
+
+            res.json(job);
+        }
     });
 };
 

@@ -161,20 +161,4 @@ Job.methods.toSolr = function() {
     };
 };
 
-Job.post('save', function (job) {
-
-    solr.add(job.toSolr(), function(err, solrResult) {
-        if (err) next(err);
-        else {
-            console.log(solrResult);
-            solr.commit(function(err,res){
-               if(err) console.log(err);
-               if(res) console.log(res);
-            });
-        }
-    });
-
-    console.log('Job %s has been indexed', job._id);
-});
-
 mongoose.model('Job', Job);
