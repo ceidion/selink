@@ -30,9 +30,6 @@ define([
         // template
         template: template,
 
-        // class name
-        className: 'navbar-header pull-right',
-
         ui: {
             completeness: '.completeness-value',
             bar: '.progress-bar'

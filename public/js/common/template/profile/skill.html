@@ -37,7 +37,7 @@
     <div class="progress-bar <%= progressClass %>" style="width:<%= length %>%">
         <span class="pull-left">
             <%
-                if (obj.skill) print('<i class="icon-gear sl-icon"></i>&nbsp;' + obj.skill)
+                if (obj.skill) print('<i class="ace-icon fa fa-gear sl-icon"></i>&nbsp;' + obj.skill)
                 else print('<span class="light-grey">未選択</span>');
             %>
         </span>
@@ -48,17 +48,19 @@
         </span>
     </div>
 </div>
-<div class="sl-editor row">
-    <div class="col-xs-12 input-icon input-icon-right form-group">
+<div class="sl-editor">
+    <div class="input-icon input-icon-right form-group">
         <input type="text" name="skill" placeholder="スキル名" value="<%- obj.skill %>">
-        <i class="icon-nothing <%= indecatorClass %>"><%= length %>pt<%= humanize %></i>
+        <i class="ace-icon fa fa-nothing <%= indecatorClass %>"><%= length %>pt<%= humanize %></i>
     </div>
-    <div class="col-xs-12 input-group">
-        <span class="input-group-addon">
-            <div class="ui-slider <%= sliderClass %> sl-slider"></div>
-        </span>
-        <span class="input-group-btn">
-            <button type="button" class="btn btn-danger btn-remove btn-xs"><i class="icon-trash bigger-150"></i></button>
-        </span>
+    <div class="form-group">
+        <div class="col-xs-12 input-group">
+            <span class="input-group-addon">
+                <div class="ui-slider <%= sliderClass %> sl-slider"></div>
+            </span>
+            <span class="input-group-btn">
+                <button type="button" class="btn btn-danger btn-remove btn-xs"><i class="ace-icon fa fa-trash-o bigger-150"></i></button>
+            </span>
+        </div>
     </div>
 </div>

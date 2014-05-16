@@ -5,40 +5,23 @@ html(lang="ja", xmlns="http://www.w3.org/1999/xhtml")
   include partials/header
 
   //- body
-  body.navbar-fixed
+  body.no-skin.navbar-fixed
 
     //- top navigation
-    //- top bar
-    #navbar.navbar.navbar-default.navbar-fixed-top
-
+    #navbar.navbar.navbar-default.navbar-fixed-top.navbar-collapse
       //- container
       #navbar-container.navbar-container
 
-        //- page name
-        .navbar-header.pull-left
-          a.navbar-brand(href="#")
-            small
-              block page-name
-
-        //- menu
-        #topnav-area
-
     //- container
     #main-container.main-container
-      .main-container-inner
 
-        //- side navigation
-        a#menu-toggler.menu-toggler(href="#")
-          span.menu-text
-        #sidebar.sidebar.sidebar-fixed
-          #shortcuts-area
-          #sidenav-area
-          #sidebar-collapse.sidebar-collapse
-            i.icon-double-angle-left(data-icon1="icon-double-angle-left", data-icon2="icon-double-angle-right")
+      //- side navigation
+      a#menu-toggler.invisible.menu-toggler
+      #sidebar.sidebar.collpase.navbar-collapse.sidebar-fixed.menu-min
 
-        //- content
-        .main-content
-          .page-content
+      //- content
+      .main-content
+        .page-content
 
     //- modal
     #modal-area.modal.fade(tabindex="-1", data-backdrop="static")

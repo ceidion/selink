@@ -4,53 +4,53 @@ require.config({
 
     paths: {
         // core library
-        'jquery': "lib/jquery-2.0.3.min",
-        'jquery-ui': "lib/jquery-ui-1.10.3.custom.min",
-        'bootstrap': "lib/bootstrap.min",
+        'jquery': "lib/jquery",
+        'jquery-ui': "lib/jquery-ui.custom",
+        'bootstrap': "lib/bootstrap",
         'underscore': 'lib/underscore',
-        'underscore.string': 'lib/underscore.string.min',
+        'underscore.string': 'lib/underscore.string',
         'backbone': 'lib/backbone',
         'marionette': 'lib/backbone.marionette',
         'backbone.wreqr': 'lib/backbone.wreqr',
         'backbone.babysitter': 'lib/backbone.babysitter',
-        'backbone.validation': 'lib/backbone.validation.min',
-        'deep-model': 'lib/deep-model.min',
+        'backbone.validation': 'lib/backbone.validation',
+        'deep-model': 'lib/deep-model',
         'text': 'lib/text',
         // core theme
-        'ace': "lib/uncompressed/ace",
-        'ace-extra': "lib/uncompressed/ace-extra",
-        'ace-element': "lib/uncompressed/ace-elements",
+        'ace': "lib/ace",
+        'ace-extra': "lib/ace-extra",
+        'ace-element': "lib/ace-elements",
         // pie chart
-        'pie-chart': "lib/jquery.easy-pie-chart.min",
+        'pie-chart': "lib/jquery.easypiechart",
         // calendar
-        'full-calendar': "lib/fullcalendar.min",
+        'full-calendar': "lib/fullcalendar",
         'google-calendar': "lib/gcal",
         // date time
         'datepicker-locale': "lib/date-time/locales/bootstrap-datepicker.ja",
         'datepicker': "lib/date-time/bootstrap-datepicker",
-        'timepicker': "lib/date-time/bootstrap-timepicker.min",
-        'moment': "lib/date-time/moment-with-langs.min",
+        'timepicker': "lib/date-time/bootstrap-timepicker",
+        'moment': "lib/date-time/moment-with-langs",
         // file upload
         'jquery.ui.widget': 'lib/jquery.ui.widget',
         'iframetransport': 'lib/jquery.iframe-transport',
         'fileupload': 'lib/jquery.fileupload',
         // input mask
-        'maskedinput': "lib/jquery.maskedinput.min",
-        'autosize': "lib/jquery.autosize.min",
-        'chosen': 'lib/chosen.jquery.min',
-        'gritter': 'lib/jquery.gritter.min',
-        'colorbox': 'lib/jquery.colorbox-min',
-        'knob': 'lib/jquery.knob.min',
-        'wysiwyg': 'lib/bootstrap-wysiwyg.min',
-        'hotkeys': 'lib/jquery.hotkeys.min',
+        'maskedinput': "lib/jquery.maskedinput",
+        'autosize': "lib/jquery.autosize",
+        'chosen': 'lib/chosen.jquery',
+        'gritter': 'lib/jquery.gritter',
+        'colorbox': 'lib/jquery.colorbox',
+        'knob': 'lib/jquery.knob',
+        'wysiwyg': 'lib/bootstrap-wysiwyg',
+        'hotkeys': 'lib/jquery.hotkeys',
         // isotope
-        'bridget': 'lib/uncompressed/jquery.bridget',
-        'imagesloaded': 'lib/imagesloaded.pkgd.min',
-        'isotope': 'lib/isotope.pkgd.min',
-        'nicescroll': 'lib/jquery.nicescroll.min',
-        'infinite-scroll': 'lib/jquery.infinitescroll.min',
-        'tag': 'lib/uncompressed/bootstrap-tag',
-        'typeahead': 'lib/uncompressed/typeahead.bundle',
+        'bridget': 'lib/jquery.bridget',
+        'imagesloaded': 'lib/imagesloaded.pkgd',
+        'isotope': 'lib/isotope.pkgd',
+        'nicescroll': 'lib/jquery.nicescroll',
+        'infinite-scroll': 'lib/jquery.infinitescroll',
+        'tag': 'lib/bootstrap-tag',
+        'typeahead': 'lib/typeahead.bundle',
         'selink': 'lib/selink',
         // 'socket.io': '../socket.io/socket.io.js',
         'socket.io': 'lib/socket.io',
@@ -77,14 +77,14 @@ require.config({
         'deep-model': {
             deps: ['backbone']
         },
-        'ace-element': {
-            deps: ['jquery']
-        },
         'ace-extra': {
             deps: ['jquery']
         },
         'ace': {
-            deps: ['ace-element', 'ace-extra']
+            deps: ['ace-extra']
+        },
+        'ace-element': {
+            deps: ['ace']
         },
         'pie-chart': {
             deps: ['jquery']
@@ -163,7 +163,7 @@ require.config({
                 'underscore.string',
                 'deep-model',
                 'backbone.validation',
-                'ace',
+                'ace-element',
                 'pie-chart',
                 'full-calendar',
                 'google-calendar',

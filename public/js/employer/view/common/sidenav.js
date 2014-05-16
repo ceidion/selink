@@ -1,12 +1,8 @@
 define(['text!employer/template/common/sidenav.html',], function(template) {
 
-    var SideNav = Backbone.Marionette.ItemView.extend({
+    return Backbone.Marionette.ItemView.extend({
 
         template: template,
-
-        tagName: 'ul',
-
-        className: 'nav nav-list',
 
         events: {
             'click li': 'activeMenu',
@@ -28,5 +24,4 @@ define(['text!employer/template/common/sidenav.html',], function(template) {
         }
     });
 
-    return SideNav;
 });

@@ -1,21 +1,17 @@
 define(['text!admin/template/common/sidenav.html',], function(template) {
 
-    var SideNav = Backbone.Marionette.ItemView.extend({
+    return Backbone.Marionette.ItemView.extend({
 
         template: template,
 
-        tagName: 'ul',
-
-        className: 'nav nav-list',
-
         events: {
-            // 'click li': 'activeMenu',
+            'click li': 'activeMenu',
             'mouseover li': 'attention'
         },
 
         onShow: function() {
             // this.$el.addClass('animated fadeInLeft');
-            ace.handle_side_menu($);
+            // ace.handle_side_menu($);
         },
 
         activeMenu: function(event) {
@@ -25,10 +21,7 @@ define(['text!admin/template/common/sidenav.html',], function(template) {
         },
 
         attention: function(event) {
-            $(event.target).find('i').addClass('animated wobble');
             $(event.target).find('i').slWobble();
         }
     });
-
-    return SideNav;
 });

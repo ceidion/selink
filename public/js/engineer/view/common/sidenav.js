@@ -4,10 +4,6 @@ define(['text!engineer/template/common/sidenav.html',], function(template) {
 
         template: template,
 
-        tagName: 'ul',
-
-        className: 'nav nav-list',
-
         events: {
             'click li': 'activeMenu',
             'mouseover li': 'attention'

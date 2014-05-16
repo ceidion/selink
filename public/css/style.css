@@ -1,17 +1,15 @@
 
-html,body{height:100%}
+body{background-color:#fff}
 input{line-height:normal !important}
 img{max-width:100%}
-.main-container{height:90%;min-height:90%}
-.main-container-inner,.main-content,.page-content{height:100%;min-height:100%}
-.sidebar{-webkit-transition:width .5s;transition:width .5s}.sidebar:before{-webkit-transition:width .5s;transition:width .5s}
+.sidebar{-webkit-transition:width .5s;transition:width .5s}
 .main-content{-webkit-transition:margin .5s;transition:margin .5s}.main-content:before{-webkit-transition:margin .5s;transition:margin .5s}
 .sl-editable{-webkit-transition:background-color .5s;transition:background-color .5s}.sl-editable:hover{background-color:#EEE;cursor:pointer}
 .sl-editable .form-group{margin-bottom:0px}
 .sl-editable .sl-editor{display:none}
 .label{line-height:1.4}
 .badge{top:-2px !important;padding-top:3px;padding-bottom:1px}
-[class^="icon-"],[class*=" icon-"]{min-width:15px}
+.ace-icon{min-width:15px}
 .empty-view{border:2px dashed #eee;padding:25px}
 .icon-nothing{font-family:inherit}
 .sl-title{line-height:1.3 !important}
@@ -62,7 +60,7 @@ img{max-width:100%}
 #external-events>div :hover{cursor:move}
 .fc-event-inner{padding:3px 5px}.fc-event-inner .sl-event-memo{padding:10px 15px;max-height:100px}.fc-event-inner .sl-event-memo img{max-height:100px;max-width:100px}
 .sl-input-group-addon{padding:6px 12px !important;line-height:1 !important;border-width:1px 0 1px 1px !important}
-.animated-input-error{display:inline-block;-moz-animation:vertical 2.0s 3 ease 0.5s;-webkit-animation:vertical 2.0s 3 ease 0.5s;-o-animation:vertical 2.0s 3 ease 0.5s;-ms-animation:vertical 2.0s 3 ease 0.5s;animation:vertical 2.0s 3 ease 0.5s}
+.animated-input-error{display:inline-block;animation:vertical 2.0s 3 ease 0.5s;-moz-animation:vertical 2.0s 3 ease 0.5s;-webkit-animation:vertical 2.0s 3 ease 0.5s;-o-animation:vertical 2.0s 3 ease 0.5s;-ms-animation:vertical 2.0s 3 ease 0.5s;animation:vertical 2.0s 3 ease 0.5s}
 @-moz-keyframes vertical{0%{-moz-transform:translate(0, -3px)} 4%{-moz-transform:translate(0, 3px)} 8%{-moz-transform:translate(0, -3px)} 12%{-moz-transform:translate(0, 3px)} 16%{-moz-transform:translate(0, -3px)} 20%{-moz-transform:translate(0, 3px)} 22%{-moz-transform:translate(0, 0)}}@-webkit-keyframes vertical{0%{-webkit-transform:translate(0, -3px)} 4%{-webkit-transform:translate(0, 3px)} 8%{-webkit-transform:translate(0, -3px)} 12%{-webkit-transform:translate(0, 3px)} 16%{-webkit-transform:translate(0, -3px)} 20%{-webkit-transform:translate(0, 3px)} 22%{-webkit-transform:translate(0, 0)}}@-ms-keyframes vertical{0%{-ms-transform:translate(0, -3px)} 4%{-ms-transform:translate(0, 3px)} 8%{-ms-transform:translate(0, -3px)} 12%{-ms-transform:translate(0, 3px)} 16%{-ms-transform:translate(0, -3px)} 20%{-ms-transform:translate(0, 3px)} 22%{-ms-transform:translate(0, 0)}}@keyframes vertical{0%{transform:translate(0, -3px)} 4%{transform:translate(0, 3px)} 8%{transform:translate(0, -3px)} 12%{transform:translate(0, 3px)} 16%{transform:translate(0, -3px)} 20%{transform:translate(0, 3px)} 22%{transform:translate(0, 0)}}#infscr-loading{position:fixed;text-align:center;bottom:30px;left:42%;z-index:100;background-color:#dff0d8;border:2px solid #d6e9c6;padding:15px;color:#468847;font-size:15px;font-weight:bold}
 .dropdown-navbar .msg-body{width:100%;padding-right:8px;vertical-align:top}
 .dropdown-body{max-height:300px;border-color:#bcd4e5}.dropdown-body>li{padding:0 8px;background-color:#FFFFFF}.dropdown-body>li>[class*="icon-"],.dropdown-body>li>a>[class*="icon-"]{margin-right:5px !important;color:#555;font-size:14px}

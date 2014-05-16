@@ -49,9 +49,8 @@ define([
     // create regions
     selink.addRegions({
         pageContent: '.page-content',
-        topnavArea: '#topnav-area',
-        shortcutArea: '#shortcuts-area',
-        sidenavArea: '#sidenav-area',
+        topnavArea: '#navbar-container',
+        sidenavArea: '#sidebar',
         modalArea: '#modal-area'
     });
 

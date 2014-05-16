@@ -95,13 +95,6 @@ var User = new Schema({
         validate: validate('len', 0, 20)
     },
 
-    // E-mail
-    secEmail: {
-        type: String,
-        trim: true,
-        validate: validate({passIfEmpty: true}, 'isEmail')
-    },
-
     // Personal WebSite
     webSite: {
         type: String,
@@ -128,12 +121,6 @@ var User = new Schema({
         type: String,
         trim: true,
         validate: validate('len', 0, 30)
-    },
-
-    // Work Experience
-    experience: {
-        type: Number,
-        validate: validate({passIfEmpty: true}, 'isInt')
     },
 
     // Self Introduction

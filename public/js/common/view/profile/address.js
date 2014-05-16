@@ -66,7 +66,7 @@ define([
                 // spin an icon
                 beforeSend: function() {
                     self.ui.zipCodeArea.find('.input-group-addon')
-                        .empty().append('<i class="icon-refresh icon-spin"><i>');
+                        .empty().append('<i class="ace-icon fa fa-refresh fa-spin"><i>');
                 },
 
                 // success handler

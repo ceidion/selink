@@ -1,7 +1,7 @@
 <div class="sl-value">
     <blockquote>
         <p>
-            <i class="icon-book sl-icon bigger-110 green"></i>&nbsp;
+            <i class="ace-icon fa fa-graduation-cap sl-icon green"></i>&nbsp;
             <span class="school-value">
             <%
                 if (obj.school) print(obj.school);
@@ -29,41 +29,33 @@
     </blockquote>
 </div>
 <div class="sl-editor">
-    <div class="row form-group">
+    <div class="form-group">
         <div class="col-md-12 input-group">
             <span class="input-group-addon">
-                <i class="icon-building bigger-110"></i>
+                <i class="ace-icon fa fa-university"></i>
             </span>
-            <input type="text" placeholder="学校名称" name="school" value="<%- obj.school %>">
+            <input type="text" placeholder="学校名称" name="school" value="<%= obj.school %>">
             <span class="input-group-btn">
-                <button type="button" class="btn btn-danger btn-remove btn-xs"><i class="icon-trash bigger-150"></i></button>
+                <button type="button" class="btn btn-danger btn-remove btn-xs"><i class="ace-icon fa fa-trash-o bigger-150"></i></button>
             </span>
         </div>
     </div>
-    <div class="row form-group">
+    <div class="space-2"></div>
+    <div class="form-group">
         <div class="col-md-12 input-group">
             <span class="input-group-addon">
-                <i class="icon-book bigger-110"></i>
+                <i class="ace-icon fa fa-book"></i>
             </span>
-            <input type="text" placeholder="学部・専門・専攻" name="major" value="<%- obj.major %>">
+            <input type="text" placeholder="学部・専門・専攻" name="major" value="<%= obj.major %>">
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-5 form-group">
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="icon-calendar bigger-110"></i>
-                </span>
-                <input type="text" class="col-xs-12" placeholder="開始日" name="startDate" value="<%- obj.startDateInput %>">
-            </div>
-        </div>
-        <div class="col-md-5 form-group">
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="icon-calendar bigger-110"></i>
-                </span>
-                <input type="text" class="col-xs-12" placeholder="終了日" name="endDate" value="<%- obj.endDateInput %>">
-            </div>
+    <div class="space-2"></div>
+    <div class="form-group">
+        <div class="input-group input-daterange">
+            <span class="input-group-addon sl-input-group-addon"><i class="ace-icon fa fa-calendar"></i></span>
+            <input type="text" style="width: 150px;" placeholder="開始日" name="startDate" value="<%= obj.startDateInput %>">
+            <span class="input-group-addon"><i class="ace-icon fa fa-exchange"></i></span>
+            <input type="text" style="width: 150px;" placeholder="終了日" name="endDate" value="<%= obj.endDateInput %>">
         </div>
     </div>
 </div>

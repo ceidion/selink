@@ -21,7 +21,8 @@
  * ========================================================= */
 
 (function($, undefined){
-
+	var $date_prev_icon = '&laquo;';//ACE
+	var $date_next_icon = '&raquo;';//ACE
 	var $window = $(window);
 
 	function UTCDate(){
@@ -63,7 +64,7 @@
 				this.push.apply(this, new_array);
 			},
 			clear: function(){
-				this.splice(0);
+				this.length = 0;
 			},
 			copy: function(){
 				var a = new DateArray();
@@ -80,8 +81,6 @@
 		};
 	})();
 
-
-	// Picker object
 
 	var Datepicker = function(element, options){
 		this.dates = new DateArray();
@@ -1388,6 +1387,7 @@
 			return this;
 	};
 
+	
 	var defaults = $.fn.datepicker.defaults = {
 		autoclose: false,
 		beforeShowDay: $.noop,
@@ -1598,9 +1598,9 @@
 		},
 		headTemplate: '<thead>'+
 							'<tr>'+
-								'<th class="prev">&laquo;</th>'+
+								'<th class="prev">'+$date_prev_icon+'</th>'+//ACE
 								'<th colspan="5" class="datepicker-switch"></th>'+
-								'<th class="next">&raquo;</th>'+
+								'<th class="next">'+$date_next_icon+'</th>'+//ACE
 							'</tr>'+
 						'</thead>',
 		contTemplate: '<tbody><tr><td colspan="7"></td></tr></tbody>',

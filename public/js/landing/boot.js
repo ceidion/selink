@@ -4,24 +4,24 @@ require.config({
 
     paths: {
         // core library
-        'jquery': 'lib/jquery-2.0.3.min',
-        'jquery-ui': 'lib/jquery-ui-1.10.3.custom.min',
-        'bootstrap': 'lib/bootstrap.min',
+        'jquery': 'lib/jquery',
+        'jquery-ui': 'lib/jquery-ui.custom',
+        'bootstrap': 'lib/bootstrap',
         'underscore': 'lib/underscore',
-        'underscore.string': 'lib/underscore.string.min',
+        'underscore.string': 'lib/underscore.string',
         'backbone': 'lib/backbone',
         'marionette': 'lib/backbone.marionette',
         'backbone.wreqr': 'lib/backbone.wreqr',
         'backbone.babysitter': 'lib/backbone.babysitter',
         'text': 'lib/text',
         // core theme
-        'ace': 'lib/uncompressed/ace',
-        'ace-extra': 'lib/uncompressed/ace-extra',
-        'ace-element': 'lib/uncompressed/ace-elements',
+        'ace': 'lib/ace',
+        'ace-extra': 'lib/ace-extra',
+        'ace-element': 'lib/ace-elements',
         // validator
-        'validate': 'lib/jquery.validate.min',
-        'gritter': 'lib/jquery.gritter.min',
-        'scrollIt': 'lib/scrollIt.min',
+        'validate': 'lib/jquery.validate',
+        'gritter': 'lib/jquery.gritter',
+        'scrollIt': 'lib/scrollIt',
         'app': 'landing/landing'
     },
 
@@ -42,14 +42,14 @@ require.config({
             deps: ['jquery', 'underscore'],
             exports: 'Backbone'
         },
-        'ace-element': {
-            deps: ['jquery']
-        },
         'ace-extra': {
             deps: ['jquery']
         },
         'ace': {
-            deps: ['ace-element', 'ace-extra']
+            deps: ['ace-extra']
+        },
+        'ace-element': {
+            deps: ['ace']
         },
         'validate': {
             deps: ['jquery']
@@ -66,7 +66,7 @@ require.config({
                 'bootstrap',
                 'underscore.string',
                 'marionette',
-                'ace',
+                'ace-element',
                 'validate',
                 'gritter',
                 'scrollIt'

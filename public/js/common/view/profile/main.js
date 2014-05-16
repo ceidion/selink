@@ -9,9 +9,7 @@ define([
     'common/view/profile/nationality',
     'common/view/profile/address',
     'common/view/profile/nearestSt',
-    'common/view/profile/experience',
     'common/view/profile/telno',
-    'common/view/profile/email',
     'common/view/profile/website',
     'common/view/profile/bio',
     'common/view/profile/languages',
@@ -30,9 +28,7 @@ define([
     NationalityItem,
     AddressItem,
     NearestStItem,
-    ExperienceItem,
     TelNoItem,
-    EMailItem,
     WebSiteItem,
     BioItem,
     LanguageComposite,
@@ -59,9 +55,7 @@ define([
             nationalityRegion: '#nationality',
             addressRegion: '#address',
             nearestStRegion: '#nearestst',
-            experienceRegion: '#experience',
             telNoRegion: '#telno',
-            emailRegion: '#email',
             webSiteRegion: '#website',
             bioRegion: '#bio',
             languageRegion: '#languages',
@@ -83,9 +77,7 @@ define([
             this.nationalityItem = new NationalityItem({model: this.model});
             this.addressItem = new AddressItem({model: this.model});
             this.nearestStItem = new NearestStItem({model: this.model});
-            this.experienceItem = new ExperienceItem({model: this.model});
             this.telNoItem = new TelNoItem({model: this.model});
-            this.emailItem = new EMailItem({model: this.model});
             this.webSiteItem = new WebSiteItem({model: this.model});
             this.bioItem = new BioItem({model: this.model});
             this.languageComposite = new LanguageComposite({model: this.model});
@@ -107,9 +99,7 @@ define([
             this.nationalityRegion.show(this.nationalityItem);
             this.addressRegion.show(this.addressItem);
             this.nearestStRegion.show(this.nearestStItem);
-            this.experienceRegion.show(this.experienceItem);
             this.telNoRegion.show(this.telNoItem);
-            this.emailRegion.show(this.emailItem);
             this.webSiteRegion.show(this.webSiteItem);
             this.bioRegion.show(this.bioItem);
             this.languageRegion.show(this.languageComposite);

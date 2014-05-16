@@ -1,6 +1,5 @@
 define([
     'common/view/topnav/topnav',
-    'common/view/shortcuts/shortcuts',
     'engineer/view/common/sidenav',
     'engineer/view/home/main',
     'common/view/profile/main',
@@ -17,7 +16,6 @@ define([
     'common/model/post'
 ], function(
     TopNavView,
-    ShortCutsView,
     SideNavView,
     HomeView,
     ProfileView,
@@ -52,10 +50,6 @@ define([
         },
 
         showNavigation: function() {
-
-            // setup short cuts
-            selink.shortCutsView = new ShortCutsView();
-            selink.shortcutArea.show(selink.shortCutsView);
 
             // setup side nav
             selink.sideNavView = new SideNavView();

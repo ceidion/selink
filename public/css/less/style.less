@@ -3,8 +3,8 @@
 @import "variables.less";
 @import "mixins.less";
 
-html,body {
-  height: 100%;
+body {
+  background-color: #fff;
 }
 
 input {
@@ -15,23 +15,9 @@ img {
   max-width: 100%;
 }
 
-.main-container {
-  height: 90%;
-  min-height: 90%;
-}
-
-.main-container-inner,.main-content,.page-content {
-  height: 100%;
-  min-height: 100%;
-}
-
 .sidebar {
 
     .transition(width 0.5s);
-
-    &:before {
-        .transition(width 0.5s);
-    }
 }
 
 .main-content {
@@ -72,7 +58,7 @@ img {
   padding-bottom: 1px;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+.ace-icon {
   min-width: 15px;
 }
 
