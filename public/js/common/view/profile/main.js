@@ -12,6 +12,7 @@ define([
     'common/view/profile/telno',
     'common/view/profile/website',
     'common/view/profile/bio',
+    'common/view/profile/friends',
     'common/view/profile/languages',
     'common/view/profile/skills',
     'common/view/profile/qualifications',
@@ -31,6 +32,7 @@ define([
     TelNoItem,
     WebSiteItem,
     BioItem,
+    FriendComposite,
     LanguageComposite,
     SkillComposite,
     QualificationComposite,
@@ -58,6 +60,7 @@ define([
             telNoRegion: '#telno',
             webSiteRegion: '#website',
             bioRegion: '#bio',
+            friendRegion: '#friends',
             languageRegion: '#languages',
             skillRegion: '#skills',
             qualificationRegion: '#qualifications',
@@ -80,6 +83,7 @@ define([
             this.telNoItem = new TelNoItem({model: this.model});
             this.webSiteItem = new WebSiteItem({model: this.model});
             this.bioItem = new BioItem({model: this.model});
+            this.friendComposite = new FriendComposite({model: this.model});
             this.languageComposite = new LanguageComposite({model: this.model});
             this.skillComposite = new SkillComposite({model: this.model});
             this.qualificationComposite = new QualificationComposite({model: this.model});
@@ -102,6 +106,7 @@ define([
             this.telNoRegion.show(this.telNoItem);
             this.webSiteRegion.show(this.webSiteItem);
             this.bioRegion.show(this.bioItem);
+            this.friendRegion.show(this.friendComposite);
             this.languageRegion.show(this.languageComposite);
             this.skillRegion.show(this.skillComposite);
             this.qualificationRegion.show(this.qualificationComposite);

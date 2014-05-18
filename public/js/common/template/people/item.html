@@ -19,13 +19,13 @@
         <% } %>
         <% if (obj.employments.length) { %>
             <h5 class="blue">
-                <i class="icon-building"></i>&nbsp;<%= _.last(obj.employments).company %>
+                <i class="ace-icon fa fa-briefcase"></i>&nbsp;<%= _.last(obj.employments).company %>
                 <span class="label label-sm label-primary arrowed arrowed-right"><%= _.last(obj.employments).position %></span>
             </h5>
         <% } %>
         <% if (obj.educations.length) { %>
             <h5 class="green">
-                <i class="icon-book"></i>&nbsp;<%= _.last(obj.educations).school %>
+                <i class="ace-icon fa fa-university"></i>&nbsp;<%= _.last(obj.educations).school %>
                 <span class="label label-sm label-success arrowed arrowed-right"><%= _.last(obj.educations).major %></span>
             </h5>
         <% } %>
@@ -34,8 +34,8 @@
     <div class="widget-body">
         <div class="widget-main clearfix"><%= obj.bio %></div>
         <div class="widget-toolbox padding-8 clearfix">
-            <button class="btn btn-info btn-block btn-friend" data-loading-text="<i class='icon-spinner icon-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
-                <i class="icon-plus light-blue"></i>&nbsp;友達
+            <button class="btn btn-info btn-block btn-friend" data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
+                <i class="ace-icon fa fa-plus light-blue"></i>&nbsp;友達
             </button>
         </div>
     </div>

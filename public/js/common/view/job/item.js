@@ -196,8 +196,8 @@ define([
             // flip the icon and mark this post as bookmark
             this.$el.find('.btn-bookmark')
                 .find('i')
-                .removeClass('icon-star-empty')
-                .addClass('icon-star')
+                .removeClass('fa-star-o')
+                .addClass('fa-star')
                 .slFlip();
             // remove bookmark button, can't bookmark it twice
             this.$el.find('.btn-bookmark').removeClass('btn-bookmark');

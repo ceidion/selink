@@ -1,9 +1,12 @@
 define([
     'common/view/item-base',
-    'text!common/template/profile/photo.html'
+    'text!common/template/profile/photo.html',
+    'common/view/profile/crop'
 ], function(
     BaseView,
-    template) {
+    template,
+    CropView
+) {
 
     return BaseView.extend({
 
@@ -54,7 +57,12 @@ define([
                 dataType: 'json',
                 done: function(e, data) {
 
-                    self.model.set('photo', data.result.photo);
+                    self.model.set('photoOriginal', data.result.fileName);
+
+                    var cropView = new CropView({model: self.model});
+
+                    selink.modalArea.show(cropView);
+                    selink.modalArea.$el.modal('show');
                 },
                 error: function() {
                     // say hello to user

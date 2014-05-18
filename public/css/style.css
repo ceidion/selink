@@ -10,10 +10,11 @@ img{max-width:100%}
 .label{line-height:1.4}
 .badge{top:-2px !important;padding-top:3px;padding-bottom:1px}
 .ace-icon{min-width:15px}
+.infobox-small{width:110px}
 .empty-view{border:2px dashed #eee;padding:25px}
 .icon-nothing{font-family:inherit}
 .sl-title{line-height:1.3 !important}
-#sl-basic-info .sl-editable{padding:10px;line-height:33px}#sl-basic-info .sl-editable .align-right{padding:0px;color:#667e99}
+#sl-basic-info .sl-editable{padding:4px;line-height:33px}#sl-basic-info .sl-editable .align-right{padding:0px;color:#667e99}
 #name,#title{padding:5px 7px !important;min-height:43px}
 #photo .sl-avatar{border:0px !important;float:none !important}
 #photo .progress{margin-bottom:0px}
@@ -45,8 +46,9 @@ img{max-width:100%}
 .isotope-item .avatar{max-width:100px;max-height:100px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
 .isotope-item .widget-header .label{margin-bottom:5px}
 .isotope-item .btn-block{-webkit-transition:all 1s;transition:all 1s}
+.jcrop-holder{margin-right:auto;margin-left:auto}
 #modal-area .avatar{max-width:100px;max-height:100px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
-@media screen and (min-width:768px){.job-modal,.post-modal{width:80%}.job-modal .wysiwyg-editor,.post-modal .wysiwyg-editor{height:500px;max-height:500px} .job-modal .modal-footer .alert-danger,.post-modal .modal-footer .alert-danger{margin-bottom:0px;margin-top:10px;text-align:left} .job-modal input[name="name"],.post-modal input[name="name"]{font-size:1.5em} .job-modal input,.post-modal input{width:100%} .announcement-modal,.message-modal{width:80%}}#event-modal .row{margin-top:15px}#event-modal .row:first-child{margin-top:0px}
+@media screen and (min-width:768px){.job-modal,.post-modal,.crop-modal{width:80%}.job-modal .wysiwyg-editor,.post-modal .wysiwyg-editor,.crop-modal .wysiwyg-editor{height:500px;max-height:500px} .job-modal .modal-footer .alert-danger,.post-modal .modal-footer .alert-danger,.crop-modal .modal-footer .alert-danger{margin-bottom:0px;margin-top:10px;text-align:left} .job-modal input[name="name"],.post-modal input[name="name"],.crop-modal input[name="name"]{font-size:1.5em} .job-modal input,.post-modal input,.crop-modal input{width:100%} .announcement-modal,.message-modal{width:80%}}#event-modal .row{margin-top:15px}#event-modal .row:first-child{margin-top:0px}
 #event-modal .checkbox{margin-top:4px;margin-bottom:0px}
 #event-modal .wysiwyg-editor{margin:0 15px;height:150px}
 #event-modal .wysiwyg-toolbar{margin:0 15px !important}

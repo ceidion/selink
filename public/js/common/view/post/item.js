@@ -291,8 +291,8 @@ define([
             // flip the icon and mark this post as liked
             this.ui.likeBtn
                 .find('i')
-                .removeClass('icon-heart-empty')
-                .addClass('icon-heart')
+                .removeClass('fa-heart-o')
+                .addClass('fa-heart')
                 .slFlip();
             // remove like button, can't like it twice
             this.ui.likeBtn.removeClass('btn-like');
@@ -321,8 +321,8 @@ define([
             // flip the icon and mark this post as bookmark
             this.ui.bookmarkBtn
                 .find('i')
-                .removeClass('icon-star-empty')
-                .addClass('icon-star')
+                .removeClass('fa-star-o')
+                .addClass('fa-star')
                 .slFlip();
             // remove bookmark button, can't bookmark it twice
             this.ui.bookmarkBtn.removeClass('btn-bookmark');

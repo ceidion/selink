@@ -72,7 +72,7 @@ define([
 
             if (this.model.get('eventsNum') > 0)
                 // let the icon swing
-                this.$el.find('.icon-tasks').slJump();
+                this.$el.find('.fa-tasks').slJump();
         },
 
         // update the number badge when collection changed
@@ -107,7 +107,7 @@ define([
 
             if (futureEvents > 0)
                 // let the icon swing
-                this.$el.find('.icon-tasks').slJump();
+                this.$el.find('.fa-tasks').slJump();
 
         }
     });

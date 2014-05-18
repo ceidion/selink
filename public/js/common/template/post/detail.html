@@ -20,10 +20,10 @@
                         <img class="avatar" src="<%= obj._owner.photo %>">
                     </a>
                     <h5>
-                        <i class="icon-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
+                        <i class="ace-icon fa fa-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
                     </h5>
                     <h5 class="smaller">
-                        <i class="icon-time"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
+                        <i class="ace-icon fa fa-clock-o"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
                     </h5>
                     <div class="clearfix"></div>
                 </div>
@@ -39,10 +39,10 @@
                         </div>
                         <div class="btn-area pull-right" style="margin-top: 4px; display: none;">
                             <button class="btn btn-sm btn-success btn-comment disabled">
-                                <i class="icon-comment bigger-125"></i>&nbsp;コメントする
+                                <i class="ace-icon fa fa-comment bigger-125"></i>&nbsp;コメントする
                             </button>
                             <button class="btn btn-sm btn-yellow btn-cancel">
-                                <i class="icon-off bigger-125"></i>&nbsp;取消
+                                <i class="ace-icon fa fa-power-off bigger-125"></i>&nbsp;取消
                             </button>
                         </div>
                     </div>
@@ -58,38 +58,38 @@
         <div class="pull-left" style="margin-top: 10px;">        
             <% if (obj.isLiked) { %>
                 <div class="inline btn-like red tooltip-error">
-                    <i class="icon-heart bigger-130"></i>
+                    <i class="ace-icon fa fa-heart bigger-130"></i>
                     <span><%= obj.liked.length %></span>
                 </div>
             <% } else { %>
                 <div class="inline btn-like red tooltip-error">
-                    <i class="icon-heart-empty bigger-130"></i>
+                    <i class="ace-icon fa fa-heart-o bigger-130"></i>
                     <span><%= obj.liked.length %></span>
                 </div>
             <% } %>
 
             <% if (obj.isMarked) { %>
                 <div class="inline btn-bookmark orange tooltip-warning">
-                    <i class="icon-star bigger-130"></i>
+                    <i class="ace-icon fa fa-star bigger-130"></i>
                     <span><%= obj.bookmarked.length %></span>
                 </div>
             <% } else { %>
                 <div class="inline btn-bookmark orange tooltip-warning">
-                    <i class="icon-star-empty bigger-130"></i>
+                    <i class="ace-icon fa fa-star-o bigger-130"></i>
                     <span><%= obj.bookmarked.length %></span>
                 </div>
             <% } %>
         </div>
 
-        <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> 閉じる</button>
+        <button class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i> 閉じる</button>
         <% if (obj.isMine) { %>
-        <button class="btn btn-sm btn-danger btn-remove"><i class="icon-trash"></i> 削除</button>
-        <button class="btn btn-sm btn-success btn-save"><i class="icon-save"></i> 保存</button>
+        <button class="btn btn-sm btn-danger btn-remove"><i class="ace-icon fa fa-trash-o"></i> 削除</button>
+        <button class="btn btn-sm btn-success btn-save"><i class="ace-icon fa fa-save"></i> 保存</button>
         <% } %>
 
         <% if (obj.isMine) { %>
         <div class="alert alert-danger clearfix" style="display: none;">
-            <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
+            <strong><i class="ace-icon fa fa-warning bigger-125"></i></strong>&nbsp;
             この投稿を削除します、よろしいですか？
             <div class="pull-right">            
                 <button class="btn btn-sm btn-warning btn-remove-cancel">取消</button>

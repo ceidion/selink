@@ -41,7 +41,7 @@ define([
                     selink.userModel.friends.add(friend);
                     self.$el.find('.pull-right').fadeOut(function() {
                         $(this).empty()
-                            .html('<div class="text-muted pull-right"><i class="icon-ok"></i>&nbsp;承認済み</div>')
+                            .html('<div class="text-muted pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;承認済み</div>')
                             .fadeIn();
                     });
                     selink.userModel.notifications.remove(self.model.get('_id'));
@@ -59,7 +59,7 @@ define([
                 success: function() {
                     self.$el.find('.pull-right').fadeOut(function() {
                         $(this).empty()
-                            .html('<div class="text-muted pull-right"><i class="icon-ok"></i>&nbsp;拒否済み</div>')
+                            .html('<div class="text-muted pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;拒否済み</div>')
                             .fadeIn();
                     });
                     selink.userModel.notifications.remove(self.model.get('_id'));
@@ -77,7 +77,7 @@ define([
                 success: function() {
                     self.$el.find('.pull-right').fadeOut(function() {
                         $(this).empty()
-                            .html('<div class="text-muted pull-right"><i class="icon-ok"></i>&nbsp;確認済み</div>')
+                            .html('<div class="text-muted pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;確認済み</div>')
                             .fadeIn();
                     });
                     selink.userModel.notifications.remove(self.model.get('_id'));

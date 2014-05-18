@@ -15,27 +15,27 @@
         <% if (obj.isMine) { %>
         <div class="widget-toolbar no-border hidden">
             <a class="yellow dropdown-toggle" data-toggle="dropdown">
-                <i class="icon-chevron-down"></i>
+                <i class="ace-icon fa fa-chevron-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-yellow pull-right dropdown-caret dropdown-close">
-                <li><a href="#" class="btn-edit"><i class="icon-pencil green bigger-110"></i>&nbsp;&nbsp;編集</a></li>
-                <li><a href="#" class="btn-remove"><i class="icon-trash red bigger-110"></i>&nbsp;&nbsp;削除</a></li>
+                <li><a href="#" class="btn-edit"><i class="ace-icon fa fa-pencil green bigger-110"></i>&nbsp;&nbsp;編集</a></li>
+                <li><a href="#" class="btn-remove"><i class="ace-icon fa fa-trash-o red bigger-110"></i>&nbsp;&nbsp;削除</a></li>
             </ul>
         </div>
         <% } %>
 
         <!-- job name -->
         <h5>
-            <i class="icon-briefcase"></i>&nbsp;
+            <i class="ace-icon fa fa-briefcase"></i>&nbsp;
             <span class="name-value"><%= obj.name %></span>
         </h5>
 
         <h5>
-            <i class="icon-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
+            <i class="ace-icon fa fa-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
         </h5>
 
         <h5>
-            <i class="icon-time"></i>&nbsp;<%= moment(obj.createDate).calendar() %>
+            <i class="ace-icon fa fa-clock-o"></i>&nbsp;<%= moment(obj.createDate).calendar() %>
         </h5>
 
         <div class="clearfix"></div>
@@ -47,7 +47,7 @@
 
             <% if (obj.isMine) { %>
             <div class="alert alert-danger clearfix" style="display: none;">
-                <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
+                <strong><i class="ace-icon fa fa-warning bigger-125"></i></strong>&nbsp;
                 この案件を削除します、よろしいですか？
                 <br />
                 <br />
@@ -60,24 +60,24 @@
 
             <!-- address -->
             <h6 class="text-primary <%= obj.address ? '' : 'hide' %>">
-                <i class="icon-map-marker bigger-120"></i>&nbsp;&nbsp;作業場所：
+                <i class="ace-icon fa fa-map-marker bigger-120"></i>&nbsp;&nbsp;作業場所：
                 <span class="address-value"><%= obj.address %></span>
             </h6>
 
             <!-- duration -->
             <h6 class="text-primary <%= (obj.startDate || obj.endDate) ? '' : 'hide' %>">
-                <i class="icon-calendar bigger-120"></i>&nbsp;&nbsp;作業期間：
+                <i class="ace-icon fa fa-calendar bigger-120"></i>&nbsp;&nbsp;作業期間：
                 <span class="duration-value"><%= obj.startDateInput %>～<%= obj.endDateInput %></span>
             </h6>
 
             <!-- price -->
             <h6 class="text-warning <%= (obj.priceBottom || obj.priceTop) ? '' : 'hide' %>">
-                <i class="icon-jpy bigger-120"></i>&nbsp;&nbsp;単金：
+                <i class="ace-icon fa fa-jpy bigger-120"></i>&nbsp;&nbsp;単金：
                 <span class="price-value"><%= obj.priceBottom %>～<%= obj.priceTop %>万円</span>
             </h6>
 
             <h6 class="text-danger">
-                <i class="icon-ban-circle bigger-120"></i>&nbsp;&nbsp;応募締日：
+                <i class="ace-icon fa fa-ban bigger-120"></i>&nbsp;&nbsp;応募締日：
                 <span class="expired-value"><%= moment(obj.expiredDate).calendar() %></span>
             </h6>
 
@@ -105,12 +105,12 @@
 
                 <% if (obj.isMarked) { %>
                     <div class="inline btn-bookmark orange tooltip-warning">
-                        <i class="icon-star bigger-110"></i>
+                        <i class="ace-icon fa fa-star bigger-110"></i>
                         <span><%= obj.bookmarked.length %></span>
                     </div>
                 <% } else { %>
                     <div class="inline btn-bookmark orange tooltip-warning">
-                        <i class="icon-star-empty bigger-110"></i>
+                        <i class="ace-icon fa fa-star-o bigger-110"></i>
                         <span><%= obj.bookmarked.length %></span>
                     </div>
                 <% } %>
@@ -132,7 +132,7 @@
             <div class="skill"></div>
 
             <button class="btn btn-success btn-block btn-match" data-loading-text="<i class='icon-spinner icon-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
-                <i class="icon-random"></i>&nbsp;マッチング
+                <i class="ace-icon fa fa-random"></i>&nbsp;マッチング
             </button>
         </div>
 

@@ -2,7 +2,7 @@
     <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
         <div class="row">
-            <h4 class="blue bigger col-sm-3"><span class="icon-bell-alt"></span>&nbsp;&nbsp;イベント</h4>
+            <h4 class="blue bigger col-sm-3"><span class="ace-icon fa fa-bell-o"></span>&nbsp;&nbsp;イベント</h4>
             <div data-toggle="buttons" class="btn-group col-sm-8">
                 <%
                     _.each(obj.labels, function(labelClass) {
@@ -23,7 +23,7 @@
         <div class="row">
             <div class="form-group col-xs-8">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="icon-tag"></i></span>
+                    <span class="input-group-addon"><i class="ace-icon fa fa-tag"></i></span>
                     <input class="form-control" type="text" name="title" placeholder="タイトル" value="<%- obj.title %>"/>
                 </div>
             </div>
@@ -39,14 +39,14 @@
         <div class="row">
             <div class="form-group col-xs-5">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                    <span class="input-group-addon"><i class="ace-icon fa fa-calendar"></i></span>
                     <input class="form-control" type="text" name="startDate" placeholder="開始日" value="<%- obj.startDate %>"/>
                 </div>
             </div>
 
             <div class="form-group col-xs-5">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="icon-time"></i></span>
+                    <span class="input-group-addon"><i class="ace-icon fa fa-clock-o"></i></span>
                     <div class="bootstrap-timepicker">
                         <input class="form-control" type="text" name="startTime" placeholder="開始時間" value="<%- obj.startTime %>"/>
                     </div>
@@ -57,14 +57,14 @@
         <div class="row">
             <div class="form-group col-xs-5">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="icon-calendar"></i></span>
+                    <span class="input-group-addon"><i class="ace-icon fa fa-calendar"></i></span>
                     <input class="form-control" type="text" name="endDate" placeholder="終了日" value="<%- obj.endDate %>"/>
                 </div>
             </div>
 
             <div class="form-group col-xs-5">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="icon-time"></i></span>
+                    <span class="input-group-addon"><i class="ace-icon fa fa-clock-o"></i></span>
                     <div class="bootstrap-timepicker">
                         <input class="form-control" type="text" name="endTime" placeholder="終了時間" value="<%- obj.endTime %>"/>
                     </div>
@@ -83,10 +83,10 @@
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> 取消</button>
+        <button class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i> 取消</button>
         <% if (obj._id) { %>
-            <button class="btn btn-sm btn-danger btn-remove"><i class="icon-trash"></i> 削除</button>
+            <button class="btn btn-sm btn-danger btn-remove"><i class="ace-icon fa fa-trash-o"></i> 削除</button>
         <% } %>
-        <button class="btn btn-sm btn-success btn-save"><i class="icon-ok"></i> 保存</button>
+        <button class="btn btn-sm btn-success btn-save"><i class="ace-icon fa fa-check"></i> 保存</button>
     </div>
 </div>

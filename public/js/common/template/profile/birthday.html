@@ -1,17 +1,16 @@
-<div class="col-xs-4 align-right">
-    <i class="ace-icon fa fa-calendar sl-icon"></i>&nbsp;
-    生年月日
+<div class="col-xs-1 align-right">
+    <i class="ace-icon fa fa-calendar sl-icon"></i>
 </div>
-<div class="col-xs-8">
+<div class="col-xs-11">
     <div class="sl-value">
         <%
             if (obj.birthDayDisplay)
                 print(obj.birthDayDisplay);
             else
-                print('<span class="text-muted">クリックして編集</span>');
+                print('<span class="text-muted">生年月日</span>');
         %>
     </div>
-    <div class="sl-editor row form-group">
+    <div class="sl-editor form-group">
         <div class="col-sm-12 col-md-10 input-group">
             <span class="input-group-addon">
                 <i class="ace-icon fa fa-calendar bigger-110"></i>

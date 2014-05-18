@@ -3,32 +3,32 @@
         title = "";
 
     if (obj.type == "user-job") {
-        iconClass = "icon-briefcase";
+        iconClass = "ace-icon fa fa-briefcase";
         title = "は新しい仕事情報を公開しました";
     }
     else if (obj.type == "user-job-liked") {
-        iconClass = "icon-heart";
+        iconClass = "ace-icon fa fa-heart";
         title = "はあなたの仕事情報に「いいね！」しました";
     }
     else if (obj.type == "user-job-bookmarked") {
-        iconClass = "icon-star";
+        iconClass = "ace-icon fa fa-star";
         title = "はあなたの仕事情報にブックマークを付けました";
     }
     else if (obj.type == "user-job-commented") {
-        iconClass = "icon-commet";
+        iconClass = "ace-icon fa fa-commet";
         title = "はあなたの仕事情報をコメントしました";
     }
 %>
 
-<div class="widget-box isotope-item">
-    <div class="widget-header widget-header-flat header-color-red">
-        <h5>
+<div class="widget-box widget-color-red isotope-item">
+    <div class="widget-header widget-header-flat">
+        <h5 class="widget-title smaller">
             <i class="<%= iconClass %>"></i>
             <%= obj._from.firstName %>&nbsp;<%= obj._from.lastName %>
             &nbsp;<%= title %>
         </h5>
         <div class="widget-toolbar">
-            <i class="icon-time"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
+            <i class="ace-icon fa fa-clock-o"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
         </div>
         <a href="#profile/<%= obj._from._id %>" title="<%- obj._from.firstName %>">
             <img class="avatar" src="<%= obj._from.photo %>">
@@ -44,10 +44,10 @@
             </div>
 
             <% if (obj.result) { %>
-                <div class="text-muted pull-right"><i class="icon-ok"></i>&nbsp;確認済み</div>
+                <div class="text-muted pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;確認済み</div>
             <% } else { %>
                 <div class="pull-right">
-                    <button class="btn btn-sm btn-info btn-acknowledge pull-right"><i class="icon-ok"></i>&nbsp;了解</button>
+                    <button class="btn btn-sm btn-info btn-acknowledge pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;了解</button>
                 </div>
             <% } %>
 

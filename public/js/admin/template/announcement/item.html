@@ -7,12 +7,12 @@
         <% if (obj.isAdmin) { %>
         <div class="widget-toolbar no-border hidden">
             <a class="yellow dropdown-toggle" data-toggle="dropdown">
-                <i class="icon-chevron-down"></i>
+                <i class="ace-icon fa fa-chevron-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-yellow pull-right dropdown-caret dropdown-close">
                 <li>
                     <a href="#" class="btn-remove">
-                        <i class="icon-trash red bigger-110"></i>&nbsp;&nbsp;削除
+                        <i class="ace-icon fa fa-trash-o red bigger-110"></i>&nbsp;&nbsp;削除
                     </a>
                 </li>
             </ul>
@@ -20,10 +20,10 @@
         <% } %>
 
         <h5>
-            <i class="icon-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
+            <i class="ace-icon fa fa-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
         </h5>
         <h5 class="smaller">
-            <i class="icon-time"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
+            <i class="ace-icon fa fa-clock-o"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
         </h5>
         <div class="clearfix"></div>
     </div>
@@ -33,7 +33,7 @@
 
             <% if (obj.isAdmin) { %>
             <div class="alert alert-danger clearfix" style="display: none;">
-                <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
+                <strong><i class="ace-icon fa fa-warning bigger-125"></i></strong>&nbsp;
                 この公告を削除します、よろしいですか？
                 <br />
                 <br />
@@ -53,10 +53,10 @@
 
             <div class="inline btn btn-xs btn-link btn-detail">
                 <% if (obj.isAdmin) { %>
-                    <i class="icon-pencil bigger-110"></i>&nbsp;
+                    <i class="ace-icon fa fa-pencil bigger-110"></i>&nbsp;
                     <span>編集</span>
                 <% } else { %>
-                    <i class="icon-desktop bigger-110"></i>&nbsp;
+                    <i class="ace-icon fa fa-desktop bigger-110"></i>&nbsp;
                     <span>詳しく読む</span>
                 <% } %>
             </div>

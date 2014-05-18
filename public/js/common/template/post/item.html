@@ -7,22 +7,22 @@
         <% if (obj.isMine || obj.isAdmin) { %>
         <div class="widget-toolbar no-border hidden">
             <a class="yellow dropdown-toggle" data-toggle="dropdown">
-                <i class="icon-chevron-down"></i>
+                <i class="ace-icon fa fa-chevron-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-yellow pull-right dropdown-caret dropdown-close">
                 <li>
                     <a href="#" class="btn-remove">
-                        <i class="icon-trash red bigger-110"></i>&nbsp;&nbsp;削除
+                        <i class="ace-icon fa fa-trash-o red bigger-110"></i>&nbsp;&nbsp;削除
                     </a>
                 </li>
                 <li class="<% if (!obj.setting.commentable) print("hidden") %>">
                     <a href="#" class="btn-forbid">
-                        <i class="icon-ban-circle pink bigger-110"></i>&nbsp;&nbsp;コメント禁止
+                        <i class="ace-icon fa fa-ban pink bigger-110"></i>&nbsp;&nbsp;コメント禁止
                     </a>
                 </li>
                 <li class="<% if (obj.setting.commentable) print("hidden") %>">
                     <a href="#" class="btn-forbid">
-                        <i class="icon-ok green bigger-110"></i>&nbsp;&nbsp;コメント許可
+                        <i class="ace-icon fa fa-check green bigger-110"></i>&nbsp;&nbsp;コメント許可
                     </a>
                 </li>
             </ul>
@@ -30,10 +30,10 @@
         <% } %>
 
         <h5>
-            <i class="icon-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
+            <i class="ace-icon fa fa-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
         </h5>
         <h5 class="smaller">
-            <i class="icon-time"></i>&nbsp;<%= moment(obj.createDate).calendar() %>
+            <i class="ace-icon fa fa-clock-o"></i>&nbsp;<%= moment(obj.createDate).calendar() %>
         </h5>
         <div class="clearfix"></div>
     </div>
@@ -43,7 +43,7 @@
 
             <% if (obj.isMine || obj.isAdmin) { %>
             <div class="alert alert-danger clearfix" style="display: none;">
-                <strong><i class="icon-warning-sign bigger-125"></i></strong>&nbsp;
+                <strong><i class="ace-icon fa fa-warning bigger-125"></i></strong>&nbsp;
                 この投稿を削除します、よろしいですか？
                 <br />
                 <br />
@@ -63,10 +63,10 @@
 
             <div class="inline btn btn-xs btn-link btn-detail">
                 <% if (obj.isMine || obj.isAdmin) { %>
-                    <i class="icon-pencil bigger-110"></i>&nbsp;
+                    <i class="ace-icon fa fa-pencil bigger-110"></i>&nbsp;
                     <span>編集</span>
                 <% } else { %>
-                    <i class="icon-desktop bigger-110"></i>&nbsp;
+                    <i class="ace-icon fa fa-desktop bigger-110"></i>&nbsp;
                     <span>詳しく読む</span>
                 <% } %>
             </div>
@@ -75,24 +75,24 @@
 
                 <% if (obj.isLiked) { %>
                     <div class="inline btn-like red tooltip-error">
-                        <i class="icon-heart bigger-110"></i>
+                        <i class="ace-icon fa fa-heart bigger-110"></i>
                         <span><%= obj.liked.length %></span>
                     </div>
                 <% } else { %>
                     <div class="inline btn-like red tooltip-error">
-                        <i class="icon-heart-empty bigger-110"></i>
+                        <i class="ace-icon fa fa-heart-o bigger-110"></i>
                         <span><%= obj.liked.length %></span>
                     </div>
                 <% } %>
 
                 <% if (obj.isMarked) { %>
                     <div class="inline btn-bookmark orange tooltip-warning">
-                        <i class="icon-star bigger-110"></i>
+                        <i class="ace-icon fa fa-star bigger-110"></i>
                         <span><%= obj.bookmarked.length %></span>
                     </div>
                 <% } else { %>
                     <div class="inline btn-bookmark orange tooltip-warning">
-                        <i class="icon-star-empty bigger-110"></i>
+                        <i class="ace-icon fa fa-star-o bigger-110"></i>
                         <span><%= obj.bookmarked.length %></span>
                     </div>
                 <% } %>
@@ -120,10 +120,10 @@
             </div>
             <div class="btn-area pull-right" style="margin-top: 4px; display: none;">
                 <button class="btn btn-sm btn-success btn-comment disabled">
-                    <i class="icon-comment bigger-125"></i>&nbsp;コメントする
+                    <i class="ace-icon fa fa-comment bigger-125"></i>&nbsp;コメントする
                 </button>
                 <button class="btn btn-sm btn-yellow btn-cancel">
-                    <i class="icon-off bigger-125"></i>&nbsp;取消
+                    <i class="ace-icon fa fa-power-off bigger-125"></i>&nbsp;取消
                 </button>
             </div>
         </div>

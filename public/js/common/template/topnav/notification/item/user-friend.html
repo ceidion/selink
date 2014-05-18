@@ -26,14 +26,14 @@
             <%= title %>
         </span>
         <span class="msg-time">
-            <i class="icon-time"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>
+            <i class="ace-icon fa fa-clock-o"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>
             <% if (obj.type == "user-friend-invited") { %>
                 <div class="pull-right">
-                    <button class="btn btn-minier btn-pink btn-decline"><i class="icon-remove"></i>&nbsp;拒否</button>
-                    <button class="btn btn-minier btn-success btn-approve"><i class="icon-ok"></i>&nbsp;許可</button>
+                    <button class="btn btn-minier btn-pink btn-decline"><i class="ace-icon fa fa-times"></i>&nbsp;拒否</button>
+                    <button class="btn btn-minier btn-success btn-approve"><i class="ace-icon fa fa-check"></i>&nbsp;許可</button>
                 </div>
             <% } else { %>
-                <button class="btn btn-minier btn-info btn-acknowledge pull-right"><i class="icon-ok"></i>&nbsp;了解</button>
+                <button class="btn btn-minier btn-info btn-acknowledge pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;了解</button>
             <% } %>
         </span>
     </span>

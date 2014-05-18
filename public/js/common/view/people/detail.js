@@ -184,7 +184,7 @@ define([
                         .removeClass('btn-info btn-friend')
                         .addClass('btn-success')
                         .empty()
-                        .html('<i class="icon-ok light-green"></i>&nbsp;友達リクエスト送信済み');
+                        .html('<i class="ace-icon fa fa-check light-green"></i>&nbsp;友達リクエスト送信済み');
                 },
                 patch: true,
                 wait: true
@@ -208,7 +208,7 @@ define([
                         .removeClass('btn-info btn-break')
                         .addClass('btn-grey')
                         .empty()
-                        .html('<i class="icon-ok light-green"></i>&nbsp;友達解除しました');
+                        .html('<i class="ace-icon fa fa-check light-green"></i>&nbsp;友達解除しました');
                 }
             });
         }

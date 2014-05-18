@@ -17,21 +17,21 @@
         <div class="col-xs-12 col-md-10">
             <% if (obj.isFriend) { %>
                 <button class="btn btn-sm btn-danger btn-break"
-                        data-loading-text="<i class='icon-spinner icon-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
-                    <i class="icon-unlink"></i>&nbsp;友達を解除
+                        data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
+                    <i class="ace-icon fa fa-unlink"></i>&nbsp;友達を解除
                 </button>
             <% } else if (obj.isInvited) { %>
                 <button class="btn btn-sm btn-success disabled">
-                    <i class="icon-ok"></i>&nbsp;友達リクエスト送信済み
+                    <i class="ace-icon fa fa-check"></i>&nbsp;友達リクエスト送信済み
                 </button>
             <% } else { %>
                 <button class="btn btn-sm btn-info btn-friend"
-                        data-loading-text="<i class='icon-spinner icon-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
-                    <i class="icon-plus"></i>&nbsp;友達にする
+                        data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
+                    <i class="ace-icon fa fa-plus"></i>&nbsp;友達にする
                 </button>
             <% } %>
             <button class="btn btn-sm btn-success btn-msg">
-                <i class="icon-envelope"></i>&nbsp;メッセージ送信
+                <i class="ace-icon fa fa-envelope"></i>&nbsp;メッセージ送信
             </button>
             <div class="space"></div>
             <div class="bigger-200"><%= obj.firstName %>&nbsp;<%= obj.lastName %></div>

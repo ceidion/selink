@@ -1,17 +1,16 @@
-<div class="col-xs-4 align-right">
-    <i class="ace-icon fa fa-flag sl-icon"></i>&nbsp;
-    国籍
+<div class="col-xs-1 align-right">
+    <i class="ace-icon fa fa-flag sl-icon"></i>
 </div>
-<div class="col-xs-8">
+<div class="col-xs-11">
     <div class="sl-value">
         <%
             if (obj.nationality)
                 print(obj.nationality);
             else
-                print('<span class="text-muted">クリックして編集</span>');
+                print('<span class="text-muted">国籍</span>');
         %>
     </div>
-    <div class="sl-editor row">
+    <div class="sl-editor">
         <div class="col-sm-12 input-group">
             <span class="input-group-addon">
                 <i class="ace-icon fa fa-flag bigger-110"></i>

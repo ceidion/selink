@@ -28,7 +28,7 @@ html(lang="en", xmlns="http://www.w3.org/1999/xhtml")
           .widget-main
             h4.header.blue.lighter.bigger
               strong
-                i.icon-key
+                i.ace-icon.fa.fa-key
                 | &nbsp;パースワード変更
             .alert.alert-danger
               | パースワード更新の申請が見付かりませんでした。お手数ですが、SELinkのホームページからもう一度申請してください。
@@ -38,15 +38,15 @@ html(lang="en", xmlns="http://www.w3.org/1999/xhtml")
             form
               .input-group
                 span.input-group-addon
-                  i.icon-key
+                  i.ace-icon.fa.fa-key
                 input.form-control(type='password', placeholder='新しいパースワード', name='password')
               .input-group
                 span.input-group-addon
-                  i.icon-key
+                  i.ace-icon.fa.fa-key
                 input.form-control(type='password', placeholder='新しいパースワード (確認用)', name='passwordConf')
               input(type='hidden', value='#{_id}', name="_id")
               .space-6
               .clearfix
-                button.btn.btn-sm.btn-block.btn-primary.btn-send(type="submit", data-loading-text="<i class='icon-spinner icon-spin white bigger-125'></i>&nbsp;&nbsp;処理中・・・")
-                  i.icon-ok.icon-white
+                button.btn.btn-sm.btn-block.btn-primary.btn-send(type="submit", data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;処理中・・・")
+                  i.ace-icon.fa.fa-check.icon-white
                   | &nbsp;&nbsp;設定

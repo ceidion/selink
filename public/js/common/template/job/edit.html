@@ -3,13 +3,13 @@
         <div class="row">
             <div class="form-group col-sm-8" style="margin-bottom: 0px;">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="icon-edit bigger-150"></i></span>
+                    <span class="input-group-addon"><i class="ace-icon fa fa-edit bigger-150"></i></span>
                     <input type="text" placeholder="案件名称" name="name" value="<%= obj.name %>">
                 </div>
             </div>
             <div class="col-sm-4 align-right">
-                <button class="btn btn-sm btn-success btn-save"><i class="icon-ok"></i> 保存</button>
-                <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i> 取消</button>
+                <button class="btn btn-sm btn-success btn-save"><i class="ace-icon fa fa-check"></i> 保存</button>
+                <button class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i> 取消</button>
             </div>
         </div>
     </div>
@@ -19,15 +19,15 @@
         <div class="basic-info col-xs-12 col-sm-6">
             <div class="form-group">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="icon-map-marker bigger-110"></i></span>
+                    <span class="input-group-addon"><i class="ace-icon fa fa-map-marker bigger-110"></i></span>
                     <input type="text" class="col-xs-12" placeholder="作業場所" name="address" value="<%= obj.address %>">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group input-daterange">
-                    <span class="input-group-addon sl-input-group-addon"><i class="icon-calendar bigger-110"></i></span>
+                    <span class="input-group-addon sl-input-group-addon"><i class="ace-icon fa fa-calendar bigger-110"></i></span>
                     <input type="text" class="input-medium" placeholder="応募締日" name="expiredDate" value="<%= obj.expiredDate ? moment(obj.expiredDate).format('L') : '' %>">
-                    <span class="input-group-addon"><i class="icon-time bigger-110"></i></span>
+                    <span class="input-group-addon"><i class="ace-icon fa fa-clock-o bigger-110"></i></span>
                     <div class="bootstrap-timepicker">
                         <input type="text" class="input-medium " placeholder="時間" name="expiredTime" value="<%= obj.expiredTime %>">
                     </div>
@@ -35,29 +35,29 @@
             </div>
             <div class="form-group">
                 <div id="duration" class="input-group input-daterange">
-                    <span class="input-group-addon sl-input-group-addon"><i class="icon-flag-alt bigger-110"></i></span>
+                    <span class="input-group-addon sl-input-group-addon"><i class="ace-icon fa fa-flag bigger-110"></i></span>
                     <input type="text" placeholder="作業開始日" name="startDate" value="<%= obj.startDate ? moment(obj.startDate).format('L') : '' %>">
-                    <span class="input-group-addon"><i class="icon-arrow-right bigger-110"></i></span>
+                    <span class="input-group-addon"><i class="ace-icon fa fa-exchange bigger-110"></i></span>
                     <input type="text" placeholder="作業終了日" name="endDate" value="<%= obj.endDate ? moment(obj.endDate).format('L') : '' %>">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group input-daterange">
-                    <span class="input-group-addon sl-input-group-addon"><i class="icon-jpy bigger-110"></i></span>
+                    <span class="input-group-addon sl-input-group-addon"><i class="ace-icon fa fa-jpy bigger-110"></i></span>
                     <input type="text" placeholder="単金下限" name="priceBottom" value="<%= obj.priceBottom %>">
-                    <span class="input-group-addon"><i class="icon-arrow-right bigger-110"></i></span>
+                    <span class="input-group-addon"><i class="ace-icon fa fa-exchange bigger-110"></i></span>
                     <input type="text" placeholder="単金上限" name="priceTop" value="<%= obj.priceTop %>">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="icon-bullhorn bigger-110"></i></span>
+                    <span class="input-group-addon"><i class="ace-icon fa fa-bullhorn bigger-110"></i></span>
                     <input type="text" class="col-xs-12" placeholder="募集人数" name="recruitNum" value="<%= obj.recruitNum %>">
                 </div>
             </div>
             <div class="form-group">
                 <div class="input-group">
-                    <span class="input-group-addon"><i class="icon-microphone bigger-110"></i></span>
+                    <span class="input-group-addon"><i class="ace-icon fa fa-microphone bigger-110"></i></span>
                     <input type="text" class="col-xs-12" placeholder="面接回数" name="interviewNum" value="<%= obj.interviewNum %>">
                 </div>
             </div>
@@ -77,7 +77,7 @@
             <div class="hr hr-double dotted"></div>
             <div class="widget-box transparent">
                 <div class="widget-header">
-                    <h4 class="lighter"><i class="icon-briefcase"></i>&nbsp;仕事の紹介</h4>
+                    <h4 class="lighter"><i class="ace-icon fa fa-briefcase"></i>&nbsp;仕事の紹介</h4>
                 </div>
                 <div class="widget-body">
                     <div class="widget-main padding-6">
@@ -93,7 +93,7 @@
     </div>
 
     <div class="modal-footer">
-        <button class="btn btn-sm btn-success btn-save"><i class="icon-ok"></i>&nbsp;保存</button>
-        <button class="btn btn-sm" data-dismiss="modal"><i class="icon-remove"></i>&nbsp;取消</button>
+        <button class="btn btn-sm btn-success btn-save"><i class="ace-icon fa fa-check"></i>&nbsp;保存</button>
+        <button class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i>&nbsp;取消</button>
     </div>
 </div>

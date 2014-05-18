@@ -92,8 +92,8 @@ define([
                     right: 'month,agendaWeek,agendaDay'
                 },
                 buttonText: {
-                    prev: '<i class="icon-chevron-left"></i>',
-                    next: '<i class="icon-chevron-right"></i>',
+                    prev: '<i class="ace-icon fa fa-chevron-left"></i>',
+                    next: '<i class="ace-icon fa fa-chevron-right"></i>',
                     today: '本日',
                     month: '月',
                     week: '週',

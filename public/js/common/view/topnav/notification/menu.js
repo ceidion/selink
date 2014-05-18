@@ -192,7 +192,7 @@ define([
 
             if (this.collection.length > 0)
                 // let the icon swing
-                this.$el.find('.icon-bell-alt').slShake();
+                this.$el.find('.fa-bell').slShake();
         },
 
         // update the number badge when collection changed
@@ -224,7 +224,7 @@ define([
 
             if (notyNum > 0)
                 // let the icon swing
-                this.$el.find('.icon-bell-alt').slShake();
+                this.$el.find('.fa-bell').slShake();
         }
     });
 });

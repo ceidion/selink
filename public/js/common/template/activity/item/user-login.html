@@ -15,15 +15,15 @@
     </a>
 </div>
 
-<div class="widget-box">
-    <div class="widget-header header-color-pink widget-header-small">
-        <h5 class="smaller">
-            <i class="icon-signin bigger-110"></i>
+<div class="widget-box widget-color-pink">
+    <div class="widget-header widget-header-small">
+        <h5 class="widget-title smaller">
+            <i class="ace-icon fa fa-sign-in bigger-110"></i>
             <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
             は<%= title %>
         </h5>
         <span class="widget-toolbar no-border">
-            <i class="icon-time bigger-110"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
+            <i class="ace-icon fa fa-clock-o bigger-110"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
         </span>
     </div>
 </div>

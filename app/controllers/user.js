@@ -1,6 +1,9 @@
 var _ = require('underscore'),
+    fs = require('fs'),
+    gm = require('gm'),
     mongoose = require('mongoose'),
     util = require('util'),
+    path = require('path'),
     User = mongoose.model('User'),
     Post = mongoose.model('Post'),
     Job = mongoose.model('Job'),
@@ -92,13 +95,23 @@ exports.show = function(req, res, next) {
 // Edit Profile
 exports.update = function(req, res, next) {
 
-    console.log("request body: " + util.inspect(req.body));
-    console.log("request params: " + util.inspect(req.params));
-    console.log("request attach: " + util.inspect(req.files));
     delete req.body._id;
+
+    // update user info
+    User.findByIdAndUpdate(req.params.id, req.body, function(err, updatedUser) {
+        if (err) next(err);
+        else res.send(updatedUser);
+    });
+};
+
+// Upload Photo
+exports.uploadPhoto = function(req, res, next) {
 
     // handle photo file
     if (req.files && req.files.photo) {
+
+        console.log(req.files.photo);
+
         var photoType = req.files.photo.type;
         var photoPath = req.files.photo.path;
 
@@ -108,14 +121,40 @@ exports.update = function(req, res, next) {
         }
 
         var photoName = /.*[\/|\\](.*)$/.exec(photoPath)[1];
-        req.body.photo = './upload/' + photoName;
-    }
 
-    // update user info
-    User.findByIdAndUpdate(req.params.id, req.body, function(err, updatedUser) {
-        if (err) next(err);
-        else res.send(updatedUser);
-    });
+        req.session.tempPhoto = photoName;
+
+        gm(photoPath).size(function(err, size) {
+            if (err) next(err);
+            else res.json({fileName: './upload/' + photoName});
+        });
+
+    } else {
+        res.json(400, {});
+    }
+};
+
+// Scale Photo
+exports.scalePhoto = function(req, res, next) {
+
+    // TODO: check exsitence of tempPhoto
+
+    var photoPath = path.join(__dirname, '../../public/upload/', req.session.tempPhoto);
+
+    gm(photoPath)
+        .crop(req.body.w, req.body.h, req.body.x, req.body.y)
+        .resize(200, 200)
+        .write(photoPath, function(err) {
+            if (err) next(err);
+            else {
+
+                // update user info
+                User.findByIdAndUpdate(req.params.user, {photo: './upload/' + req.session.tempPhoto}, function(err, updatedUser) {
+                    if (err) next(err);
+                    else res.send({photo: updatedUser.photo});
+                });
+            }
+        });
 };
 
 // Create new sub document

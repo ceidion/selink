@@ -114,10 +114,12 @@ module.exports = function(app, sio) {
     // Remove event
     app.delete('/events/:event', checkLoginStatus, userEvent.remove);
 
+    // Upload user photo
+    app.put('/users/:user/photo', checkLoginStatus, user.uploadPhoto);
+    app.put('/users/:user/scale', checkLoginStatus, user.scalePhoto);
+
     // Get user info
     app.get('/users/:user', checkLoginStatus, user.show);
-    // Upload user photo
-    app.put('/users/:id', checkLoginStatus, user.update);
     // Update user info (first-level property)
     app.patch('/users/:id', checkLoginStatus, user.update);
     // Create nested collection item

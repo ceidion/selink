@@ -82,7 +82,7 @@ define([
 
             if (this.collection.length > 0)
                 // let the icon swing
-                this.$el.find('.icon-envelope').slJump();
+                this.$el.find('.fa-envelope').slJump();
         },
 
         // update the number badge when collection changed
@@ -114,7 +114,7 @@ define([
 
             if (msgNum > 0)
                 // let the icon swing
-                this.$el.find('.icon-envelope').slJump();
+                this.$el.find('.fa-envelope').slJump();
         }
     });
 });

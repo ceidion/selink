@@ -79,7 +79,7 @@ define([
                     if (status == 'timeout') {
 
                         $.gritter.add({
-                            title: '<i class="icon-wrench icon-animated-wrench bigger-125"></i>&nbsp;&nbsp;サーバが応答しません',
+                            title: '<i class="ace-icon fa fa-wrench icon-animated-wrench bigger-125"></i>&nbsp;&nbsp;サーバが応答しません',
                             text: 'サーバと通信できませんでした、しばらくお待ちいただき、もう一度お試してください。',
                             class_name: 'gritter-error',
                             sticky: false,
