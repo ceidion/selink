@@ -244,7 +244,7 @@ define([
 
             var completeness = 0;
 
-            if (this.get('photo') && this.get('photo') != "./asset/images/no_photo_male.gif")
+            if (this.get('photo') && this.get('photo') != "./asset/images/no_photo_male.jpg")
                 completeness += 10;
 
             if (this.get('firstName'))

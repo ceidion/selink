@@ -34,6 +34,7 @@ require.config({
         'jquery.ui.widget': 'lib/jquery.ui.widget',
         'iframetransport': 'lib/jquery.iframe-transport',
         'fileupload': 'lib/jquery.fileupload',
+        'jcrop': 'lib/jquery.Jcrop',
         // input mask
         'maskedinput': "lib/jquery.maskedinput",
         'autosize': "lib/jquery.autosize",
@@ -107,6 +108,9 @@ require.config({
         'fileupload': {
             deps: ['jquery', 'jquery.ui.widget', 'iframetransport']
         },
+        'jcrop': {
+            deps: ['jquery']
+        },
         'maskedinput': {
             deps: ['jquery']
         },
@@ -171,6 +175,7 @@ require.config({
                 'timepicker',
                 'moment',
                 'fileupload',
+                'jcrop',
                 'maskedinput',
                 'autosize',
                 'chosen',

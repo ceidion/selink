@@ -1,5 +1,5 @@
 define([
-    'text!common/template/profile/crop.html',
+    'text!common/template/profile/photo-crop.html',
 ], function(
     template
 ) {
@@ -39,7 +39,7 @@ define([
             $.ajax({
 
                 // page url
-                url: '/users/' + this.model.get('_id') + '/scale',
+                url: '/users/' + this.model.get('_id') + '/photo-scale',
 
                 // post data
                 data: this.select,

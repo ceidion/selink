@@ -116,7 +116,10 @@ module.exports = function(app, sio) {
 
     // Upload user photo
     app.put('/users/:user/photo', checkLoginStatus, user.uploadPhoto);
-    app.put('/users/:user/scale', checkLoginStatus, user.scalePhoto);
+    app.put('/users/:user/photo-scale', checkLoginStatus, user.scalePhoto);
+    // Upload cover
+    app.put('/users/:user/cover', checkLoginStatus, user.uploadCover);
+    app.put('/users/:user/cover-scale', checkLoginStatus, user.scaleCover);
 
     // Get user info
     app.get('/users/:user', checkLoginStatus, user.show);

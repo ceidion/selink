@@ -1,7 +1,7 @@
 define([
     'common/view/item-base',
     'text!common/template/profile/photo.html',
-    'common/view/profile/crop'
+    'common/view/profile/photo-crop'
 ], function(
     BaseView,
     template,
@@ -41,7 +41,7 @@ define([
 
             this.listenTo(this.model.educations, 'change', this.updateCompleteness);
             this.listenTo(this.model.educations, 'remove', this.updateCompleteness);
-            
+
             this.listenTo(this.model.employments, 'change', this.updateCompleteness);
             this.listenTo(this.model.employments, 'remove', this.updateCompleteness);
         },
@@ -65,12 +65,11 @@ define([
                     selink.modalArea.$el.modal('show');
                 },
                 error: function() {
-                    // say hello to user
-                    noty({
-                        type: 'error',
-                        timeout: 5000,
-                        text: "Sorry, the photo should be a file in *.jpg, *.gif or *.png format. and not bigger than 512kb. Please use a another one.",
-                        layout: 'bottomRight'
+                    // show error
+                    $.gritter.add({
+                        title: 'ファイルアップロードが失敗しました',
+                        text: '画像は「jpg」、「gif」、「png」のフォーマットのみ受け付けます。お手数ですが、お確かめ上に、もう一度アップロードしてください。',
+                        class_name: 'gritter-error'
                     });
                 }
             });

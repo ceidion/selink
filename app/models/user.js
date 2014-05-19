@@ -57,6 +57,12 @@ var User = new Schema({
         trim: true
     },
 
+    // Cover
+    cover: {
+        type: String,
+        trim: true
+    },
+
     // Title
     title: {
         type: String,

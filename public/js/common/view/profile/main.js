@@ -1,5 +1,6 @@
 define([
     'text!common/template/profile/main.html',
+    'common/view/profile/cover',
     'common/view/profile/photo',
     'common/view/profile/name',
     'common/view/profile/title',
@@ -12,7 +13,6 @@ define([
     'common/view/profile/telno',
     'common/view/profile/website',
     'common/view/profile/bio',
-    'common/view/profile/friends',
     'common/view/profile/languages',
     'common/view/profile/skills',
     'common/view/profile/qualifications',
@@ -20,6 +20,7 @@ define([
     'common/view/profile/employments',
 ], function(
     template,
+    CoverItem,
     PhotoItem,
     NameItem,
     TitleItem,
@@ -32,7 +33,6 @@ define([
     TelNoItem,
     WebSiteItem,
     BioItem,
-    FriendComposite,
     LanguageComposite,
     SkillComposite,
     QualificationComposite,
@@ -48,6 +48,7 @@ define([
 
         // regions
         regions: {
+            coverRegion: '#cover',
             photoRegion: '#photo',
             nameRegion: '#name',
             titleRegion: '#title',
@@ -60,7 +61,6 @@ define([
             telNoRegion: '#telno',
             webSiteRegion: '#website',
             bioRegion: '#bio',
-            friendRegion: '#friends',
             languageRegion: '#languages',
             skillRegion: '#skills',
             qualificationRegion: '#qualifications',
@@ -71,6 +71,7 @@ define([
         // initializer
         initialize: function() {
             // create component
+            this.coverItem = new CoverItem({model: this.model});
             this.photoItem = new PhotoItem({model: this.model});
             this.nameItem = new NameItem({model: this.model});
             this.titleItem = new TitleItem({model: this.model});
@@ -83,7 +84,6 @@ define([
             this.telNoItem = new TelNoItem({model: this.model});
             this.webSiteItem = new WebSiteItem({model: this.model});
             this.bioItem = new BioItem({model: this.model});
-            this.friendComposite = new FriendComposite({model: this.model});
             this.languageComposite = new LanguageComposite({model: this.model});
             this.skillComposite = new SkillComposite({model: this.model});
             this.qualificationComposite = new QualificationComposite({model: this.model});
@@ -94,6 +94,7 @@ define([
         // after render
         onRender: function() {
             // show every component
+            this.coverRegion.show(this.coverItem);
             this.photoRegion.show(this.photoItem);
             this.nameRegion.show(this.nameItem);
             this.titleRegion.show(this.titleItem);
@@ -106,7 +107,6 @@ define([
             this.telNoRegion.show(this.telNoItem);
             this.webSiteRegion.show(this.webSiteItem);
             this.bioRegion.show(this.bioItem);
-            this.friendRegion.show(this.friendComposite);
             this.languageRegion.show(this.languageComposite);
             this.skillRegion.show(this.skillComposite);
             this.qualificationRegion.show(this.qualificationComposite);

@@ -84,8 +84,8 @@ exports.show = function(req, res, next) {
     // }
 
     User.findById(req.params.user, '-password')
-        .populate('friends', 'type firstName lastName title photo createDate')
-        .populate('invited', 'type firstName lastName title photo createDate')
+        .populate('friends', 'type firstName lastName title cover photo createDate')
+        .populate('invited', 'type firstName lastName title cover photo createDate')
         .exec(function(err, user) {
             if (err) next(err);
             else res.json(user);
@@ -152,6 +152,58 @@ exports.scalePhoto = function(req, res, next) {
                 User.findByIdAndUpdate(req.params.user, {photo: './upload/' + req.session.tempPhoto}, function(err, updatedUser) {
                     if (err) next(err);
                     else res.send({photo: updatedUser.photo});
+                });
+            }
+        });
+};
+
+// Upload Cover
+exports.uploadCover = function(req, res, next) {
+
+    // handle cover file
+    if (req.files && req.files.cover) {
+
+        console.log(req.files.cover);
+
+        var coverType = req.files.cover.type;
+        var coverPath = req.files.cover.path;
+
+        if (['image/jpeg', 'image/gif', 'image/png'].indexOf(coverType) === -1) {
+            res.status(415).send("Only jpeg, gif or png file are valide");
+            return;
+        }
+
+        var coverName = /.*[\/|\\](.*)$/.exec(coverPath)[1];
+
+        req.session.tempCover = coverName;
+
+        gm(coverPath).size(function(err, size) {
+            if (err) next(err);
+            else res.json({fileName: './upload/' + coverName});
+        });
+
+    } else {
+        res.json(400, {});
+    }
+};
+
+// Scale Cover
+exports.scaleCover = function(req, res, next) {
+
+    // TODO: check exsitence of tempCover
+
+    var coverPath = path.join(__dirname, '../../public/upload/', req.session.tempCover);
+
+    gm(coverPath)
+        .crop(req.body.w, req.body.h, req.body.x, req.body.y)
+        .write(coverPath, function(err) {
+            if (err) next(err);
+            else {
+
+                // update user info
+                User.findByIdAndUpdate(req.params.user, {cover: './upload/' + req.session.tempCover}, function(err, updatedUser) {
+                    if (err) next(err);
+                    else res.send({cover: updatedUser.cover});
                 });
             }
         });

@@ -35,7 +35,7 @@ exports.create = function(req, res, next) {
                         res.json(409, {});
                     else next(err);
                 } else {
-                    
+
                     // send account-activate mail
                     Mailer.accountActive({
                         id: tempAccount._id,
@@ -87,7 +87,7 @@ exports.activate = function(req, res, next) {
                 lastName: tempAccount.lastName,
                 secEmail: tempAccount.email,
                 type: tempAccount.type,
-                photo: './asset/images/no_photo_male.gif',
+                photo: './asset/images/no_photo_male.jpg',
                 provider: 'local'
             }, function(err, user) {
 
