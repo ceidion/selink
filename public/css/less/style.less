@@ -15,8 +15,10 @@ img {
   max-width: 100%;
 }
 
-.sidebar {
-    .transition(all 0.5s);
+@media only screen and (min-width: @grid-float-breakpoint-max) {
+  .sidebar {
+      .transition(all 0.5s);
+  }
 }
 
 .main-content {

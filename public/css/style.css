@@ -2,8 +2,7 @@
 body{background-color:#fff}
 input{line-height:normal !important}
 img{max-width:100%}
-.sidebar{-webkit-transition:all .5s;transition:all .5s}
-.main-content{-webkit-transition:margin .5s;transition:margin .5s}.main-content:before{-webkit-transition:margin .5s;transition:margin .5s}
+@media only screen and (min-width:991px){.sidebar{-webkit-transition:all .5s;transition:all .5s}}.main-content{-webkit-transition:margin .5s;transition:margin .5s}.main-content:before{-webkit-transition:margin .5s;transition:margin .5s}
 .sl-editable{-webkit-transition:background-color .5s;transition:background-color .5s}.sl-editable:hover{background-color:#EEE;cursor:pointer}
 .sl-editable .form-group{margin-bottom:0px}
 .sl-editable .sl-editor{display:none}
