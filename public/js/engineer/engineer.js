@@ -89,6 +89,10 @@ define([
             dateJa: function(value, attr, customValue, model) {
                 if (value && !moment(value, 'YYYY/MM/DD').isValid())
                     return "有効な日付をご入力ください";
+            },
+            datetimeJa: function(value, attr, customValue, model) {
+                if (value && !moment(value).isValid())
+                    return "有効な時日をご入力ください";
             }
         });
 
@@ -250,7 +254,7 @@ define([
                 return;
             }
 
-            if($el.find('.form-group').hasClass('has-error')) {
+            if($el.hasClass('has-error') || $el.find('.form-group').hasClass('has-error')) {
                 return;
             }
 

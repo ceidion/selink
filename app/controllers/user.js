@@ -87,8 +87,22 @@ exports.show = function(req, res, next) {
         .populate('friends', 'type firstName lastName title cover photo createDate')
         .populate('invited', 'type firstName lastName title cover photo createDate')
         .exec(function(err, user) {
+
             if (err) next(err);
-            else res.json(user);
+            else {
+
+                Post.count({_owner: req.params.user}, function(err, postNum) {
+
+                    if (err) next(err);
+                    else {
+
+                        var userObj = user.toObject();
+                            userObj.postNum = postNum;
+
+                        res.json(userObj);
+                    }
+                });
+            }
         });
 };
 
@@ -284,8 +298,8 @@ exports.newsfeed = function(req, res, next) {
 
     Post.find()
         .where('logicDelete').equals(false)
-        .populate('_owner', 'firstName lastName photo')
-        .populate('comments._owner', 'firstName lastName photo')
+        .populate('_owner', 'type firstName lastName title cover photo createDate')
+        .populate('comments._owner', 'type firstName lastName title cover photo createDate')
         .sort('-createDate')
         .skip(10*page)  // skip n page
         .limit(10)
@@ -296,7 +310,7 @@ exports.newsfeed = function(req, res, next) {
                 Job.find()
                     .where('logicDelete').equals(false)
                     .where('expiredDate').gt(new Date())
-                    .populate('_owner', 'firstName lastName photo')
+                    .populate('_owner', 'type firstName lastName title cover photo createDate')
                     .sort('-createDate')
                     .skip(10*page)  // skip n page
                     .limit(10)

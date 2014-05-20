@@ -3,13 +3,15 @@ define([
     'text!common/template/profile/name.html'
 ], function(
     BaseView,
-    template) {
+    template
+) {
 
     return BaseView.extend({
 
         // template
         template: template,
 
+        // override placeholder
         placeholder: '氏名',
 
         // initializer
@@ -39,11 +41,7 @@ define([
             Backbone.Validation.bind(this);
         },
 
-        // after show
-        onShow: function() {
-            this.$el.addClass('animated fadeInLeft');
-        },
-
+        // reflect user input on model
         updateModel: function() {
             // clear all errors
             this.clearError();
@@ -61,6 +59,7 @@ define([
             }
         },
 
+        // get user input data
         getData: function() {
             return {
                 firstName: this.ui.firstName.val(),
@@ -68,6 +67,7 @@ define([
             };
         },
 
+        // render value with user input data
         renderValue: function(data) {
 
             if (!data.firstName && !data.lastName) {

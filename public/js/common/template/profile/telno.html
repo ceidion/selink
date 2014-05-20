@@ -10,12 +10,7 @@
                 print('<span class="text-muted">Tel.</span>');
         %>
     </div>
-    <div class="sl-editor form-group">
-        <div class="col-sm-12 input-group">
-            <span class="input-group-addon">
-                <i class="ace-icon fa fa-phone bigger-110"></i>
-            </span>
-            <input type="text" class="input-medium" placeholder="電話番号" name="telNo" value="<%- obj.telNo %>">
-        </div>
+    <div class="sl-editor">
+        <input type="text" class="input-medium" placeholder="電話番号" name="telNo" value="<%= obj.telNo %>">
     </div>
 </div>

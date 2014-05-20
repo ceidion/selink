@@ -51,7 +51,7 @@ define(['common/view/composite-empty'], function(EmptyView) {
             // this happend on composite initialzation.
             // if the subview's model has _id attribute, it is a existing model
             else {
-                
+
                 // just append the subview
                 this.$el.find(this.itemViewContainer).append(itemView.el);
             }

@@ -10,12 +10,7 @@
                 print('<span class="text-muted">個人サイト</span>');
         %>
     </div>
-    <div class="sl-editor form-group">
-        <div class="col-sm-12 input-group">
-            <span class="input-group-addon">
-                <i class="ace-icon fa fa-globe bigger-110"></i>
-            </span>
-            <input type="text" class="col-xs-12" placeholder="サイトURL" name="webSite" value="<%- obj.webSite %>">
-        </div>
+    <div class="sl-editor">
+        <input type="text" class="col-xs-12" placeholder="サイトURL" name="webSite" value="<%= obj.webSite %>">
     </div>
 </div>

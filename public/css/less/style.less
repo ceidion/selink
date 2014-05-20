@@ -16,8 +16,7 @@ img {
 }
 
 .sidebar {
-
-    .transition(width 0.5s);
+    .transition(all 0.5s);
 }
 
 .main-content {
@@ -63,7 +62,8 @@ img {
 }
 
 .infobox-small {
-  width: 110px;
+  width: 105px;
+  height: 48px;
 }
 
 .empty-view {
@@ -92,7 +92,7 @@ img {
   .profile-picture {
     width: 100px;
     height: 100px;
-    margin-right: 12px;
+    // margin-right: 12px;
     // margin-top: -50px;
   }
 
@@ -173,12 +173,8 @@ img {
       .transition-duration(0);
     }
 
-    .sl-value {
-      margin-top: -10px;
-    }
-
-    .sl-editor {
-      margin-top: -5px;
+    .sl-value, .sl-editor {
+      margin-top: -15px;
     }
 
     // for the delete button append on select
@@ -286,11 +282,6 @@ img {
 .photo-item {
   margin: 5px;
 
-  img {
-    min-width: 100px;
-    max-width: 100px;
-  }
-
   .tags {
     position: absolute;
     background-color: transparent;
@@ -368,8 +359,8 @@ img {
   }
 
   .avatar {
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 75px;
+    max-height: 75px;
     margin-top: 8px;
     margin-bottom: 8px;
     margin-right: 12px;

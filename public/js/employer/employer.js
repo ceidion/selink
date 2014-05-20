@@ -254,7 +254,7 @@ define([
                 return;
             }
 
-            if($el.find('.form-group').hasClass('has-error')) {
+            if($el.hasClass('has-error') || $el.find('.form-group').hasClass('has-error')) {
                 return;
             }
 

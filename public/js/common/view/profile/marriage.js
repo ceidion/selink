@@ -11,7 +11,7 @@ define([
         template: template,
 
         // className
-        className: 'row',
+        className: 'row form-group',
 
         // initializer
         initialize: function() {

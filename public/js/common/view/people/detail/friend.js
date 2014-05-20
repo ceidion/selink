@@ -1,7 +1,9 @@
 define([
-    'text!common/template/people/detail/friend.html'
+    'text!common/template/people/detail/friend.html',
+    'text!common/template/people/popover.html'
 ], function(
-    template
+    template,
+    popoverTemplate
 ) {
 
     return Backbone.Marionette.ItemView.extend({
@@ -25,7 +27,7 @@ define([
                 container: 'body',
                 placement: 'auto',
                 title: '<img src="' + this.model.get('cover') + '" />',
-                content: '<div class="profile-picture"><img src="' + this.model.get('photo') + '" /></div><div class="inline"><strong>' + this.model.get('firstName') + ' ' + this.model.get('lastName') + '</strong></div>',
+                content: _.template(popoverTemplate, this.model.attributes),
             });
         },
 

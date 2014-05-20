@@ -22,8 +22,9 @@ define([
             var self = this;
 
             this.$el.find('img').Jcrop({
-                minSize: [500, 150],
-                setSelect: [ 0, 0, 500, 150 ],
+                aspectRatio: 4,
+                minSize: [600, 150],
+                setSelect: [ 0, 0, 600, 150 ],
                 boxWidth: 800,
                 onSelect: function(c) {
                     self.select = c;

@@ -2,7 +2,7 @@
 body{background-color:#fff}
 input{line-height:normal !important}
 img{max-width:100%}
-.sidebar{-webkit-transition:width .5s;transition:width .5s}
+.sidebar{-webkit-transition:all .5s;transition:all .5s}
 .main-content{-webkit-transition:margin .5s;transition:margin .5s}.main-content:before{-webkit-transition:margin .5s;transition:margin .5s}
 .sl-editable{-webkit-transition:background-color .5s;transition:background-color .5s}.sl-editable:hover{background-color:#EEE;cursor:pointer}
 .sl-editable .form-group{margin-bottom:0px}
@@ -10,12 +10,12 @@ img{max-width:100%}
 .label{line-height:1.4}
 .badge{top:-2px !important;padding-top:3px;padding-bottom:1px}
 .ace-icon{min-width:15px}
-.infobox-small{width:110px}
+.infobox-small{width:105px;height:48px}
 .empty-view{border:2px dashed #eee;padding:25px}
 .icon-nothing{font-family:inherit}
 .sl-title{line-height:1.3 !important}
 .popover .popover-title{padding:0px;height:70px;width:274px;overflow:hidden;margin-bottom:-40px}
-.popover .profile-picture{width:100px;height:100px;margin-right:12px}
+.popover .profile-picture{width:100px;height:100px}
 #sl-basic-info .sl-editable{padding:4px;line-height:33px}#sl-basic-info .sl-editable .align-right{padding:0px;color:#667e99}
 #friends .timeline-item{padding-left:0px;padding-right:8px}
 #name,#title{padding:5px 7px !important;min-height:43px}
@@ -26,8 +26,7 @@ img{max-width:100%}
 #photo .progress[data-percent]:after{line-height:normal}
 #zipCodeArea{margin-bottom:10px}
 #languages .grid2,#languages .grid3,#languages .grid4{min-height:127px;margin-bottom:6px;padding-top:6px;border-left:none}#languages .grid2 input[type="text"],#languages .grid3 input[type="text"],#languages .grid4 input[type="text"]{-webkit-transition-duration:0;transition-duration:0}
-#languages .grid2 .sl-value,#languages .grid3 .sl-value,#languages .grid4 .sl-value{margin-top:-10px}
-#languages .grid2 .sl-editor,#languages .grid3 .sl-editor,#languages .grid4 .sl-editor{margin-top:-5px}
+#languages .grid2 .sl-value,#languages .grid3 .sl-value,#languages .grid4 .sl-value,#languages .grid2 .sl-editor,#languages .grid3 .sl-editor,#languages .grid4 .sl-editor{margin-top:-15px}
 #languages .grid2 .input-group-btn .btn,#languages .grid3 .input-group-btn .btn,#languages .grid4 .input-group-btn .btn{min-height:30px;margin-left:-2px}
 #skills .sl-editable{min-height:42px;padding:7px}
 #skills input{width:100%;padding-right:135px;border-bottom:0}
@@ -44,12 +43,11 @@ img{max-width:100%}
 #employments blockquote{margin:0px}
 #employments .row{margin-top:5px}#employments .row:first-child{margin-top:0px}
 .person-info{color:#478fca !important}
-.photo-item{margin:5px}.photo-item img{min-width:100px;max-width:100px}
-.photo-item .tags{position:absolute;background-color:transparent;border:0;bottom:0;right:0;left:0;overflow:visible;direction:rtl;margin:0;padding:0}.photo-item .tags>.label-holder{opacity:.92;filter:alpha(opacity=92);display:table;margin:1px 0 0 0;direction:ltr;text-align:left}.photo-item .tags>.label-holder:hover{opacity:1;filter:alpha(opacity=100)}
+.photo-item{margin:5px}.photo-item .tags{position:absolute;background-color:transparent;border:0;bottom:0;right:0;left:0;overflow:visible;direction:rtl;margin:0;padding:0}.photo-item .tags>.label-holder{opacity:.92;filter:alpha(opacity=92);display:table;margin:1px 0 0 0;direction:ltr;text-align:left}.photo-item .tags>.label-holder:hover{opacity:1;filter:alpha(opacity=100)}
 .match-item{position:relative;float:left;margin:5px}.match-item img{max-height:50px}
 .match-item .tags{position:absolute;background-color:transparent;border:0;bottom:0;right:0;left:0;overflow:visible;direction:rtl;margin:0;padding:0}.match-item .tags>.label-holder{opacity:.92;filter:alpha(opacity=92);display:table;margin:1px 0 0 0;direction:ltr;text-align:left}.match-item .tags>.label-holder:hover{opacity:1;filter:alpha(opacity=100)}
 .isotope-item{margin:0px !important;word-wrap:break-word}.isotope-item div{max-width:100%}
-.isotope-item .avatar{max-width:100px;max-height:100px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
+.isotope-item .avatar{max-width:75px;max-height:75px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
 .isotope-item .widget-header .label{margin-bottom:5px}
 .isotope-item .btn-block{-webkit-transition:all 1s;transition:all 1s}
 .jcrop-holder{margin-right:auto;margin-left:auto}

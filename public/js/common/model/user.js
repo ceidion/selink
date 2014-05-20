@@ -265,14 +265,8 @@ define([
             if (this.get('marriage'))
                 completeness += 5;
 
-            if (this.get('experience'))
-                completeness += 5;
-
             if (this.get('telNo'))
-                completeness += 5;
-
-            if (this.get('secEmail'))
-                completeness += 5;
+                completeness += 10;
 
             if (this.get('webSite'))
                 completeness += 5;
@@ -284,7 +278,7 @@ define([
                 completeness += 5;
 
             if (this.get('bio'))
-                completeness += 5;
+                completeness += 10;
 
             if (this.qualifications.length)
                 completeness += 5;

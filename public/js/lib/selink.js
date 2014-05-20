@@ -68,9 +68,26 @@
         return $(this).slAnimated('fadeInUp', color, callback);
     };
 
+    $.fn.slFadeInDown = function(color, callback) {
+        return $(this).slAnimated('fadeInDown', color, callback);
+    };
+
+    $.fn.slFadeOutUp = function(color, callback) {
+        return $(this).slAnimated('fadeOutUp', color, callback);
+    };
+
     $.fn.slFadeOutLeft = function(color, callback) {
         return $(this).slAnimated('fadeOutLeft', color, callback);
     };
+
+    $.fn.slBounceOutUp = function(color, callback) {
+        return $(this).slAnimated('bounceOutUp', color, callback);
+    };
+
+    $.fn.slBounceInDown = function(color, callback) {
+        return $(this).slAnimated('bounceInDown', color, callback);
+    };
+
 
     $.fn.slAnimated = function(effect, color, callback) {
 

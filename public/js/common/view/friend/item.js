@@ -1,31 +1,38 @@
 define([
-    'text!common/template/friend/item.html'
+    'text!common/template/friend/item.html',
+    'text!common/template/people/popover.html'
 ],function(
-    template
+    template,
+    popoverTemplate
 ) {
 
     return Backbone.Marionette.ItemView.extend({
 
         template: template,
 
-        // tagName: 'li',
-
         className: 'photo-item',
 
-        onRender: function() {
-            // this.$el.find('img').popover({
-            //     placement: 'auto',
-            //     html: true,
-            //     trigger: 'hover',
-            //     container: 'body',
-            //     title: this.model.get('firstName') + " " + this.model.get('lastName'),
-            //     content: "123"
-            // });
+        events: {
+            'click a': 'onClick'
+        },
 
-            // this.$el.find('img').tooltip({
-            //     title: this.model.get('firstName') + " " + this.model.get('lastName'),
-            //     placement: 'left'
-            // });
+        onShow: function() {
+            this.$el.find('img').popover({
+                html: true,
+                trigger: 'hover',
+                container: 'body',
+                placement: 'auto right',
+                title: '<img src="' + this.model.get('cover') + '" />',
+                content: _.template(popoverTemplate, this.model.attributes),
+            });
+        },
+
+        onClick: function(e) {
+
+            e.preventDefault();
+
+            this.$el.find('img').popover('destroy');
+            window.location = '#profile/' + this.model.get('_id');
         }
     });
 });

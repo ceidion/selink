@@ -1,11 +1,13 @@
 define([
     'text!common/template/post/item.html',
     'text!common/template/post/detail.html',
+    'text!common/template/people/popover.html',
     'common/collection/base',
     'common/view/post/comment'
 ], function(
     defaultTemplate,
     detailTemplate,
+    popoverTemplate,
     BaseCollection,
     ItemView
 ) {
@@ -34,6 +36,7 @@ define([
 
         // ui
         ui: {
+            avatar: '.avatar',
             contentArea: '.content',
             editArea: '.wysiwyg-editor',
             alertArea: '.alert',
@@ -48,6 +51,7 @@ define([
 
         // events
         events: {
+            'click .profile-link': 'onProfile',
             'click .btn-save': 'onSave',
             'click .btn-remove': 'showAlert',
             'click .btn-remove-cancel': 'hideAlert',
@@ -142,6 +146,15 @@ define([
 
             var self = this;
 
+            this.ui.avatar.popover({
+                html: true,
+                trigger: 'hover',
+                container: 'body',
+                placement: 'auto right',
+                title: '<img src="' + this.model.get('_owner').cover + '" />',
+                content: _.template(popoverTemplate, this.model.get('_owner')),
+            });
+
             // add tooltip on add button
             this.ui.likeBtn.tooltip({
                 placement: 'top',
@@ -155,6 +168,14 @@ define([
 
             // initiate wysiwyg eidtor for memo
             this.ui.editArea.ace_wysiwyg().prev().addClass('wysiwyg-style3');
+        },
+
+        onProfile: function(e) {
+
+            e.preventDefault();
+
+            this.ui.avatar.popover('destroy');
+            window.location = '#profile/' + this.model.get('_owner')._id;
         },
 
         // show the comfirm alert
@@ -333,7 +354,7 @@ define([
 
             var self = this;
 
-            this.$el.find('.comment-area').css('margin-left', '40px');
+            this.$el.find('.comment-area').css('margin-left', '58px');
             this.$el.find('.photo-area').slideDown();
             this.$el.find('.btn-area').slideDown('fast', function() {
                 // enable autosize on comment area

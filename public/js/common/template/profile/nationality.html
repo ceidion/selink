@@ -11,25 +11,20 @@
         %>
     </div>
     <div class="sl-editor">
-        <div class="col-sm-12 input-group">
-            <span class="input-group-addon">
-                <i class="ace-icon fa fa-flag bigger-110"></i>
-            </span>
-            <select placeholder="国籍を選択して下さい" name="nationality">
-                <%
-                    for(var key in obj.countryList){
+        <select placeholder="国籍を選択して下さい" name="nationality">
+            <%
+                for(var key in obj.countryList){
 
-                        print('<optgroup label="' + key + '">');
+                    print('<optgroup label="' + key + '">');
 
-                        _.each(obj.countryList[key], function(option) {
-                            var selected = (option == obj.nationality) ? 'selected' : '';
-                            print('<option value="' + option + '" ' + selected + '>' + option + '</option>' );
-                        });
+                    _.each(obj.countryList[key], function(option) {
+                        var selected = (option == obj.nationality) ? 'selected' : '';
+                        print('<option value="' + option + '" ' + selected + '>' + option + '</option>' );
+                    });
 
-                        print('</optgroup>');
-                    }
-                %>
-            </select>
-        </div>
+                    print('</optgroup>');
+                }
+            %>
+        </select>
     </div>
 </div>

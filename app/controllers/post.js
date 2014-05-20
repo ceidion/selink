@@ -30,8 +30,8 @@ exports.index = function(req, res, next) {
     }
 
     query.where('logicDelete').equals(false)
-        .populate('_owner', 'firstName lastName photo')
-        .populate('comments._owner', 'firstName lastName photo')
+        .populate('_owner', 'type firstName lastName title cover photo createDate')
+        .populate('comments._owner', 'type firstName lastName title cover photo createDate')
         .skip(20*page)  // skip n page
         .limit(20)
         .sort('-createDate')
@@ -46,8 +46,8 @@ exports.show = function(req, res, next) {
 
     Post.findById(req.params.post)
         .where('logicDelete').equals(false)
-        .populate('_owner', 'firstName lastName photo')
-        .populate('comments._owner', 'firstName lastName photo')
+        .populate('_owner', 'type firstName lastName title cover photo createDate')
+        .populate('comments._owner', 'type firstName lastName title cover photo createDate')
         .exec(function(err, posts) {
             if (err) next(err);
             else res.json(posts);
@@ -97,11 +97,11 @@ exports.create = function(req, res, next) {
                     // populate the respond notification with user's info
                     notification.populate({
                         path:'_from',
-                        select: 'firstName lastName photo'
+                        select: 'type firstName lastName title cover photo createDate'
                     }, function(err, noty) {
                         if(err) next(err);
                         // send real time message
-                        else 
+                        else
                             req.user.friends.forEach(function(room) {
                                 sio.sockets.in(room).emit('user-post', noty);
                             });
@@ -149,7 +149,7 @@ exports.create = function(req, res, next) {
             // return the crearted post
             newPost.populate({
                 path: '_owner',
-                select: 'firstName lastName photo'
+                select: 'type firstName lastName title cover photo createDate'
             }, function(err, post) {
                 if (err) next(err);
                 else res.json(post);
@@ -171,7 +171,7 @@ exports.update = function(req, res, next){
 
             post.populate({
                 path: '_owner',
-                select: 'firstName lastName photo'
+                select: 'type firstName lastName title cover photo createDate'
             }, function(err, result){
                 if (err) next(err);
                 else res.json(result);
@@ -197,8 +197,8 @@ exports.news = function(req, res, next) {
 
     Post.find()
         .where('logicDelete').equals(false)
-        .populate('_owner', 'firstName lastName photo')
-        .populate('comments._owner', 'firstName lastName photo')
+        .populate('_owner', 'type firstName lastName title cover photo createDate')
+        .populate('comments._owner', 'type firstName lastName title cover photo createDate')
         .sort('-createDate')
         .limit(20)
         .exec(function(err, posts) {
@@ -250,7 +250,7 @@ exports.like = function(req, res, next){
                                 // populate the respond notification with user's info
                                 notification.populate({
                                     path:'_from',
-                                    select: 'firstName lastName photo'
+                                    select: 'type firstName lastName title cover photo createDate'
                                 }, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
@@ -311,7 +311,7 @@ exports.bookmark = function(req, res, next){
                                 // populate the respond notification with user's info
                                 notification.populate({
                                     path:'_from',
-                                    select: 'firstName lastName photo'
+                                    select: 'type firstName lastName title cover photo createDate'
                                 }, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
@@ -380,7 +380,7 @@ exports.comment = function(req, res, next) {
                                 // populate the respond notification with user's info
                                 notification.populate({
                                     path:'_from',
-                                    select: 'firstName lastName photo'
+                                    select: 'type firstName lastName title cover photo createDate'
                                 }, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
@@ -393,7 +393,7 @@ exports.comment = function(req, res, next) {
                     // populate the comment owner and send saved post back
                     User.populate(comment, {
                         path: '_owner',
-                        select: 'firstName lastName photo'
+                        select: 'type firstName lastName title cover photo createDate'
                     }, function(err, newComment) {
                         if (err) next(err);
                         else res.json(newComment);

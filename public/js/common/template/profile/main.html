@@ -14,32 +14,12 @@
                     <i class="ace-icon fa fa-edit"></i>
                 </div>
                 <div class="infobox-data">
-                    <div class="infobox-content">32件</div>
+                    <div class="infobox-content"><%= selink.userModel.get('postNum') %>件</div>
                     <div class="infobox-content">投稿</div>
                 </div>
             </div>
 
             <div class="infobox infobox-green infobox-small infobox-dark">
-                <div class="infobox-icon">
-                    <i class="ace-icon fa fa-inbox"></i>
-                </div>
-                <div class="infobox-data">
-                    <div class="infobox-content"><%= selink.userModel.messages.length %>通</div>
-                    <div class="infobox-content">メール</div>
-                </div>
-            </div>
-
-            <div class="infobox infobox-orange infobox-small infobox-dark">
-                <div class="infobox-icon">
-                    <i class="ace-icon fa fa-bell"></i>
-                </div>
-                <div class="infobox-data">
-                    <div class="infobox-content"><%= selink.userModel.notifications.length %>件</div>
-                    <div class="infobox-content">通知</div>
-                </div>
-            </div>
-
-            <div class="infobox infobox-pink infobox-small infobox-dark">
                 <div class="infobox-icon">
                     <i class="ace-icon fa fa-group"></i>
                 </div>
@@ -51,7 +31,7 @@
 
         </div>
 
-        <div class="col-xs-8 col-md-7">
+        <div class="col-xs-8 col-md-7" style="margin-top: 10px;">
             <div id="name" class="sl-editable"></div>
             <div id="telno" class="sl-editable"></div>
             <div id="website" class="sl-editable"></div>

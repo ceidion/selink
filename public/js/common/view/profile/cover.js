@@ -56,9 +56,9 @@ define([
 
             var self = this;
 
-            this.ui.cover.slRollOut('', function() {
+            this.ui.cover.slFadeOutUp('', function() {
                 $(this).attr('src', self.model.get('cover'));
-                $(this).removeClass('rollOut').addClass('rollIn');
+                $(this).removeClass('fadeOutUp').addClass('fadeInDown');
             });
         },
 

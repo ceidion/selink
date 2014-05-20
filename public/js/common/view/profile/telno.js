@@ -3,7 +3,8 @@ define([
     'text!common/template/profile/telno.html'
 ], function(
     BaseView,
-    template) {
+    template
+) {
 
     return BaseView.extend({
 
@@ -11,7 +12,7 @@ define([
         template: template,
 
         // className
-        className: 'row',
+        className: 'row form-group',
 
         // initializer
         initialize: function() {

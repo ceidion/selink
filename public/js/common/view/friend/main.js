@@ -2,7 +2,6 @@ define([
     'text!common/template/friend/main.html',
     'common/view/composite-isotope',
     'common/collection/base',
-    'common/view/friend/invited',
     'common/view/friend/friend',
     'common/model/post',
     'common/view/post/item'
@@ -10,7 +9,6 @@ define([
     pageTemplate,
     BaseView,
     BaseCollection,
-    InvitedView,
     FriendsView,
     PostModel,
     ItemView
@@ -34,10 +32,6 @@ define([
         // Initializer
         initialize: function() {
 
-            if (selink.userModel.invited.length)
-                // create invited friends view
-                this.invitedView = new InvitedView({collection: selink.userModel.invited});
-
             if (selink.userModel.friends.length)
                 // create firends view
                 this.friendsView = new FriendsView({collection: selink.userModel.friends});
@@ -56,17 +50,12 @@ define([
             this.rm = new Backbone.Marionette.RegionManager();
             // create regions
             this.regions = this.rm.addRegions({
-                invitedRegion: '#invited',
                 friendsRegion: '#friends'
             });
         },
 
         // After show
         onShow: function() {
-
-            if (this.invitedView)
-                // show invited friends view
-                this.regions.invitedRegion.show(this.invitedView);
 
             if (this.friendsView)
                 // show friends view

@@ -1,6 +1,6 @@
 <div class="widget-box" data-create-date="<%= moment(obj.createDate).valueOf() %>">
     <div class="widget-header widget-header-flat">
-        <a href="#profile/<%= obj._owner._id %>" title="<%- obj._owner.firstName %>">
+        <a class="profile-link" href="#profile/<%= obj._owner._id %>">
             <img class="avatar" src="<%= obj._owner.photo %>">
         </a>
 
@@ -30,9 +30,9 @@
         <% } %>
 
         <h5>
-            <i class="ace-icon fa fa-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
+            <i class="ace-icon fa fa-edit"></i>&nbsp;<strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
         </h5>
-        <h5 class="smaller">
+        <h6>
             <i class="ace-icon fa fa-clock-o"></i>&nbsp;<%= moment(obj.createDate).calendar() %>
         </h5>
         <div class="clearfix"></div>
@@ -114,11 +114,11 @@
         </div>
 
         <div class="widget-toolbox padding-4 clearfix <% if (!obj.setting.commentable) print('hidden') %>">
-            <img class="photo-area pull-left" src="<%= selink.userModel.get('photo') %>" style="max-width: 36px; display: none;">
+            <img class="photo-area pull-left" src="<%= selink.userModel.get('photo') %>" style="max-width: 55px; display: none;">
             <div class="comment-area">
                 <textarea name="comment" placeholder="コメントを書く" style="width: 100%"/></textarea>
             </div>
-            <div class="btn-area pull-right" style="margin-top: 4px; display: none;">
+            <div class="btn-area pull-right" style="display: none;">
                 <button class="btn btn-sm btn-success btn-comment disabled">
                     <i class="ace-icon fa fa-comment bigger-125"></i>&nbsp;コメントする
                 </button>

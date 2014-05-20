@@ -14,6 +14,9 @@
             %>
             </span>
         </p>
+        <% if (obj.address) { %>
+            <small class="address-value"> <%= obj.address %></small>
+        <% } %>
         <% if (obj.startDate || obj.endDate) { %>
             <small class="duration-value">
                 <%
@@ -25,9 +28,6 @@
                         print(obj.startDateDisplay + "〜" + obj.endDateDisplay);
                 %>
             </small>
-        <% } %>
-        <% if (obj.address) { %>
-            <small class="address-value"> <%= obj.address %></small>
         <% } %>
     </blockquote>
 </div>
