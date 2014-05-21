@@ -1,5 +1,4 @@
 var Mailer = require('../mailer/mailer.js'),
-    request = require('request'),
     mongoose = require('mongoose'),
     User = mongoose.model('User'),
     Activity = mongoose.model('Activity'),

@@ -3,19 +3,54 @@
 </div>
 
 <div class="body">
+
     <div class="time">
         <i class="ace-icon fa fa-clock-o"></i>
-        <span class="{{time-color}}"><%= moment(obj.createDate).fromNow() %></span>
+        <span class="blue"><%= moment(obj.createDate).fromNow() %></span>
     </div>
+
     <div class="name">
         <a href="#profile/<%= obj._owner._id %>">
             <%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
         </a>
     </div>
+
     <div class="text"><%= obj.content %></div>
 
-    <div class="tools">
-        <i class="icon-only ace-icon fa fa-heart-o red"></i>
-        <i class="icon-only ace-icon fa fa-share-alt blue"></i>
+    <% if (obj.isMine || obj.isAdmin) { %>
+    <div class="alert alert-danger clearfix" style="display: none;">
+        <strong><i class="ace-icon fa fa-warning bigger-125"></i></strong>&nbsp;
+        このコメントを削除します、よろしいですか？
+        <br />
+        <br />
+        <p class="pull-right">
+            <button class="btn btn-sm btn-warning btn-remove-cancel">取消</button>
+            <button class="btn btn-sm btn-danger btn-remove-comfirm">削除</button>
+        </p>
     </div>
+    <% } %>
+
+    <div class="action">
+        <% if (obj.isMine) { %>
+            <i class="icon-only ace-icon fa fa-pencil green"></i>
+            <i class="icon-only ace-icon fa fa-trash-o red"></i>
+        <% } else { %>
+            <i class="icon-only ace-icon fa fa-reply blue"></i>
+        <% } %>
+        <div class="like-indicator inline red">
+
+            <% if (obj.isLiked) { %>
+                <i class="icon-only ace-icon fa fa-heart"></i>
+            <% } else { %>
+                <i class="btn-like icon-only ace-icon fa fa-heart-o"></i>
+            <% } %>
+
+            <span>
+            <% if (obj.liked.length > 0 ) { %>
+                <%= obj.liked.length %>
+            <% } %>
+            </span>
+        </div>
+    </div>
+
 </div>

@@ -359,9 +359,10 @@ define([
             this.$el.find('.btn-area').slideDown('fast', function() {
                 // enable autosize on comment area
                 self.ui.commentInput.autosize({
-                    // append: "\n",
                     callback: function() {
-                        self.trigger("shiftColumn");
+                        setTimeout(function() {
+                            self.trigger("shiftColumn");
+                        }, 200);
                     }
                 });
             });
@@ -398,8 +399,10 @@ define([
 
             var self = this;
 
+            var comment = this.ui.commentInput.val().replace(/(?:\r\n|\r|\n)/g, '<br />');
+
             this.collection.create({
-                content: this.ui.commentInput.val()
+                content: comment
             }, {
                 success: function() {
 

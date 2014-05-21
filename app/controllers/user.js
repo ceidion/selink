@@ -74,15 +74,6 @@ exports.index = function(req, res, next) {
 // Get single user
 exports.show = function(req, res, next) {
 
-
-    // // if requested for 'my' info
-    // if (req.params.user == req.user.id){
-
-    // // others info
-    // } else {
-
-    // }
-
     User.findById(req.params.user, '-password')
         .populate('friends', 'type firstName lastName title cover photo createDate')
         .populate('invited', 'type firstName lastName title cover photo createDate')
@@ -91,7 +82,7 @@ exports.show = function(req, res, next) {
             if (err) next(err);
             else {
 
-                Post.count({_owner: req.params.user}, function(err, postNum) {
+                Post.count({_owner: req.params.user, logicDelete: false}, function(err, postNum) {
 
                     if (err) next(err);
                     else {

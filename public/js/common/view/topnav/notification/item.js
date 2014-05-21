@@ -12,7 +12,7 @@ define([
 
         userTargetNotification: ['user-friend-invited', 'user-friend-approved', 'user-friend-declined', 'user-friend-break'],
 
-        postTargetNotification: ['user-post', 'user-post-liked', 'user-post-bookmarked', 'user-post-commented'],
+        postTargetNotification: ['user-post', 'user-post-liked', 'user-post-bookmarked', 'user-post-commented', 'user-comment-liked'],
 
         jobTargetNotification: ['user-job', 'user-job-bookmarked'],
 

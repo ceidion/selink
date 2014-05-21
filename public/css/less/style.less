@@ -56,7 +56,7 @@ img {
 .badge {
   top: -2px !important;
   padding-top: 3px;
-  padding-bottom: 1px;
+  // padding-bottom: 1px;
 }
 
 .ace-icon {
@@ -346,6 +346,28 @@ img {
       &:hover {
         .opacity(1);
       }
+    }
+  }
+}
+
+// comment
+.itemdiv .body {
+
+  .action {
+    position: absolute;
+    bottom: 5px;
+    right: 8px;
+
+    &>i {
+      display: none;
+      margin-right: 3px;
+      cursor: pointer;
+    }
+  }
+
+  &:hover {
+    .action > i {
+      display: inline;
     }
   }
 }

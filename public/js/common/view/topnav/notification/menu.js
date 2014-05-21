@@ -148,6 +148,18 @@ define([
                 self.collection.add(data);
             });
 
+            selink.socket.on('user-comment-liked', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: 'あなたのコメントにいいね！しました。',
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-success'
+                });
+                // add the notification to collection
+                self.collection.add(data);
+            });
+
             selink.socket.on('user-job', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,

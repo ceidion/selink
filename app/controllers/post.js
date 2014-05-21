@@ -2,7 +2,6 @@ var _ = require('underscore'),
     _s = require('underscore.string'),
     Mailer = require('../mailer/mailer.js'),
     util = require('util'),
-    request = require('request'),
     mongoose = require('mongoose'),
     Post = mongoose.model('Post'),
     User = mongoose.model('User'),
@@ -216,6 +215,8 @@ exports.like = function(req, res, next){
         if (err) next(err);
         else {
 
+            // TODO: one user can like a post only once!
+
             // add one like
             post.liked.addToSet(req.body.liked);
 
@@ -323,82 +324,6 @@ exports.bookmark = function(req, res, next){
 
                     // return the saved post
                     res.json(newPost);
-                }
-            });
-        }
-    });
-};
-
-// Comment a post
-exports.comment = function(req, res, next) {
-
-    // TODO: check post's forbidden flag, check ownership
-
-    // find the post
-    Post.findById(req.params.post, function(err, post) {
-
-        if (err) next(err);
-        else {
-
-            // create a comment object
-            var comment = post.comments.create({
-                _owner: req.user.id,
-                content: req.body.content,
-            });
-
-            // add comment to post
-            post.comments.push(comment);
-
-            // save the post
-            post.save(function(err, newPost) {
-
-                if (err) next(err);
-                else {
-
-                    // if someone not post owner commented this post
-                    if (newPost._owner != req.user.id) {
-
-                        // create activity
-                        Activity.create({
-                            _owner: req.user.id,
-                            type: 'user-post-commented',
-                            target: newPost._id
-                        }, function(err, activity) {
-                            if (err) next(err);
-                        });
-
-                        // create notification for post owner
-                        Notification.create({
-                            _owner: [newPost._owner],
-                            _from: req.user.id,
-                            type: 'user-post-commented',
-                            target: newPost._id
-                        }, function(err, notification) {
-
-                            if (err) next(err);
-                            else {
-                                // populate the respond notification with user's info
-                                notification.populate({
-                                    path:'_from',
-                                    select: 'type firstName lastName title cover photo createDate'
-                                }, function(err, noty) {
-                                    if(err) next(err);
-                                    // send real time message
-                                    sio.sockets.in(newPost._owner).emit('user-post-commented', noty);
-                                });
-                            }
-                        });
-                    }
-
-                    // populate the comment owner and send saved post back
-                    User.populate(comment, {
-                        path: '_owner',
-                        select: 'type firstName lastName title cover photo createDate'
-                    }, function(err, newComment) {
-                        if (err) next(err);
-                        else res.json(newComment);
-                    });
-
                 }
             });
         }

@@ -4,6 +4,7 @@ var tag = require('../app/controllers/tag'),
     post = require('../app/controllers/post'),
     issue = require('../app/controllers/issue'),
     friend = require('../app/controllers/friend'),
+    comment = require('../app/controllers/comment'),
     address = require('../app/controllers/address'),
     message = require('../app/controllers/message'),
     resetPs = require('../app/controllers/resetpassword'),
@@ -67,8 +68,17 @@ module.exports = function(app, sio) {
     app.patch('/posts/:post/bookmark', checkLoginStatus, post.bookmark);
     // Remove post
     app.delete('/posts/:post', checkLoginStatus, post.remove);
+
     // Comment a post
-    app.post('/posts/:post/comments', checkLoginStatus, post.comment);
+    app.post('/posts/:post/comments', checkLoginStatus, comment.create);
+    // Update comment
+    app.patch('/posts/:post/comments/:comment', checkLoginStatus, comment.update);
+    // Like comment
+    app.patch('/posts/:post/comments/:comment/like', checkLoginStatus, comment.like);
+    // Reply comment
+    app.patch('/posts/:post/comments/:comment/reply', checkLoginStatus, comment.create);
+    // Remove comment
+    app.delete('/posts/:post/comments/:comment', checkLoginStatus, comment.remove);
 
     // Get jobs (employer only)
     app.get('/jobs', checkLoginStatus, job.index);

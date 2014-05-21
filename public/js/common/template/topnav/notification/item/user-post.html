@@ -13,6 +13,9 @@
     else if (obj.type == "user-post-commented") {
         title = "はあなたの投稿にコメントしました";
     }
+    else if (obj.type == "user-comment-liked") {
+        title = "はあなたのコメントに「いいね！」しました";
+    }
 %>
 
 <a href="#post/<%= obj.target %>">
