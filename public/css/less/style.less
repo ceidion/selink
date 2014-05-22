@@ -358,15 +358,18 @@ img {
     bottom: 5px;
     right: 8px;
 
-    &>i {
+    & > .blink {
       display: none;
       margin-right: 3px;
+    }
+
+    & > i {
       cursor: pointer;
     }
   }
 
   &:hover {
-    .action > i {
+    .action > .blink {
       display: inline;
     }
   }

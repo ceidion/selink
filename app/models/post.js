@@ -41,6 +41,9 @@ var Post = new Schema({
     // Comments
     comments: [Comment],
 
+    // Removed comments
+    removedComments: [Comment],
+
     // Setting
     setting: {
 

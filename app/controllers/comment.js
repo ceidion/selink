@@ -87,7 +87,7 @@ exports.create = function(req, res, next) {
 // Update comment
 exports.update = function(req, res, next){
 
-    // TODO: check post's ownership
+    // TODO: check ownership
 
     // find the post and update it
     Post.findByIdAndUpdate(req.params.post, req.body, function(err, post) {
@@ -109,12 +109,28 @@ exports.update = function(req, res, next){
 // Remove comment
 exports.remove = function(req, res, next) {
 
-    // TODO: check post's ownership
+    // TODO: check ownership
 
-    // find the post and mark it as logical deleted
-    Post.findByIdAndUpdate(req.params.post, {logicDelete: true}, function(err, post) {
+    // find post
+    Post.findById(req.params.post, function(err, post) {
+
         if (err) next(err);
-        else res.json(post);
+        else {
+
+            // comment was deleted in this way because I can't find a way to filter the deleted comment when the post are queried,
+            // I tried $elemMatch, but it just return the first non-delete comment, not working here.
+            // pull the removed comment out
+            var remove = post.comments.pull(req.params.comment);
+            // push it to the backup array
+            post.removedComments.push(remove[0]);
+
+            // save the post
+            post.save(function(err, newPost) {
+
+                if (err) next(err);
+                else res.json(newPost);
+            });
+        }
     });
 };
 

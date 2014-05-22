@@ -16,19 +16,20 @@ define([
 
         // ui
         ui: {
-            likeBtn: '.btn-like',
-            replyBtn: '.fa-reply',
-            editBtn: '.fa-pencil',
-            deleteBtn: '.fa-trash-o',
-            alertArea: '.alert',
+            likeBtn: '.btn-comment-like',
+            replyBtn: '.btn-reply',
+            editBtn: '.btn-edit',
+            removeBtn: '.btn-remove',
+            alert: '.alert',
+            likeNum: '.like-num'
         },
 
         // events
         events: {
-            'click .fa-heart-o': 'onLike',
-            'click .fa-reply': 'onReply',
-            'click .fa-pencil': 'onEdit',
-            'click .fa-trash-o': 'showAlert',
+            'click @ui.likeBtn': 'onLike',
+            'click @ui.replyBtn': 'onReply',
+            'click @ui.editBtn': 'onEdit',
+            'click @ui.removeBtn': 'showAlert',
             'click .btn-remove-cancel': 'hideAlert',
             'click .btn-remove-comfirm': 'onRemove',
         },
@@ -36,22 +37,6 @@ define([
         modelEvents: {
             // 'change:content': 'renderContent',
             'change:liked': 'renderLike'
-        },
-
-        // initializer
-        initialize: function() {
-
-            // if the owner of comment is user
-            if (this.model.get('_owner')._id === selink.userModel.id)
-                // mark it
-                this.model.set('isMine', true, {slient: true});
-
-            // if user's id exists in comment's liked list
-            if (_.indexOf(this.model.get('liked'), selink.userModel.get('_id')) >= 0)
-            // mark as liked
-                this.model.set('isLiked', true, {
-                    silent: true
-                });
         },
 
         // after render
@@ -89,7 +74,7 @@ define([
                 template: '<div class="tooltip tooltip-success"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
             });
 
-            this.ui.deleteBtn.tooltip({
+            this.ui.removeBtn.tooltip({
                 container: 'body',
                 placement: 'top',
                 title: "削除",
@@ -113,36 +98,37 @@ define([
         renderLike: function() {
 
             // update the liked number
-            this.ui.likeBtn
-                .find('span')
+            this.ui.likeNum
                 .empty()
                 .text(this.model.get('liked').length);
             // flip the icon and mark this post as liked
             this.ui.likeBtn
-                .find('i')
                 .removeClass('fa-heart-o')
                 .addClass('fa-heart')
                 .slFlip();
             // remove like button, can't like it twice
-            this.ui.likeBtn.removeClass('btn-like');
+            this.ui.likeBtn.removeClass('btn-comment-like blink');
         },
 
         onReply: function() {
-
+            this.trigger('reply');
         },
 
         onEdit: function() {
 
+            var self = this;
+
+            this.$el.find('.text').slideUp('fast', function() {
+                self.$el.find('.editor').slideDown('fast');
+            });
         },
 
         // show the comfirm alert
         showAlert: function(event) {
 
-            event.preventDefault();
-
             var self = this;
 
-            this.ui.alertArea
+            this.ui.alert
                 .slideDown('fast', function() {
                     self.trigger("shiftColumn");
                 })
@@ -155,21 +141,15 @@ define([
 
             var self = this;
 
-            this.ui.alertArea
+            this.ui.alert
                 .slideUp('fast', function() {
                     self.trigger("shiftColumn");
                 });
         },
 
+        // remove comment
         onRemove: function() {
-
-            var self = this;
-            console.log(this);
-            this.model.destroy({
-                success: function() {
-                    self.trigger("shiftColumn");
-                }
-            });
+            this.trigger('remove');
         }
     });
 });
