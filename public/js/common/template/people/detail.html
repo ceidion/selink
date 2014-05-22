@@ -30,20 +30,21 @@
             <!-- photo -->
             <div class="profile-picture ace-thumbnails" style="position: relative;">
                 <img class="img-responsive" src="<%= obj.photo %>">
-                <div class="tags" style="position: absolute; background-color: transparent; border: 0; bottom: 0; right: 0; margin: 0; padding: 0;">
-                    <span class="label-holder">
-                        <span class="label label-lg label-primary arrowed"><%= obj.title %></span>
-                    </span>
-                </div>
             </div>
 
         </div>
 
-        <div class="col-xs-8 col-md-7 person-info">
+        <div class="col-xs-8 col-md-7 person-info" style="margin-top: 10px;">
 
-            <p class="bigger-200">
+            <p class="bigger-180 no-margin">
                 <%= obj.firstName %>&nbsp;<%= obj.lastName %>
             </p>
+
+            <p class="bigger-110 text-muted">
+                <%= obj.title %>
+            </p>
+
+            <div class="space-5"></div>
 
             <p>
                 <i class="ace-icon fa fa-phone"></i>&nbsp;&nbsp;<%= obj.telNo %>
@@ -58,7 +59,7 @@
             </p>
 
             <p>
-                <i class="ace-icon fa fa-road"></i>&nbsp;&nbsp;<%= obj.nearestSt %>
+                <i class="ace-icon fa fa-car"></i>&nbsp;&nbsp;<%= obj.nearestSt %>
             </p>
 
             <p>

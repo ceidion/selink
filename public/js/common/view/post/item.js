@@ -1,12 +1,10 @@
 define([
     'text!common/template/post/item.html',
-    // 'text!common/template/post/detail.html',
     'text!common/template/people/popover.html',
     'common/collection/base',
     'common/view/post/comment'
 ], function(
     template,
-    // detailTemplate,
     popoverTemplate,
     BaseCollection,
     ItemView
@@ -40,37 +38,35 @@ define([
             confirmBtn: '.btn-remove-confirm',
 
             postContent: '.content',
+            detailBtn: '.btn-detail',
             likeBtn: '.btn-like',
             bookmarkBtn: '.btn-bookmark',
             showAllBtn: '.btn-show-all',
 
             comments: '.dialogs',
-            commentInput: 'textarea',
+            commentInput: 'textarea[name="comment"]',
             commentConfirmBtn: '.btn-comment',
             commentCancelBtn: '.btn-cancel',
-            // editArea: '.wysiwyg-editor',
-            // saveBtn: '.btn-save',
         },
 
         // events
         events: {
             'mouseover': 'toggleMenuIndicator',
             'mouseout': 'toggleMenuIndicator',
+            'click @ui.avatar': 'toProfile',
             'click @ui.avatarLink': 'toProfile',
             'click @ui.removeBtn': 'showAlert',
             'click @ui.forbidBtn': 'toggleForbid',
             'click @ui.cancelBtn': 'hideAlert',
             'click @ui.confirmBtn': 'onRemove',
+            'click @ui.detailBtn': 'showDetail',
             'click @ui.likeBtn': 'onLike',
             'click @ui.bookmarkBtn': 'onBookmark',
             'click @ui.showAllBtn': 'showAllComment',
-            // 'click .btn-save': 'onSave',
-            // 'click .btn-detail': 'showDetail',
             'focusin @ui.commentInput': 'openComment',
             'keyup @ui.commentInput': 'checkComment',
             'click @ui.commentConfirmBtn': 'onComment',
-            'click @ui.commentCancelBtn': 'closeComment'
-            // 'keyup .wysiwyg-editor': 'enableSave'
+            'click @ui.commentCancelBtn': 'closeComment',
         },
 
         modelEvents: {
@@ -101,9 +97,6 @@ define([
         // initializer
         initialize: function() {
 
-            // if (this.options.modal)
-            //     this.$el.removeClass(this.className).addClass('modal-dialog post-modal');
-
             // create comments collction
             this.collection = this.model.comments;
         },
@@ -133,8 +126,6 @@ define([
                 title: "お気に入り"
             });
 
-            // // initiate wysiwyg eidtor for memo
-            // this.ui.editArea.ace_wysiwyg().prev().addClass('wysiwyg-style3');
         },
 
         // show operation menu toggler
@@ -145,6 +136,7 @@ define([
         // turn to user profile page
         toProfile: function(e) {
 
+            console.log("asdfsd")
             // stop defautl link behavior
             e.preventDefault();
 
@@ -186,11 +178,6 @@ define([
 
             // parent view handle remove
             this.trigger('remove');
-
-            // // if this is a detail view
-            // if (this.options.modal)
-            //     // hide the modal dialog
-            //     selink.modalArea.$el.modal('hide');
         },
 
         // forbid/allow comment
@@ -217,58 +204,15 @@ define([
             });
         },
 
-        // // show detail view
-        // showDetail: function() {
-
-        //     // detail use the same view just like this
-        //     // but pass an custom option "modal: true", view will switch template by this
-        //     var detailView = new this.constructor({
-        //         model: this.model,
-        //         modal: true
-        //     });
-
-        //     // detail also has a "remove" button, emit remove event
-        //     // for achive the same behavior of composite-isotope view, have delegate it to this view
-        //     this.listenTo(detailView, 'remove', this.onRemove);
-
-        //     selink.modalArea.show(detailView);
-        //     selink.modalArea.$el.modal('show');
-        // },
-
-        // // change the status of save button
-        // enableSave: function() {
-
-        //     // get user input
-        //     var input = this.ui.editArea.cleanHtml();
-
-        //     // if user input is not empty
-        //     if (input && !_.str.isBlank(input)) {
-        //         // enable the post button
-        //         this.ui.saveBtn.removeClass('disabled');
-        //     } else {
-        //         // disable ths post button
-        //         this.ui.saveBtn.addClass('disabled');
-        //     }
-        // },
-
-        // onSave: function() {
-
-        //     this.model.save({
-        //         content: this.ui.editArea.cleanHtml()
-        //     }, {
-        //         success: function(model, response, options) {
-        //             selink.modalArea.$el.modal('hide');
-        //         },
-        //         reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
-        //         patch: true,
-        //         wait: true
-        //     });
-        // },
-
         // rerender post content
         renderContent: function() {
             this.ui.postContent.empty().html(this.model.get('content'));
             this.trigger("shiftColumn");
+        },
+
+        showDetail: function() {
+
+            window.location = "#post/" + this.model.id;
         },
 
         // like this posts

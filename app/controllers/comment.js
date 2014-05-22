@@ -89,21 +89,23 @@ exports.update = function(req, res, next){
 
     // TODO: check ownership
 
-    // find the post and update it
-    Post.findByIdAndUpdate(req.params.post, req.body, function(err, post) {
+    // find post
+    Post.findById(req.params.post, function(err, post) {
 
         if (err) next(err);
         else {
 
-            post.populate({
-                path: '_owner',
-                select: 'type firstName lastName title cover photo createDate'
-            }, function(err, result){
+            post.comments.id(req.params.comment).set('content', req.body.content);
+
+            // save the post
+            post.save(function(err, newPost) {
+
                 if (err) next(err);
-                else res.json(result);
+                else res.json(newPost.comments.id(req.params.comment));
             });
         }
     });
+
 };
 
 // Remove comment
@@ -119,16 +121,18 @@ exports.remove = function(req, res, next) {
 
             // comment was deleted in this way because I can't find a way to filter the deleted comment when the post are queried,
             // I tried $elemMatch, but it just return the first non-delete comment, not working here.
-            // pull the removed comment out
-            var remove = post.comments.pull(req.params.comment);
+
             // push it to the backup array
-            post.removedComments.push(remove[0]);
+            post.removedComments.push(post.comments.id(req.params.comment));
+
+            // pull the removed comment out
+            post.comments.pull(req.params.comment);
 
             // save the post
             post.save(function(err, newPost) {
 
                 if (err) next(err);
-                else res.json(newPost);
+                else res.json(newPost.removedComments.id(req.params.comment));
             });
         }
     });

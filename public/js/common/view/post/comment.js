@@ -21,21 +21,23 @@ define([
             editBtn: '.btn-edit',
             removeBtn: '.btn-remove',
             alert: '.alert',
-            likeNum: '.like-num'
+            likeNum: '.like-num',
         },
 
         // events
         events: {
             'click @ui.likeBtn': 'onLike',
             'click @ui.replyBtn': 'onReply',
-            'click @ui.editBtn': 'onEdit',
+            'click @ui.editBtn': 'showEditor',
             'click @ui.removeBtn': 'showAlert',
             'click .btn-remove-cancel': 'hideAlert',
             'click .btn-remove-comfirm': 'onRemove',
+            'click .btn-edit-cancel': 'hideEditor',
+            'click .btn-edit-comfirm': 'onEdit',
         },
 
         modelEvents: {
-            // 'change:content': 'renderContent',
+            'change:content': 'renderContent',
             'change:liked': 'renderLike'
         },
 
@@ -95,6 +97,7 @@ define([
             });
         },
 
+        // rerender like icon and number
         renderLike: function() {
 
             // update the liked number
@@ -110,17 +113,61 @@ define([
             this.ui.likeBtn.removeClass('btn-comment-like blink');
         },
 
+        // reply comment
         onReply: function() {
             this.trigger('reply');
         },
 
-        onEdit: function() {
+        // display comment editor
+        showEditor: function() {
 
             var self = this;
 
+            this.$el.find('.action').slideUp('fast');
+
             this.$el.find('.text').slideUp('fast', function() {
-                self.$el.find('.editor').slideDown('fast');
+                self.$el.find('.editor').slideDown('fast', function() {
+                    self.trigger('shiftColumn');
+                });
             });
+        },
+
+        // hide comment editor
+        hideEditor: function() {
+
+            var self = this;
+
+            this.$el.find('.editor').slideUp('fast', function() {
+                self.$el.find('.text').slideDown('fast');
+                self.$el.find('.action').slideDown('fast', function() {
+                    self.trigger('shiftColumn')
+                });
+            });
+        },
+
+        // edit comment
+        onEdit: function() {
+
+            var self = this;
+            // get user input
+            var content = this.$el.find('textarea[name="edit"]').val().replace(/(?:\r\n|\r|\n)/g, '<br />');
+
+            // update comment
+            this.model.save({
+                content: content
+            }, {
+                success: function() {
+                    self.hideEditor();
+                },
+                reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
+                patch: true,
+                wait: true
+            });
+        },
+
+        // rerender comment content
+        renderContent: function() {
+            this.$el.find('.text').empty().html(this.model.get('content'));
         },
 
         // show the comfirm alert
