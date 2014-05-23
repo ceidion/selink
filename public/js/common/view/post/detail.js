@@ -44,13 +44,13 @@ define([
         // remove post
         onRemove: function() {
 
-            // parent view handle remove
-            this.trigger('remove');
-
-            // if this is a detail view
-            if (this.options.modal)
-                // hide the modal dialog
-                selink.modalArea.$el.modal('hide');
+            this.model.destroy({
+                success: function() {
+                    // hide the modal dialog
+                    selink.modalArea.$el.modal('hide');
+                },
+                wait: true
+            });
         },
 
         // change the status of save button

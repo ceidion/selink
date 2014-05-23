@@ -17,23 +17,35 @@ define([
         // item view
         itemView: ItemView,
 
+        displayLimit: 9,
+
         // initializer
         initialize: function() {
 
-            // make the collection from user model
-            // this.collection = this.model.friends;
+            this.displayCount = 0;
         },
 
-        // // override appendHtml
-        // appendHtml: function(collectionView, itemView, index) {
+        // override appendHtml
+        appendHtml: function(collectionView, itemView, index) {
 
-        //     // event menu only display the future events
-        //     if (moment(itemView.model.get('start')).isBefore(moment()))
-        //         return;
+            // the displayed friend item won't exceed the display limit
+            if (this.displayCount < this.displayLimit) {
+                this.$el.find(this.itemViewContainer).append(itemView.el);
 
-        //     // insert sub view before dropdown menu's footer (this is imply a order of items)
-        //     this.$el.find('.dropdown-body').prepend(itemView.el);
-        // },
+            // if the display limit was reached
+            } else if (this.displayCount == this.displayLimit) {
+
+                // draw a link to tell how many people left
+                var restNum = this.collection.length - this.displayLimit;
+                // TODO: where is the link lead to?
+                this.$el.find(this.itemViewContainer).append($('<div><a>他' + restNum + '人</a></div>'));
+
+            } else {
+                return;
+            }
+
+            this.displayCount++;
+        },
 
     });
 });

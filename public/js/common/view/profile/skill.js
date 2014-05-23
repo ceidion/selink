@@ -19,7 +19,7 @@ define([
             this.ui = _.extend({}, this.ui, {
                 'input': 'input',
                 'progress': '.progress-bar',
-                'valIndicator': '.icon-nothing',
+                'valIndicator': '.fa-nothing',
                 'slider': '.sl-slider',
                 'remove': '.btn-remove'
             });

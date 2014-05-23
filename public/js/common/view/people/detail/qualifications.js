@@ -12,12 +12,10 @@ define([
         template: template,
 
         // className
-        className: 'widget-box',
+        className: 'widget-box transparent',
 
         // item view container
         itemViewContainer: '.widget-main',
-
-        itemName: 'qualifications',
 
         // item view
         itemView: ItemView

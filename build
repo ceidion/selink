@@ -17,3 +17,7 @@ note:
 3. back-up user photo
 4. build app
 5. in the jade template, refer the built app
+6. in "public\js\lib\ace-element.js" the typeahead plugin was commented-out, cause it conflict with twitter typeahead
+7. the "public\js\lib\ace-element.js" was fully customized, don't update this file
+8. selink need GraphicMagik for picture process
+9. selink need solr for matching and search

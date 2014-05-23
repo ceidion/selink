@@ -22,7 +22,7 @@
     <div class="text"><%= obj.content %></div>
 
     <div class="editor" style="display: none;">
-        <textarea name="edit" style="width: 100%;" ><%= obj.content %></textarea>
+        <textarea name="edit" style="width: 100%;"><%= obj.content.replace(/<br\s*[\/]?>/gi, '\n') %></textarea>
         <button class="btn btn-xs btn-success btn-edit-comfirm">確定</button>
         <button class="btn btn-xs btn-warning btn-edit-cancel">取消</button>
     </div>
@@ -49,7 +49,7 @@
             <!-- edit button -->
             <i class="btn-edit icon-only ace-icon fa fa-pencil green blink"></i>
             <!-- remove button -->
-            <i class="btn-remove icon-only ace-icon fa fa-trash-o red blink"></i>
+            <i class="btn-comment-remove icon-only ace-icon fa fa-trash-o red blink"></i>
 
         <!-- someone's comment -->
         <% } else { %>

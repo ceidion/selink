@@ -19,7 +19,7 @@ define([
             this.ui = _.extend({}, this.ui, {
                 'input': 'input',
                 'progress': '.progress-bar',
-                'valIndicator': '.icon-nothing',
+                'valIndicator': '.fa-nothing',
                 'slider': '.sl-slider',
                 'remove': '.btn-remove'
             });
@@ -29,6 +29,8 @@ define([
                 'click .btn-remove': 'removeModel',
                 'typeahead:selected': 'ttUpdateModel'
             });
+
+            this.weight = this.model.get('weight');
 
             this.listenTo(this, 'slider', this.updateModel);
         },

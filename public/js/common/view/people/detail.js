@@ -48,7 +48,9 @@ define([
         events: {
             'click .btn-msg': 'showMessageEditor',
             'click .btn-friend': 'onAddFriend',
-            'click .btn-break': 'onBreakFriend'
+            'click .btn-break': 'onBreakFriend',
+            'click .btn-more': 'showMoreInfo',
+            'click .btn-less': 'showLessInfo'
         },
 
         // initializer
@@ -162,6 +164,26 @@ define([
 
             selink.modalArea.show(messageEditor);
             selink.modalArea.$el.modal('show');
+        },
+
+        showMoreInfo: function() {
+
+            var self = this;
+            this.$el.find('.more-info').slideDown('fast', function() {
+                self.$el.find('.btn-more').addClass('hide');
+                self.$el.find('.btn-less').removeClass('hide');
+                self.shiftColumn();
+            });
+        },
+
+        showLessInfo: function() {
+
+            var self = this;
+            this.$el.find('.more-info').slideUp('fast', function() {
+                self.$el.find('.btn-more').removeClass('hide');
+                self.$el.find('.btn-less').addClass('hide');
+                self.shiftColumn();
+            });
         },
 
         // add this person as friend

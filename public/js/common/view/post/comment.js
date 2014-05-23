@@ -19,9 +19,11 @@ define([
             likeBtn: '.btn-comment-like',
             replyBtn: '.btn-reply',
             editBtn: '.btn-edit',
-            removeBtn: '.btn-remove',
+            removeBtn: '.btn-comment-remove',
             alert: '.alert',
             likeNum: '.like-num',
+            action: '.action',
+            editInput: 'textarea[name="edit"]'
         },
 
         // events
@@ -123,11 +125,23 @@ define([
 
             var self = this;
 
-            this.$el.find('.action').slideUp('fast');
+            // hide action buttons
+            this.ui.action.slideUp('fast');
 
+            // hide plain comment content
             this.$el.find('.text').slideUp('fast', function() {
+
+                // display editor
                 self.$el.find('.editor').slideDown('fast', function() {
-                    self.trigger('shiftColumn');
+
+                    // enable autosize on edit area
+                    self.ui.editInput.autosize({
+                        callback: function() {
+                            setTimeout(function() {
+                                self.trigger("shiftColumn");
+                            }, 200);
+                        }
+                    });
                 });
             });
         },
@@ -137,10 +151,18 @@ define([
 
             var self = this;
 
+            // hide editor
             this.$el.find('.editor').slideUp('fast', function() {
+
+                // display plain comment content
                 self.$el.find('.text').slideDown('fast');
-                self.$el.find('.action').slideDown('fast', function() {
-                    self.trigger('shiftColumn')
+
+                // display action buttons
+                self.ui.action.slideDown('fast', function() {
+
+                    // destroy autosize
+                    self.ui.editInput.trigger('autosize.destroy');
+                    self.trigger('shiftColumn');
                 });
             });
         },
@@ -150,7 +172,7 @@ define([
 
             var self = this;
             // get user input
-            var content = this.$el.find('textarea[name="edit"]').val().replace(/(?:\r\n|\r|\n)/g, '<br />');
+            var content = this.ui.editInput.val().replace(/(?:\r\n|\r|\n)/g, '<br />');
 
             // update comment
             this.model.save({
@@ -175,12 +197,13 @@ define([
 
             var self = this;
 
-            this.ui.alert
-                .slideDown('fast', function() {
+            this.ui.action.slideUp('fast', function() {
+                self.ui.alert.slideDown('fast', function() {
                     self.trigger("shiftColumn");
                 })
                 .find('i')
                 .addClass('icon-animated-vertical');
+            });
         },
 
         // hide confirm alert
@@ -188,10 +211,10 @@ define([
 
             var self = this;
 
-            this.ui.alert
-                .slideUp('fast', function() {
-                    self.trigger("shiftColumn");
-                });
+            this.ui.alert.slideUp('fast', function() {
+                self.ui.action.slideDown('fast');
+                self.trigger("shiftColumn");
+            });
         },
 
         // remove comment

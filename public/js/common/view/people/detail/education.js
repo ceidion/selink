@@ -8,9 +8,5 @@ define([
 
         // template
         template: template,
-
-        // class name
-        className: 'sl-editable'
-
     });
 });

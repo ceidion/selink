@@ -4,7 +4,7 @@ define([
     'employer/view/home/main',
     'common/view/profile/main',
     'common/view/post/main',
-    'common/view/post/item',
+    'common/view/post/detail',
     'common/view/job/main',
     'common/view/friend/main',
     'common/view/people/main',

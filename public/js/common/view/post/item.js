@@ -136,7 +136,6 @@ define([
         // turn to user profile page
         toProfile: function(e) {
 
-            console.log("asdfsd")
             // stop defautl link behavior
             e.preventDefault();
 
@@ -369,11 +368,14 @@ define([
 
             var self = this;
 
-            view.model.destroy({
-                success: function(model, response) {
-                    self.trigger("shiftColumn");
-                },
-                wait: true
+            view.$el.slideUp('fast', function() {
+
+                view.model.destroy({
+                    success: function(model, response) {
+                        self.trigger("shiftColumn");
+                    },
+                    wait: true
+                });
             });
         },
 

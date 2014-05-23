@@ -33,7 +33,7 @@ define([
                 this.model = new MessageModel();
         },
 
-        onRender: function() {
+        onShow: function() {
 
             // enable wysiwyg editor
             this.ui.message.ace_wysiwyg().prev().addClass('wysiwyg-style3');
@@ -42,10 +42,10 @@ define([
             var userName = new Bloodhound({
                 datumTokenizer: function(d) {
 
-                if (d.has('firstName')) {
-                    return Bloodhound.tokenizers.whitespace(d.get('firstName') + ' ' + d.get('lastName'));
-                }
-                    else return '';
+                    if (d.has('firstName')) {
+                        return Bloodhound.tokenizers.whitespace(d.get('firstName') + ' ' + d.get('lastName'));
+                    }
+                        else return '';
                 },
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 // remote: '/suggestUser?initial=%QUERY'

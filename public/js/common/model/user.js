@@ -173,14 +173,32 @@ define([
 
             // populate educations collection
             this.educations.set(response.educations, {parse: true, remove: false});
+
+            // set final education
+            if (response.educations.length)
+                response.finalEducation = _.max(response.educations, function(education) {
+                    return education.startDate ? moment(education.startDate).valueOf() : 0;
+                });
+
             delete response.educations;
 
             // populate employments collection
             this.employments.set(response.employments, {parse: true, remove: false});
+
+            // set current employment
+            if (response.employments.length)
+                response.currentEmployment = _.max(response.employments, function(employment) {
+                    return employment.startDate ? moment(employment.startDate).valueOf() : 0;
+                });
+
             delete response.employments;
 
             // populate friends collection
             this.friends.set(response.friends, {parse: true, remove: false});
+
+            // set friends number, for display in the profile of other person
+            response.friendsNum = response.friends.length;
+
             delete response.friends;
 
             // populate invited collection

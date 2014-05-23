@@ -83,6 +83,7 @@ img {
 
 .popover {
 
+  // let popover higher than modal
   z-index: 1051;
 
   .popover-title {
@@ -100,6 +101,11 @@ img {
     // margin-top: -50px;
   }
 
+}
+
+.datepicker, .bootstrap-timepicker-widget {
+  // let datetime picker higher than modal
+  z-index: 1051 !important;
 }
 
 #sl-basic-info .sl-editable {
@@ -412,8 +418,8 @@ img {
 
 #modal-area {
   .avatar {
-    max-width: 100px;
-    max-height: 100px;
+    max-width: 75px;
+    max-height: 75px;
     margin-top: 8px;
     margin-bottom: 8px;
     margin-right: 12px;
@@ -433,6 +439,10 @@ img {
     // .modal-content, .modal-body, .post-content, .post-comment {
     //   height: 100%;
     //   max-height: 100%;
+
+    .widget-body .widget-toolbox {
+      background-color: transparent;
+    }
 
     .wysiwyg-editor {
       height: 500px;
