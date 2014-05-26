@@ -88,6 +88,22 @@
                     </p>
                 <% } %>
 
+                <!-- education -->
+                <% if (obj.finalEducation) { %>
+                    <p class="row">
+                        <span class="col-xs-1"><i class="ace-icon fa fa-graduation-cap"></i></span>
+                        <span class="col-xs-10"><%= obj.finalEducation.school %></span>
+                    </p>
+                <% } %>
+
+                <!-- email -->
+                <% if (obj.email) { %>
+                    <p class="row">
+                        <span class="col-xs-1"><i class="ace-icon fa fa-envelope"></i></span>
+                        <span class="col-xs-10"><%= obj.email %></span>
+                    </p>
+                <% } %>
+
                 <!-- tel no. -->
                 <% if (obj.telNo) { %>
                     <p class="row">
@@ -104,14 +120,6 @@
                     </p>
                 <% } %>
 
-                <!-- address -->
-                <% if (obj.address) { %>
-                    <p class="row">
-                        <span class="col-xs-1"><i class="ace-icon fa fa-map-marker"></i></span>
-                        <span class="col-xs-10"><%= obj.address %></span>
-                    </p>
-                <% } %>
-
             </div>
 
             <!-- friend list -->
@@ -121,59 +129,82 @@
 
             <div class="col-xs-12 space-12"></div>
 
+            <!-- self introduction -->
+            <% if (obj.bio) { %>
+            <div class="col-xs-12 more-info" style="display: none;">
+                <i class="fa fa-quote-left fa-3x pull-left"></i>
+                <%= obj.bio %>
+            </div>
+            <% } %>
+
+            <!-- user detail info -->
             <div class="col-xs-12 col-sm-6 more-info" style="display: none;">
 
-                <div class="padding-6">
-                    <!-- nearest Station -->
-                    <% if (obj.nearestSt) { %>
-                        <p class="row">
-                            <span class="col-xs-1"><i class="ace-icon fa fa-car"></i></span>
-                            <span class="col-xs-10"><%= obj.nearestSt %></span>
-                        </p>
-                    <% } %>
+                <div class="widget-box transparent">
 
-                    <!-- nationality -->
-                    <% if (obj.nationality) { %>
-                        <p class="row">
-                            <span class="col-xs-1"><i class="ace-icon fa fa-flag"></i></span>
-                            <span class="col-xs-10"><%= obj.nationality %></span>
-                        </p>
-                    <% } %>
+                    <div class="widget-header">
+                        <h4 class="lighter"><i class="ace-icon fa fa-list-alt"></i>&nbsp;&nbsp;基本情報</h4>
+                    </div>
 
-                    <!-- birth day -->
-                    <% if (obj.birthDay) { %>
-                        <p class="row">
-                            <span class="col-xs-1"><i class="ace-icon fa fa-calendar"></i></span>
-                            <span class="col-xs-10"><%= obj.birthDayDisplay %></span>
-                        </p>
-                    <% } %>
+                    <div class="widget-body">
 
-                    <!-- education -->
-                    <% if (obj.finalEducation) { %>
-                        <p class="row">
-                            <span class="col-xs-1"><i class="ace-icon fa fa-graduation-cap"></i></span>
-                            <span class="col-xs-10"><%= obj.finalEducation.school %></span>
-                        </p>
-                    <% } %>
+                        <div class="widget-main" style="padding: 16px 20px 0px 20px;">
 
-                    <!-- gender -->
-                    <% if (obj.gender) { %>
-                        <p class="row">
-                            <span class="col-xs-1"><i class="ace-icon fa fa-leaf"></i></span>
-                            <span class="col-xs-10"><%= obj.gender %></span>
-                        </p>
-                    <% } %>
+                            <!-- address -->
+                            <% if (obj.address) { %>
+                                <p class="row">
+                                    <span class="col-xs-1"><i class="ace-icon fa fa-map-marker"></i></span>
+                                    <span class="col-xs-10">住所：<%= obj.address %></span>
+                                </p>
+                            <% } %>
 
-                    <!-- marriage -->
-                    <% if (obj.marriage) { %>
-                        <p class="row">
-                            <span class="col-xs-1"><i class="ace-icon fa fa-heart"></i></span>
-                            <span class="col-xs-10"><%= obj.marriage %></span>
-                        </p>
-                    <% } %>
+                            <!-- nearest Station -->
+                            <% if (obj.nearestSt) { %>
+                                <p class="row">
+                                    <span class="col-xs-1"><i class="ace-icon fa fa-car"></i></span>
+                                    <span class="col-xs-10">最寄り駅：<%= obj.nearestSt %></span>
+                                </p>
+                            <% } %>
+
+                            <!-- birth day -->
+                            <% if (obj.birthDay) { %>
+                                <p class="row">
+                                    <span class="col-xs-1"><i class="ace-icon fa fa-calendar"></i></span>
+                                    <span class="col-xs-10">生年月日：<%= obj.birthDayDisplay %></span>
+                                </p>
+                            <% } %>
+
+                            <!-- nationality -->
+                            <% if (obj.nationality) { %>
+                                <p class="row">
+                                    <span class="col-xs-1"><i class="ace-icon fa fa-flag"></i></span>
+                                    <span class="col-xs-10">国籍：<%= obj.nationality %></span>
+                                </p>
+                            <% } %>
+
+                            <!-- gender -->
+                            <% if (obj.gender) { %>
+                                <p class="row">
+                                    <span class="col-xs-1"><i class="ace-icon fa fa-leaf"></i></span>
+                                    <span class="col-xs-10">性別：<%= obj.gender %></span>
+                                </p>
+                            <% } %>
+
+                            <!-- marriage -->
+                            <% if (obj.marriage) { %>
+                                <p class="row">
+                                    <span class="col-xs-1"><i class="ace-icon fa fa-heart"></i></span>
+                                    <span class="col-xs-10">婚姻状況：<%= obj.marriage %></span>
+                                </p>
+                            <% } %>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                <div id="languages"></div>
+                <div id="languages-display"></div>
                 <div id="skills"></div>
             </div>
 

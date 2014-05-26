@@ -47,7 +47,7 @@ exports.index = function(req, res, next) {
     User.find()
         .where('_id')
         .in(friendIdList)
-        .select('type firstName lastName title photo createDate')
+        .select('type firstName lastName title cover photo createDate')
         .exec(function(err, friends) {
             if (err) next(err);
             else res.json(friends);
@@ -98,7 +98,7 @@ exports.create = function(req, res, next) {
                     });
 
                     // send friend-invitation mail
-                    User.findById(req.body._id, 'type firstName lastName title photo email createDate', function(err, target){
+                    User.findById(req.body._id, 'type firstName lastName title cover photo email createDate', function(err, target){
                         if (err) next(err);
                         else {
 

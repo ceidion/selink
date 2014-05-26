@@ -46,7 +46,7 @@ exports.login = function(req, res, next) {
                 });
             });
 
-            // send success singnal
+            // send success signal
             res.json({});
         }
     });

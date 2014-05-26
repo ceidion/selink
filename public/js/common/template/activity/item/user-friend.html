@@ -22,8 +22,8 @@
 %>
 
 <div class="timeline-info">
-    <a href="#profile/<%= obj._owner._id %>" title="<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>">
-        <img alt="" src="<%= obj._owner.photo %>" />
+    <a href="#profile/<%= obj._owner._id %>">
+        <img src="<%= obj._owner.photo %>" />
     </a>
 </div>
 
@@ -40,16 +40,16 @@
     </div>
     <div class="widget-body">
         <div class="widget-main">
-            <a href="#profile/<%= obj._owner._id %>" title="<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>">
+            <a href="#profile/<%= obj._owner._id %>">
                 <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
             </a>
             は
-            <a href="#profile/<%= obj.target._id %>" title="<%= obj.target.firstName %>&nbsp;<%= obj.target.lastName %>">
+            <a href="#profile/<%= obj.target._id %>">
                 <strong><%= obj.target.firstName %>&nbsp;<%= obj.target.lastName %></strong>
             </a>
             <%= content %>
-            <a class="pull-right" href="#profile/<%= obj.target._id %>" title="<%= obj.target.firstName %>&nbsp;<%= obj.target.lastName %>">
-                <img src="<%= obj.target.photo %>" style="max-width: 72px;" />
+            <a class="pull-right" href="#profile/<%= obj.target._id %>">
+                <img src="<%= obj.target.photo %>" style="max-width: 50px;" />
             </a>
             <div class="clearfix"></div>
         </div>

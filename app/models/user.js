@@ -199,6 +199,11 @@ var User = new Schema({
         postCommented: {
             type: Boolean,
             default: true
+        },
+
+        commentReplied: {
+            type: Boolean,
+            default: true
         }
     },
 

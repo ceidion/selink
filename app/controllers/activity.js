@@ -33,7 +33,7 @@ exports.index = function(req, res, next) {
         .sort('-createDate')
         .skip(20*page)  // skip n page
         .limit(20)  // 20 user per page
-        .populate('_owner', '_id firstName lastName photo')
+        .populate('_owner', 'type firstName lastName title cover photo createDate')
         .exec(function(err, activities) {
             if (err) next(err);
             else res.json(activities);

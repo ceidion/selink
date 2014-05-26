@@ -24,7 +24,7 @@ exports.index = function(req, res, next) {
 
     query.where('_owner').equals(req.user.id)
         .where('logicDelete').equals(false)
-        .populate('_owner', 'type firstName lastName title photo createDate')
+        .populate('_owner', 'type firstName lastName title cover photo createDate')
         .skip(20*page)  // skip n page
         .limit(20)
         .sort('-createDate')
@@ -80,7 +80,7 @@ exports.create = function(req, res, next) {
                     // populate the respond notification with user's info
                     notification.populate({
                         path:'_from',
-                        select: 'type firstName lastName title photo createDate'
+                        select: 'type firstName lastName title cover photo createDate'
                     }, function(err, noty) {
                         if(err) next(err);
                         // send real time message
@@ -109,7 +109,7 @@ exports.create = function(req, res, next) {
                 });
 
             // send saved job back
-            job.populate('_owner', 'type firstName lastName title photo createDate', function(err, job) {
+            job.populate('_owner', 'type firstName lastName title cover photo createDate', function(err, job) {
 
                 if (err) next(err);
                 else {
@@ -147,7 +147,7 @@ exports.update = function(req, res, next) {
         else {
 
             // send saved job back
-            job.populate('_owner', 'type firstName lastName title photo createDate', function(err, job) {
+            job.populate('_owner', 'type firstName lastName title cover photo createDate', function(err, job) {
 
                 if (err) next(err);
                 else {
@@ -202,7 +202,7 @@ exports.news = function(req, res, next) {
     Job.find()
         .where('logicDelete').equals(false)
         .where('expiredDate').gt(new Date())
-        .populate('_owner', 'type firstName lastName title photo createDate')
+        .populate('_owner', 'type firstName lastName title cover photo createDate')
         .sort('-createDate')
         .exec(function(err, jobs) {
             if (err) next(err);
@@ -310,7 +310,7 @@ exports.match = function(req, res, next) {
 
                     if (obj.response.numFound > 0)
                         User.find()
-                            .select('type firstName lastName title photo createDate')
+                            .select('type firstName lastName title cover photo createDate')
                             .where('_id').in(_.pluck(obj.response.docs, 'id'))
                             .exec(function(err, users) {
                                 if (err) next(err);

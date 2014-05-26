@@ -88,6 +88,7 @@ exports.activate = function(req, res, next) {
                 secEmail: tempAccount.email,
                 type: tempAccount.type,
                 photo: './asset/images/no_photo_male.jpg',
+                cover: './asset/images/default_cover.jpg',
                 provider: 'local'
             }, function(err, user) {
 

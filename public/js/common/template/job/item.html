@@ -2,27 +2,51 @@
     var widgetColor = "";
 
     if (moment(obj.expiredDate).isBefore(moment()))
-        widgetColor = "header-color-grey";
+        widgetColor = "widget-color-grey";
 %>
 
-<div class="widget-box" data-create-date="<%= moment(obj.createDate).valueOf() %>">
+<div class="widget-box <%= widgetColor %>" data-create-date="<%= moment(obj.createDate).valueOf() %>">
 
-    <div class="widget-header widget-header-flat <%= widgetColor %>">
+    <!-- job header, expired jobs are grey -->
+    <div class="widget-header widget-header-flat">
 
+        <!-- job creator photo -->
         <a href="#profile/<%= obj._owner._id %>">
             <img class="avatar" src="<%= obj._owner.photo %>">
         </a>
 
+        <!-- if the job is mine -->
         <% if (obj.isMine) { %>
-        <div class="widget-toolbar no-border hidden">
-            <a class="yellow dropdown-toggle" data-toggle="dropdown">
-                <i class="ace-icon fa fa-chevron-down"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-yellow pull-right dropdown-caret dropdown-close">
-                <li><a href="#" class="btn-edit"><i class="ace-icon fa fa-pencil green bigger-110"></i>&nbsp;&nbsp;編集</a></li>
-                <li><a href="#" class="btn-remove"><i class="ace-icon fa fa-trash-o red bigger-110"></i>&nbsp;&nbsp;削除</a></li>
-            </ul>
-        </div>
+
+            <!-- operation menu -->
+            <div class="widget-toolbar no-border hidden">
+
+                <!-- menu toggler -->
+                <a class="yellow dropdown-toggle" data-toggle="dropdown">
+                    <i class="ace-icon fa fa-chevron-down"></i>
+                </a>
+
+                <!-- menu -->
+                <ul class="dropdown-menu dropdown-yellow pull-right dropdown-caret dropdown-close">
+
+                    <!-- edit button -->
+                    <li>
+                        <a href="#" class="btn-edit">
+                            <i class="ace-icon fa fa-pencil green bigger-110"></i>&nbsp;&nbsp;編集
+                        </a>
+                    </li>
+
+                    <!-- remove button -->
+                    <li>
+                        <a href="#" class="btn-remove">
+                            <i class="ace-icon fa fa-trash-o red bigger-110"></i>&nbsp;&nbsp;削除
+                        </a>
+                    </li>
+
+                </ul>
+
+            </div>
+
         <% } %>
 
         <!-- job name -->
@@ -31,32 +55,38 @@
             <span class="name-value"><%= obj.name %></span>
         </h5>
 
-        <h5>
-            <i class="ace-icon fa fa-edit"></i>&nbsp;<%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
-        </h5>
+        <!-- job creator name -->
+        <h6>
+            <i class="ace-icon fa fa-edit"></i>&nbsp;
+            <%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
+        </h6>
 
-        <h5>
-            <i class="ace-icon fa fa-clock-o"></i>&nbsp;<%= moment(obj.createDate).calendar() %>
-        </h5>
+        <!-- job create time -->
+        <h6>
+            <i class="ace-icon fa fa-clock-o"></i>&nbsp;
+            <%= moment(obj.createDate).calendar() %>
+        </h6>
 
         <div class="clearfix"></div>
     </div>
 
+    <!-- job body -->
     <div class="widget-body">
 
         <div class="widget-main">
 
+            <!-- if this job is mine -->
             <% if (obj.isMine) { %>
-            <div class="alert alert-danger clearfix" style="display: none;">
-                <strong><i class="ace-icon fa fa-warning bigger-125"></i></strong>&nbsp;
-                この案件を削除します、よろしいですか？
-                <br />
-                <br />
-                <p class="pull-right">
-                    <button class="btn btn-sm btn-warning btn-remove-cancel">取消</button>
-                    <button class="btn btn-sm btn-danger btn-remove-comfirm">削除</button>
-                </p>
-            </div>
+                <!-- remove confirm dialog -->
+                <div class="alert alert-danger clearfix" style="display: none;">
+                    <i class="ace-icon fa fa-warning"></i>&nbsp;
+                    <strong>この案件を削除します、よろしいですか？</strong>
+                    <div class="space-10"></div>
+                    <p class="pull-right">
+                        <button class="btn btn-sm btn-warning btn-remove-cancel">取消</button>
+                        <button class="btn btn-sm btn-danger btn-remove-confirm">削除</button>
+                    </p>
+                </div>
             <% } %>
 
             <!-- address -->
@@ -102,19 +132,14 @@
                 外国籍不可
             </span>
 
+            <!-- action buttons -->
             <div class="pull-right">
 
-                <% if (obj.isMarked) { %>
-                    <div class="inline btn-bookmark orange tooltip-warning">
-                        <i class="ace-icon fa fa-star bigger-110"></i>
-                        <span><%= obj.bookmarked.length %></span>
-                    </div>
-                <% } else { %>
-                    <div class="inline btn-bookmark orange tooltip-warning">
-                        <i class="ace-icon fa fa-star-o bigger-110"></i>
-                        <span><%= obj.bookmarked.length %></span>
-                    </div>
-                <% } %>
+                <!-- bookmark button -->
+                <div class="inline orange tooltip-warning <% if (!obj.isMarked) print("btn-bookmark"); %>">
+                    <i class="ace-icon fa <% if (obj.isMarked) print("fa-star"); else print("fa-star-o"); %> bigger-110"></i>
+                    <span><%= obj.bookmarked.length %></span>
+                </div>
 
             </div>
 
@@ -132,14 +157,18 @@
             <% } %>
             <div class="skill"></div>
 
+        </div>
+
+        <!-- if this job is mine -->
+        <% if (obj.isMine) { %>
+            <!-- matching result -->
+            <div class="widget-toolbox padding-8 clearfix matching">
+
+            </div>
             <button class="btn btn-success btn-block btn-match" data-loading-text="<i class='icon-spinner icon-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
                 <i class="ace-icon fa fa-random"></i>&nbsp;マッチング
             </button>
-        </div>
-
-        <div class="widget-toolbox padding-8 clearfix matching">
-
-        </div>
+        <% } %>
 
     </div>
 

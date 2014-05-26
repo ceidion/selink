@@ -44,8 +44,7 @@ img{max-width:100%}
 #employments .row{margin-top:5px}#employments .row:first-child{margin-top:0px}
 .person-info{color:#667e99 !important}
 .photo-item{margin:5px}.photo-item .tags{position:absolute;background-color:transparent;border:0;bottom:0;right:0;left:0;overflow:visible;direction:rtl;margin:0;padding:0}.photo-item .tags>.label-holder{opacity:.92;filter:alpha(opacity=92);display:table;margin:1px 0 0 0;direction:ltr;text-align:left}.photo-item .tags>.label-holder:hover{opacity:1;filter:alpha(opacity=100)}
-.match-item{position:relative;float:left;margin:5px}.match-item img{max-height:50px}
-.match-item .tags{position:absolute;background-color:transparent;border:0;bottom:0;right:0;left:0;overflow:visible;direction:rtl;margin:0;padding:0}.match-item .tags>.label-holder{opacity:.92;filter:alpha(opacity=92);display:table;margin:1px 0 0 0;direction:ltr;text-align:left}.match-item .tags>.label-holder:hover{opacity:1;filter:alpha(opacity=100)}
+.match-item{padding:4px}
 .itemdiv .body .action{position:absolute;bottom:5px;right:8px}.itemdiv .body .action>.blink{display:none;margin-right:3px}
 .itemdiv .body .action>i{cursor:pointer}
 .itemdiv .body:hover .action>.blink{display:inline}

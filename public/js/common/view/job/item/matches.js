@@ -13,6 +13,8 @@ define([
         // template
         template: template,
 
+        className: 'row no-margin',
+
         // item view container
         itemViewContainer: '.match-result',
 

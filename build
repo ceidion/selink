@@ -21,3 +21,4 @@ note:
 7. the "public\js\lib\ace-element.js" was fully customized, don't update this file
 8. selink need GraphicMagik for picture process
 9. selink need solr for matching and search
+10. all the email template must be convert by "http://templates.mailchimp.com/resources/inline-css/", and notice that the angle bracket will be escaped.

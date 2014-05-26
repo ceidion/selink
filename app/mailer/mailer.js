@@ -79,11 +79,11 @@ exports.friendInvitation = function(recipient) {
             console.log(err);
         } else {
 
-            // send account active email
             template('friend-invitation', recipient, function(err, html, text) {
                 if (err) {
                     console.log(err);
                 } else {
+
                     transport.sendMail({
                         from: 'SELink <noreply@selink.jp>',
                         to: recipient.email,

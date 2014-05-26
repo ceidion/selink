@@ -27,7 +27,6 @@ define([
         // ui
         ui: {
             avatar: '.avatar',
-            avatarLink: '.avatar-link',
 
             menuToggler: '.widget-header .widget-toolbar',
             removeBtn: '.btn-remove',
@@ -53,16 +52,19 @@ define([
         events: {
             'mouseover': 'toggleMenuIndicator',
             'mouseout': 'toggleMenuIndicator',
+
             'click @ui.avatar': 'toProfile',
-            'click @ui.avatarLink': 'toProfile',
+
             'click @ui.removeBtn': 'showAlert',
             'click @ui.forbidBtn': 'toggleForbid',
             'click @ui.cancelBtn': 'hideAlert',
             'click @ui.confirmBtn': 'onRemove',
             'click @ui.detailBtn': 'showDetail',
+
             'click @ui.likeBtn': 'onLike',
             'click @ui.bookmarkBtn': 'onBookmark',
             'click @ui.showAllBtn': 'showAllComment',
+
             'focusin @ui.commentInput': 'openComment',
             'keyup @ui.commentInput': 'checkComment',
             'click @ui.commentConfirmBtn': 'onComment',
@@ -104,8 +106,7 @@ define([
         // after render
         onRender: function() {
 
-            var self = this;
-
+            // add popover on author photo
             this.ui.avatar.popover({
                 html: true,
                 trigger: 'hover',

@@ -14,7 +14,7 @@ exports.index = function(req, res, next) {
 
     if (category == 'sent')
         query.where('_from').equals(req.user.id)
-             .populate('_recipient', 'type firstName lastName title photo createDate');
+             .populate('_recipient', 'type firstName lastName title cover photo createDate');
 
     else if (category == 'unread')
         query.where('_recipient').equals(req.user.id)
@@ -24,7 +24,7 @@ exports.index = function(req, res, next) {
         query.where('_recipient').equals(req.user.id);
 
     query.where('logicDelete').ne(req.user.id)
-        .populate('_from', 'type firstName lastName title photo createDate')
+        .populate('_from', 'type firstName lastName title cover photo createDate')
         .skip(20*page)  // skip n page
         .limit(20)
         .sort('-createDate')
@@ -53,7 +53,7 @@ exports.create = function(req, res, next) {
             });
 
             // populate the message with user's info
-            message.populate({path:'_from', select: 'type firstName lastName title photo createDate'}, function(err, msg) {
+            message.populate({path:'_from', select: 'type firstName lastName title cover photo createDate'}, function(err, msg) {
 
                 if(err) next(err);
                 // send real time message
@@ -109,7 +109,7 @@ exports.update = function(req, res, next) {
                     if (err) next(err);
                     else {
 
-                        newMessage.populate({path:'_from', select: 'type firstName lastName title photo createDate'}, function(err, msg) {
+                        newMessage.populate({path:'_from', select: 'type firstName lastName title cover photo createDate'}, function(err, msg) {
 
                             if (err) next(err);
                             else res.json(msg);

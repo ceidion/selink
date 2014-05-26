@@ -1,5 +1,6 @@
 define([
     'text!common/template/job/item.html',
+    'text!common/template/people/popover.html',
     'common/collection/base',
     'common/view/job/collection/languages',
     'common/view/job/collection/skills',
@@ -9,6 +10,7 @@ define([
     'common/view/job/edit'
 ], function(
     template,
+    popoverTemplate,
     BaseCollection,
     Languages,
     Skills,
@@ -26,15 +28,35 @@ define([
         // className
         className: 'isotope-item col-xs-12 col-sm-6 col-lg-4',
 
+        // ui
+        ui: {
+            avatar: '.avatar',
+
+            menuToggler: '.widget-header .widget-toolbar',
+            editBtn: '.btn-edit',
+            removeBtn: '.btn-remove',
+
+            alert: '.alert',
+            cancelBtn: '.btn-remove-cancel',
+            confirmBtn: '.btn-remove-confirm',
+
+            bookmarkBtn: '.btn-bookmark'
+        },
+
         // event
         events: {
-            'click .btn-edit': 'editJob',
-            'click .btn-remove': 'showAlert',
-            'click .btn-remove-cancel': 'hideAlert',
-            'click .btn-remove-comfirm': 'onRemove',
             'mouseover': 'toggleMenuIndicator',
             'mouseout': 'toggleMenuIndicator',
-            'click .btn-bookmark': 'onBookmark',
+
+            'click @ui.avatar': 'toProfile',
+
+            'click @ui.editBtn': 'editJob',
+            'click @ui.removeBtn': 'showAlert',
+            'click @ui.cancelBtn': 'hideAlert',
+            'click @ui.confirmBtn': 'onRemove',
+
+            'click @ui.bookmarkBtn': 'onBookmark',
+
             'click .btn-match': 'onMatch',
         },
 
@@ -81,7 +103,18 @@ define([
         // after render
         onRender: function() {
 
-            this.$el.find('.btn-bookmark').tooltip({
+            // add popover on job creator photo
+            this.ui.avatar.popover({
+                html: true,
+                trigger: 'hover',
+                container: 'body',
+                placement: 'auto right',
+                title: '<img src="' + this.model.get('_owner').cover + '" />',
+                content: _.template(popoverTemplate, this.model.get('_owner')),
+            });
+
+            // add tooltip on bookmark button
+            this.ui.bookmarkBtn.tooltip({
                 placement: 'top',
                 title: "お気に入り"
             });
@@ -95,6 +128,23 @@ define([
             this.skillArea.show(this.skillsView);
 
             this.onMatch();
+        },
+
+        // show operation menu indicator
+        toggleMenuIndicator: function() {
+            this.ui.menuToggler.toggleClass('hidden');
+        },
+
+        // turn to user profile page
+        toProfile: function(e) {
+
+            // stop defautl link behavior
+            e.preventDefault();
+
+            // destroy the popover on user's photo
+            this.ui.avatar.popover('destroy');
+            // turn the page manually
+            window.location = '#profile/' + this.model.get('_owner')._id;
         },
 
         // edit job
@@ -122,8 +172,7 @@ define([
             var self = this;
 
             // show alert
-            this.$el.find('.alert')
-                .slideDown('fast', function() {
+            this.ui.alert.slideDown('fast', function() {
                     self.trigger("shiftColumn");
                 })
                 .find('i')
@@ -135,7 +184,7 @@ define([
 
             var self = this;
 
-            this.$el.find('.alert').slideUp('fast', function() {
+            this.ui.alert.slideUp('fast', function() {
                 self.trigger("shiftColumn");
             });
         },
@@ -143,11 +192,6 @@ define([
         // remove job
         onRemove: function() {
             this.trigger('remove');
-        },
-
-        // show operation menu indicator
-        toggleMenuIndicator: function() {
-            this.$el.find('.widget-header .widget-toolbar').toggleClass('hidden');
         },
 
         // Bookmark this posts
@@ -186,37 +230,41 @@ define([
             });
         },
 
+        // rerender bookmark icon
         renderBookmark: function() {
 
             // update the bookmark number
-            this.$el.find('.btn-bookmark')
+            this.ui.bookmarkBtn
                 .find('span')
                 .empty()
                 .text(this.model.get('bookmarked').length);
             // flip the icon and mark this post as bookmark
-            this.$el.find('.btn-bookmark')
+            this.ui.bookmarkBtn
                 .find('i')
                 .removeClass('fa-star-o')
                 .addClass('fa-star')
                 .slFlip();
             // remove bookmark button, can't bookmark it twice
-            this.$el.find('.btn-bookmark').removeClass('btn-bookmark');
+            this.ui.bookmarkBtn.removeClass('btn-bookmark');
         },
 
+        // rerender job name
         renderName: function(model, value, options) {
             this.$el.find('.name-value').empty().text(value);
         },
 
+        // rerender expired date
         renderExpired: function(model, value, options) {
             this.$el.find('.expired-value').empty().text(moment(value).calendar());
 
+            // make the wedget header grep if this job is expired
             if (moment(value).isBefore(moment()))
                 this.$el.find('.widget-header').addClass('header-color-grey');
             else
                 this.$el.find('.widget-header').removeClass('header-color-grey');
-
         },
 
+        // rerender work duration
         renderDuration: function(model, value, options) {
 
             var $duration = this.$el.find('.duration-value'),
@@ -238,6 +286,7 @@ define([
                 $duration.empty().text(value).parent().removeClass('hide');
         },
 
+        // rerender price
         renderPrice: function(model, value, options) {
 
             var $price = this.$el.find('.price-value'),
@@ -259,6 +308,7 @@ define([
                 $price.empty().text(value).parent().removeClass('hide');
         },
 
+        // rerender work place
         renderAddress: function(model, value, options) {
 
             var $address = this.$el.find('.address-value');
@@ -269,10 +319,12 @@ define([
                 $address.empty().text(value).parent().removeClass('hide');
         },
 
+        // rerender job introduction
         renderRemark: function(model, value, options) {
             this.$el.find('.remark-value').empty().html(value);
         },
 
+        // rerender foreigner allowed flag
         renderForeigner: function(model, value, options) {
 
             var $foreigner = this.$el.find('.foreigner-value');
@@ -283,6 +335,7 @@ define([
                 $foreigner.removeClass('hide');
         },
 
+        // rerender recruit number
         renderRecruit: function(model, value, options) {
 
             var $recruit = this.$el.find('.recruit-value');
@@ -293,6 +346,7 @@ define([
                 $recruit.empty().text('募集' + value + '人').removeClass('hide');
         },
 
+        // rerender interview number
         renderInterview: function(model, value, options) {
 
             var $interview = this.$el.find('.interview-value');
@@ -303,6 +357,7 @@ define([
                 $interview.empty().text('面接' + value + '回').removeClass('hide');
         },
 
+        // rerender language requirement
         renderLanguages: function(model, value, options) {
 
             // create language area
@@ -314,6 +369,7 @@ define([
             this.languageArea.show(this.languagesView);
         },
 
+        // rerender skill requirement
         renderSkills: function(model, value, options) {
 
             // create skill area

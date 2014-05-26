@@ -106,7 +106,7 @@ define([
             this.regions = this.rm.addRegions({
                 // historyRegion: '#history',
                 friendsRegion: '#friends',
-                languagesRegion: '#languages',
+                languagesRegion: '#languages-display',
                 skillsRegion: '#skills',
                 qualificationsRegion: '#qualifications',
                 educationsRegion: '#educations',

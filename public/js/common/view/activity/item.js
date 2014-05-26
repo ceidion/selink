@@ -5,6 +5,7 @@ define([
     'text!common/template/activity/item/user-friend.html',
     'text!common/template/activity/item/user-job.html',
     'text!common/template/activity/item/default.html',
+    'text!common/template/people/popover.html',
     'common/model/base'
 ], function(
     userActivatedTemplate,
@@ -13,6 +14,7 @@ define([
     userFriendInvitedTemplate,
     userJobTemplate,
     defaultTemplate,
+    popoverTemplate,
     BaseModel
 ) {
 
@@ -84,6 +86,20 @@ define([
                     }
                 });
             }
+        },
+
+        // after render
+        onRender: function() {
+
+            // add popover on photo
+            this.$el.find('.timeline-info img').popover({
+                html: true,
+                trigger: 'hover',
+                container: 'body',
+                placement: 'auto right',
+                title: '<img src="' + this.model.get('_owner').cover + '" />',
+                content: _.template(popoverTemplate, this.model.get('_owner')),
+            });
         }
 
     });
