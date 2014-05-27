@@ -120,27 +120,24 @@ exports.activate = function(req, res, next) {
                         if (err) next(err);
                     });
 
+                    // index user in solr
+                    solr.add(user.toSolr(), function(err, solrResult) {
+                        if (err) next(err);
+                        else {
+                            console.log(solrResult);
+                            solr.commit(function(err,res){
+                               if(err) console.log(err);
+                               if(res) console.log(res);
+                            });
+                        }
+                    });
+
                     // redirect to home page
                     res.redirect('/');
                 }
             });
-
-            // make a temporary share ID
-            // var shareId = tempAccount.firstName.toLowerCase() + '.' + tempAccount.lastName.toLowerCase();
-
-            // count the number of resume using this share ID
-            // Resume.count({
-            //     shareId: new RegExp('^' + shareId, 'i')
-            // }, function(err, count){
-
-            //     if(err) next(err);
-
-            //     // if exists, alter the share ID
-            //     if (count !== 0)
-            //         shareId += '.' + count;
-
-            // });
         }
+
     });
 
 };

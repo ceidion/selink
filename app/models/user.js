@@ -243,6 +243,29 @@ User.methods.toSolr = function() {
         };
     });
 
+    var educations = _.map(this.educations, function(education) {
+        return {
+            id: education._id,
+            school: education.school,
+            major: education.major
+        };
+    });
+
+    var employments = _.map(this.employments, function(employment) {
+        return {
+            id: employment._id,
+            company: employment.company,
+            position: employment.position
+        };
+    });
+
+    var qualifications = _.map(this.qualifications, function(qualification) {
+        return {
+            id: qualification._id,
+            qualification: qualification.name
+        };
+    });
+
     return {
         type: 'user',
         id: this.id,
@@ -257,7 +280,7 @@ User.methods.toSolr = function() {
         webSite: this.webSite,
         address: this.address,
         nearestSt: this.nearestSt,
-        _childDocuments_: _.union(languages, skills),
+        _childDocuments_: _.union(languages, skills, educations, employments, qualifications),
         // educations: this.educations,
         // employments: this.employments,
         // qualifications: this.qualifications,

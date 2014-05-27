@@ -104,8 +104,24 @@ exports.update = function(req, res, next) {
 
     // update user info
     User.findByIdAndUpdate(req.params.id, req.body, function(err, updatedUser) {
+
         if (err) next(err);
-        else res.send(updatedUser);
+        else {
+
+            // index user in solr
+            solr.add(updatedUser.toSolr(), function(err, solrResult) {
+                if (err) next(err);
+                else {
+                    console.log(solrResult);
+                    solr.commit(function(err,res){
+                       if(err) console.log(err);
+                       if(res) console.log(res);
+                    });
+                }
+            });
+
+            res.send(updatedUser);
+        }
     });
 };
 
@@ -225,7 +241,22 @@ exports.createSubDocument = function(req, res, next) {
 
             user.save(function(err, updatedUser) {
                 if (err) next(err);
-                else res.send(updatedUser[req.params.sub][length - 1]);
+                else {
+
+                    // index user in solr
+                    solr.add(updatedUser.toSolr(), function(err, solrResult) {
+                        if (err) next(err);
+                        else {
+                            console.log(solrResult);
+                            solr.commit(function(err,res){
+                               if(err) console.log(err);
+                               if(res) console.log(res);
+                            });
+                        }
+                    });
+
+                    res.send(updatedUser[req.params.sub][length - 1]);
+                }
             });
         }
     });
@@ -248,7 +279,23 @@ exports.updateSubDocument = function(req, res, next) {
 
                 user.save(function(err, updatedUser) {
                     if (err) next(err);
-                    else res.send(subDoc);
+                    else {
+
+                        // index user in solr
+                        solr.add(updatedUser.toSolr(), function(err, solrResult) {
+                            if (err) next(err);
+                            else {
+                                console.log(solrResult);
+                                solr.commit(function(err,res){
+                                   if(err) console.log(err);
+                                   if(res) console.log(res);
+                                });
+                            }
+                        });
+
+                        res.send(subDoc);
+                    }
+
                 });
             } else {
                 res.json(404, {});
@@ -273,7 +320,22 @@ exports.removeSubDocument = function(req, res, next) {
 
                 user.save(function(err, updatedUser) {
                     if (err) next(err);
-                    else res.send(removedDoc);
+                    else {
+
+                        // index user in solr
+                        solr.add(updatedUser.toSolr(), function(err, solrResult) {
+                            if (err) next(err);
+                            else {
+                                console.log(solrResult);
+                                solr.commit(function(err,res){
+                                   if(err) console.log(err);
+                                   if(res) console.log(res);
+                                });
+                            }
+                        });
+
+                        res.send(removedDoc);
+                    }
                 });
             } else {
                 res.json(404, {});

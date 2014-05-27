@@ -16,12 +16,6 @@ exports.index = function(req, res, next) {
 
     var query = Job.find();
 
-    // // if requested for 'my' jobs
-    // if (req.params.user == req.user.id) {
-    //     // not populate owner, cause client have
-    //     query.where('_owner').equals(req.user.id);
-    // }
-
     query.where('_owner').equals(req.user.id)
         .where('logicDelete').equals(false)
         .populate('_owner', 'type firstName lastName title cover photo createDate')
