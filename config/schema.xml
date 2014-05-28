@@ -198,6 +198,12 @@
    <field name="nearestSt" type="text_ja" indexed="true" stored="true" termVectors="true"/>
    <field name="bio" type="text_ja" indexed="true" stored="true" termVectors="true"/>
 
+   <field name="school" type="text_ja" indexed="true" stored="true" termVectors="true"/>
+   <field name="major" type="text_ja" indexed="true" stored="true" termVectors="true"/>
+   <field name="company" type="text_ja" indexed="true" stored="true" termVectors="true"/>
+   <field name="position" type="text_ja" indexed="true" stored="true" termVectors="true"/>
+   <field name="qualification" type="text_ja" indexed="true" stored="true" termVectors="true"/>
+
    <!-- post, message, announcement, tags -->
    <field name="subject" type="text_ja" indexed="true" stored="true" termVectors="true"/>
    <field name="content" type="text_ja" indexed="true" stored="true" termVectors="true"/>

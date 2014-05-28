@@ -49,13 +49,17 @@ define([
 
         className: 'timeline-item clearfix',
 
+        events: {
+            'click .timeline-info img': 'toProfile',
+        },
+
         // initializer
         initialize: function() {
 
             var self = this,
                 type = this.model.get('type'),
                 target = new BaseModel();
-            
+
             // TODO: maybe these are should be done on server side
             if ( _.indexOf(this.userTargetActivity, type) >= 0 ) {
 
@@ -100,7 +104,20 @@ define([
                 title: '<img src="' + this.model.get('_owner').cover + '" />',
                 content: _.template(popoverTemplate, this.model.get('_owner')),
             });
-        }
+        },
+
+        // turn to user profile page
+        toProfile: function(e) {
+
+            // stop defautl link behavior
+            e.preventDefault();
+
+            // destroy the popover on user's photo
+            this.$el.find('.timeline-info img').popover('destroy');
+            // turn the page manually
+            window.location = '#profile/' + this.model.get('_owner')._id;
+        },
+
 
     });
 });
