@@ -140,6 +140,7 @@
             <!-- user detail info -->
             <div class="col-xs-12 col-sm-6 more-info" style="display: none;">
 
+                <% if (obj.address || obj.nearestSt || obj.birthDay || obj.nationality || obj.gender || obj.marriage) { %>
                 <div class="widget-box transparent">
 
                     <div class="widget-header">
@@ -203,6 +204,7 @@
                     </div>
 
                 </div>
+                <% } %>
 
                 <div id="languages-display"></div>
                 <div id="skills"></div>
