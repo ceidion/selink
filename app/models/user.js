@@ -225,7 +225,7 @@ var User = new Schema({
     }
 });
 
-User.methods.toSolr = function() {
+User.methods.toSolrOld = function() {
 
     var languages = _.map(this.languages, function(language) {
         return {
@@ -284,6 +284,54 @@ User.methods.toSolr = function() {
         // educations: this.educations,
         // employments: this.employments,
         // qualifications: this.qualifications,
+        bio: _s.stripTags(this.bio),
+        logicDelete: this.logicDelete
+    };
+};
+
+User.methods.toSolr = function() {
+
+    var languages = _.map(this.languages, function(language) {
+        var payload = language.weight/10;
+        return language.language + "|" + payload;
+    });
+
+    var skills = _.map(this.skills, function(skill) {
+        var payload = skill.weight/10;
+        return skill.skill + "|" + payload;
+    });
+
+    var educations = _.map(this.educations, function(education) {
+        return education.school + " " + education.major;
+    });
+
+    var employments = _.map(this.employments, function(employment) {
+        return employment.company + " " + employment.position;
+    });
+
+    var qualifications = _.map(this.qualifications, function(qualification) {
+        return qualification.name;
+    });
+
+    return {
+        type: 'user',
+        id: this.id,
+        name: this.firstName + ' ' + this.lastName,
+        email: this.email,
+        title: this.title,
+        birthDay: this.birthDay,
+        gender: this.gender,
+        nationality: this.nationality,
+        marriage: this.marriage,
+        telNo: this.telNo,
+        webSite: this.webSite,
+        address: this.address,
+        nearestSt: this.nearestSt,
+        language: languages,
+        skill: skills,
+        education: educations,
+        employment: employments,
+        qualification: qualifications,
         bio: _s.stripTags(this.bio),
         logicDelete: this.logicDelete
     };

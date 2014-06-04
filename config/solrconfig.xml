@@ -1821,9 +1821,9 @@
        by SearchHandler) or in LocalParams
     -->
   <!-- example of registering a query parser -->
-  <!--
-     <queryParser name="myparser" class="com.mycompany.MyQParserPlugin"/>
-    -->
+
+     <queryParser name="payloadqueryparser" class="jp.selink.plugin.PayloadQParserPlugin" />
+
 
   <!-- Function Parsers
 

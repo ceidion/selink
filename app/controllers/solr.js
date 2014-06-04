@@ -28,7 +28,7 @@ exports.user = function(req, res, next) {
             res.json({
                 title: 'Success',
                 text: 'User index successed.'
-            })
+            });
         }
     });
 };
@@ -55,7 +55,7 @@ exports.job = function(req, res, next) {
             res.json({
                 title: 'Success',
                 text: 'Job index successed.'
-            })
+            });
         }
     });
 };
@@ -82,7 +82,7 @@ exports.post = function(req, res, next) {
             res.json({
                 title: 'Success',
                 text: 'Post index successed.'
-            })
+            });
         }
     });
 };
@@ -109,7 +109,7 @@ exports.message = function(req, res, next) {
             res.json({
                 title: 'Success',
                 text: 'Message index successed.'
-            })
+            });
         }
     });
 };
@@ -136,7 +136,7 @@ exports.announcement = function(req, res, next) {
             res.json({
                 title: 'Success',
                 text: 'Announcement index successed.'
-            })
+            });
         }
     });
 };
@@ -163,7 +163,7 @@ exports.tag = function(req, res, next) {
             res.json({
                 title: 'Success',
                 text: 'Tag index successed.'
-            })
+            });
         }
     });
 };

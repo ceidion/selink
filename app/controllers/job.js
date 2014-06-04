@@ -271,25 +271,24 @@ exports.match = function(req, res, next) {
     Job.findById(req.params.job, function(err, job) {
 
         if (err) next(err);
+        else if (job.languages.length === 0 && job.skills.length === 0) res.json([]);
         else {
 
+            var languages = _.map(job.languages, function(language) {
+                return language.language;
+            });
+
+            var skills = _.map(job.skills, function(skill) {
+                return skill.skill;
+            });
+
             var solrQuery = solr.createQuery()
-                                .q('*:*')
-                                // .edismax()
-                                // .pf({language: 1, skill: 1})
-                                // .matchFilter('type', 'user')
+                                .defType('payloadqueryparser')
+                                .q(_.union(languages, skills).join(" +"))
                                 .fl('id,score')
-                                .fq('type:user');
-
-            _.map(job.languages, function(language) {
-                var bottom = Number(language.weight) - 20;
-                solrQuery.fq("{!parent which='type:user'}language:" + language.language + " AND weight:[" + bottom +" TO *]");
-            });
-
-            _.map(job.skills, function(skill) {
-                var bottom = Number(skill.weight) - 20;
-                solrQuery.fq("{!parent which='type:user'}skill:" + skill.skill + " AND weight:[" + bottom + " TO *]");
-            });
+                                .fq('type:user AND -id:' + job._owner)
+                                .qf({language: 1, skill: 1})
+                                .plf('language,skill');
 
             console.log(solrQuery.build());
 
@@ -308,7 +307,22 @@ exports.match = function(req, res, next) {
                             .where('_id').in(_.pluck(obj.response.docs, 'id'))
                             .exec(function(err, users) {
                                 if (err) next(err);
-                                else res.json(users);
+                                else {
+
+                                    // NOTE: this sucks, the 'in' query in mongodb messed up the socre order
+                                    var result = [];
+
+                                    users.forEach(function(user) {
+                                        var userObj = user.toObject();
+                                        // paste socre in result list, let client sort the result
+                                        // TODO: return the numFound
+                                        // use user.id in findWhere because it's string, userObj._id don't work
+                                        userObj.score = _.findWhere(obj.response.docs, {id: user.id}).score;
+                                        result.push(userObj);
+                                    });
+
+                                    res.json(result);
+                                }
                             });
                     else res.json([]);
                 }

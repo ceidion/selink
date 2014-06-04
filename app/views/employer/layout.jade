@@ -21,6 +21,12 @@ html(lang="ja", xmlns="http://www.w3.org/1999/xhtml")
 
       //- content
       .main-content
+        .breadcrumbs.breadcrumbs-fixed
+          .nav-search.minimized
+            form.form-search
+              span.input-icon
+                input.nav-search-input(type="text", autocomplete="off", placeholder="検索")
+                i.ace-icon.fa.fa-search.nav-search-icon
         .page-content
           #ace-settings-container.ace-settings-container
             #ace-settings-btn.ace-settings-btn.btn.btn-app.btn-xs.btn-success

@@ -217,6 +217,11 @@ define([
                 dataType: 'json',
                 success: function(data) {
 
+                    // sort matching result by score desc
+                    data = _.sortBy(data, function(d){
+                        return -d.score;
+                    });
+
                     // create match view
                     self.matchesView = new MatchesView({
                         collection: new BaseCollection(data)
