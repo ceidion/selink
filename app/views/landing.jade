@@ -23,10 +23,12 @@ html(lang="en", xmlns="http://www.w3.org/1999/xhtml")
         a.navbar-brand(href="#")
           small SELink
       #sign-in-area
-    .container
-      div(data-scroll-index="0", style="height: 1200px; width: 100%;")
-        #sign-up-area.pull-right
-      div(data-scroll-index="1", style="height: 1200px; width: 100%;")
-      div(data-scroll-index="2", style="height: 1200px; width: 100%;")
+    .main-container
+      .main-content
+        .page-content
+          div(data-scroll-index="0", style="height: 1200px; width: 100%;")
+            #sign-up-area.pull-right
+          div(data-scroll-index="1", style="height: 1200px; width: 100%;")
+          div(data-scroll-index="2", style="height: 1200px; width: 100%;")
     //- modal
     #modal-area.modal.fade(tabindex="-1")
