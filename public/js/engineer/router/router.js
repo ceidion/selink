@@ -4,6 +4,7 @@ define([], function() {
 
         appRoutes: {
             "home": "showHomeView",
+            "search/:term": "showSearchView",
             "profile": "showProfileView",
             "profile/:id": "showProfileView",
             "post": "showPostView",
@@ -13,8 +14,6 @@ define([], function() {
             "calendar": "showCalendarView",
             "notification": "showNotificationView",
             "activity": "showActivityView",
-            // "timecard": "showTimecardView",
-            // "timecard/:date": "showTimecardView",
             "mailbox": "showMailBoxView",
         }
     });

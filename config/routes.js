@@ -44,6 +44,9 @@ module.exports = function(app, sio) {
         res.render('./' + req.user.type + '/index', req.user);
     });
 
+    // Search
+    app.get('/search', checkLoginStatus, user.search);
+
     // Get news
     app.get('/newsfeed', checkLoginStatus, user.newsfeed);
 

@@ -193,8 +193,17 @@ exports.like = function(req, res, next){
                         });
                     }
 
-                    // return the saved post
-                    res.json(newPost.comments.id(req.params.comment));
+                    // populate the comment owner
+                    // cause if user reply this comment just after liked it, the owner info is needed.
+                    // post don't have this problem (?)
+                    User.populate(newPost.comments.id(req.params.comment), {
+                        path: '_owner',
+                        select: 'type firstName lastName title cover photo createDate'
+                    }, function(err, comment) {
+                        if(err) next(err);
+                        // return the saved post
+                        else res.json(comment);
+                    });
                 }
             });
         }

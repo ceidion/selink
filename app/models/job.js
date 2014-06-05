@@ -139,7 +139,7 @@ Job.methods.toSolr = function() {
     });
 
     return {
-        type: 'job',
+        type: 'Job',
         id: this.id,
         name: this.name,
         expiredDate: this.expiredDate,

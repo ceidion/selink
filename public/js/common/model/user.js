@@ -161,15 +161,12 @@ define([
 
             // populate languages collection
             this.languages.set(response.languages, {parse: true, remove: false});
-            delete response.languages;
 
             // populate skills collection
             this.skills.set(response.skills, {parse: true, remove: false});
-            delete response.skills;
 
             // populate qualifications collection
             this.qualifications.set(response.qualifications, {parse: true, remove: false});
-            delete response.qualifications;
 
             // populate educations collection
             this.educations.set(response.educations, {parse: true, remove: false});
@@ -180,8 +177,6 @@ define([
                     return education.startDate ? moment(education.startDate).valueOf() : 0;
                 });
 
-            delete response.educations;
-
             // populate employments collection
             this.employments.set(response.employments, {parse: true, remove: false});
 
@@ -191,7 +186,12 @@ define([
                     return employment.startDate ? moment(employment.startDate).valueOf() : 0;
                 });
 
-            delete response.employments;
+            // Don't delete these attribute, for the conveience of "people/item.html" template render.
+            // delete response.languages;
+            // delete response.skills;
+            // delete response.qualifications;
+            // delete response.educations;
+            // delete response.employments;
 
             // populate friends collection
             this.friends.set(response.friends, {parse: true, remove: false});

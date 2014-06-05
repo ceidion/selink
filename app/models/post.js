@@ -75,7 +75,7 @@ var Post = new Schema({
 
 Post.methods.toSolr = function() {
     return {
-        type: 'post',
+        type: 'Post',
         id: this.id,
         // owner: this._owner.firstName + ' ' + this._owner.lastName,
         // comments: this.comments,

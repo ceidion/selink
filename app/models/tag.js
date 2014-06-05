@@ -31,7 +31,7 @@ var Tag = new Schema({
 
 Tag.methods.toSolr = function() {
     return {
-        type: 'tag',
+        type: 'Tag',
         id: this.id,
         // owner:
         name: this.name,

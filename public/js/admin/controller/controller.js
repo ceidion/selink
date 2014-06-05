@@ -2,6 +2,7 @@ define([
     'common/view/topnav/topnav',
     'admin/view/common/sidenav',
     'admin/view/home/main',
+    'common/view/search/main',
     'common/view/profile/main',
     'common/view/post/main',
     'common/view/post/detail',
@@ -22,6 +23,7 @@ define([
     TopNavView,
     SideNavView,
     HomeView,
+    SearchView,
     ProfileView,
     PostView,
     PostDetailView,
@@ -76,6 +78,17 @@ define([
             });
             // show main page
             selink.pageContent.show(selink.homeView);
+        },
+
+        // show search view
+        showSearchView: function(term) {
+
+            // create search view
+            selink.searchView = new SearchView({
+                model: new Backbone.Model({term: term})
+            });
+            // show main page
+            selink.pageContent.show(selink.searchView);
         },
 
         // show profile

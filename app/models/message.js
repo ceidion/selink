@@ -60,7 +60,7 @@ var Message = new Schema({
 
 Message.methods.toSolr = function() {
     return {
-        type: 'message',
+        type: 'Message',
         id: this.id,
         // recipient:
         // from:

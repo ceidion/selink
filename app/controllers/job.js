@@ -33,6 +33,7 @@ exports.show = function(req, res, next) {
 
     Job.findById(req.params.job)
         .where('logicDelete').equals(false)
+        .populate('_owner', 'type firstName lastName title cover photo createDate')
         .exec(function(err, posts) {
             if (err) next(err);
             else res.json(posts);
@@ -286,7 +287,7 @@ exports.match = function(req, res, next) {
                                 .defType('payloadqueryparser')
                                 .q(_.union(languages, skills).join(" +"))
                                 .fl('id,score')
-                                .fq('type:user AND -id:' + job._owner)
+                                .fq('type:User AND -id:' + job._owner)
                                 .qf({language: 1, skill: 1})
                                 .plf('language,skill');
 

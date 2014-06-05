@@ -314,7 +314,7 @@ User.methods.toSolr = function() {
     });
 
     return {
-        type: 'user',
+        type: 'User',
         id: this.id,
         name: this.firstName + ' ' + this.lastName,
         email: this.email,

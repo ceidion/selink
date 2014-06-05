@@ -11,6 +11,12 @@ var Comment = new Schema({
         required: true
     },
 
+    // reply recipient
+    _replyTo: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+    },
+
     // Content
     content: {
         type: String,

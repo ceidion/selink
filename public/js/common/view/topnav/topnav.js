@@ -32,13 +32,16 @@ define([
 
         ui: {
             completeness: '.completeness-value',
-            bar: '.progress-bar'
+            bar: '.progress-bar',
+            searchTxt: '.form-search input',
+            searchBtn: '.btn-search'
         },
 
         events: {
             'click #issue': 'showIssueView',
             'click #setting': 'showSettingView',
-            'click #password': 'showPasswordView'
+            'click #password': 'showPasswordView',
+            'click @ui.searchBtn': 'onSearch'
         },
 
         // model events
@@ -167,6 +170,17 @@ define([
             this.ui.completeness.empty().text(completeness + '%');
             this.ui.bar.removeClass().addClass(progressClass);
             this.ui.bar.css('width', completeness + '%');
+        },
+
+        // search
+        onSearch: function() {
+
+            // do nothing if input is blank
+            if (_.str.isBlank(this.ui.searchTxt.val()))
+                return;
+
+            window.location = '#search/'+ this.ui.searchTxt.val();
         }
+
     });
 });

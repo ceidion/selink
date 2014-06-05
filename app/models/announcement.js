@@ -43,7 +43,7 @@ var Announcement = new Schema({
 
 Announcement.methods.toSolr = function() {
     return {
-        type: 'announcement',
+        type: 'Announcement',
         id: this.id,
         // owner:
         title: this.title,
