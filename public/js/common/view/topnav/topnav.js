@@ -41,7 +41,8 @@ define([
             'click #issue': 'showIssueView',
             'click #setting': 'showSettingView',
             'click #password': 'showPasswordView',
-            'click @ui.searchBtn': 'onSearch'
+            'click @ui.searchBtn': 'onSearch',
+            'submit form': 'onSearch'
         },
 
         // model events
@@ -173,7 +174,9 @@ define([
         },
 
         // search
-        onSearch: function() {
+        onSearch: function(e) {
+
+            e.preventDefault();
 
             // do nothing if input is blank
             if (_.str.isBlank(this.ui.searchTxt.val()))
