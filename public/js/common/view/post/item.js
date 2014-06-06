@@ -36,8 +36,15 @@ define([
             cancelBtn: '.btn-remove-cancel',
             confirmBtn: '.btn-remove-confirm',
 
+            editable: '.sl-editable',
             postContent: '.content',
+            postEditor: '.sl-editor',
+            editorTool: '.editor-toolbox',
             detailBtn: '.btn-detail',
+            briefBtn: '.btn-brief',
+            saveBtn: '.btn-save',
+            editCancelBtn: '.btn-edit-cancel',
+
             likeBtn: '.btn-like',
             bookmarkBtn: '.btn-bookmark',
             showAllBtn: '.btn-show-all',
@@ -59,7 +66,12 @@ define([
             'click @ui.forbidBtn': 'toggleForbid',
             'click @ui.cancelBtn': 'hideAlert',
             'click @ui.confirmBtn': 'onRemove',
-            'click @ui.detailBtn': 'showDetail',
+            'click @ui.detailBtn': 'toggleExpand',
+            'click @ui.briefBtn': 'toggleExpand',
+            'click @ui.editable': 'showEditor',
+            'click @ui.editCancelBtn': 'hideEditor',
+            'click @ui.saveBtn': 'onSave',
+            'keyup @ui.postEditor': 'enableSave',
 
             'click @ui.likeBtn': 'onLike',
             'click @ui.bookmarkBtn': 'onBookmark',
@@ -99,12 +111,21 @@ define([
         // initializer
         initialize: function() {
 
+            // post is collapsed in the beginning
+            this.expanded = false;
+
             // create comments collction
             this.collection = this.model.comments;
         },
 
         // after render
         onRender: function() {
+
+            this.ui.postEditor.ace_wysiwyg({
+                toolbar_place: function(toolbar) {
+                    return $(this).closest('.widget-box').find('.btn-toolbar').prepend(toolbar).children(0).addClass('inline');
+                }
+            }).prev().addClass('wysiwyg-style3');
 
             // add popover on author photo
             this.ui.avatar.popover({
@@ -114,6 +135,11 @@ define([
                 placement: 'auto right',
                 title: '<img src="' + this.model.get('_owner').cover + '" />',
                 content: _.template(popoverTemplate, this.model.get('_owner')),
+            });
+
+            this.ui.editable.tooltip({
+                placement: 'bottom',
+                title: "クリックして編集"
             });
 
             // add tooltip on add button
@@ -126,7 +152,6 @@ define([
                 placement: 'top',
                 title: "お気に入り"
             });
-
         },
 
         // show operation menu toggler
@@ -210,9 +235,120 @@ define([
             this.trigger("shiftColumn");
         },
 
-        showDetail: function() {
+        // expand post content to full screen
+        toggleExpand: function() {
 
-            window.location = "#post/" + this.model.id;
+            // window.location = "#post/" + this.model.id;
+
+            // remove the gird class
+            this.$el.toggleClass('col-sm-6 col-lg-4');
+
+            // toggle expand/brief button
+            this.ui.detailBtn.toggleClass('hidden');
+            this.ui.briefBtn.toggleClass('hidden');
+
+            // toggle post status
+            this.expanded = !this.expanded;
+
+            // re-isotope
+            this.trigger("shiftColumn");
+            this.trigger("expand");
+        },
+
+        // show post editor
+        showEditor: function() {
+
+            var self = this;
+
+            // if the post is collapsed
+            if (!this.expanded)
+                // expand it to full screen
+                this.toggleExpand();
+
+            // hide brief button
+            this.ui.briefBtn.addClass('hidden');
+
+            // show save cancel button
+            this.ui.saveBtn.removeClass('hidden');
+            this.ui.editCancelBtn.removeClass('hidden');
+
+            // hide content display area
+            this.ui.postContent.slideUp('fast', function() {
+
+                // show editor tool box
+                self.ui.editorTool.slideDown('fast');
+
+                // show editor
+                self.ui.postEditor.slideDown('fast', function() {
+
+                    // re-isotope
+                    self.trigger("shiftColumn");
+                });
+            });
+        },
+
+        // hide post editor
+        hideEditor: function() {
+
+            var self = this;
+
+            // show brief button
+            this.ui.briefBtn.removeClass('hidden');
+
+            // at this point, post box must be expanded, callapse it
+            this.toggleExpand();
+
+            // hide save cancel button
+            this.ui.saveBtn.addClass('hidden');
+            this.ui.editCancelBtn.addClass('hidden');
+
+            // hide editor tool box
+            this.ui.editorTool.slideUp('fast');
+
+            // hide editor
+            this.ui.postEditor.slideUp('fast', function() {
+
+                // show content display area
+                self.ui.postContent.slideDown('fast', function() {
+
+                    // re-isotope
+                    self.trigger("shiftColumn");
+                });
+            });
+        },
+
+        // change the status of editor save button
+        enableSave: function() {
+
+            // get user input
+            var input = this.ui.postEditor.cleanHtml();
+
+            // if user input is not empty
+            if (input && !_.str.isBlank(input)) {
+                // enable the post button
+                this.ui.saveBtn.removeClass('disabled');
+            } else {
+                // disable ths post button
+                this.ui.saveBtn.addClass('disabled');
+            }
+        },
+
+        // update post content
+        onSave: function() {
+
+            var self = this;
+
+            this.model.save({
+                content: this.ui.postEditor.cleanHtml()
+            }, {
+                success: function(model, response, options) {
+                    self.ui.postContent.empty().html(model.get('content'));
+                    self.hideEditor();
+                },
+                // reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
+                patch: true,
+                wait: true
+            });
         },
 
         // like this posts
@@ -279,8 +415,6 @@ define([
 
         // display all comments
         showAllComment: function() {
-
-            console.log("message");
 
             var self = this;
 

@@ -4,6 +4,7 @@ define([
     'common/model/job',
     'common/model/user',
     'common/model/post',
+    'common/view/search/empty',
     'common/view/post/item',
     'common/view/people/item',
     'common/view/job/item'
@@ -13,6 +14,7 @@ define([
     JobModel,
     UserModel,
     PostModel,
+    EmptyView,
     PostItemView,
     PeopleItemView,
     JobItemView
@@ -54,6 +56,9 @@ define([
 
         // Template
         template: template,
+
+        // empty view
+        emptyView: EmptyView,
 
         // item view
         getItemView: function(item) {

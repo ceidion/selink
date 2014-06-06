@@ -1,4 +1,4 @@
-<div class="widget-box" data-create-date="<%= moment(obj.createDate).valueOf() %>">
+<div id="<%= obj._id %>" class="widget-box" data-create-date="<%= moment(obj.createDate).valueOf() %>">
 
     <!-- post header -->
     <div class="widget-header widget-header-flat">
@@ -65,11 +65,15 @@
 
     <!-- post body -->
     <div class="widget-body">
+        <div class="widget-toolbox editor-toolbox" style="display: none;">
+            <div class="btn-toolbar center"></div>
+        </div>
 
         <div class="widget-main">
 
             <!-- if this post is mine -->
             <% if (obj.isMine) { %>
+
                 <!-- remove confrim dialog -->
                 <div class="alert alert-danger clearfix" style="display: none;">
                     <i class="ace-icon fa fa-warning"></i>&nbsp;
@@ -80,25 +84,53 @@
                         <button class="btn btn-sm btn-danger btn-remove-confirm">削除</button>
                     </p>
                 </div>
+
+                <div class="sl-editable tooltip-info">
+                    <!-- post content -->
+                    <div class="content">
+                        <%= obj.content %>
+                    </div>
+                    <!-- post editor -->
+                    <div class="sl-editor" style="min-height: 200px;">
+                        <%= obj.content %>
+                    </div>
+                </div>
+
+                <br/>
+
+                <!-- save button -->
+                <div class="btn btn-xs btn-success btn-save hidden">
+                    <i class="ace-icon fa fa-save bigger-110"></i>&nbsp;
+                    <span>保存</span>
+                </div>
+
+                <!-- cancel button -->
+                <div class="btn btn-xs btn-grey btn-edit-cancel hidden">
+                    <i class="ace-icon fa fa-times bigger-110"></i>&nbsp;
+                    <span>取消</span>
+                </div>
+
+            <% } else { %>
+
+                <!-- post content -->
+                <div class="content">
+                    <%= obj.content %>
+                </div>
+
             <% } %>
 
-            <!-- post content -->
-            <div class="content">
-                <%= obj.content %>
+            <br/>
+
+            <!-- detail button -->
+            <div class="btn btn-xs btn-primary btn-detail">
+                <i class="ace-icon fa fa-desktop bigger-110"></i>&nbsp;
+                <span>詳しく読む</span>
             </div>
 
-            <br/>
-            <br/>
-
-            <!-- detail/edit link -->
-            <div class="inline btn btn-xs btn-link btn-detail">
-                <% if (obj.isMine) { %>
-                    <i class="ace-icon fa fa-pencil bigger-110"></i>&nbsp;
-                    <span>編集</span>
-                <% } else { %>
-                    <i class="ace-icon fa fa-desktop bigger-110"></i>&nbsp;
-                    <span>詳しく読む</span>
-                <% } %>
+            <!-- brief button -->
+            <div class="btn btn-xs btn-warning btn-brief hidden">
+                <i class="ace-icon fa fa-desktop bigger-110"></i>&nbsp;
+                <span>小さくする</span>
             </div>
 
             <!-- action buttons -->

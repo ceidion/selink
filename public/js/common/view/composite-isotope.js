@@ -13,6 +13,7 @@ define([], function() {
         // item view events
         itemEvents: {
             'remove': 'onRemove',
+            'expand': 'onExpand',
             'shiftColumn': 'shiftColumn'
         },
 
@@ -157,10 +158,13 @@ define([], function() {
             });
         },
 
+        // remove item
         onRemove: function(event, view) {
 
+            // first remove it form screen
             this.$el.find(this.itemViewContainer).isotope('remove', view.$el).isotope('layout');
 
+            // then remove the model
             view.model.destroy({
                 success: function(model, response) {
                 },
@@ -168,6 +172,19 @@ define([], function() {
             });
         },
 
+        // when item expanded, scorll to that item
+        onExpand: function(event, view) {
+
+            // must scroll after isotope finish layout, so wait 500ms here
+            setTimeout(function() {
+                $('html, body').animate({
+                    // note that the "50" is the height of topnav
+                    scrollTop: $("#" + view.model.id).offset().top - 50
+                }, 500);
+            }, 500);
+        },
+
+        // re-layout after item size changed
         shiftColumn: function(event, view) {
 
             var self = this;
