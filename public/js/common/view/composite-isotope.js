@@ -58,36 +58,10 @@ define([], function() {
                 });
             });
 
+            Pace.restart();
+
             // fetch collection items
-            this.collection.fetch({
-
-                xhr: function() {
-
-                    var xhr = new window.XMLHttpRequest();
-
-                    xhr.upload.addEventListener("progress", function(evt){
-                        if (evt.lengthComputable) {
-                            var percentComplete = evt.loaded / evt.total;
-                            console.log(percentComplete);
-                        }
-                    }, false);
-
-                    xhr.addEventListener("progress", function(evt){
-                        if (evt.lengthComputable) {
-                            var percentComplete = evt.loaded / evt.total;
-                            console.log(percentComplete);
-                        }
-                    }, false);
-
-                    return xhr;
-                },
-                beforeSend: function(XMLHttpRequest) {
-                    console.log("loading");
-                },
-                complete: function() {
-                    console.log("complete");
-                }
-            });
+            this.collection.fetch();
         },
 
         // After show

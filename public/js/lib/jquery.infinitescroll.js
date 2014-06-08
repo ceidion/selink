@@ -582,6 +582,7 @@
 					break;
 				case 'json':
 					instance._debug('Using ' + (method.toUpperCase()) + ' via $.ajax() method');
+                    Pace.restart();
 					$.ajax({
 						dataType: 'json',
 						type: 'GET',
