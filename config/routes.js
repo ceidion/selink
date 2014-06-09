@@ -3,6 +3,7 @@ var tag = require('../app/controllers/tag'),
     user = require('../app/controllers/user'),
     post = require('../app/controllers/post'),
     issue = require('../app/controllers/issue'),
+    group = require('../app/controllers/group'),
     friend = require('../app/controllers/friend'),
     comment = require('../app/controllers/comment'),
     address = require('../app/controllers/address'),
@@ -85,6 +86,9 @@ module.exports = function(app, sio) {
     app.patch('/posts/:post/comments/:comment/reply', checkLoginStatus, comment.create);
     // Remove comment
     app.delete('/posts/:post/comments/:comment', checkLoginStatus, comment.remove);
+
+    // Get groups
+    app.get('/groups', checkLoginStatus, group.index);
 
     // Get jobs (employer only)
     app.get('/jobs', checkLoginStatus, job.index);

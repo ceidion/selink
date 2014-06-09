@@ -3,23 +3,14 @@ define([
     'common/view/composite-isotope',
     'common/collection/base',
     'common/view/group/groups',
-    'common/model/post',
     'common/view/post/item'
 ], function(
     pageTemplate,
     BaseView,
     BaseCollection,
     GroupsView,
-    PostModel,
     ItemView
 ) {
-
-    var PostsCollection = BaseCollection.extend({
-
-        model: PostModel,
-
-        url: '/posts?category=friend'
-    });
 
     return BaseView.extend({
 
@@ -34,13 +25,13 @@ define([
 
             // if (selink.userModel.groups.length)
                 // create groups view
-                this.groupsView = new GroupsView({collection: selink.userModel.groups});
+                this.groupsView = new GroupsView();
 
             // create posts collection
-            this.collection = new PostsCollection();
+            // this.collection = new GroupsCollection();
 
             // call super initializer
-            BaseView.prototype.initialize.apply(this);
+            // BaseView.prototype.initialize.apply(this);
         },
 
         // After render
