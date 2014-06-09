@@ -136,16 +136,15 @@
             <!-- action buttons -->
             <div class="pull-right">
 
-                <!-- like button -->
-                <div class="inline red tooltip-error <% if (!obj.isLiked) print("btn-like"); %>">
-                    <i class="ace-icon fa <% if (obj.isLiked) print("fa-heart"); else print("fa-heart-o"); %> bigger-110"></i>
-                    <span><%= obj.liked.length %></span>
-                </div>
-
                 <!-- bookmark button -->
                 <div class="inline orange tooltip-warning <% if (!obj.isMarked) print("btn-bookmark"); %>">
                     <i class="ace-icon fa <% if (obj.isMarked) print("fa-star"); else print("fa-star-o"); %> bigger-110"></i>
-                    <span><%= obj.bookmarked.length %></span>
+                </div>
+
+                <!-- like button -->
+                <div class="inline red tooltip-error <% if (!obj.isLiked) print("btn-like"); %>">
+                    <i class="ace-icon fa <% if (obj.isLiked) print("fa-heart"); else print("fa-heart-o"); %> "></i>
+                    <span><%= obj.liked.length %></span>
                 </div>
 
             </div>

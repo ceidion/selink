@@ -27,6 +27,7 @@ define([
 
         ui: {
             selection: 'input[type="checkbox"]',
+            bookmarkBtn: '.message-star',
             subject: '.text',
             replyBtn: '.btn-reply',
             removeBtn: '.btn-remove'
@@ -34,13 +35,15 @@ define([
 
         events: {
             'click input[type="checkbox"]': 'toggleSelect',
+            'click .message-star': 'onBookmark',
             'click .text': 'showMessage',
             'click .btn-reply': 'replyMessage',
             'click .btn-remove': 'removeMessage'
         },
 
         modelEvents: {
-            'change:isUnread': 'markRead'
+            'change:isUnread': 'markRead',
+            'change:bookmarked': 'renderBookmark'
         },
 
         initialize: function() {
@@ -74,7 +77,7 @@ define([
         toggleSelect: function() {
 
             var checked = this.ui.selection.prop('checked');
-            
+
             if (checked) {
                 this.$el.addClass('selected');
                 this.trigger('selected');
@@ -94,6 +97,36 @@ define([
         unselectMessage: function() {
             this.$el.removeClass('selected');
             this.$el.find('input[type="checkbox"]').prop('checked', false);
+        },
+
+        // Bookmark this messages
+        onBookmark: function() {
+
+            this.model.save({
+                bookmarked: selink.userModel.id // TODO: no need to pass this parameter
+            }, {
+                url: '/messages/' + this.model.get('_id') + '/bookmark',
+                reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
+                patch: true,
+                wait: true
+            });
+        },
+
+        // rerender bookmark mark
+        renderBookmark: function() {
+
+            if (this.model.get('isMarked'))
+                // flip the icon and mark this message as bookmark
+                this.ui.bookmarkBtn
+                    .removeClass('fa-star-o light-grey')
+                    .addClass('fa-star orange')
+                    .slFlip();
+            else
+                // flip the icon and mark this message as unbookmark
+                this.ui.bookmarkBtn
+                    .removeClass('fa-star orange')
+                    .addClass('fa-star-o light-grey')
+                    .slFlip();
         },
 
         showMessage: function() {
@@ -162,7 +195,7 @@ define([
 
         markRead: function() {
 
-            if (this.model.get('isUnread')) {            
+            if (this.model.get('isUnread')) {
                 this.$el.addClass('message-unread');
                 selink.userModel.messages.add(this.model);
             } else {

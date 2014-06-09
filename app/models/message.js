@@ -45,6 +45,12 @@ var Message = new Schema({
         ref: 'User'
     }],
 
+    // People who bookmarked this message
+    bookmarked: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
     // Logical Delete flag
     logicDelete: [{
         type: Schema.Types.ObjectId,

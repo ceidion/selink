@@ -89,7 +89,7 @@ exports.create = function(req, res, next) {
 
 exports.update = function(req, res, next) {
 
-    // no way to update a sent message, the only updatable field is 'opened'
+    // no way to update a sent message, the only updatable field is 'opened' and 'bookmarked'
     if (_.has(req.body, 'opened')) {
 
         // find that message
@@ -101,8 +101,8 @@ exports.update = function(req, res, next) {
                 if (req.body.opened)
                     // add user to the opened list
                     message.opened.addToSet(req.user.id);
-                else 
-                    message.opened.pull(req.user.id)
+                else
+                    message.opened.pull(req.user.id);
 
                 message.save(function(err, newMessage) {
 
@@ -127,11 +127,11 @@ exports.update = function(req, res, next) {
 
 exports.remove = function(req, res, next) {
 
-    // message could be sent to multiple people, 
-    // one recipient delelte it dosen't mean the other recipients delete it.
+    // message could be sent to multiple people,
+    // one recipient deleted it dosen't mean the other recipients delete it.
     // so message's logicDelete flag is an array, filled by the user's id who deleted it
 
-    // find the message 
+    // find the message
     Message.findById(req.params.message, function(err, message) {
 
         if (err) next(err);
@@ -145,6 +145,40 @@ exports.remove = function(req, res, next) {
                 if (err) next(err);
                 else res.json(deletedMessage);
             });
-        } 
+        }
+    });
+};
+
+// bookmark messages
+exports.bookmark = function(req, res, next){
+
+    // find message
+    Message.findById(req.params.message, function(err, message) {
+
+        if (err) next(err);
+        else {
+
+            // check if the user bookmarked this message, then toggle it
+            if (message.bookmarked.indexOf(req.body.bookmarked) < 0)
+                // add one bookmarked people id
+                message.bookmarked.addToSet(req.body.bookmarked);
+            else
+                // remove the people id from bookmarked list
+                message.bookmarked.remove(req.body.bookmarked);
+
+            // save the message
+            message.save(function(err, newMessage) {
+                if (err) next(err);
+                else {
+
+                    // populate the message sender
+                    // cause if user reply this message just after bookmark it, the sender info is needed.
+                    newMessage.populate({path:'_from', select: 'type firstName lastName title cover photo createDate'}, function(err, message) {
+                        if(err) next(err);
+                        else res.json(message);
+                    });
+                }
+            });
+        }
     });
 };

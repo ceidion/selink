@@ -31,22 +31,25 @@ define(['common/model/base'], function(BaseModel) {
             // if the message belong to the user
             if (response._from._id == userId)
                 // mark as 'my message'
-                response.isMine = true;                
-            else 
+                response.isMine = true;
+            else
                 response.isMine = false;
 
             // if the message not belong to the user
             // or user's id exists in message's opened list
-            if (response._from._id != userId
-                && _.indexOf(response.opened, userId) < 0) {
-
+            if (response._from._id != userId && _.indexOf(response.opened, userId) < 0)
                 // mark as unread
                 response.isUnread = true;
-
-            // or
-            } else
+            else
                 // mark as read
                 response.isUnread = false;
+
+            // if user's id exists in post's bookmark list
+            if (_.indexOf(response.bookmarked, selink.userModel.id) >= 0)
+                // mark as marked
+                response.isMarked = true;
+            else
+                response.isMarked = false;
 
             return response;
         }

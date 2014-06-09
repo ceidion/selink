@@ -8,8 +8,10 @@ define([
     'common/view/post/detail',
     'common/view/job/main',
     'common/view/friend/main',
+    'common/view/group/main',
     'common/view/people/main',
     'common/view/people/detail',
+    'common/view/bookmark/main',
     'common/view/calendar/main',
     'common/view/activity/main',
     'common/view/notification/main',
@@ -26,8 +28,10 @@ define([
     PostDetailView,
     JobView,
     FriendView,
+    GroupView,
     PeopleView,
     PeopleDetailView,
+    BookMarkView,
     CalendarView,
     ActivityView,
     NotificationView,
@@ -162,6 +166,15 @@ define([
             selink.pageContent.show(selink.friendView);
         },
 
+        // show groups
+        showGroupView: function() {
+
+            // create group view
+            selink.groupView = new GroupView();
+            // show group view
+            selink.pageContent.show(selink.groupView);
+        },
+
         // show people
         showPeopleView: function() {
 
@@ -169,6 +182,15 @@ define([
             selink.peopleView = new PeopleView();
             // show people view
             selink.pageContent.show(selink.peopleView);
+        },
+
+        // show bookmark
+        showBookmarkView: function() {
+
+            // create bookmark view
+            selink.bookmarkView = new BookMarkView();
+            // show bookmark view
+            selink.pageContent.show(selink.bookmarkView);
         },
 
         // show calendar

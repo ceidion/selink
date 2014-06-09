@@ -344,6 +344,7 @@ exports.removeSubDocument = function(req, res, next) {
     });
 };
 
+// news for home page
 exports.newsfeed = function(req, res, next) {
 
     // page number
@@ -387,6 +388,40 @@ exports.newsfeed = function(req, res, next) {
         });
 };
 
+// User's bookmark
+exports.bookmark = function(req, res, next) {
+
+    // page number
+    var page = req.query.page || 0;
+
+    Post.find()
+        .where('logicDelete').equals(false)
+        .where('bookmarked').equals(req.user.id)
+        .populate('_owner', 'type firstName lastName title cover photo createDate')
+        .populate('comments._owner', 'type firstName lastName title cover photo createDate')
+        .sort('-createDate')
+        .skip(10*page)  // skip n page
+        .limit(10)
+        .exec(function(err, posts) {
+            if (err) next(err);
+            else {
+
+                Job.find()
+                    .where('logicDelete').equals(false)
+                    .where('bookmarked').equals(req.user.id)
+                    .populate('_owner', 'type firstName lastName title cover photo createDate')
+                    .sort('-createDate')
+                    .skip(10*page)  // skip n page
+                    .limit(10)
+                    .exec(function(err, jobs) {
+                        if (err) next(err);
+                        else res.json(_.union(jobs, posts));
+                    });
+            }
+        });
+};
+
+// Search
 exports.search = function(req, res, next) {
 
     var page = req.query.page || 0,  // page number

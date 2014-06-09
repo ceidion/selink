@@ -10,7 +10,7 @@ define([
 
         template: template,
 
-        className: 'photo-item',
+        className: 'photo-item no-padding col-xs-2',
 
         events: {
             'click a': 'onClick'

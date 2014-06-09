@@ -116,6 +116,7 @@ define([
 
             // create comments collction
             this.collection = this.model.comments;
+
         },
 
         // after render
@@ -150,7 +151,7 @@ define([
 
             this.ui.bookmarkBtn.tooltip({
                 placement: 'top',
-                title: "お気に入り"
+                title: "ブックマーク"
             });
         },
 
@@ -398,11 +399,6 @@ define([
         // rerender bookmark mark
         renderBookmark: function() {
 
-            // update the bookmark number
-            this.ui.bookmarkBtn
-                .find('span')
-                .empty()
-                .text(this.model.get('bookmarked').length);
             // flip the icon and mark this post as bookmark
             this.ui.bookmarkBtn
                 .find('i')

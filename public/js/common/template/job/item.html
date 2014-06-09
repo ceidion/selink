@@ -3,6 +3,8 @@
 
     if (moment(obj.expiredDate).isBefore(moment()))
         widgetColor = "widget-color-grey";
+    else
+        widgetColor = "widget-color-red";
 %>
 
 <div class="widget-box <%= widgetColor %>" data-create-date="<%= moment(obj.createDate).valueOf() %>">
@@ -138,7 +140,7 @@
                 <!-- bookmark button -->
                 <div class="inline orange tooltip-warning <% if (!obj.isMarked) print("btn-bookmark"); %>">
                     <i class="ace-icon fa <% if (obj.isMarked) print("fa-star"); else print("fa-star-o"); %> bigger-110"></i>
-                    <span><%= obj.bookmarked.length %></span>
+                    <span>&nbsp;</span>
                 </div>
 
             </div>

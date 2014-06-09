@@ -50,6 +50,9 @@ module.exports = function(app, sio) {
     // Get news
     app.get('/newsfeed', checkLoginStatus, user.newsfeed);
 
+    // Bookmarked item
+    app.get('/bookmark', checkLoginStatus, user.bookmark);
+
     // Get notification
     app.get('/notifications', checkLoginStatus, notification.index);
     // Update notification
@@ -115,6 +118,8 @@ module.exports = function(app, sio) {
     app.post('/messages', checkLoginStatus, message.create);
     // Update messages
     app.patch('/messages/:message', checkLoginStatus, message.update);
+    // bookmark a message
+    app.patch('/messages/:message/bookmark', checkLoginStatus, message.bookmark);
     // Remove message
     app.delete('/messages/:message', checkLoginStatus, message.remove);
 
