@@ -2,13 +2,15 @@ define([
     'text!common/template/group/groups.html',
     'common/collection/base',
     'common/view/group/empty',
-    'common/view/friend/item',
+    'common/view/group/item',
+    'common/view/group/edit/main',
     'common/model/group'
 ], function(
     template,
     BaseCollection,
     EmptyView,
     ItemView,
+    EditView,
     GroupModel
 ) {
 
@@ -76,10 +78,11 @@ define([
 
         createGroup: function() {
 
-            this.collection.create({
-                name: this.ui.groupName.val()
-            },{
-                wait: true
+            var newGroup = new GroupModel();
+            newGroup.save({name: this.ui.groupName.val()}, {
+                success: function(model, response, options) {
+                    window.location = '#group/' + model.id;
+                }
             });
         }
 

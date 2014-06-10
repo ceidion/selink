@@ -89,6 +89,16 @@ module.exports = function(app, sio) {
 
     // Get groups
     app.get('/groups', checkLoginStatus, group.index);
+    // Get specific group
+    app.get('/groups/:group', checkLoginStatus, group.show);
+    // Create groups
+    app.post('/groups', checkLoginStatus, group.create);
+    // Update group
+    app.patch('/groups/:group', checkLoginStatus, group.update);
+    // Upload group cover
+    app.put('/groups/:group/cover', checkLoginStatus, group.uploadCover);
+    app.put('/groups/:group/cover-scale', checkLoginStatus, group.scaleCover);
+
 
     // Get jobs (employer only)
     app.get('/jobs', checkLoginStatus, job.index);

@@ -29,18 +29,12 @@ var Group = new Schema({
     // Cover
     cover: {
         type: String,
-        trim: true
-    },
-
-    // Title
-    title: {
-        type: String,
         trim: true,
-        validate: validate('len', 0, 50)
+        default: './asset/images/default_cover.jpg'
     },
 
-    // Introduction
-    bio: {
+    // Description
+    description: {
         type: String,
         trim: true,
         validate: validate('len', 0, 5000)

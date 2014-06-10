@@ -9,6 +9,7 @@ define([
     'common/view/job/main',
     'common/view/friend/main',
     'common/view/group/main',
+    'common/view/group/edit/main',
     'common/view/people/main',
     'common/view/people/detail',
     'common/view/bookmark/main',
@@ -17,7 +18,8 @@ define([
     'common/view/notification/main',
     'common/view/mailbox/main',
     'common/model/user',
-    'common/model/post'
+    'common/model/post',
+    'common/model/group'
 ], function(
     TopNavView,
     SideNavView,
@@ -29,6 +31,7 @@ define([
     JobView,
     FriendView,
     GroupView,
+    GroupEditView,
     PeopleView,
     PeopleDetailView,
     BookMarkView,
@@ -37,7 +40,8 @@ define([
     NotificationView,
     MailBoxView,
     UserModel,
-    PostModel
+    PostModel,
+    GroupModel
 ) {
 
     // Main page controller
@@ -167,12 +171,27 @@ define([
         },
 
         // show groups
-        showGroupView: function() {
+        showGroupView: function(id) {
 
-            // create group view
-            selink.groupView = new GroupView();
-            // show group view
-            selink.pageContent.show(selink.groupView);
+            if (id) {
+
+                var group = new GroupModel({_id: id});
+                group.fetch({
+                    success: function() {
+                        selink.groupEditView = new GroupEditView({
+                            model: group
+                        });
+                        selink.pageContent.show(selink.groupEditView);
+                    }
+                });
+
+            } else {
+
+                // create group view
+                selink.groupView = new GroupView();
+                // show group view
+                selink.pageContent.show(selink.groupView);
+            }
         },
 
         // show people

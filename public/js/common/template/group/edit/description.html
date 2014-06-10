@@ -1,0 +1,11 @@
+<small class="sl-value">
+    <%
+        if (obj.description) print(obj.description)
+        else print('<div class="empty-view text-muted bigger-125 center">グループ紹介はまだ登録していません<br/>ここをクリックして編集できます</div>');
+    %>
+</small>
+<div class="sl-editor">
+    <div class="wysiwyg-editor">
+        <%= obj.description %>
+    </div>
+</div>

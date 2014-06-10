@@ -12,6 +12,7 @@ define([], function() {
             'job': 'showJobView',
             "friend": "showFriendView",
             "group": "showGroupView",
+            "group/:id": "showGroupView",
             "people": "showPeopleView",
             "bookmark": "showBookmarkView",
             "calendar": "showCalendarView",
