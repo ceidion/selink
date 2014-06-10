@@ -1,7 +1,11 @@
 define([
-    'text!common/template/group/edit/member.html'
+    'text!common/template/group/edit/member.html',
+    'common/view/group/edit/member/friends',
+    'common/view/group/edit/member/people',
 ], function(
-    template
+    template,
+    FriendsView,
+    PeopleView
 ) {
 
     return Backbone.Marionette.Layout.extend({
@@ -14,22 +18,24 @@ define([
 
         // regions
         regions: {
-            languageRegion: '#languages',
-            skillRegion: '#skills',
+            friendsRegion: '#friends',
+            peopleRegion: '#people',
         },
 
         // initializer
         initialize: function() {
 
+            this.friendsView = new FriendsView({collection: selink.userModel.friends});
+            this.peopleView = new PeopleView({collection: selink.userModel.friends});
         },
 
         // after render
         onRender: function() {
 
-            // // show language area
-            // this.languageRegion.show(this.languageComposite);
-            // // show skill area
-            // this.skillRegion.show(this.skillComposite);
+            // show friends area
+            this.friendsRegion.show(this.friendsView);
+            // show people area
+            this.peopleRegion.show(this.peopleView);
 
         }
 
