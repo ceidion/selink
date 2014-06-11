@@ -37,6 +37,14 @@ define([], function() {
         // Initializer
         initialize: function() {
 
+            Pace.restart();
+
+            // fetch collection items
+            this.collection.fetch();
+        },
+
+        onCompositeModelRendered: function() {
+
             var self = this;
 
             // use imageLoaded plugin
@@ -57,11 +65,6 @@ define([], function() {
                     sortAscending: false
                 });
             });
-
-            Pace.restart();
-
-            // fetch collection items
-            this.collection.fetch();
         },
 
         // After show

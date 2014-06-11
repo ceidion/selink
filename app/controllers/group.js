@@ -43,6 +43,8 @@ exports.show = function(req, res, next) {
     Group.findById(req.params.group)
         .where('logicDelete').equals(false)
         .populate('_owner', 'type firstName lastName title cover photo createDate')
+        .populate('invited', 'type firstName lastName title cover photo createDate')
+        .populate('participants', 'type firstName lastName title cover photo createDate')
         .exec(function(err, group) {
             if (err) next(err);
             else res.json(group);
@@ -67,10 +69,38 @@ exports.update = function(req, res, next) {
     delete req.body._id;
 
     // update group info
-    Group.findByIdAndUpdate(req.params.group, req.body, function(err, group) {
+    Group.findById(req.params.group, function(err, group) {
 
         if (err) next(err);
-        else res.json(group);
+        else {
+
+            if (req.body.invited) {
+
+                req.body.invited.forEach(function(userId) {
+                    group.invited.addToSet(userId);
+                });
+                delete req.body.invited;
+            }
+
+            group.set(req.body);
+
+            group.save(function(err, newGroup) {
+
+                if (err) next(err);
+                else {
+
+                    newGroup.populate({
+                        path:'invited',
+                        select: 'type firstName lastName title cover photo createDate'
+                    }, function(err, group) {
+
+                        if (err) next(err);
+                        else res.json(group);
+                    });
+                }
+            });
+
+        }
     });
 };
 

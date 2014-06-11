@@ -23,7 +23,7 @@ var Group = new Schema({
         type: String,
         required: true,
         trim: true,
-        validate: validate('len', 0, 20)
+        validate: validate('len', 0, 100)
     },
 
     // Cover
