@@ -1,10 +1,8 @@
 define([
     'text!common/template/group/edit/member/invited.html',
-    'common/view/composite-isotope',
-    'common/view/group/edit/member/item'
+    'common/view/group/edit/member/item-ro'
 ], function(
     template,
-    BaseView,
     ItemView
 ) {
 
@@ -18,17 +16,6 @@ define([
 
         // item view
         itemView: ItemView,
-
-        collectionEvents: {
-            'add': 'layout'
-        },
-
-        // initailizer
-        initialize: function() {
-
-            // all the selected friend will saved here
-            this.selectFriends = [];
-        },
 
         // after the view collection rendered
         onCompositeCollectionRendered: function() {
@@ -44,6 +31,15 @@ define([
                 self.$el.find(self.itemViewContainer).isotope({
                     itemSelector : '.isotope-item'
                 });
+
+                self.appendHtml = function(collectionView, itemView, index) {
+                    // ensure the image are loaded
+                    self.$el.find(self.itemViewContainer).imagesLoaded(function() {
+                        // prepend new item and reIsotope
+                        self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
+                    });
+                };
+
             }, 300);
         },
 
@@ -53,16 +49,6 @@ define([
             // make container scrollable
             this.$el.find('.widget-main').niceScroll({
                 horizrailenabled: false
-            });
-        },
-
-        layout: function() {
-            console.log("add");
-            console.log(arguments);
-            // enable isotope
-            // enable isotope
-            this.$el.find(this.itemViewContainer).isotope({
-                itemSelector : '.isotope-item'
             });
         }
 

@@ -1,10 +1,8 @@
 define([
     'text!common/template/group/edit/member/friends.html',
-    'common/view/composite-isotope',
     'common/view/group/edit/member/item'
 ], function(
     template,
-    BaseView,
     ItemView
 ) {
 
@@ -32,8 +30,10 @@ define([
         // initailizer
         initialize: function() {
 
-            // all the selected friend will saved here
+            // selected friend will saved here temprary
             this.selectFriends = [];
+            // selected friend view's $el will save here
+            this.selectView = [];
         },
 
         // after the view collection rendered
@@ -74,10 +74,13 @@ define([
 
         onItemClick: function(event, view) {
 
-            if (_.indexOf(this.selectFriends, view.model.id) < 0)
+            if (_.indexOf(this.selectFriends, view.model.id) < 0) {
                 this.selectFriends.push(view.model.id);
-            else
+                this.selectView.push(view.$el);
+            } else {
                 this.selectFriends = _.without(this.selectFriends, view.model.id);
+                this.selectView = _.without(this.selectView, view.$el);
+            }
 
             if (this.selectFriends.length)
                 this.$el.find('.btn-invite').removeClass('disabled');
@@ -87,11 +90,15 @@ define([
 
         onInvite: function() {
 
+            var self = this;
+
             this.model.save({
                 invited: this.selectFriends
             }, {
                 success: function() {
-
+                    _.each(self.selectView, function(view) {
+                        self.$el.find(self.itemViewContainer).isotope('remove', view).isotope('layout');
+                    });
                 },
                 patch: true,
                 wait: true

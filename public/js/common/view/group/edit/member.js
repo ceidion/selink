@@ -3,11 +3,13 @@ define([
     'common/view/group/edit/member/friends',
     'common/view/group/edit/member/people',
     'common/view/group/edit/member/invited',
+    'common/view/group/edit/member/participants',
 ], function(
     template,
     FriendsView,
     PeopleView,
-    InvitedView
+    InvitedView,
+    ParticipantsView
 ) {
 
     return Backbone.Marionette.Layout.extend({
@@ -23,6 +25,7 @@ define([
             friendsRegion: '#friends',
             peopleRegion: '#people',
             invitedRegion: '#invited',
+            participantsRegion: '#participants',
         },
 
         // initializer
@@ -44,6 +47,11 @@ define([
                 model: this.model,
                 collection: this.model.invited
             });
+
+            this.participantsView = new ParticipantsView({
+                model: this.model,
+                collection: this.model.participants
+            });
         },
 
         // after render
@@ -57,6 +65,9 @@ define([
 
             // show invited area
             this.invitedRegion.show(this.invitedView);
+
+            // show participants area
+            this.participantsRegion.show(this.participantsView);
 
         }
 
