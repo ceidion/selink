@@ -59,7 +59,43 @@ exports.create = function(req, res, next) {
         name: req.body.name
     }, function(err, group) {
         if (err) next(err);
-        else res.json(group);
+        else {
+
+            // create activity
+            Activity.create({
+                _owner: req.user.id,
+                type: 'new-group',
+                target: group._id
+            }, function(err, activity) {
+                if (err) next(err);
+            });
+
+            // send notificaton to all friends
+            Notification.create({
+                _owner: req.user.friends,
+                _from: req.user.id,
+                type: 'new-group',
+                target: group._id
+            }, function(err, notification) {
+                if (err) next(err);
+                else {
+                    // populate the respond notification with user's info
+                    notification.populate({
+                        path:'_from',
+                        select: 'type firstName lastName title cover photo createDate'
+                    }, function(err, noty) {
+                        if(err) next(err);
+                        // send real time message
+                        else
+                            req.user.friends.forEach(function(room) {
+                                sio.sockets.in(room).emit('new-group', noty);
+                            });
+                    });
+                }
+            });
+
+            res.json(group);
+        }
     });
 };
 
@@ -67,41 +103,68 @@ exports.create = function(req, res, next) {
 exports.update = function(req, res, next) {
 
     delete req.body._id;
+    delete req.body.invited;
 
     // update group info
-    Group.findById(req.params.group, function(err, group) {
+    Group.findByIdAndUpdate(req.params.group, req.body, function(err, group) {
 
         if (err) next(err);
         else {
 
-            if (req.body.invited) {
+            group.populate({
+                path:'invited',
+                select: 'type firstName lastName title cover photo createDate'
+            }, function(err, group) {
+
+                if (err) next(err);
+                else res.json(group);
+            });
+        }
+    });
+};
+
+// Invite people into group
+exports.invite = function(req, res, next) {
+
+    if (req.body.invited) {
+
+        // update group info
+        Group.findById(req.params.group, function(err, group) {
+
+            if (err) next(err);
+            else {
 
                 req.body.invited.forEach(function(userId) {
                     group.invited.addToSet(userId);
                 });
-                delete req.body.invited;
+
+                group.save(function(err, newGroup) {
+
+                    if (err) next(err);
+                    else {
+
+                        newGroup.populate({
+                            path:'invited',
+                            select: 'type firstName lastName title cover photo createDate'
+                        }, function(err, group) {
+
+                            if (err) next(err);
+                            else res.json(group);
+                        });
+                    }
+                });
+
             }
+        });
 
-            group.set(req.body);
+    } else {
+        res.json(400, {});
+    }
+};
 
-            group.save(function(err, newGroup) {
+// Join group
+exports.join = function(req, res, next) {
 
-                if (err) next(err);
-                else {
-
-                    newGroup.populate({
-                        path:'invited',
-                        select: 'type firstName lastName title cover photo createDate'
-                    }, function(err, group) {
-
-                        if (err) next(err);
-                        else res.json(group);
-                    });
-                }
-            });
-
-        }
-    });
 };
 
 // Upload Cover

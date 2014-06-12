@@ -1,0 +1,30 @@
+<%
+    var title = "";
+
+    if (obj.type == "new-group") {
+        title = "は新しいグループを立ち上げました";
+    }
+    else if (obj.type == "group-invited") {
+        title = "はあなたをグループに招待しました";
+    }
+    else if (obj.type == "group-join") {
+        title = "はグループに参加しました";
+    }
+%>
+
+<a href="#group/<%= obj.target %>">
+    <img src="<%= obj._from.photo %>" class="msg-photo" alt="">
+    <span class="msg-body">
+        <span class="msg-title">
+            <span class="blue">
+                <%= obj._from.firstName %>&nbsp;
+                <%= obj._from.lastName %>&nbsp;
+            </span>
+            <%= title %>
+        </span>
+        <span class="msg-time">
+            <i class="ace-icon fa fa-clock-o"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>
+            <button class="btn btn-minier btn-info btn-acknowledge pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;了解</button>
+        </span>
+    </span>
+</a>

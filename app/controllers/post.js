@@ -91,7 +91,7 @@ exports.create = function(req, res, next) {
                 type: 'user-post',
                 target: newPost._id
             }, function(err, notification) {
-                if (err) next(err)
+                if (err) next(err);
                 else {
                     // populate the respond notification with user's info
                     notification.populate({

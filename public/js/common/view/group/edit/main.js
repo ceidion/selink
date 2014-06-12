@@ -22,7 +22,7 @@ define([
         regions: {
             coverRegion: '#cover',
             nameRegion: '#name',
-            descriptionRegion: '#description'
+            descriptionRegion: '#description',
         },
 
         // events

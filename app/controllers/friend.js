@@ -16,7 +16,7 @@ exports.introduce = function(req, res, next) {
         .ne(req.user._id)  // not himself
         .nin(req.user.friends.concat(req.user.invited))  // not his friend and haven't been invited by him
         // .nin(req.user.invited)
-        .select('type firstName lastName title gender bio photo employments educations createDate')
+        .select('type firstName lastName title cover gender bio photo employments educations createDate')
         .skip(30*page)  // skip n page
         .limit(30)  // 30 user per page
         .sort({createDate:-1})  // sort by createDate desc

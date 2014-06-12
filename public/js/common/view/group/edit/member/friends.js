@@ -95,10 +95,17 @@ define([
             this.model.save({
                 invited: this.selectFriends
             }, {
+                url: this.model.url() + '/invite',
                 success: function() {
+
+                    self.$el.find('.btn-invite').addClass('disabled');
+
                     _.each(self.selectView, function(view) {
                         self.$el.find(self.itemViewContainer).isotope('remove', view).isotope('layout');
                     });
+
+                    self.selectFriends = [];
+                    self.selectView = [];
                 },
                 patch: true,
                 wait: true

@@ -17,6 +17,9 @@ var Mailer = require('../mailer/mailer.js'),
     9. user-job
     10. user-job-bookmarked
     11. user-message
+    12. new-group
+    13. group-invited
+    14. group-joined
 */
 
 // Notification index

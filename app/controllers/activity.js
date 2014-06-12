@@ -18,6 +18,9 @@ var mongoose = require('mongoose'),
     12. | user-job             | job    | job name
     13. | user-job-bookmarked  | job    | job name
     14. | user-message         | message| message subject
+    15. | new-group            | group  | group
+    16. | group-invited        | group  | group
+    17. | group-joined         | group  | group
 */
 
 // Activity index

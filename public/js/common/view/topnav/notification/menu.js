@@ -183,6 +183,18 @@ define([
                 // add the notification to collection
                 self.collection.add(data);
             });
+
+            selink.socket.on('new-group', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: '新しいグループを立ち上げました。',
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-success'
+                });
+                // add the notification to collection
+                self.collection.add(data);
+            });
         },
 
         // after show

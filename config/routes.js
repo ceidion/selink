@@ -98,7 +98,10 @@ module.exports = function(app, sio) {
     // Upload group cover
     app.put('/groups/:group/cover', checkLoginStatus, group.uploadCover);
     app.put('/groups/:group/cover-scale', checkLoginStatus, group.scaleCover);
-
+    // Invite people
+    app.patch('/groups/:group/invite', checkLoginStatus, group.invite);
+    // Join group
+    app.patch('/groups/:group/join', checkLoginStatus, group.join);
 
     // Get jobs (employer only)
     app.get('/jobs', checkLoginStatus, job.index);

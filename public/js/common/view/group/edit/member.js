@@ -41,7 +41,10 @@ define([
                 model: this.model,
                 collection: new Backbone.Collection(avaliableFriends)
             });
-            // this.peopleView = new PeopleView({collection: selink.userModel.friends});
+
+            this.peopleView = new PeopleView({
+                model: this.model
+            });
 
             this.invitedView = new InvitedView({
                 model: this.model,
@@ -61,7 +64,7 @@ define([
             this.friendsRegion.show(this.friendsView);
 
             // show people area
-            // this.peopleRegion.show(this.peopleView);
+            this.peopleRegion.show(this.peopleView);
 
             // show invited area
             this.invitedRegion.show(this.invitedView);

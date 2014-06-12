@@ -17,22 +17,22 @@ define([], function() {
             'shiftColumn': 'shiftColumn'
         },
 
-        appendHtml: function(collectionView, itemView, index) {
+        // appendHtml: function(collectionView, itemView, index) {
 
-            var self = this;
+        //     var self = this;
 
-            // ensure the image are loaded
-            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
-                // if the item is newly created one
-                if (index === 0)
-                    // prepend new item and reIsotope
-                    self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
-                // if the item from infinit scroll loading
-                else
-                    // append item and reIsotope
-                    self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
-            });
-        },
+        //     // ensure the image are loaded
+        //     this.$el.find(this.itemViewContainer).imagesLoaded(function() {
+        //         // if the item is newly created one
+        //         if (index === 0)
+        //             // prepend new item and reIsotope
+        //             self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
+        //         // if the item from infinit scroll loading
+        //         else
+        //             // append item and reIsotope
+        //             self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
+        //     });
+        // },
 
         // Initializer
         initialize: function() {
@@ -47,24 +47,36 @@ define([], function() {
 
             var self = this;
 
-            // use imageLoaded plugin
-            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
-                // enable isotope
-                self.$el.find(self.itemViewContainer).isotope({
-                    itemSelector : '.isotope-item',
-                    stamp: '.stamp',
-                    masonry: {
-                        columnWidth: '.isotope-item'
-                    },
-                    getSortData: {
-                        createDate: function(elem) {
-                            return $(elem).find('[data-create-date]').data('create-date');
-                        }
-                    },
-                    sortBy: 'createDate',
-                    sortAscending: false
-                });
+            // enable isotope
+            this.$el.find(this.itemViewContainer).isotope({
+                itemSelector : '.isotope-item',
+                stamp: '.stamp',
+                masonry: {
+                    columnWidth: '.isotope-item'
+                },
+                getSortData: {
+                    createDate: function(elem) {
+                        return $(elem).find('[data-create-date]').data('create-date');
+                    }
+                },
+                sortBy: 'createDate',
+                sortAscending: false
             });
+
+            this.appendHtml = function(collectionView, itemView, index) {
+
+                // ensure the image are loaded
+                self.$el.find(self.itemViewContainer).imagesLoaded(function() {
+                    // if the item is newly created one
+                    if (index === 0)
+                        // prepend new item and reIsotope
+                        self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
+                    // if the item from infinit scroll loading
+                    else
+                        // append item and reIsotope
+                        self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
+                });
+            };
         },
 
         // After show
