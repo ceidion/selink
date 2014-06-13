@@ -7,8 +7,11 @@
     else if (obj.type == "group-invited") {
         title = "はあなたをグループに招待しました";
     }
-    else if (obj.type == "group-join") {
+    else if (obj.type == "group-joined") {
         title = "はグループに参加しました";
+    }
+    else if (obj.type == "group-refused") {
+        title = "はグループ招待を拒否しました";
     }
 %>
 
@@ -24,7 +27,14 @@
         </span>
         <span class="msg-time">
             <i class="ace-icon fa fa-clock-o"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>
-            <button class="btn btn-minier btn-info btn-acknowledge pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;了解</button>
+            <% if (obj.type == "group-invited") { %>
+                <div class="pull-right">
+                    <button class="btn btn-minier btn-pink btn-refuse"><i class="ace-icon fa fa-times"></i>&nbsp;拒否</button>
+                    <button class="btn btn-minier btn-success btn-join"><i class="ace-icon fa fa-check"></i>&nbsp;参加</button>
+                </div>
+            <% } else { %>
+                <button class="btn btn-minier btn-info btn-acknowledge pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;了解</button>
+            <% } %>
         </span>
     </span>
 </a>

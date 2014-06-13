@@ -2,11 +2,13 @@ define([
     'text!common/template/notification/item/user-friend.html',
     'text!common/template/notification/item/user-post.html',
     'text!common/template/notification/item/user-job.html',
+    'text!common/template/notification/item/group.html',
     'common/view/topnav/notification/item'
 ], function(
     friendTemplate,
     postTemplate,
     jobTemplate,
+    groupTemplate,
     BaseView
 ) {
 
@@ -25,6 +27,8 @@ define([
                 return postTemplate;
             else if (_.indexOf(this.jobTargetNotification, type) >= 0)
                 return jobTemplate;
+            else if (_.indexOf(this.groupTargetNotification, type) >= 0)
+                return groupTemplate;
         },
 
         onApproveClick: function() {

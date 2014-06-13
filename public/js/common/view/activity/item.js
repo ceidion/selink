@@ -4,6 +4,7 @@ define([
     'text!common/template/activity/item/user-post.html',
     'text!common/template/activity/item/user-friend.html',
     'text!common/template/activity/item/user-job.html',
+    'text!common/template/activity/item/group.html',
     'text!common/template/activity/item/default.html',
     'text!common/template/people/popover.html',
     'common/model/base'
@@ -13,6 +14,7 @@ define([
     userPostTemplate,
     userFriendInvitedTemplate,
     userJobTemplate,
+    groupTemplate,
     defaultTemplate,
     popoverTemplate,
     BaseModel
@@ -24,9 +26,11 @@ define([
 
         userTargetActivity: ['user-friend-invited', 'user-friend-approved', 'user-friend-declined', 'user-friend-break'],
 
-        postTargetActivity: ['user-post', 'user-post-liked', 'user-post-bookmarked', 'user-post-commented'],
+        postTargetActivity: ['user-post', 'user-post-liked', 'user-post-bookmarked', 'user-post-commented', 'user-comment-liked'],
 
         jobTargetActivity: ['user-job', 'user-job-bookmarked'],
+
+        groupTargetActivity: ['new-group', 'group-invited', 'group-joined', 'group-refused'],
 
         // template
         getTemplate: function(){
@@ -43,6 +47,8 @@ define([
                 return userPostTemplate;
             else if (_.indexOf(this.jobTargetActivity, type) >= 0)
                 return userJobTemplate;
+            else if (_.indexOf(this.groupTargetActivity, type) >= 0)
+                return groupTemplate;
             else
                 return defaultTemplate;
         },

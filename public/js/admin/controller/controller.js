@@ -7,8 +7,11 @@ define([
     'common/view/post/main',
     'common/view/post/detail',
     'common/view/friend/main',
+    'common/view/group/main',
+    'common/view/group/edit/main',
     'common/view/people/main',
     'common/view/people/detail',
+    'common/view/bookmark/main',
     'common/view/calendar/main',
     'common/view/activity/main',
     'common/view/notification/main',
@@ -18,7 +21,8 @@ define([
     'admin/view/announcement/main',
     'admin/view/issue/main',
     'common/model/user',
-    'common/model/post'
+    'common/model/post',
+    'common/model/group'
 ], function(
     TopNavView,
     SideNavView,
@@ -28,8 +32,11 @@ define([
     PostView,
     PostDetailView,
     FriendView,
+    GroupView,
+    GroupEditView,
     PeopleView,
     PeopleDetailView,
+    BookMarkView,
     CalendarView,
     ActivityView,
     NotificationView,
@@ -39,7 +46,8 @@ define([
     AnnouncementView,
     IssueView,
     UserModel,
-    PostModel
+    PostModel,
+    GroupModel
 ) {
 
     // Main page controller
@@ -163,6 +171,30 @@ define([
             selink.pageContent.show(selink.friendView);
         },
 
+        // show groups
+        showGroupView: function(id) {
+
+            if (id) {
+
+                var group = new GroupModel({_id: id});
+                group.fetch({
+                    success: function() {
+                        selink.groupEditView = new GroupEditView({
+                            model: group
+                        });
+                        selink.pageContent.show(selink.groupEditView);
+                    }
+                });
+
+            } else {
+
+                // create group view
+                selink.groupView = new GroupView();
+                // show group view
+                selink.pageContent.show(selink.groupView);
+            }
+        },
+
         // show people
         showPeopleView: function() {
 
@@ -170,6 +202,15 @@ define([
             selink.peopleView = new PeopleView();
             // show people view
             selink.pageContent.show(selink.peopleView);
+        },
+
+        // show bookmark
+        showBookmarkView: function() {
+
+            // create bookmark view
+            selink.bookmarkView = new BookMarkView();
+            // show bookmark view
+            selink.pageContent.show(selink.bookmarkView);
         },
 
         // show calendar

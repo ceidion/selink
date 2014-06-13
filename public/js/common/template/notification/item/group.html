@@ -1,0 +1,59 @@
+<%
+    var iconClass = "",
+        title = "";
+
+    if (obj.type == "new-group") {
+        iconClass = "ace-icon fa fa-group";
+        title = "は新しいグループを立ち上げました";
+    }
+    else if (obj.type == "group-invited") {
+        iconClass = "ace-icon fa fa-ticket";
+        title = "はあなたをグループに招待しました";
+    }
+    else if (obj.type == "group-joined") {
+        iconClass = "ace-icon fa fa-beer";
+        title = "はグループに参加しました";
+    }
+    else if (obj.type == "group-refused") {
+        iconClass = "ace-icon fa fa-times-circle";
+        title = "はグループ招待を拒否しました";
+    }
+%>
+
+<div class="widget-box widget-color-pink isotope-item">
+    <div class="widget-header widget-header-flat">
+        <h5 class="widget-title smaller">
+            <i class="<%= iconClass %>"></i>
+            <%= obj._from.firstName %>&nbsp;<%= obj._from.lastName %>
+            &nbsp;<%= title %>
+        </h5>
+        <div class="widget-toolbar">
+            <i class="ace-icon fa fa-clock-o"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
+        </div>
+        <a href="#profile/<%= obj._from._id %>" title="<%- obj._from.firstName %>">
+            <img class="avatar" src="<%= obj._from.photo %>">
+        </a>
+    </div>
+
+    <div class="widget-body">
+
+        <div class="widget-main">
+
+            <div class="content">
+                <%= obj.content %>
+            </div>
+
+            <% if (obj.result) { %>
+                <div class="text-muted pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;確認済み</div>
+            <% } else { %>
+                <div class="pull-right">
+                    <button class="btn btn-sm btn-info btn-acknowledge pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;了解</button>
+                </div>
+            <% } %>
+
+            <div class="clearfix"></div>
+        </div>
+
+    </div>
+</div>
+<div class="space"></div>

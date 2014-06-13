@@ -51,6 +51,8 @@ define([
 
             // populate invited collection
             this.invited.set(response.invited, {parse: true, remove: false});
+            // set invitation number, for display in the profile of group
+            response.invitationNum = response.invited.length;
             delete response.invited;
 
             return response;

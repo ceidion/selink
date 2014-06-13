@@ -33,24 +33,32 @@ define([
 
             var self = this;
 
+            // people in my friend list but not in the group yet
             var avaliableFriends = selink.userModel.friends.reject(function(friend) {
-                return self.model.invited.findWhere({_id: friend.id});
+                // neither in invited list nor in pariticipants list
+                return self.model.invited.findWhere({_id: friend.id}) || self.model.participants.findWhere({_id: friend.id});
             });
 
-            this.friendsView = new FriendsView({
-                model: this.model,
-                collection: new Backbone.Collection(avaliableFriends)
-            });
+            // if there is any friend avaliable
+            if (avaliableFriends.length)
+                // build friend view
+                this.friendsView = new FriendsView({
+                    model: this.model,
+                    collection: new Backbone.Collection(avaliableFriends)
+                });
 
+            // people ont in my friends list
             this.peopleView = new PeopleView({
                 model: this.model
             });
 
+            // people been invited to this group
             this.invitedView = new InvitedView({
                 model: this.model,
                 collection: this.model.invited
             });
 
+            // people already in this group
             this.participantsView = new ParticipantsView({
                 model: this.model,
                 collection: this.model.participants
@@ -60,8 +68,9 @@ define([
         // after render
         onRender: function() {
 
-            // show friends area
-            this.friendsRegion.show(this.friendsView);
+            if (this.friendsView)
+                // show friends area
+                this.friendsRegion.show(this.friendsView);
 
             // show people area
             this.peopleRegion.show(this.peopleView);

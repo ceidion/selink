@@ -195,6 +195,42 @@ define([
                 // add the notification to collection
                 self.collection.add(data);
             });
+
+            selink.socket.on('group-invited', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: 'グループに招待しました。',
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-success'
+                });
+                // add the notification to collection
+                self.collection.add(data);
+            });
+
+            selink.socket.on('group-joined', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: 'グループに参加しました。',
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-success'
+                });
+                // add the notification to collection
+                self.collection.add(data);
+            });
+
+            selink.socket.on('group-refused', function(data) {
+                $.gritter.add({
+                    title: data._from.firstName + ' ' + data._from.lastName,
+                    text: 'グループ招待を拒否しました。',
+                    image: data._from.photo,
+                    time: 8000,
+                    class_name: 'gritter-info'
+                });
+                // add the notification to collection
+                self.collection.add(data);
+            });
         },
 
         // after show

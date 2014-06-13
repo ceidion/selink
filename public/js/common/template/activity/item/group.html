@@ -1,22 +1,18 @@
 <%
     var title = "";
 
-    if (obj.type == "user-post") {
-        title = "新しい記事を投稿しました";
+    if (obj.type == "new-group") {
+        title = "は新しいグループを立ち上げました";
     }
-    else if (obj.type == "user-post-liked") {
-        title = "下記投稿に「いいね！」しました";
+    else if (obj.type == "group-invited") {
+        title = "はあなたをグループに招待しました";
     }
-    else if (obj.type == "user-post-bookmarked") {
-        title = "下記投稿にブックマークを付けました";
+    else if (obj.type == "group-joined") {
+        title = "はグループに参加しました";
     }
-    else if (obj.type == "user-post-commented") {
-        title = "下記投稿をコメントしました";
+    else if (obj.type == "group-refused") {
+        title = "はグループ招待を拒否しました";
     }
-    else if (obj.type == "user-comment-liked") {
-        title = "はあなたのコメントに「いいね！」しました";
-    }
-
 %>
 
 <div class="timeline-info">
@@ -25,10 +21,10 @@
     </a>
 </div>
 
-<div class="widget-box widget-color-green">
+<div class="widget-box widget-color-pink">
     <div class="widget-header widget-header-small">
         <h5 class="widget-title smaller">
-            <i class="ace-icon fa fa-edit bigger-110"></i>&nbsp;
+            <i class="ace-icon fa fa-group bigger-110"></i>&nbsp;
             <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
             は<%= title %>
         </h5>
@@ -43,7 +39,7 @@
                 <div class="pull-right action-buttons">
                     <div class="space-4"></div>
                     <div>
-                        <a href="#post/<%= obj.target._id %>"><i class="ace-icon fa fa-desktop bigger-110"></i>&nbsp;詳しく読む</a>
+                        <a href="#group/<%= obj.target %>"><i class="ace-icon fa fa-group bigger-110"></i>&nbsp;グループへ</a>
                     </div>
                 </div>
             </div>

@@ -143,10 +143,63 @@ exports.invite = function(req, res, next) {
                     if (err) next(err);
                     else {
 
-                        newGroup.populate({
+                        // create activity
+                        Activity.create({
+                            _owner: req.user.id,
+                            type: 'group-invited',
+                            target: newGroup._id
+                        }, function(err, activity) {
+                            if (err) next(err);
+                        });
+
+                        // send notificaton to all friends
+                        Notification.create({
+                            _owner: req.body.invited,
+                            _from: req.user.id,
+                            type: 'group-invited',
+                            target: newGroup._id
+                        }, function(err, notification) {
+                            if (err) next(err);
+                            else {
+                                // populate the respond notification with user's info
+                                notification.populate({
+                                    path:'_from',
+                                    select: 'type firstName lastName title cover photo createDate'
+                                }, function(err, noty) {
+                                    if(err) next(err);
+                                    // send real time message
+                                    else
+                                        req.body.invited.forEach(function(room) {
+                                            sio.sockets.in(room).emit('group-invited', noty);
+                                        });
+                                });
+                            }
+                        });
+
+                        // // send email to all friends
+                        // User.find()
+                        //     .select('email')
+                        //     .where('_id').in(req.user.friends)
+                        //     .where('logicDelete').equals(false)
+                        //     .exec(function(err, users) {
+                        //         // send new-post mail
+                        //         Mailer.newPost(users, {
+                        //             _id: newPost._id,
+                        //             authorName: req.user.firstName + ' ' + req.user.lastName,
+                        //             authorPhoto: req.user.photo,
+                        //             summary: newPost.summary
+                        //         });
+                        //     });
+
+                        var populateQuery = [{
                             path:'invited',
                             select: 'type firstName lastName title cover photo createDate'
-                        }, function(err, group) {
+                        }, {
+                            path:'participants',
+                            select: 'type firstName lastName title cover photo createDate'
+                        }];
+
+                        newGroup.populate(populateQuery, function(err, group) {
 
                             if (err) next(err);
                             else res.json(group);
