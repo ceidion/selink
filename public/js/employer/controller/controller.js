@@ -178,6 +178,7 @@ define([
                 var group = new GroupModel({_id: id});
                 group.fetch({
                     success: function() {
+
                         selink.groupEditView = new GroupEditView({
                             model: group
                         });

@@ -1,11 +1,13 @@
 define([
     'text!common/template/post/item.html',
     'text!common/template/people/popover.html',
+    'text!common/template/group/popover.html',
     'common/collection/base',
     'common/view/post/comment'
 ], function(
     template,
-    popoverTemplate,
+    peoplePopoverTemplate,
+    groupPopoverTemplate,
     BaseCollection,
     ItemView
 ) {
@@ -27,6 +29,7 @@ define([
         // ui
         ui: {
             avatar: '.avatar',
+            groupLabel: '.group-label',
 
             menuToggler: '.widget-header .widget-toolbar',
             removeBtn: '.btn-remove',
@@ -61,6 +64,7 @@ define([
             'mouseout': 'toggleMenuIndicator',
 
             'click @ui.avatar': 'toProfile',
+            'click @ui.groupLabel': 'toGroup',
 
             'click @ui.removeBtn': 'showAlert',
             'click @ui.forbidBtn': 'toggleForbid',
@@ -128,6 +132,18 @@ define([
                 }
             }).prev().addClass('wysiwyg-style3');
 
+            // if this post belong to some group
+            if (this.model.get('group'))
+                // add popover on group label
+                this.ui.groupLabel.popover({
+                    html: true,
+                    trigger: 'hover',
+                    container: 'body',
+                    placement: 'auto right',
+                    title: '<img src="' + this.model.get('group').cover + '" />',
+                    content: _.template(groupPopoverTemplate, this.model.get('group')),
+                });
+
             // add popover on author photo
             this.ui.avatar.popover({
                 html: true,
@@ -135,7 +151,7 @@ define([
                 container: 'body',
                 placement: 'auto right',
                 title: '<img src="' + this.model.get('_owner').cover + '" />',
-                content: _.template(popoverTemplate, this.model.get('_owner')),
+                content: _.template(peoplePopoverTemplate, this.model.get('_owner')),
             });
 
             this.ui.editable.tooltip({
@@ -170,6 +186,18 @@ define([
             this.ui.avatar.popover('destroy');
             // turn the page manually
             window.location = '#profile/' + this.model.get('_owner')._id;
+        },
+
+        // turn to group page
+        toGroup: function(e) {
+
+            // stop defautl link behavior
+            e.preventDefault();
+
+            // destroy the popover on group label
+            this.ui.groupLabel.popover('destroy');
+            // turn the page manually
+            window.location = '#group/' + this.model.get('group')._id;
         },
 
         // show remove confirm alert

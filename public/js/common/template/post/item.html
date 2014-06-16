@@ -59,6 +59,15 @@
             <%= moment(obj.createDate).calendar() %>
         </h6>
 
+        <!-- group name -->
+        <% if (obj.group) { %>
+            <a class="group-label" href="#group/<%= obj.group._id %>">
+                <span class="label label-pink arrowed-in arrowed-in-right">
+                    <%= obj.group.name %>
+                </span>
+            </a>
+        <% } %>
+
         <div class="clearfix"></div>
 
     </div>

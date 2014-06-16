@@ -354,6 +354,7 @@ exports.newsfeed = function(req, res, next) {
         .where('logicDelete').equals(false)
         .populate('_owner', 'type firstName lastName title cover photo createDate')
         .populate('comments._owner', 'type firstName lastName title cover photo createDate')
+        .populate('group', 'name cover description')
         .sort('-createDate')
         .skip(10*page)  // skip n page
         .limit(10)
@@ -399,6 +400,7 @@ exports.bookmark = function(req, res, next) {
         .where('bookmarked').equals(req.user.id)
         .populate('_owner', 'type firstName lastName title cover photo createDate')
         .populate('comments._owner', 'type firstName lastName title cover photo createDate')
+        .populate('group', 'name cover description')
         .sort('-createDate')
         .skip(10*page)  // skip n page
         .limit(10)

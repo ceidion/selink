@@ -200,7 +200,6 @@ exports.invite = function(req, res, next) {
                         }];
 
                         newGroup.populate(populateQuery, function(err, group) {
-
                             if (err) next(err);
                             else res.json(group);
                         });

@@ -12,6 +12,7 @@ var _ = require('underscore'),
 exports.index = function(req, res, next) {
 
     var category = req.query.category || null, // category of request
+        group = req.query.group || null,
         user = req.query.user || null,
         page = req.query.page || 0;            // page number
 
@@ -20,7 +21,10 @@ exports.index = function(req, res, next) {
     // if requested for 'my friends' posts
     if (category == "friend") {
         query.where('_owner').in(req.user.friends);
-    // or requested for 'someone' posts
+    // or requested for 'some group' posts
+    } else if (group) {
+        query.where('group').equals(group);
+    // or requested for 'someone\'s'  posts
     } else if (user) {
         query.where('_owner').equals(user);
     // or requested for 'my' posts
@@ -31,6 +35,7 @@ exports.index = function(req, res, next) {
     query.where('logicDelete').equals(false)
         .populate('_owner', 'type firstName lastName title cover photo createDate')
         .populate('comments._owner', 'type firstName lastName title cover photo createDate')
+        .populate('group', 'name cover description')
         .skip(20*page)  // skip n page
         .limit(20)
         .sort('-createDate')
@@ -47,6 +52,7 @@ exports.show = function(req, res, next) {
         .where('logicDelete').equals(false)
         .populate('_owner', 'type firstName lastName title cover photo createDate')
         .populate('comments._owner', 'type firstName lastName title cover photo createDate')
+        .populate('group', 'name cover description')
         .exec(function(err, posts) {
             if (err) next(err);
             else res.json(posts);
@@ -69,7 +75,8 @@ exports.create = function(req, res, next) {
     Post.create({
         _owner: req.user.id,
         content: req.body.content,
-        summary: contentStripTag
+        summary: contentStripTag,
+        group: req.body.group
     }, function(err, newPost) {
 
         if (err) next(err);
@@ -123,11 +130,16 @@ exports.create = function(req, res, next) {
                     });
                 });
 
-            // return the crearted post
-            newPost.populate({
+            var populateQuery = [{
                 path: '_owner',
                 select: 'type firstName lastName title cover photo createDate'
-            }, function(err, post) {
+            }, {
+                path:'group',
+                select: 'name cover description'
+            }];
+
+            // return the crearted post
+            newPost.populate(populateQuery, function(err, post) {
                 if (err) next(err);
                 else res.json(post);
             });

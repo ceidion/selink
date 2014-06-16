@@ -38,6 +38,12 @@ var Post = new Schema({
         ref: 'User'
     }],
 
+    // post group
+    group: {
+        type: Schema.Types.ObjectId,
+        ref: 'Group'
+    },
+
     // Comments
     comments: [Comment],
 
