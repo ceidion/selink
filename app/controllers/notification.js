@@ -21,6 +21,7 @@ var Mailer = require('../mailer/mailer.js'),
     12. new-group
     13. group-invited
     14. group-joined
+    15. group-refused
 */
 
 // Notification index

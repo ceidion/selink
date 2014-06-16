@@ -21,6 +21,7 @@ var mongoose = require('mongoose'),
     15. | new-group            | group  | group
     16. | group-invited        | group  | group
     17. | group-joined         | group  | group
+    18. | group-refused        | group  | group
 */
 
 // Activity index
