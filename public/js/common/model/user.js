@@ -112,6 +112,11 @@ define([
         }
     });
 
+    var Groups = BaseCollection.extend({
+
+        url: '/groups'
+    });
+
     var Friends = BaseCollection.extend({
 
         url: '/friends'
@@ -145,6 +150,9 @@ define([
 
             // create employments collection inside model
             this.employments = new Employments(null, {document: this});
+
+            // create groups collection inside model
+            this.groups = new Groups();
 
             // create friends collection inside model
             this.friends = new Friends();
@@ -193,12 +201,14 @@ define([
             // delete response.educations;
             // delete response.employments;
 
+            // populate groups collection
+            this.groups.set(response.groups, {parse: true, remove: false});
+            delete response.groups;
+
             // populate friends collection
             this.friends.set(response.friends, {parse: true, remove: false});
-
             // set friends number, for display in the profile of other person
             response.friendsNum = response.friends.length;
-
             delete response.friends;
 
             // populate invited collection

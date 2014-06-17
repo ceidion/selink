@@ -15,6 +15,9 @@ define([
 
     return Backbone.Marionette.CompositeView.extend({
 
+        // class name
+        className: "widget-box widget-color-orange",
+
         // template
         template: template,
 

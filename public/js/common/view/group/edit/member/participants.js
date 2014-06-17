@@ -8,6 +8,9 @@ define([
 
     return Backbone.Marionette.CompositeView.extend({
 
+        // class name
+        className: "widget-box transparent",
+
         // template
         template: template,
 
