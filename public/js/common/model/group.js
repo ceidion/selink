@@ -51,7 +51,8 @@ define([
                 response.isMine = false;
 
             // if user's id exists in group's participants list
-            if (_.indexOf(response.participants, selink.userModel.id) >= 0)
+            // if (_.indexOf(response.participants, selink.userModel.id) >= 0)
+            if (_.findWhere(response.participants, {_id: selink.userModel.id}))
                 // mark as participated
                 response.isParticipated = true;
             else

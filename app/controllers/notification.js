@@ -225,57 +225,67 @@ accept = function(req, res, next, notification) {
         if (err) next(err);
         else {
 
-            // move user's id from group's invited list
-            // to the participants list
-            group.invited.pull(req.user._id);
-            group.participants.push(req.user._id);
-
-            // update group
-            group.save(function(err, updatedGroup) {
+            // add group id to user paticipated group
+            req.user.groups.addToSet(group._id);
+            // update user
+            req.user.save(function(err) {
 
                 if (err) next(err);
                 else {
 
-                    // create respond notification
-                    Notification.create({
-                        _owner: updatedGroup._owner,
-                        _from: req.user.id,
-                        type: 'group-joined'
-                    }, function(err, respond) {
+                    // move user's id from group's invited list
+                    // to the participants list
+                    group.invited.pull(req.user._id);
+                    group.participants.push(req.user._id);
+
+                    // update group
+                    group.save(function(err, updatedGroup) {
 
                         if (err) next(err);
                         else {
-                            // populate the respond notification with user's info
-                            respond.populate({path:'_from', select: 'type firstName lastName title cover photo createDate'}, function(err, noty) {
 
-                                if(err) next(err);
-                                // send real time message
-                                else sio.sockets.in(updatedGroup._owner).emit('group-joined', noty);
+                            // create respond notification
+                            Notification.create({
+                                _owner: updatedGroup._owner,
+                                _from: req.user.id,
+                                type: 'group-joined'
+                            }, function(err, respond) {
+
+                                if (err) next(err);
+                                else {
+                                    // populate the respond notification with user's info
+                                    respond.populate({path:'_from', select: 'type firstName lastName title cover photo createDate'}, function(err, noty) {
+
+                                        if(err) next(err);
+                                        // send real time message
+                                        else sio.sockets.in(updatedGroup._owner).emit('group-joined', noty);
+                                    });
+                                }
                             });
+
+                            // log user's activity
+                            Activity.create({
+                                _owner: req.user.id,
+                                type: 'group-joined',
+                                target: updatedGroup._id
+                            }, function(err) {
+                                if (err) next(err);
+                            });
+
+                            // mark the notification as confirmed
+                            notification.result = req.body.result;
+                            notification.confirmed.addToSet(req.user.id);
+                            notification.save(function(err, confirmedNotification) {
+                                if (err) next(err);
+                                else res.json(confirmedNotification);
+                            });
+
+                            // Mailer.groupJoin({
+                            //     from: req.user,
+                            //     email: updatedFriend.email
+                            // });
                         }
                     });
-
-                    // log user's activity
-                    Activity.create({
-                        _owner: req.user.id,
-                        type: 'group-joined',
-                        target: updatedGroup._id
-                    }, function(err) {
-                        if (err) next(err);
-                    });
-
-                    // mark the notification as confirmed
-                    notification.result = req.body.result;
-                    notification.confirmed.addToSet(req.user.id);
-                    notification.save(function(err, confirmedNotification) {
-                        if (err) next(err);
-                        else res.json(confirmedNotification);
-                    });
-
-                    // Mailer.groupJoin({
-                    //     from: req.user,
-                    //     email: updatedFriend.email
-                    // });
                 }
             });
         }

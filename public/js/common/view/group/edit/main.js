@@ -46,6 +46,7 @@ define([
 
         // events
         events: {
+            'click .btn-join': 'onJoin',
             'click .btn-member': 'showMemberEditor',
             'click .btn-post': 'onPost',
             'keyup .wysiwyg-editor': 'enablePost'
@@ -107,6 +108,33 @@ define([
 
             // call super onBeforeClose
             BaseView.prototype.onBeforeClose.apply(this);
+        },
+
+        // join group
+        onJoin: function() {
+
+            var self = this;
+
+            // show loading icon, and prevent user click twice
+            this.$el.find('.btn-join').button('loading');
+
+            // create a participant in this group
+            this.model.save({
+                participants: selink.userModel.id //TODO: no need to pass this parameter
+            }, {
+                url: this.model.url() + '/join',
+                success: function() {
+                    // change the label of the add button, but still disabled
+                    self.$el.find('.btn-join')
+                        .removeClass('btn-info btn-join')
+                        .addClass('btn-success')
+                        .empty()
+                        .html('<i class="ace-icon fa fa-check light-green"></i>&nbsp;参加中');
+                    // TODO: sycn with user model
+                },
+                patch: true,
+                wait: true
+            });
         },
 
         // edit group member

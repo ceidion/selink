@@ -2,15 +2,22 @@ define([
     'text!common/template/group/main.html',
     'common/view/composite-isotope',
     'common/collection/base',
-    'common/view/group/groups',
-    'common/view/post/item'
+    'common/view/group/item',
+    'common/model/group'
 ], function(
     pageTemplate,
     BaseView,
     BaseCollection,
-    GroupsView,
-    ItemView
+    ItemView,
+    GroupModel
 ) {
+
+    var GroupsCollection = BaseCollection.extend({
+
+        model: GroupModel,
+
+        url: '/groups'
+    });
 
     return BaseView.extend({
 
@@ -20,50 +27,57 @@ define([
         // item view
         itemView: ItemView,
 
+        // ui
+        ui: {
+            groupName: 'input',
+            createBtn: 'button'
+        },
+
+        // events
+        events: {
+            'keyup input': 'enableCreateBtn',
+            'click button': 'createGroup'
+        },
+
         // Initializer
         initialize: function() {
 
-            // if (selink.userModel.groups.length)
-                // create groups view
-                this.groupsView = new GroupsView();
-
             // create posts collection
-            // this.collection = new GroupsCollection();
+            this.collection = new GroupsCollection();
 
             // call super initializer
-            // BaseView.prototype.initialize.apply(this);
+            BaseView.prototype.initialize.apply(this);
         },
 
-        // After render
-        onRender: function() {
+        // enable create button if the group name was entered
+        enableCreateBtn: function() {
 
-            // create region manager (this composite view will have layout ability)
-            this.rm = new Backbone.Marionette.RegionManager();
-            // create regions
-            this.regions = this.rm.addRegions({
-                groupsRegion: '#groups'
+            // get user input
+            var input = this.ui.groupName.val();
+
+            // if user input is not empty
+            if (input && !_.str.isBlank(input)) {
+                // enable the create button
+                this.ui.createBtn.removeClass('disabled');
+            } else {
+                // disable ths create button
+                this.ui.createBtn.addClass('disabled');
+            }
+        },
+
+        // create group
+        createGroup: function() {
+
+            // create new group model
+            var newGroup = new GroupModel();
+
+            // save model with user inputed name
+            newGroup.save({name: this.ui.groupName.val()}, {
+                // jump to the group detail page
+                success: function(model, response, options) {
+                    window.location = '#group/' + model.id;
+                }
             });
-        },
-
-        // After show
-        onShow: function() {
-
-            if (this.groupsView)
-                // show friends view
-                this.regions.groupsRegion.show(this.groupsView);
-
-            // call super onShow
-            BaseView.prototype.onShow.apply(this);
-        },
-
-        // before close
-        onBeforeClose: function() {
-
-            // close region manager
-            this.rm.close();
-
-            // call super onBeforeClose
-            BaseView.prototype.onBeforeClose.apply(this);
         }
 
     });

@@ -13,18 +13,18 @@ var _ = require('underscore'),
 // Group index
 exports.index = function(req, res, next) {
 
-    var user = req.query.user || null,
+    var //user = req.query.user || null,
         page = req.query.page || 0;            // page number
 
     var query = Group.find();
 
-    // if requested for 'someone' groups
-    if (user) {
-        query.where('_owner').equals(user);
-    // or requested for 'my' groups
-    } else {
-        query.where('_owner').equals(req.user.id);
-    }
+    // // if requested for 'someone' groups
+    // if (user) {
+    //     query.where('_owner').equals(user);
+    // // or requested for 'my' groups
+    // } else {
+    //     query.where('_owner').equals(req.user.id);
+    // }
 
     query.where('logicDelete').equals(false)
         .populate('_owner', 'type firstName lastName title cover photo createDate')
@@ -56,7 +56,8 @@ exports.create = function(req, res, next) {
 
     Group.create({
         _owner: req.user.id,
-        name: req.body.name
+        name: req.body.name,
+        participants: req.user.id
     }, function(err, group) {
         if (err) next(err);
         else {
@@ -217,6 +218,43 @@ exports.invite = function(req, res, next) {
 // Join group
 exports.join = function(req, res, next) {
 
+    // add group id to user paticipated group
+    req.user.groups.addToSet(req.params.group);
+    // update user
+    req.user.save(function(err){
+
+        if (err) next(err);
+        else {
+
+            // update group info
+            Group.findById(req.params.group, function(err, group) {
+
+                if (err) next(err);
+                else {
+
+                    // add user id to group participants
+                    group.participants.addToSet(req.user.id);
+                    // update group
+                    group.save(function(err, group) {
+
+                        if (err) next(err);
+                        else {
+
+                            // return updated group
+                            group.populate({
+                                path: '_owner',
+                                select: 'type firstName lastName title cover photo createDate'
+                            }, function(err, group) {
+
+                                if (err) next(err);
+                                else res.json(group);
+                            });
+                        }
+                    });
+                }
+            });
+        }
+    });
 };
 
 // Upload Cover

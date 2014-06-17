@@ -151,16 +151,28 @@ var User = new Schema({
     // Skill
     skills: [Skill],
 
-    // Friend
+    // Posts
+    posts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+    }],
+
+    // Friends
     friends: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],
 
-    // Invited Friend
+    // Invited Friends
     invited: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
+    }],
+
+    // Participated group
+    groups: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Group'
     }],
 
     // User Setting

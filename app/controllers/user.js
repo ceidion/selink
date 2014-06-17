@@ -77,6 +77,7 @@ exports.show = function(req, res, next) {
     User.findById(req.params.user, '-password')
         .populate('friends', 'type firstName lastName title cover photo createDate')
         .populate('invited', 'type firstName lastName title cover photo createDate')
+        .populate('groups', 'name cover description')
         .exec(function(err, user) {
 
             if (err) next(err);

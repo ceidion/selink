@@ -47,21 +47,25 @@ define([], function() {
 
             var self = this;
 
-            // enable isotope
-            this.$el.find(this.itemViewContainer).isotope({
-                itemSelector : '.isotope-item',
-                stamp: '.stamp',
-                masonry: {
-                    columnWidth: '.isotope-item'
-                },
-                getSortData: {
-                    createDate: function(elem) {
-                        return $(elem).find('[data-create-date]').data('create-date');
-                    }
-                },
-                sortBy: 'createDate',
-                sortAscending: false
+            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
+
+                // enable isotope
+                self.$el.find(self.itemViewContainer).isotope({
+                    itemSelector : '.isotope-item',
+                    stamp: '.stamp',
+                    masonry: {
+                        columnWidth: '.isotope-item'
+                    },
+                    getSortData: {
+                        createDate: function(elem) {
+                            return $(elem).find('[data-create-date]').data('create-date');
+                        }
+                    },
+                    sortBy: 'createDate',
+                    sortAscending: false
+                });
             });
+
 
             this.appendHtml = function(collectionView, itemView, index) {
 

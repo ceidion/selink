@@ -1,10 +1,37 @@
-<div style="border: 1px solid #CCC;">
-    <a href="#group/<%= obj._id %>">
-        <img src="<%= obj.cover %>"/>
-    </a>
+<div style="border: 1px solid #CCC; margin-bottom: 10px;">
+
+    <div style="position: relative;">
+        <a href="#group/<%= obj._id %>">
+            <img src="<%= obj.cover %>"/>
+        </a>
+
+        <a href="#profile/<%= obj._owner._id %>" style="position: absolute; bottom: -20px; right: 10px;">
+            <img class="avatar" src="<%= obj._owner.photo %>" style="max-width: 50px; border-radius: 100%; border: 2px solid white;">
+        </a>
+    </div>
 
     <blockquote style="margin-bottom: 0px;">
         <p><%= obj.name %></p>
         <small><%= obj.description %></small>
     </blockquote>
+
+    <div class="clearfix" style="padding: 12px;">
+
+        <div class="pull-right green">
+            <i class="ace-icon fa fa-group tooltip-success"></i>
+            <%= obj.memberNum %>
+        </div>
+
+        <div class="pull-right orange" style="padding-right: 10px;">
+            <i class="ace-icon fa fa-tasks tooltip-warning"></i>
+            <%= obj.invitationNum %>
+        </div>
+
+        <div class="pull-right blue" style="padding-right: 10px;">
+            <i class="ace-icon fa fa-edit tooltip-info"></i>
+            <%= selink.userModel.get('postNum') %>
+        </div>
+
+    </div>
+
 </div>
