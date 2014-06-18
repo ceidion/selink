@@ -85,8 +85,8 @@ exports.create = function(req, res, next) {
             // create activity
             Activity.create({
                 _owner: req.user.id,
-                type: 'user-post',
-                target: newPost._id
+                type: 'post-new',
+                targetPost: newPost._id
             }, function(err, activity) {
                 if (err) next(err);
             });
@@ -95,8 +95,8 @@ exports.create = function(req, res, next) {
             Notification.create({
                 _owner: req.user.friends,
                 _from: req.user.id,
-                type: 'user-post',
-                target: newPost._id
+                type: 'post-new',
+                targetPost: newPost._id
             }, function(err, notification) {
                 if (err) next(err);
                 else {
@@ -109,7 +109,7 @@ exports.create = function(req, res, next) {
                         // send real time message
                         else
                             req.user.friends.forEach(function(room) {
-                                sio.sockets.in(room).emit('user-post', noty);
+                                sio.sockets.in(room).emit('post-new', noty);
                             });
                     });
                 }
@@ -222,8 +222,8 @@ exports.like = function(req, res, next){
                         // create activity
                         Activity.create({
                             _owner: req.body.liked,
-                            type: 'user-post-liked',
-                            target: newPost._id
+                            type: 'post-liked',
+                            targetPost: newPost._id
                         }, function(err, activity) {
                             if (err) next(err);
                         });
@@ -232,8 +232,8 @@ exports.like = function(req, res, next){
                         Notification.create({
                             _owner: [newPost._owner],
                             _from: req.body.liked,
-                            type: 'user-post-liked',
-                            target: newPost._id
+                            type: 'post-liked',
+                            targetPost: newPost._id
                         }, function(err, notification) {
 
                             if (err) next(err);
@@ -245,7 +245,7 @@ exports.like = function(req, res, next){
                                 }, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
-                                    sio.sockets.in(newPost._owner).emit('user-post-liked', noty);
+                                    sio.sockets.in(newPost._owner).emit('post-liked', noty);
                                 });
                             }
                         });
@@ -283,8 +283,8 @@ exports.bookmark = function(req, res, next){
                         // create activity
                         Activity.create({
                             _owner: req.body.bookmarked,
-                            type: 'user-post-bookmarked',
-                            target: newPost._id
+                            type: 'post-bookmarked',
+                            targetPost: newPost._id
                         }, function(err, activity) {
                             if (err) next(err);
                         });
@@ -293,8 +293,8 @@ exports.bookmark = function(req, res, next){
                         Notification.create({
                             _owner: [newPost._owner],
                             _from: req.body.bookmarked,
-                            type: 'user-post-bookmarked',
-                            target: newPost._id
+                            type: 'post-bookmarked',
+                            targetPost: newPost._id
                         }, function(err, notification) {
 
                             if (err) next(err);
@@ -306,7 +306,7 @@ exports.bookmark = function(req, res, next){
                                 }, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
-                                    sio.sockets.in(newPost._owner).emit('user-post-bookmarked', noty);
+                                    sio.sockets.in(newPost._owner).emit('post-bookmarked', noty);
                                 });
                             }
                         });

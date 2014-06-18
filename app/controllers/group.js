@@ -65,8 +65,8 @@ exports.create = function(req, res, next) {
             // create activity
             Activity.create({
                 _owner: req.user.id,
-                type: 'new-group',
-                target: group._id
+                type: 'group-new',
+                targetGroup: group._id
             }, function(err, activity) {
                 if (err) next(err);
             });
@@ -75,8 +75,8 @@ exports.create = function(req, res, next) {
             Notification.create({
                 _owner: req.user.friends,
                 _from: req.user.id,
-                type: 'new-group',
-                target: group._id
+                type: 'group-new',
+                targetGroup: group._id
             }, function(err, notification) {
                 if (err) next(err);
                 else {
@@ -89,7 +89,7 @@ exports.create = function(req, res, next) {
                         // send real time message
                         else
                             req.user.friends.forEach(function(room) {
-                                sio.sockets.in(room).emit('new-group', noty);
+                                sio.sockets.in(room).emit('group-new', noty);
                             });
                     });
                 }
@@ -148,7 +148,7 @@ exports.invite = function(req, res, next) {
                         Activity.create({
                             _owner: req.user.id,
                             type: 'group-invited',
-                            target: newGroup._id
+                            targetGroup: newGroup._id
                         }, function(err, activity) {
                             if (err) next(err);
                         });
@@ -158,7 +158,7 @@ exports.invite = function(req, res, next) {
                             _owner: req.body.invited,
                             _from: req.user.id,
                             type: 'group-invited',
-                            target: newGroup._id
+                            targetGroup: newGroup._id
                         }, function(err, notification) {
                             if (err) next(err);
                             else {
@@ -218,38 +218,28 @@ exports.invite = function(req, res, next) {
 // Join group
 exports.join = function(req, res, next) {
 
-    // add group id to user paticipated group
-    req.user.groups.addToSet(req.params.group);
-    // update user
-    req.user.save(function(err){
+    // update group info
+    Group.findById(req.params.group, function(err, group) {
 
         if (err) next(err);
         else {
 
-            // update group info
-            Group.findById(req.params.group, function(err, group) {
+            // add user id to group participants
+            group.participants.addToSet(req.user.id);
+            // update group
+            group.save(function(err, group) {
 
                 if (err) next(err);
                 else {
 
-                    // add user id to group participants
-                    group.participants.addToSet(req.user.id);
-                    // update group
-                    group.save(function(err, group) {
+                    // return updated group
+                    group.populate({
+                        path: '_owner',
+                        select: 'type firstName lastName title cover photo createDate'
+                    }, function(err, group) {
 
                         if (err) next(err);
-                        else {
-
-                            // return updated group
-                            group.populate({
-                                path: '_owner',
-                                select: 'type firstName lastName title cover photo createDate'
-                            }, function(err, group) {
-
-                                if (err) next(err);
-                                else res.json(group);
-                            });
-                        }
+                        else res.json(group);
                     });
                 }
             });

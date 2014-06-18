@@ -45,7 +45,7 @@ define([
             this.model.set('notificationsNum', this.collection.length, {silent:true});
 
             // accept notification real-time
-            selink.socket.on('user-friend-invited', function(data) {
+            selink.socket.on('friend-invited', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: '友達になるリクエストが届きました。',
@@ -57,7 +57,7 @@ define([
                 self.collection.add(data);
             });
 
-            selink.socket.on('user-friend-approved', function(data) {
+            selink.socket.on('friend-approved', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: 'あなたの友達リクエストを承認しました。',
@@ -72,7 +72,7 @@ define([
                 selink.userModel.friends.push(data._from);
             });
 
-            selink.socket.on('user-friend-declined', function(data) {
+            selink.socket.on('friend-declined', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: 'あなたの友達リクエストを拒否しました。',
@@ -86,7 +86,7 @@ define([
                 selink.userModel.invited.remove(data._from._id);
             });
 
-            selink.socket.on('user-friend-break', function(data) {
+            selink.socket.on('friend-break', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: 'あなたと友達を解除しました。',
@@ -100,7 +100,7 @@ define([
                 selink.userModel.friends.remove(data._from._id);
             });
 
-            selink.socket.on('user-post', function(data) {
+            selink.socket.on('post-new', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: '新しい記事を投稿しました。',
@@ -112,7 +112,7 @@ define([
                 self.collection.add(data);
             });
 
-            selink.socket.on('user-post-liked', function(data) {
+            selink.socket.on('post-liked', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: 'あなたの投稿にいいね！しました。',
@@ -124,7 +124,7 @@ define([
                 self.collection.add(data);
             });
 
-            selink.socket.on('user-post-bookmarked', function(data) {
+            selink.socket.on('post-bookmarked', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: 'あなたの投稿にブックマーク付けました。',
@@ -136,7 +136,7 @@ define([
                 self.collection.add(data);
             });
 
-            selink.socket.on('user-post-commented', function(data) {
+            selink.socket.on('post-commented', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: 'あなたの投稿にコメントしました。',
@@ -148,7 +148,7 @@ define([
                 self.collection.add(data);
             });
 
-            selink.socket.on('user-comment-liked', function(data) {
+            selink.socket.on('comment-liked', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: 'あなたのコメントにいいね！しました。',
@@ -160,7 +160,7 @@ define([
                 self.collection.add(data);
             });
 
-            selink.socket.on('user-job', function(data) {
+            selink.socket.on('job-new', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: '新しい仕事情報を投稿しました。',
@@ -172,7 +172,7 @@ define([
                 self.collection.add(data);
             });
 
-            selink.socket.on('user-job-bookmarked', function(data) {
+            selink.socket.on('job-bookmarked', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: 'あなたの仕事情報にブックマーク付けました。',
@@ -184,7 +184,7 @@ define([
                 self.collection.add(data);
             });
 
-            selink.socket.on('new-group', function(data) {
+            selink.socket.on('group-new', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: '新しいグループを立ち上げました。',

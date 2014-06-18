@@ -1,13 +1,13 @@
 <%
     var title = "";
 
-    if (obj.type == "user-job") {
+    if (obj.type == "job-new") {
         title = "新しい仕事情報を公開しました";
     }
     else if (obj.type == "user-job-liked") {
         title = "下記仕事情報に「いいね！」しました";
     }
-    else if (obj.type == "user-job-bookmarked") {
+    else if (obj.type == "job-bookmarked") {
         title = "下記仕事情報にブックマークを付けました";
     }
     else if (obj.type == "user-job-commented") {

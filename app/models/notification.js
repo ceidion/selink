@@ -24,9 +24,28 @@ var Notification = new Schema({
         required: true
     },
 
-    // notification target
-    target: {
-        type: Schema.Types.ObjectId
+    // notification target (post)
+    targetPost: {
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+    },
+
+    // notification target (job)
+    targetJob: {
+        type: Schema.Types.ObjectId,
+        ref: 'Job'
+    },
+
+    // notification target (message)
+    targetMessage: {
+        type: Schema.Types.ObjectId,
+        ref: 'Message'
+    },
+
+    // notification target (group)
+    targetGroup: {
+        type: Schema.Types.ObjectId,
+        ref: 'Group'
     },
 
     // notification confirmed

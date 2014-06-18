@@ -3,25 +3,25 @@
         title = ""
         resultStr = "確認済み";
 
-    if (obj.type == "user-friend-invited") {
+    if (obj.type == "friend-invited") {
         iconClass = "ace-icon fa fa-user";
         title = "から友達になるリクエストがありました";
 
-        if (obj.result == "approved") 
+        if (obj.result == "approved")
             resultStr = "承認済み";
-        else if (obj.result == "declined") 
+        else if (obj.result == "declined")
             resultStr = "拒否済み";
-        
+
     }
-    else if (obj.type == "user-friend-approved") {
+    else if (obj.type == "friend-approved") {
         iconClass = "ace-icon fa fa-check-circle-o";
         title = "はあなたの友達リクエストを承認しました";
     }
-    else if (obj.type == "user-friend-declined") {
+    else if (obj.type == "friend-declined") {
         iconClass = "ace-icon fa fa-ban";
         title = "はあなたの友達リクエストを拒否しました";
     }
-    else if (obj.type == "user-friend-break") {
+    else if (obj.type == "friend-break") {
         iconClass = "ace-icon fa fa-times-circle";
         title = "はあなたと友達を解除しました";
     }
@@ -52,7 +52,7 @@
 
             <% if (obj.result) { %>
                 <div class="text-muted pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;<%= resultStr %></div>
-            <% } else if (obj.type == "user-friend-invited") { %>
+            <% } else if (obj.type == "friend-invited") { %>
                 <div class="pull-right">
                     <button class="btn btn-sm btn-pink btn-decline"><i class="ace-icon fa fa-times"></i>&nbsp;拒否</button>
                     <button class="btn btn-sm btn-success btn-approve"><i class="ace-icon fa fa-check"></i>&nbsp;許可</button>

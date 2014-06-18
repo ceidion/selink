@@ -123,14 +123,15 @@ define([
                 participants: selink.userModel.id //TODO: no need to pass this parameter
             }, {
                 url: this.model.url() + '/join',
-                success: function() {
+                success: function(model, response, options) {
                     // change the label of the add button, but still disabled
                     self.$el.find('.btn-join')
                         .removeClass('btn-info btn-join')
                         .addClass('btn-success')
                         .empty()
                         .html('<i class="ace-icon fa fa-check light-green"></i>&nbsp;参加中');
-                    // TODO: sycn with user model
+                    // sycn with user model
+                    selink.userModel.groups.add(model);
                 },
                 patch: true,
                 wait: true

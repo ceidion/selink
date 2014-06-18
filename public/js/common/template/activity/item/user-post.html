@@ -1,19 +1,19 @@
 <%
     var title = "";
 
-    if (obj.type == "user-post") {
+    if (obj.type == "post-new") {
         title = "新しい記事を投稿しました";
     }
-    else if (obj.type == "user-post-liked") {
+    else if (obj.type == "post-liked") {
         title = "下記投稿に「いいね！」しました";
     }
-    else if (obj.type == "user-post-bookmarked") {
+    else if (obj.type == "post-bookmarked") {
         title = "下記投稿にブックマークを付けました";
     }
-    else if (obj.type == "user-post-commented") {
+    else if (obj.type == "post-commented") {
         title = "下記投稿をコメントしました";
     }
-    else if (obj.type == "user-comment-liked") {
+    else if (obj.type == "comment-liked") {
         title = "はあなたのコメントに「いいね！」しました";
     }
 

@@ -2,19 +2,19 @@
     var iconClass = "",
         title = "";
 
-    if (obj.type == "user-post") {
+    if (obj.type == "post-new") {
         iconClass = "ace-icon fa fa-edit";
         title = "は新しい記事を投稿しました";
     }
-    else if (obj.type == "user-post-liked") {
+    else if (obj.type == "post-liked") {
         iconClass = "ace-icon fa fa-heart";
         title = "はあなたの投稿に「いいね！」しました";
     }
-    else if (obj.type == "user-post-bookmarked") {
+    else if (obj.type == "post-bookmarked") {
         iconClass = "ace-icon fa fa-star";
         title = "はあなたの投稿にブックマークを付けました";
     }
-    else if (obj.type == "user-post-commented") {
+    else if (obj.type == "post-commented") {
         iconClass = "ace-icon fa fa-comment";
         title = "はあなたの投稿にコメントしました";
     }

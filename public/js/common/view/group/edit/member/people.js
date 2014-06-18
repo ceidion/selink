@@ -10,7 +10,7 @@ define([
 
     var Introductions = BaseCollection.extend({
 
-        url: '/people'
+        url: '/non-friends'
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -91,8 +91,8 @@ define([
             setTimeout(function() {
                 // attach infinite scroll
                 self.$el.find(self.itemViewContainer).infinitescroll({
-                    navSelector  : self.navSelector || '#page_nav',
-                    nextSelector : self.nextSelector || '#page_nav a',
+                    navSelector  : self.navSelector || '#page_nav_sub',
+                    nextSelector : self.nextSelector || '#page_nav_sub a',
                     behavior: 'local',
                     binder: self.$el.find(self.itemViewContainer),
                     dataType: 'json',

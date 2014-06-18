@@ -2,7 +2,7 @@
     var iconClass = "",
         title = "";
 
-    if (obj.type == "user-job") {
+    if (obj.type == "job-new") {
         iconClass = "ace-icon fa fa-briefcase";
         title = "は新しい仕事情報を公開しました";
     }
@@ -10,7 +10,7 @@
         iconClass = "ace-icon fa fa-heart";
         title = "はあなたの仕事情報に「いいね！」しました";
     }
-    else if (obj.type == "user-job-bookmarked") {
+    else if (obj.type == "job-bookmarked") {
         iconClass = "ace-icon fa fa-star";
         title = "はあなたの仕事情報にブックマークを付けました";
     }

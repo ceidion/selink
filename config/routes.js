@@ -122,6 +122,8 @@ module.exports = function(app, sio) {
 
     // Introduce friend
     app.get('/people', checkLoginStatus, friend.introduce);
+    // Get people not my friends
+    app.get('/non-friends', checkLoginStatus, friend.nonFriends);
     // Get friends
     app.get('/friends', checkLoginStatus, friend.index);
     // Request new friend

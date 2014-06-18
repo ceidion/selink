@@ -44,7 +44,7 @@ define([
             // set the number of messages in the model
             this.model.set('messagesNum', this.collection.length, {silent:true});
 
-            selink.socket.on('user-message', function(data) {
+            selink.socket.on('message-new', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
                     text: data.subject,

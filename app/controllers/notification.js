@@ -7,21 +7,22 @@ var Mailer = require('../mailer/mailer.js'),
 
 /*
     Notification Type:
-    1. user-friend-invited
-    2. user-friend-approved
-    3. user-friend-declined
-    4. user-friend-break
-    5. user-post
-    6. user-post-liked
-    7. user-post-bookmarked
-    8. user-post-commented
-    9. user-job
-    10. user-job-bookmarked
-    11. user-message
-    12. new-group
-    13. group-invited
-    14. group-joined
-    15. group-refused
+    1. friend-invited
+    2. friend-approved
+    3. friend-declined
+    4. friend-break
+    5. post-new
+    6. post-liked
+    7. post-bookmarked
+    8. post-commented
+    9. comment-liked
+    10. job-new
+    11. job-bookmarked
+    12. message-new
+    13. group-new
+    14. group-invited
+    15. group-joined
+    16. group-refused
 */
 
 // Notification index
@@ -124,7 +125,7 @@ approve = function(req, res, next, notification) {
                         Notification.create({
                             _owner: [updatedFriend.id],
                             _from: req.user.id,
-                            type: 'user-friend-approved'
+                            type: 'friend-approved'
                         }, function(err, respond) {
 
                             if (err) next(err);
@@ -134,7 +135,7 @@ approve = function(req, res, next, notification) {
 
                                     if(err) next(err);
                                     // send real time message
-                                    else sio.sockets.in(updatedFriend.id).emit('user-friend-approved', noty);
+                                    else sio.sockets.in(updatedFriend.id).emit('friend-approved', noty);
                                 });
                             }
                         });
@@ -142,8 +143,8 @@ approve = function(req, res, next, notification) {
                         // log user's activity
                         Activity.create({
                             _owner: req.user.id,
-                            type: 'user-friend-approved',
-                            target: updatedFriend._id
+                            type: 'friend-approved',
+                            targetUser: updatedFriend._id
                         }, function(err) {
                             if (err) next(err);
                         });
@@ -182,7 +183,7 @@ decline = function(req, res, next, notification) {
             Notification.create({
                 _owner: [updatedFriend.id],
                 _from: req.user.id,
-                type: 'user-friend-declined'
+                type: 'friend-declined'
             }, function(err, respond) {
 
                 if (err) next(err);
@@ -192,7 +193,7 @@ decline = function(req, res, next, notification) {
 
                         if(err) next(err);
                         // send real time message
-                        else sio.sockets.in(updatedFriend.id).emit('user-friend-declined', noty);
+                        else sio.sockets.in(updatedFriend.id).emit('friend-declined', noty);
                     });
                 }
             });
@@ -200,8 +201,8 @@ decline = function(req, res, next, notification) {
             // log user's activity
             Activity.create({
                 _owner: req.user.id,
-                type: 'user-friend-declined',
-                target: updatedFriend._id
+                type: 'friend-declined',
+                targetUser: updatedFriend._id
             }, function(err) {
                 if (err) next(err);
             });
@@ -225,72 +226,62 @@ accept = function(req, res, next, notification) {
         if (err) next(err);
         else {
 
-            // add group id to user paticipated group
-            req.user.groups.addToSet(group._id);
-            // update user
-            req.user.save(function(err) {
+            // move user's id from group's invited list
+            // to the participants list
+            group.invited.pull(req.user._id);
+            group.participants.push(req.user._id);
+
+            // update group
+            group.save(function(err, updatedGroup) {
 
                 if (err) next(err);
                 else {
 
-                    // move user's id from group's invited list
-                    // to the participants list
-                    group.invited.pull(req.user._id);
-                    group.participants.push(req.user._id);
-
-                    // update group
-                    group.save(function(err, updatedGroup) {
+                    // create respond notification
+                    Notification.create({
+                        _owner: updatedGroup._owner,
+                        _from: req.user.id,
+                        type: 'group-joined',
+                        targetGroup: updatedGroup._id
+                    }, function(err, respond) {
 
                         if (err) next(err);
                         else {
-
-                            // create respond notification
-                            Notification.create({
-                                _owner: updatedGroup._owner,
-                                _from: req.user.id,
-                                type: 'group-joined'
-                            }, function(err, respond) {
+                            // populate the respond notification with user's info
+                            respond.populate({path:'_from', select: 'type firstName lastName title cover photo createDate'}, function(err, noty) {
 
                                 if (err) next(err);
-                                else {
-                                    // populate the respond notification with user's info
-                                    respond.populate({path:'_from', select: 'type firstName lastName title cover photo createDate'}, function(err, noty) {
-
-                                        if(err) next(err);
-                                        // send real time message
-                                        else sio.sockets.in(updatedGroup._owner).emit('group-joined', noty);
-                                    });
-                                }
+                                // send real time message
+                                else sio.sockets.in(updatedGroup._owner).emit('group-joined', noty);
                             });
-
-                            // log user's activity
-                            Activity.create({
-                                _owner: req.user.id,
-                                type: 'group-joined',
-                                target: updatedGroup._id
-                            }, function(err) {
-                                if (err) next(err);
-                            });
-
-                            // mark the notification as confirmed
-                            notification.result = req.body.result;
-                            notification.confirmed.addToSet(req.user.id);
-                            notification.save(function(err, confirmedNotification) {
-                                if (err) next(err);
-                                else res.json(confirmedNotification);
-                            });
-
-                            // Mailer.groupJoin({
-                            //     from: req.user,
-                            //     email: updatedFriend.email
-                            // });
                         }
                     });
+
+                    // log user's activity
+                    Activity.create({
+                        _owner: req.user.id,
+                        type: 'group-joined',
+                        targetGroup: updatedGroup._id
+                    }, function(err) {
+                        if (err) next(err);
+                    });
+
+                    // mark the notification as confirmed
+                    notification.result = req.body.result;
+                    notification.confirmed.addToSet(req.user.id);
+                    notification.save(function(err, confirmedNotification) {
+                        if (err) next(err);
+                        else res.json(confirmedNotification);
+                    });
+
+                    // Mailer.groupJoin({
+                    //     from: req.user,
+                    //     email: updatedFriend.email
+                    // });
                 }
             });
         }
     });
-
 };
 
 refuse = function(req, res, next, notification) {
@@ -314,7 +305,8 @@ refuse = function(req, res, next, notification) {
                     Notification.create({
                         _owner: updatedGroup._owner,
                         _from: req.user.id,
-                        type: 'group-refused'
+                        type: 'group-refused',
+                        targetGroup: updatedGroup._id
                     }, function(err, respond) {
 
                         if (err) next(err);
@@ -333,7 +325,7 @@ refuse = function(req, res, next, notification) {
                     Activity.create({
                         _owner: req.user.id,
                         type: 'group-refused',
-                        target: updatedGroup._id
+                        targetGroup: updatedGroup._id
                     }, function(err) {
                         if (err) next(err);
                     });

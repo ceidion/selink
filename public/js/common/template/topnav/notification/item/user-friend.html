@@ -1,16 +1,16 @@
 <%
     var title = "";
 
-    if (obj.type == "user-friend-invited") {
+    if (obj.type == "friend-invited") {
         title = "から友達になるリクエストがありました";
     }
-    else if (obj.type == "user-friend-approved") {
+    else if (obj.type == "friend-approved") {
         title = "はあなたの友達リクエストを承認しました";
     }
-    else if (obj.type == "user-friend-declined") {
+    else if (obj.type == "friend-declined") {
         title = "はあなたの友達リクエストを拒否しました";
     }
-    else if (obj.type == "user-friend-break") {
+    else if (obj.type == "friend-break") {
         title = "はあなたと友達を解除しました";
     }
 %>
@@ -27,7 +27,7 @@
         </span>
         <span class="msg-time">
             <i class="ace-icon fa fa-clock-o"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>
-            <% if (obj.type == "user-friend-invited") { %>
+            <% if (obj.type == "friend-invited") { %>
                 <div class="pull-right">
                     <button class="btn btn-minier btn-pink btn-decline"><i class="ace-icon fa fa-times"></i>&nbsp;拒否</button>
                     <button class="btn btn-minier btn-success btn-approve"><i class="ace-icon fa fa-check"></i>&nbsp;許可</button>

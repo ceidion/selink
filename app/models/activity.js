@@ -18,9 +18,34 @@ var Activity = new Schema({
         required: true
     },
 
-    // activity target
-    target: {
-        type: Schema.Types.ObjectId
+    // activity target (user)
+    targetUser: {
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    },
+
+    // activity target (post)
+    targetPost: {
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+    },
+
+    // activity target (job)
+    targetJob: {
+        type: Schema.Types.ObjectId,
+        ref: 'Job'
+    },
+
+    // activity target (message)
+    targetMessage: {
+        type: Schema.Types.ObjectId,
+        ref: 'Message'
+    },
+
+    // activity target (group)
+    targetGroup: {
+        type: Schema.Types.ObjectId,
+        ref: 'Group'
     },
 
     // Logical Delete flag

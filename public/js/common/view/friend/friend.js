@@ -1,18 +1,17 @@
 define([
     'text!common/template/friend/friend.html',
-    'common/view/composite-isotope',
-    'common/collection/base',
     'common/view/friend/empty',
     'common/view/friend/item',
 ], function(
     template,
-    BaseView,
-    BaseCollection,
     EmptyView,
     ItemView
 ) {
 
-    return BaseView.extend({
+    return Backbone.Marionette.CompositeView.extend({
+
+        // class name
+        className: "widget-box widget-color-green",
 
         // template
         template: template,
@@ -26,8 +25,8 @@ define([
         // empty view
         emptyView: EmptyView,
 
-        // initializer
-        initialize: function() {
+        // after the view collection rendered
+        onCompositeCollectionRendered: function() {
 
             var self = this;
 

@@ -55,8 +55,8 @@ exports.create = function(req, res, next) {
             // create activity
             Activity.create({
                 _owner: req.user.id,
-                type: 'user-job',
-                target: job._id
+                type: 'job-new',
+                targetJob: job._id
             }, function(err, activity) {
                 if (err) next(err);
             });
@@ -65,8 +65,8 @@ exports.create = function(req, res, next) {
             Notification.create({
                 _owner: req.user.friends,
                 _from: req.user.id,
-                type: 'user-job',
-                target: job.id
+                type: 'job-new',
+                targetJob: job.id
             }, function(err, notification) {
 
                 if (err) next(err);
@@ -81,7 +81,7 @@ exports.create = function(req, res, next) {
                         // send real time message
                         else
                             req.user.friends.forEach(function(room) {
-                                sio.sockets.in(room).emit('user-job', noty);
+                                sio.sockets.in(room).emit('job-new', noty);
                             });
                     });
                 }
@@ -229,8 +229,8 @@ exports.bookmark = function(req, res, next){
                         // create activity
                         Activity.create({
                             _owner: req.body.bookmarked,
-                            type: 'user-job-bookmarked',
-                            target: newJob._id
+                            type: 'job-bookmarked',
+                            targetJob: newJob._id
                         }, function(err, activity) {
                             if (err) next(err);
                         });
@@ -239,8 +239,8 @@ exports.bookmark = function(req, res, next){
                         Notification.create({
                             _owner: [newJob._owner],
                             _from: req.body.bookmarked,
-                            type: 'user-job-bookmarked',
-                            target: newJob._id
+                            type: 'job-bookmarked',
+                            targetJob: newJob._id
                         }, function(err, notification) {
 
                             if (err) next(err);
@@ -252,7 +252,7 @@ exports.bookmark = function(req, res, next){
                                 }, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
-                                    sio.sockets.in(newJob._owner).emit('user-job-bookmarked', noty);
+                                    sio.sockets.in(newJob._owner).emit('job-bookmarked', noty);
                                 });
                             }
                         });

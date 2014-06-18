@@ -24,13 +24,13 @@ define([
 
         loginActivity: ['user-login', 'user-logout'],
 
-        userTargetActivity: ['user-friend-invited', 'user-friend-approved', 'user-friend-declined', 'user-friend-break'],
+        userTargetActivity: ['friend-invited', 'friend-approved', 'friend-declined', 'friend-break'],
 
-        postTargetActivity: ['user-post', 'user-post-liked', 'user-post-bookmarked', 'user-post-commented', 'user-comment-liked'],
+        postTargetActivity: ['post-new', 'post-liked', 'post-bookmarked', 'post-commented', 'comment-liked'],
 
-        jobTargetActivity: ['user-job', 'user-job-bookmarked'],
+        jobTargetActivity: ['job-new', 'job-bookmarked'],
 
-        groupTargetActivity: ['new-group', 'group-invited', 'group-joined', 'group-refused'],
+        groupTargetActivity: ['group-new', 'group-invited', 'group-joined', 'group-refused'],
 
         // template
         getTemplate: function(){

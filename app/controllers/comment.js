@@ -40,8 +40,8 @@ exports.create = function(req, res, next) {
                         // create activity
                         Activity.create({
                             _owner: req.user.id,
-                            type: 'user-post-commented',
-                            target: newPost._id
+                            type: 'post-commented',
+                            targetPost: newPost._id
                         }, function(err, activity) {
                             if (err) next(err);
                         });
@@ -50,8 +50,8 @@ exports.create = function(req, res, next) {
                         Notification.create({
                             _owner: [newPost._owner],
                             _from: req.user.id,
-                            type: 'user-post-commented',
-                            target: newPost._id
+                            type: 'post-commented',
+                            targetPost: newPost._id
                         }, function(err, notification) {
 
                             if (err) next(err);
@@ -63,7 +63,7 @@ exports.create = function(req, res, next) {
                                 }, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
-                                    sio.sockets.in(newPost._owner).emit('user-post-commented', noty);
+                                    sio.sockets.in(newPost._owner).emit('post-commented', noty);
                                 });
                             }
                         });
@@ -164,8 +164,8 @@ exports.like = function(req, res, next){
                         // create activity
                         Activity.create({
                             _owner: req.body.liked,
-                            type: 'user-comment-liked',
-                            target: newPost._id
+                            type: 'comment-liked',
+                            targetPost: newPost._id
                         }, function(err, activity) {
                             if (err) next(err);
                         });
@@ -174,8 +174,8 @@ exports.like = function(req, res, next){
                         Notification.create({
                             _owner: [newPost.comments.id(req.params.comment)._owner],
                             _from: req.body.liked,
-                            type: 'user-comment-liked',
-                            target: newPost._id
+                            type: 'comment-liked',
+                            targetPost: newPost._id
                         }, function(err, notification) {
 
                             if (err) next(err);
@@ -187,7 +187,7 @@ exports.like = function(req, res, next){
                                 }, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
-                                    sio.sockets.in(newPost.comments.id(req.params.comment)._owner).emit('user-comment-liked', noty);
+                                    sio.sockets.in(newPost.comments.id(req.params.comment)._owner).emit('comment-liked', noty);
                                 });
                             }
                         });

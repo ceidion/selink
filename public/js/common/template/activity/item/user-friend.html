@@ -2,19 +2,19 @@
     var title = "",
         content = "";
 
-    if (obj.type == "user-friend-invited") {
+    if (obj.type == "friend-invited") {
         title = "お友達になる要請を送信しました";
         content = "にお友達になる要請を送信しました。";
     }
-    else if (obj.type == "user-friend-approved") {
+    else if (obj.type == "friend-approved") {
         title = "お友達作りました";
         content = "と友達になりました。";
     }
-    else if (obj.type == "user-friend-declined") {
+    else if (obj.type == "friend-declined") {
         title = "お友達になる要請を拒否しました";
         content = "のお友達になる要請を拒否しました。";
     }
-    else if (obj.type == "user-friend-break") {
+    else if (obj.type == "friend-break") {
         title = "お友達を削除しました";
         content = "を友達リストから削除しました。";
     }
@@ -32,7 +32,7 @@
         <h5 class="widget-title smaller">
             <i class="ace-icon fa fa-group bigger-110"></i>&nbsp;
             <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
-            は<%= title %> 
+            は<%= title %>
         </h5>
         <span class="widget-toolbar no-border">
             <i class="ace-icon fa fa-clock-o bigger-110"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>

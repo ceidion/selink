@@ -46,8 +46,8 @@ exports.create = function(req, res, next) {
             // log user's activity
             Activity.create({
                 _owner: req.user.id,
-                type: 'user-message',
-                target: message._id
+                type: 'message-new',
+                targetMessage: message._id
             }, function(err) {
                 if (err) next(err);
             });
@@ -60,7 +60,7 @@ exports.create = function(req, res, next) {
                 else {
 
                     msg._recipient.forEach(function(room) {
-                        sio.sockets.in(room).emit('user-message', msg);
+                        sio.sockets.in(room).emit('message-new', msg);
                     });
 
                     // send email to all recipients

@@ -28,6 +28,29 @@ exports.introduce = function(req, res, next) {
         });
 };
 
+// non-friends list
+exports.nonFriends = function(req, res, next) {
+
+    // page number
+    var page = req.query.page || 0;
+
+    // find user that:
+    User.find()
+        .where('_id')
+        .ne(req.user._id)  // not himself
+        .nin(req.user.friends)  // not his friend
+        .select('type firstName lastName title cover gender bio photo employments educations createDate')
+        .skip(30*page)  // skip n page
+        .limit(30)  // 30 user per page
+        .sort({createDate:-1})  // sort by createDate desc
+        .exec(function(err, users) {
+            if (err) next(err);
+            else
+                // return the user
+                res.json(users);
+        });
+};
+
 // friend list
 exports.index = function(req, res, next) {
 
@@ -85,7 +108,7 @@ exports.create = function(req, res, next) {
             Notification.create({
                 _owner: [req.body._id],
                 _from: user.id,
-                type: 'user-friend-invited'
+                type: 'friend-invited'
             }, function(err, notification) {
 
                 if (err) next(err);
@@ -94,7 +117,7 @@ exports.create = function(req, res, next) {
                     notification.populate({path:'_from', select: 'firstName lastName photo'}, function(err, noty) {
                         // send real time message
                         if(err) next(err);
-                        else sio.sockets.in(req.body._id).emit('user-friend-invited', noty);
+                        else sio.sockets.in(req.body._id).emit('friend-invited', noty);
                     });
 
                     // send friend-invitation mail
@@ -105,8 +128,8 @@ exports.create = function(req, res, next) {
                             // log user's activity
                             Activity.create({
                                 _owner: user.id,
-                                type: 'user-friend-invited',
-                                target: req.body._id
+                                type: 'friend-invited',
+                                targetUser: req.body._id
                             }, function(err, activity) {
                                 // send back requested user's info
                                 if (err) next(err);
@@ -146,7 +169,7 @@ exports.remove = function(req, res, next) {
                     Notification.create({
                         _owner: [friend.id],
                         _from: user.id,
-                        type: 'user-friend-break'
+                        type: 'friend-break'
                     }, function(err, notification) {
 
                         if (err) next(err);
@@ -156,14 +179,14 @@ exports.remove = function(req, res, next) {
 
                                 // send real time message
                                 if(err) next(err);
-                                else sio.sockets.in(friend.id).emit('user-friend-break', noty);
+                                else sio.sockets.in(friend.id).emit('friend-break', noty);
                             });
 
                             // log user's activity
                             Activity.create({
                                 _owner: user.id,
-                                type: 'user-friend-break',
-                                target: req.params.friend
+                                type: 'friend-break',
+                                targetUser: req.params.friend
                             }, function(err, activity) {
                                 // send back requested user's info
                                 if (err) next(err);
