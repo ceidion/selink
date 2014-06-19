@@ -38,6 +38,10 @@ exports.index = function(req, res, next) {
 
     query.where('logicDelete').equals(false)
         .populate('_from', 'type firstName lastName title cover photo createDate')
+        .populate('targetPost')
+        .populate('targetJob')
+        .populate('targetMessage')
+        .populate('targetGroup')   // there is no targetComment, cause comment was embedded in post
         .skip(20*page)  // skip n page
         .limit(20)
         .sort('-createDate')
@@ -221,7 +225,7 @@ decline = function(req, res, next, notification) {
 accept = function(req, res, next, notification) {
 
     // find target group
-    Group.findById(notification.target, function(err, group){
+    Group.findById(notification.targetGroup, function(err, group){
 
         if (err) next(err);
         else {
@@ -247,8 +251,16 @@ accept = function(req, res, next, notification) {
 
                         if (err) next(err);
                         else {
+
+                            var notyPopulateQuery = [{
+                                path:'_from',
+                                select: 'type firstName lastName title cover photo createDate'
+                            },{
+                                path:'targetGroup'
+                            }];
+
                             // populate the respond notification with user's info
-                            respond.populate({path:'_from', select: 'type firstName lastName title cover photo createDate'}, function(err, noty) {
+                            respond.populate(notyPopulateQuery, function(err, noty) {
 
                                 if (err) next(err);
                                 // send real time message
@@ -287,7 +299,7 @@ accept = function(req, res, next, notification) {
 refuse = function(req, res, next, notification) {
 
     // find target group
-    Group.findById(notification.target, function(err, group){
+    Group.findById(notification.targetGroup, function(err, group){
 
         if (err) next(err);
         else {
@@ -311,8 +323,16 @@ refuse = function(req, res, next, notification) {
 
                         if (err) next(err);
                         else {
+
+                            var notyPopulateQuery = [{
+                                path:'_from',
+                                select: 'type firstName lastName title cover photo createDate'
+                            },{
+                                path:'targetGroup'
+                            }];
+
                             // populate the respond notification with user's info
-                            respond.populate({path:'_from', select: 'type firstName lastName title cover photo createDate'}, function(err, noty) {
+                            respond.populate(notyPopulateQuery, function(err, noty) {
 
                                 if(err) next(err);
                                 // send real time message

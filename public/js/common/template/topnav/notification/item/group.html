@@ -1,29 +1,44 @@
 <%
-    var title = "";
+    var title,
+        icon,
+        content;
 
     if (obj.type == "group-new") {
-        title = "は新しいグループを立ち上げました";
+        title = "新しいグループを立ち上げました";
+        icon = "fa-group blue bigger-110";
+        content = obj.targetGroup.name;
     }
     else if (obj.type == "group-invited") {
-        title = "はあなたをグループに招待しました";
+        title = "あなたをグループに招待しました";
+        icon = "fa-ticket red bigger-110";
+        content = obj.targetGroup.name;
     }
     else if (obj.type == "group-joined") {
-        title = "はグループに参加しました";
+        title = "グループに参加しました";
+        icon = "fa-sign-in green bigger-110";
+        content = obj.targetGroup.name;
     }
     else if (obj.type == "group-refused") {
-        title = "はグループ招待を拒否しました";
+        title = "グループ招待を拒否しました";
+        icon = "fa-sign-out purple bigger-110";
+        content = obj.targetGroup.name;
     }
 %>
 
-<a href="#group/<%= obj.target %>">
+<a href="#group/<%= obj.targetGroup._id %>">
     <img src="<%= obj._from.photo %>" class="msg-photo" alt="">
     <span class="msg-body">
         <span class="msg-title">
-            <span class="blue">
-                <%= obj._from.firstName %>&nbsp;
-                <%= obj._from.lastName %>&nbsp;
-            </span>
-            <%= title %>
+            <strong>
+                <span class="blue">
+                    <%= obj._from.firstName %>&nbsp;
+                    <%= obj._from.lastName %>&nbsp;
+                </span>
+                <%= title %>
+            </strong>
+            <div class="space-2"></div>
+            <i class="ace-icon fa <%= icon %>"></i>
+            <%= content %>
         </span>
         <span class="msg-time">
             <i class="ace-icon fa fa-clock-o"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>

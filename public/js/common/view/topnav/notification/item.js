@@ -61,6 +61,8 @@ define([
                 // cause I want add _from to friends list, have to put it here temporary
                 friend = this.model.get('_from');
 
+                console.log(friend);
+
             this.model.save({result: 'approved'}, {
                 success: function() {
                     self.$el.slideUp(function() {

@@ -40,6 +40,14 @@ define([
                     }
                 });
             });
+
+            this.appendHtml = function(collectionView, itemView, index) {
+                // ensure the image are loaded
+                self.$el.find(self.itemViewContainer).imagesLoaded(function() {
+                    // prepend new item and reIsotope
+                    self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
+                });
+            };
         },
 
         // after show
@@ -48,6 +56,11 @@ define([
             this.$el.find('.widget-main').niceScroll({
                 horizrailenabled: false
             });
+        },
+
+        // TODO: remove on friend-break
+        onBeforeRemoveChild: function() {
+            console.log(arguments);
         }
 
     });

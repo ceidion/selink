@@ -72,11 +72,15 @@ exports.create = function(req, res, next) {
                 if (err) next(err);
                 else {
 
-                    // populate the respond notification with user's info
-                    notification.populate({
+                    var notyPopulateQuery = [{
                         path:'_from',
                         select: 'type firstName lastName title cover photo createDate'
-                    }, function(err, noty) {
+                    },{
+                        path:'targetJob'
+                    }];
+
+                    // populate the respond notification with user's info
+                    notification.populate(notyPopulateQuery, function(err, noty) {
                         if(err) next(err);
                         // send real time message
                         else
@@ -245,11 +249,16 @@ exports.bookmark = function(req, res, next){
 
                             if (err) next(err);
                             else {
-                                // populate the respond notification with user's info
-                                notification.populate({
+
+                                var notyPopulateQuery = [{
                                     path:'_from',
-                                    select: 'firstName lastName photo'
-                                }, function(err, noty) {
+                                    select: 'type firstName lastName title cover photo createDate'
+                                },{
+                                    path:'targetJob'
+                                }];
+
+                                // populate the respond notification with user's info
+                                notification.populate(notyPopulateQuery, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
                                     sio.sockets.in(newJob._owner).emit('job-bookmarked', noty);

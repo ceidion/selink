@@ -30,6 +30,12 @@ var Notification = new Schema({
         ref: 'Post'
     },
 
+    // notification target (comment)
+    targetComment: {
+        type: Schema.Types.ObjectId,
+        ref: 'Comment'
+    },
+
     // notification target (job)
     targetJob: {
         type: Schema.Types.ObjectId,

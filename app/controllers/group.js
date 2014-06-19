@@ -80,11 +80,16 @@ exports.create = function(req, res, next) {
             }, function(err, notification) {
                 if (err) next(err);
                 else {
-                    // populate the respond notification with user's info
-                    notification.populate({
+
+                    var notyPopulateQuery = [{
                         path:'_from',
                         select: 'type firstName lastName title cover photo createDate'
-                    }, function(err, noty) {
+                    },{
+                        path:'targetGroup'
+                    }];
+
+                    // populate the respond notification with user's info
+                    notification.populate(notyPopulateQuery, function(err, noty) {
                         if(err) next(err);
                         // send real time message
                         else
@@ -162,11 +167,16 @@ exports.invite = function(req, res, next) {
                         }, function(err, notification) {
                             if (err) next(err);
                             else {
-                                // populate the respond notification with user's info
-                                notification.populate({
+
+                                var notyPopulateQuery = [{
                                     path:'_from',
                                     select: 'type firstName lastName title cover photo createDate'
-                                }, function(err, noty) {
+                                },{
+                                    path:'targetGroup'
+                                }];
+
+                                // populate the respond notification with user's info
+                                notification.populate(notyPopulateQuery, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
                                     else
@@ -224,6 +234,8 @@ exports.join = function(req, res, next) {
         if (err) next(err);
         else {
 
+            // remove user's id from group's invited list, in case he had been invited
+            group.invited.pull(req.user._id);
             // add user id to group participants
             group.participants.addToSet(req.user.id);
             // update group
@@ -231,6 +243,43 @@ exports.join = function(req, res, next) {
 
                 if (err) next(err);
                 else {
+
+                    // create respond notification
+                    Notification.create({
+                        _owner: group._owner,
+                        _from: req.user.id,
+                        type: 'group-joined',
+                        targetGroup: group._id
+                    }, function(err, respond) {
+
+                        if (err) next(err);
+                        else {
+
+                            var notyPopulateQuery = [{
+                                path:'_from',
+                                select: 'type firstName lastName title cover photo createDate'
+                            },{
+                                path:'targetGroup'
+                            }];
+
+                            // populate the respond notification with user's info
+                            respond.populate(notyPopulateQuery, function(err, noty) {
+
+                                if (err) next(err);
+                                // send real time message
+                                else sio.sockets.in(group._owner._id).emit('group-joined', noty);
+                            });
+                        }
+                    });
+
+                    // log user's activity
+                    Activity.create({
+                        _owner: req.user.id,
+                        type: 'group-joined',
+                        targetGroup: group._id
+                    }, function(err) {
+                        if (err) next(err);
+                    });
 
                     // return updated group
                     group.populate({

@@ -66,7 +66,6 @@ define([], function() {
                 });
             });
 
-
             this.appendHtml = function(collectionView, itemView, index) {
 
                 // ensure the image are loaded

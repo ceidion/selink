@@ -8,7 +8,21 @@ var _ = require('underscore'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
 
-// Create a comment
+/*
+    Create a comment
+
+    1. check post commentable flag, return error if uncommentable
+    2. find post with its Id
+        3. create comment object
+        4. add comment object to post's comments list
+        5. update post
+            if the comment author is not post author
+                6. create user activity
+                7. create notification for post author
+                    8. send real-time notification to post author
+                9. send email notification to post author
+            10. return comment to client
+*/
 exports.create = function(req, res, next) {
 
     // TODO: check post's forbidden flag, check ownership
@@ -41,7 +55,8 @@ exports.create = function(req, res, next) {
                         Activity.create({
                             _owner: req.user.id,
                             type: 'post-commented',
-                            targetPost: newPost._id
+                            targetPost: newPost._id,
+                            targetComment: comment._id
                         }, function(err, activity) {
                             if (err) next(err);
                         });
@@ -51,16 +66,22 @@ exports.create = function(req, res, next) {
                             _owner: [newPost._owner],
                             _from: req.user.id,
                             type: 'post-commented',
-                            targetPost: newPost._id
+                            targetPost: newPost._id,
+                            targetComment: comment._id
                         }, function(err, notification) {
 
                             if (err) next(err);
                             else {
-                                // populate the respond notification with user's info
-                                notification.populate({
+
+                                var notyPopulateQuery = [{
                                     path:'_from',
                                     select: 'type firstName lastName title cover photo createDate'
-                                }, function(err, noty) {
+                                },{
+                                    path:'targetPost'
+                                }];
+
+                                // populate the respond notification with user's info
+                                notification.populate(notyPopulateQuery, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
                                     sio.sockets.in(newPost._owner).emit('post-commented', noty);
@@ -138,7 +159,20 @@ exports.remove = function(req, res, next) {
     });
 };
 
-// Like comment
+/*
+    Like comment
+
+    1. find the post with its Id
+        2. find the comment with its Id in post's comments list
+        3. add user id to comment's liked list
+        4. update post
+            if the comment author is not the user
+                5. create user activity
+                6. create notification for comment author
+                    7. send real-time notification to comment author
+                8. send email notification to comment author
+            9. return the comment to client
+*/
 exports.like = function(req, res, next){
 
     // find post
@@ -165,7 +199,8 @@ exports.like = function(req, res, next){
                         Activity.create({
                             _owner: req.body.liked,
                             type: 'comment-liked',
-                            targetPost: newPost._id
+                            targetPost: newPost._id,
+                            targetComment: req.params.comment
                         }, function(err, activity) {
                             if (err) next(err);
                         });
@@ -175,19 +210,25 @@ exports.like = function(req, res, next){
                             _owner: [newPost.comments.id(req.params.comment)._owner],
                             _from: req.body.liked,
                             type: 'comment-liked',
-                            targetPost: newPost._id
+                            targetPost: newPost._id,
+                            targetComment: req.params.comment
                         }, function(err, notification) {
 
                             if (err) next(err);
                             else {
-                                // populate the respond notification with user's info
-                                notification.populate({
+
+                                var notyPopulateQuery = [{
                                     path:'_from',
                                     select: 'type firstName lastName title cover photo createDate'
-                                }, function(err, noty) {
+                                },{
+                                    path:'targetPost'
+                                }];
+
+                                // populate the respond notification with user's info
+                                notification.populate(notyPopulateQuery, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
-                                    sio.sockets.in(newPost.comments.id(req.params.comment)._owner).emit('comment-liked', noty);
+                                    sio.sockets.in(newPost.comments.id(req.params.comment)._owner._id).emit('comment-liked', noty);
                                 });
                             }
                         });

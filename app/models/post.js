@@ -20,12 +20,6 @@ var Post = new Schema({
         trim: true,
     },
 
-    // Post summary
-    summary: {
-        type: String,
-        trim: true,
-    },
-
     // People who like this post
     liked: [{
         type: Schema.Types.ObjectId,

@@ -48,4 +48,5 @@ var Comment = new Schema({
     }
 });
 
+mongoose.model('Comment', Comment);
 module.exports = Comment;

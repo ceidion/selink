@@ -59,24 +59,29 @@ exports.show = function(req, res, next) {
         });
 };
 
-// Create post
+/*
+    Create post
+
+    1* user = author
+    2* group participants = group's participants - author's friends
+
+    1. create post with content and group
+        2. create user(author) activity
+        3. create notification for author's friends
+            4. send real-time notification to author's friends
+        5. create notification for group's participants
+            6. sent real-time notification to group's participants
+        7. send email notification to author's friends
+        8. commit post to solr
+        9. return the new post to client
+*/
 exports.create = function(req, res, next) {
-
-    // strip out the tags in content
-    var contentStripTag = _s.stripTags(req.body.content);
-
-    // if content is longer than 350
-    if (contentStripTag.length > 350) {
-        // cut it in 350
-        contentStripTag = _s.truncate(contentStripTag, 350);
-    }
 
     // create post
     Post.create({
         _owner: req.user.id,
-        content: req.body.content,
-        summary: contentStripTag,
-        group: req.body.group
+        group: req.body.group,
+        content: req.body.content
     }, function(err, newPost) {
 
         if (err) next(err);
@@ -100,11 +105,16 @@ exports.create = function(req, res, next) {
             }, function(err, notification) {
                 if (err) next(err);
                 else {
-                    // populate the respond notification with user's info
-                    notification.populate({
+
+                    var notyPopulateQuery = [{
                         path:'_from',
                         select: 'type firstName lastName title cover photo createDate'
-                    }, function(err, noty) {
+                    },{
+                        path:'targetPost'
+                    }];
+
+                    // populate the respond notification with user's info
+                    notification.populate(notyPopulateQuery, function(err, noty) {
                         if(err) next(err);
                         // send real time message
                         else
@@ -126,7 +136,7 @@ exports.create = function(req, res, next) {
                         _id: newPost._id,
                         authorName: req.user.firstName + ' ' + req.user.lastName,
                         authorPhoto: req.user.photo,
-                        summary: newPost.summary
+                        summary: newPost.content
                     });
                 });
 
@@ -196,7 +206,19 @@ exports.news = function(req, res, next) {
         });
 };
 
-// Like post
+/*
+    Like post
+
+    1. find post with its Id
+        2. add user's Id to post's liked list
+        3. update post
+            if the user is not the post author
+                4. create user activity
+                5. create notification for post author
+                    6. send real-time notification to post author
+                7. send email notification to post author
+        8. return the post to client
+*/
 exports.like = function(req, res, next){
 
     // find post
@@ -238,11 +260,16 @@ exports.like = function(req, res, next){
 
                             if (err) next(err);
                             else {
-                                // populate the respond notification with user's info
-                                notification.populate({
+
+                                var notyPopulateQuery = [{
                                     path:'_from',
                                     select: 'type firstName lastName title cover photo createDate'
-                                }, function(err, noty) {
+                                },{
+                                    path:'targetPost'
+                                }];
+
+                                // populate the respond notification with user's info
+                                notification.populate(notyPopulateQuery, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
                                     sio.sockets.in(newPost._owner).emit('post-liked', noty);
@@ -259,7 +286,19 @@ exports.like = function(req, res, next){
     });
 };
 
-// bookmark post
+/*
+    Bookmark post
+
+    1. find post with its Id
+        2. add user's Id to post's bookmarked list
+        3. update post
+            if the user is not the post author
+                4. create user activity
+                5. create notification for post author
+                    6. send real-time notification to post author
+                7. send email notification to post author
+        8. return the post to client
+*/
 exports.bookmark = function(req, res, next){
 
     // find post
@@ -299,11 +338,16 @@ exports.bookmark = function(req, res, next){
 
                             if (err) next(err);
                             else {
-                                // populate the respond notification with user's info
-                                notification.populate({
+
+                                var notyPopulateQuery = [{
                                     path:'_from',
                                     select: 'type firstName lastName title cover photo createDate'
-                                }, function(err, noty) {
+                                },{
+                                    path:'targetPost'
+                                }];
+
+                                // populate the respond notification with user's info
+                                notification.populate(notyPopulateQuery, function(err, noty) {
                                     if(err) next(err);
                                     // send real time message
                                     sio.sockets.in(newPost._owner).emit('post-bookmarked', noty);

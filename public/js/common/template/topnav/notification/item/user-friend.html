@@ -5,13 +5,13 @@
         title = "から友達になるリクエストがありました";
     }
     else if (obj.type == "friend-approved") {
-        title = "はあなたの友達リクエストを承認しました";
+        title = "あなたの友達リクエストを承認しました";
     }
     else if (obj.type == "friend-declined") {
-        title = "はあなたの友達リクエストを拒否しました";
+        title = "あなたの友達リクエストを拒否しました";
     }
     else if (obj.type == "friend-break") {
-        title = "はあなたと友達を解除しました";
+        title = "あなたと友達を解除しました";
     }
 %>
 
@@ -19,11 +19,13 @@
     <img src="<%= obj._from.photo %>" class="msg-photo" alt="">
     <span class="msg-body">
         <span class="msg-title">
-            <span class="blue">
-                <%= obj._from.firstName %>&nbsp;
-                <%= obj._from.lastName %>&nbsp;
-            </span>
-            <%= title %>
+            <strong>
+                <span class="blue">
+                    <%= obj._from.firstName %>&nbsp;
+                    <%= obj._from.lastName %>&nbsp;
+                </span>
+                <%= title %>
+            </strong>
         </span>
         <span class="msg-time">
             <i class="ace-icon fa fa-clock-o"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>

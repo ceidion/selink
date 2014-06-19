@@ -1,32 +1,54 @@
 <%
-    var title = "";
+    var title,
+        icon,
+        comment,
+        content = _.str.stripTags(obj.targetPost.content),
+        summary = _.str.truncate(content, 50);
 
     if (obj.type == "post-new") {
-        title = "は新しい記事を投稿しました";
+        title = "新しい記事を投稿しました";
+        icon = "fa-edit green bigger-110";
     }
     else if (obj.type == "post-liked") {
-        title = "はあなたの投稿に「いいね！」しました";
+        title = "あなたの投稿に「いいね！」しました";
+        icon = "fa-heart red bigger-110";
     }
     else if (obj.type == "post-bookmarked") {
-        title = "はあなたの投稿にブックマークを付けました";
+        title = "あなたの投稿にブックマークを付けました";
+        icon = "fa-star orange2 bigger-110";
     }
     else if (obj.type == "post-commented") {
-        title = "はあなたの投稿にコメントしました";
+        title = "あなたの投稿にコメントしました";
+        icon = "fa-comment blue bigger-110";
+
+        comment = _.findWhere(obj.targetPost.comments, {_id: obj.targetComment});
+        content = _.str.stripTags(comment.content),
+        summary = _.str.truncate(content, 50);
     }
     else if (obj.type == "comment-liked") {
-        title = "はあなたのコメントに「いいね！」しました";
+        title = "あなたのコメントに「いいね！」しました";
+        icon = "fa-heart red bigger-110";
+
+        comment = _.findWhere(obj.targetPost.comments, {_id: obj.targetComment});
+        content = _.str.stripTags(comment.content),
+        summary = _.str.truncate(content, 50);
     }
 %>
 
-<a href="#post/<%= obj.target %>">
+<a href="#post/<%= obj.targetPost._id %>">
     <img src="<%= obj._from.photo %>" class="msg-photo" alt="">
     <span class="msg-body">
         <span class="msg-title">
-            <span class="blue">
-                <%= obj._from.firstName %>&nbsp;
-                <%= obj._from.lastName %>&nbsp;
-            </span>
-            <%= title %>
+            <strong>
+                <span class="blue">
+                    <%= obj._from.firstName %>&nbsp;
+                    <%= obj._from.lastName %>&nbsp;
+                </span>
+                <%= title %>
+            </strong>
+            <div class="space-2"></div>
+            <i class="ace-icon fa <%= icon %>"></i>
+            <%= summary %>
         </span>
         <span class="msg-time">
             <i class="ace-icon fa fa-clock-o"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>

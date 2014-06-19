@@ -114,7 +114,7 @@ exports.create = function(req, res, next) {
                 if (err) next(err);
                 else {
                     // populate the notification with request sender's info
-                    notification.populate({path:'_from', select: 'firstName lastName photo'}, function(err, noty) {
+                    notification.populate({path:'_from', select: 'type firstName lastName title cover photo email createDate'}, function(err, noty) {
                         // send real time message
                         if(err) next(err);
                         else sio.sockets.in(req.body._id).emit('friend-invited', noty);
