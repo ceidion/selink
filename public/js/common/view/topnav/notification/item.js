@@ -1,7 +1,7 @@
 define([
-    'text!common/template/topnav/notification/item/user-friend.html',
-    'text!common/template/topnav/notification/item/user-post.html',
-    'text!common/template/topnav/notification/item/user-job.html',
+    'text!common/template/topnav/notification/item/friend.html',
+    'text!common/template/topnav/notification/item/post.html',
+    'text!common/template/topnav/notification/item/job.html',
     'text!common/template/topnav/notification/item/group.html',
 ], function(
     friendTemplate,

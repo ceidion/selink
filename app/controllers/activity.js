@@ -34,11 +34,16 @@ exports.index = function(req, res, next) {
     // find the activities of all users
     Activity.find()
         .where('_owner').ne(req.user.id).in(req.user.friends)
-        .where('type').nin(['user-login', 'user-logout', 'friend-declined', 'message-new'])
+        .where('type').nin(['user-login', 'user-logout', 'friend-declined', 'friend-break', 'group-refused', 'message-new']) // surppress the negative or private activity
         .sort('-createDate')
         .skip(20*page)  // skip n page
         .limit(20)  // 20 user per page
         .populate('_owner', 'type firstName lastName title cover photo createDate')
+        .populate('targetUser', 'type firstName lastName title cover photo createDate')
+        .populate('targetPost')
+        .populate('targetJob')
+        .populate('targetMessage')
+        .populate('targetGroup')   // there is no targetComment, cause comment was embedded in post
         .exec(function(err, activities) {
             if (err) next(err);
             else res.json(activities);

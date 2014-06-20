@@ -1,12 +1,12 @@
 define([
     'text!common/template/activity/item/user-activated.html',
     'text!common/template/activity/item/user-login.html',
-    'text!common/template/activity/item/user-post.html',
-    'text!common/template/activity/item/user-friend.html',
-    'text!common/template/activity/item/user-job.html',
+    'text!common/template/activity/item/post.html',
+    'text!common/template/activity/item/friend.html',
+    'text!common/template/activity/item/job.html',
     'text!common/template/activity/item/group.html',
-    'text!common/template/activity/item/default.html',
     'text!common/template/people/popover.html',
+    'text!common/template/group/popover.html',
     'common/model/base'
 ], function(
     userActivatedTemplate,
@@ -15,8 +15,8 @@ define([
     userFriendInvitedTemplate,
     userJobTemplate,
     groupTemplate,
-    defaultTemplate,
-    popoverTemplate,
+    peoplePopoverTemplate,
+    groupPopoverTemplate,
     BaseModel
 ) {
 
@@ -49,57 +49,29 @@ define([
                 return userJobTemplate;
             else if (_.indexOf(this.groupTargetActivity, type) >= 0)
                 return groupTemplate;
-            else
-                return defaultTemplate;
         },
 
         className: 'timeline-item clearfix',
 
         events: {
             'click .timeline-info img': 'toProfile',
-        },
-
-        // initializer
-        initialize: function() {
-
-            var self = this,
-                type = this.model.get('type'),
-                target = new BaseModel();
-
-            // TODO: maybe these are should be done on server side
-            if ( _.indexOf(this.userTargetActivity, type) >= 0 ) {
-
-                target.fetch({
-                    url: '/users/' + this.model.get('target'),
-                    success: function() {
-                        self.model.set('target', target.attributes);
-                        self.render();
-                    }
-                });
-
-            } else if ( _.indexOf(this.postTargetActivity, type) >= 0 ) {
-
-                target.fetch({
-                    url: '/posts/' + this.model.get('target'),
-                    success: function() {
-                        self.model.set('target', target.attributes);
-                        self.render();
-                    }
-                });
-            } else if ( _.indexOf(this.jobTargetActivity, type) >= 0 ) {
-
-                target.fetch({
-                    url: '/jobs/' + this.model.get('target'),
-                    success: function() {
-                        self.model.set('target', target.attributes);
-                        self.render();
-                    }
-                });
-            }
+            'click .group-link': 'toGroup',
         },
 
         // after render
         onRender: function() {
+
+            if (this.model.get('targetGroup'))
+                // add popover on group link
+                this.$el.find('.group-link').popover({
+                    html: true,
+                    trigger: 'hover',
+                    container: 'body',
+                    placement: 'auto right',
+                    title: '<img src="' + this.model.get('targetGroup').cover + '" />',
+                    content: _.template(groupPopoverTemplate, this.model.get('targetGroup')),
+                });
+
 
             // add popover on photo
             this.$el.find('.timeline-info img').popover({
@@ -108,7 +80,7 @@ define([
                 container: 'body',
                 placement: 'auto right',
                 title: '<img src="' + this.model.get('_owner').cover + '" />',
-                content: _.template(popoverTemplate, this.model.get('_owner')),
+                content: _.template(peoplePopoverTemplate, this.model.get('_owner')),
             });
         },
 
@@ -124,6 +96,17 @@ define([
             window.location = '#profile/' + this.model.get('_owner')._id;
         },
 
+        // turn to group page
+        toGroup: function(e) {
+
+            // stop defautl link behavior
+            e.preventDefault();
+
+            // destroy the popover on group label
+            this.$el.find('.group-link').popover('destroy');
+            // turn the page manually
+            window.location = '#group/' + this.model.get('targetGroup')._id;
+        }
 
     });
 });

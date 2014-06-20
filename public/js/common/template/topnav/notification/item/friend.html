@@ -1,17 +1,22 @@
 <%
-    var title = "";
+    var title,
+        icon;
 
     if (obj.type == "friend-invited") {
         title = "から友達になるリクエストがありました";
+        icon = "fa-paper-plan blue bigger-110";
     }
     else if (obj.type == "friend-approved") {
         title = "あなたの友達リクエストを承認しました";
+        icon = "fa-smile-o green bigger-110";
     }
     else if (obj.type == "friend-declined") {
         title = "あなたの友達リクエストを拒否しました";
+        icon = "fa-meh-o purple bigger-110";
     }
     else if (obj.type == "friend-break") {
         title = "あなたと友達を解除しました";
+        icon = "fa-frown-o red bigger-110";
     }
 %>
 

@@ -5,6 +5,7 @@ define([
     'common/view/composite-isotope',
     'common/view/post/item',
     'common/view/people/detail/friends',
+    'common/view/people/detail/groups',
     'common/view/people/detail/languages',
     'common/view/people/detail/skills',
     'common/view/people/detail/qualifications',
@@ -18,6 +19,7 @@ define([
     BaseView,
     ItemView,
     FriendsView,
+    GroupsView,
     LanguagesView,
     SkillsView,
     QualificationsView,
@@ -71,6 +73,10 @@ define([
             if (this.model.friends.length)
                 this.friendsView = new FriendsView({collection: this.model.friends});
 
+            // create groups view
+            if (this.model.groups.length)
+                this.groupsView = new GroupsView({collection: this.model.groups});
+
             // create languages view
             if (this.model.languages.length)
                 this.languagesView = new LanguagesView({collection: this.model.languages});
@@ -106,6 +112,7 @@ define([
             this.regions = this.rm.addRegions({
                 // historyRegion: '#history',
                 friendsRegion: '#friends',
+                groupsRegion: '#groups',
                 languagesRegion: '#languages-display',
                 skillsRegion: '#skills',
                 qualificationsRegion: '#qualifications',
@@ -120,6 +127,10 @@ define([
             // show friends view
             if (this.friendsView)
                 this.regions.friendsRegion.show(this.friendsView);
+
+            // show groups view
+            if (this.groupsView)
+                this.regions.groupsRegion.show(this.groupsView);
 
             // show languages view
             if (this.languagesView)

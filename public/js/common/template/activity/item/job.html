@@ -4,14 +4,8 @@
     if (obj.type == "job-new") {
         title = "新しい仕事情報を公開しました";
     }
-    else if (obj.type == "user-job-liked") {
-        title = "下記仕事情報に「いいね！」しました";
-    }
     else if (obj.type == "job-bookmarked") {
         title = "下記仕事情報にブックマークを付けました";
-    }
-    else if (obj.type == "user-job-commented") {
-        title = "下記仕事情報をコメントしました";
     }
 %>
 
@@ -26,7 +20,7 @@
         <h5 class="widget-title smaller">
             <i class="ace-icon fa fa-briefcase bigger-110"></i>&nbsp;
             <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
-            は<%= title %>
+            <%= title %>
         </h5>
         <span class="widget-toolbar no-border">
             <i class="ace-icon fa fa-clock-o bigger-110"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
@@ -34,7 +28,7 @@
     </div>
     <div class="widget-body">
         <div class="widget-main">
-            <strong><a href="#job/<%= obj.target._id %>"><%= obj.target.name %></a></strong>
+            <strong><a href="#job/<%= obj.targetJob._id %>"><%= obj.targetJob.name %></a></strong>
         </div>
     </div>
 </div>

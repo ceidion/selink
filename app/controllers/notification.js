@@ -103,7 +103,7 @@ approve = function(req, res, next, notification) {
     req.user.invited.pull(notification._from);
 
     // add the request sender's id into user's friend list
-    req.user.friends.push(notification._from);
+    req.user.friends.addToSet(notification._from);
 
     // update user
     req.user.save(function(err) {

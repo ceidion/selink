@@ -6,6 +6,7 @@ var _ = require('underscore'),
     path = require('path'),
     User = mongoose.model('User'),
     Post = mongoose.model('Post'),
+    Group = mongoose.model('Group'),
     Job = mongoose.model('Job'),
     Announcement = mongoose.model('Announcement'),
     Activity = mongoose.model('Activity');
@@ -77,7 +78,6 @@ exports.show = function(req, res, next) {
     User.findById(req.params.user, '-password')
         .populate('friends', 'type firstName lastName title cover photo createDate')
         .populate('invited', 'type firstName lastName title cover photo createDate')
-        .populate('groups', 'name cover description')
         .exec(function(err, user) {
 
             if (err) next(err);
@@ -88,10 +88,18 @@ exports.show = function(req, res, next) {
                     if (err) next(err);
                     else {
 
-                        var userObj = user.toObject();
-                            userObj.postNum = postNum;
+                        Group.find().where('participants').equals(req.user.id).exec(function(err, groups){
 
-                        res.json(userObj);
+                            if (err) next(err);
+                            else {
+
+                                var userObj = user.toObject();
+                                    userObj.postNum = postNum;
+                                    userObj.groups = groups;
+
+                                res.json(userObj);
+                            }
+                        });
                     }
                 });
             }

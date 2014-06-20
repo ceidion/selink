@@ -1,32 +1,28 @@
 <%
-    var title,
-        icon,
-        content;
+    var icon,
+        content,
+        groupName = obj.targetGroup.name;
 
     if (obj.type == "group-new") {
-        title = "新しいグループを立ち上げました";
         icon = "fa-group blue bigger-110";
-        content = obj.targetGroup.name;
+        content = "グループ<strong>「" + groupName + "」</strong>を立ち上げました";
     }
     else if (obj.type == "group-invited") {
-        title = "あなたをグループに招待しました";
         icon = "fa-ticket red bigger-110";
-        content = obj.targetGroup.name;
+        content = "あなたをグループ<strong>「" + groupName + "」</strong>に招待しました";
     }
     else if (obj.type == "group-joined") {
-        title = "グループに参加しました";
         icon = "fa-sign-in green bigger-110";
-        content = obj.targetGroup.name;
+        content = "グループ<strong>「" + groupName + "」</strong>に参加しました";
     }
     else if (obj.type == "group-refused") {
-        title = "グループ招待を拒否しました";
         icon = "fa-sign-out purple bigger-110";
-        content = obj.targetGroup.name;
+        content = "グループ<strong>「" + groupName + "」</strong>の招待を拒否しました";
     }
 %>
 
 <a href="#group/<%= obj.targetGroup._id %>">
-    <img src="<%= obj._from.photo %>" class="msg-photo" alt="">
+    <img src="<%= obj._from.photo %>" class="msg-photo">
     <span class="msg-body">
         <span class="msg-title">
             <strong>
@@ -34,7 +30,6 @@
                     <%= obj._from.firstName %>&nbsp;
                     <%= obj._from.lastName %>&nbsp;
                 </span>
-                <%= title %>
             </strong>
             <div class="space-2"></div>
             <i class="ace-icon fa <%= icon %>"></i>

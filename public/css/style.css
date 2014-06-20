@@ -18,6 +18,7 @@ img{max-width:100%}
 .datepicker,.bootstrap-timepicker-widget{z-index:1051 !important}
 #sl-basic-info .sl-editable{padding:4px;line-height:33px}#sl-basic-info .sl-editable .align-right{padding:0px;color:#667e99}
 #friends .timeline-item{padding-left:0px;padding-right:8px}
+#groups .timeline-item{padding-left:0px;padding-right:0px;margin-bottom:3px}
 #name,#title{padding:5px 7px !important;min-height:43px}
 #cover{width:100%;max-height:150px;overflow:hidden}#cover img{width:100%}
 #cover .fileinput-button{position:absolute;top:10px;right:10px}

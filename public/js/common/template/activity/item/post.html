@@ -1,20 +1,30 @@
 <%
-    var title = "";
+    var title,
+        comment,
+        content = obj.targetPost.content;
 
     if (obj.type == "post-new") {
         title = "新しい記事を投稿しました";
     }
     else if (obj.type == "post-liked") {
-        title = "下記投稿に「いいね！」しました";
+        title = "あなたの投稿に「いいね！」しました";
+        content = _.str.stripTags(obj.targetPost.content);
+        content = _.str.truncate(content, 200);
     }
     else if (obj.type == "post-bookmarked") {
-        title = "下記投稿にブックマークを付けました";
+        title = "あなたの投稿にブックマークを付けました";
+        content = _.str.stripTags(obj.targetPost.content);
+        content = _.str.truncate(content, 200);
     }
     else if (obj.type == "post-commented") {
-        title = "下記投稿をコメントしました";
+        title = "あなたの投稿をコメントしました";
+        comment = _.findWhere(obj.targetPost.comments, {_id: obj.targetComment});
+        content = comment.content;
     }
     else if (obj.type == "comment-liked") {
-        title = "はあなたのコメントに「いいね！」しました";
+        title = "あなたのコメントに「いいね！」しました";
+        comment = _.findWhere(obj.targetPost.comments, {_id: obj.targetComment});
+        content = comment.content;
     }
 
 %>
@@ -30,7 +40,7 @@
         <h5 class="widget-title smaller">
             <i class="ace-icon fa fa-edit bigger-110"></i>&nbsp;
             <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
-            は<%= title %>
+            <%= title %>
         </h5>
         <span class="widget-toolbar no-border">
             <i class="ace-icon fa fa-clock-o bigger-110"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
@@ -38,12 +48,12 @@
     </div>
     <div class="widget-body">
         <div class="widget-main">
-            <%= obj.target.summary %>
+            <%= content %>
             <div class="widget-toolbox clearfix">
                 <div class="pull-right action-buttons">
                     <div class="space-4"></div>
                     <div>
-                        <a href="#post/<%= obj.target._id %>"><i class="ace-icon fa fa-desktop bigger-110"></i>&nbsp;詳しく読む</a>
+                        <a href="#post/<%= obj.targetPost._id %>"><i class="ace-icon fa fa-desktop bigger-110"></i>&nbsp;詳しく読む</a>
                     </div>
                 </div>
             </div>

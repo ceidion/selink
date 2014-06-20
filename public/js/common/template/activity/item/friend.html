@@ -10,14 +10,6 @@
         title = "お友達作りました";
         content = "と友達になりました。";
     }
-    else if (obj.type == "friend-declined") {
-        title = "お友達になる要請を拒否しました";
-        content = "のお友達になる要請を拒否しました。";
-    }
-    else if (obj.type == "friend-break") {
-        title = "お友達を削除しました";
-        content = "を友達リストから削除しました。";
-    }
 
 %>
 
@@ -32,7 +24,7 @@
         <h5 class="widget-title smaller">
             <i class="ace-icon fa fa-group bigger-110"></i>&nbsp;
             <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
-            は<%= title %>
+            <%= title %>
         </h5>
         <span class="widget-toolbar no-border">
             <i class="ace-icon fa fa-clock-o bigger-110"></i>&nbsp;<%= moment(obj.createDate).fromNow() %>
@@ -44,12 +36,12 @@
                 <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
             </a>
             は
-            <a href="#profile/<%= obj.target._id %>">
-                <strong><%= obj.target.firstName %>&nbsp;<%= obj.target.lastName %></strong>
+            <a href="#profile/<%= obj.targetUser._id %>">
+                <strong><%= obj.targetUser.firstName %>&nbsp;<%= obj.targetUser.lastName %></strong>
             </a>
             <%= content %>
-            <a class="pull-right" href="#profile/<%= obj.target._id %>">
-                <img src="<%= obj.target.photo %>" style="max-width: 50px;" />
+            <a class="pull-right" href="#profile/<%= obj.targetUser._id %>">
+                <img src="<%= obj.targetUser.photo %>" style="max-width: 50px;" />
             </a>
             <div class="clearfix"></div>
         </div>
