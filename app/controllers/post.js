@@ -69,11 +69,12 @@ exports.show = function(req, res, next) {
         2. create user(author) activity
         3. create notification for author's friends
             4. send real-time notification to author's friends
-        5. create notification for group's participants
-            6. sent real-time notification to group's participants
-        7. send email notification to author's friends
-        8. commit post to solr
-        9. return the new post to client
+        5. send email notification to author's friends
+        6. create notification for group's participants
+            7. sent real-time notification to group's participants
+        8. send email notification to group's participants
+        9. commit post to solr
+        10. return the new post to client
 */
 exports.create = function(req, res, next) {
 
@@ -134,9 +135,10 @@ exports.create = function(req, res, next) {
                     // send new-post mail
                     Mailer.newPost(users, {
                         _id: newPost._id,
+                        authorId: req.user.id,
                         authorName: req.user.firstName + ' ' + req.user.lastName,
                         authorPhoto: req.user.photo,
-                        summary: newPost.content
+                        content: newPost.content
                     });
                 });
 

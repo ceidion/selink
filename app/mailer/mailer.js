@@ -87,7 +87,7 @@ exports.friendInvitation = function(recipient) {
                     transport.sendMail({
                         from: 'SELink <noreply@selink.jp>',
                         to: recipient.email,
-                        subject: 'SELinkお友達要請',
+                        subject: 'お友達要請',
                         html: html,
                         text: text
                     }, function(err, responseStatus) {
@@ -135,6 +135,57 @@ exports.friendApprove = function(recipient) {
     });
 };
 
+exports.groupInvitation = function(recipients, group) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) {
+            console.log(err);
+        } else {
+
+            var Render = function(recipient, group) {
+
+                this.locals = {
+                    recipient: recipient,
+                    group: group
+                };
+
+                this.send = function(err, html, text) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                            transport.sendMail({
+                            from: 'SELink <noreply@selink.jp>',
+                            to: recipient.email,
+                            subject: 'グループ招待',
+                            html: html,
+                            text: text
+                        }, function(err, responseStatus) {
+                            if (err) {
+                                console.log(err);
+                            } else {
+                                console.log(responseStatus.message);
+                            }
+                        });
+                    }
+                };
+
+                this.batch = function(batch) {
+                    batch(this.locals, templatesDir, this.send);
+                };
+            };
+
+            // Load the template and send the emails
+            template('group-invitation', true, function(err, batch) {
+                for(recipient in recipients) {
+                    var render = new Render(recipients[recipient], group);
+                    render.batch(batch);
+                }
+            });
+        }
+    });
+};
+
 exports.newPost = function(recipients, post) {
 
     emailTemplates(templatesDir, function(err, template) {
@@ -157,7 +208,7 @@ exports.newPost = function(recipients, post) {
                             transport.sendMail({
                             from: 'SELink <noreply@selink.jp>',
                             to: recipient.email,
-                            subject: post.authorName + 'さんは新しい記事を投稿しました',
+                            subject: '新しい記事',
                             html: html,
                             text: text
                         }, function(err, responseStatus) {
@@ -208,7 +259,7 @@ exports.newJob = function(recipients, job) {
                             transport.sendMail({
                             from: 'SELink <noreply@selink.jp>',
                             to: recipient.email,
-                            subject: job.authorName + 'さんは仕事情報を投稿しました',
+                            subject: '仕事情報',
                             html: html,
                             text: text
                         }, function(err, responseStatus) {
@@ -259,7 +310,7 @@ exports.newMessage = function(recipients, message) {
                             transport.sendMail({
                             from: 'SELink <noreply@selink.jp>',
                             to: recipient.email,
-                            subject: message.authorName + 'さんから新しいメッセージ',
+                            subject: '新しいメッセージ',
                             html: html,
                             text: text
                         }, function(err, responseStatus) {

@@ -206,7 +206,7 @@
                 /*@editable*/ padding-left:20px;
                 /*@editable*/ text-align:left;
                 /*@editable*/ vertical-align:middle;
-                background: #438eb9;
+                background: #42a8e1;
             }
 
             .headerContent h1{
@@ -311,12 +311,10 @@
             }
 
             .avatar {
-                max-width: 75px;
-                max-height: 75px;
-                margin-top: 8px;
-                margin-bottom: 8px;
-                margin-right: 12px;
-                float: left;
+                max-width: 70px;
+                max-height: 70px;
+                border-radius: 100%;
+                border: 2px solid #C9D6E5;
             }
 
             .widget-body {
@@ -536,12 +534,10 @@
                 }
 
                 .avatar {
-                    max-width: 75px;
-                    max-height: 75px;
-                    margin-top: 8px;
-                    margin-bottom: 8px;
-                    margin-right: 12px;
-                    float: left;
+                    max-width: 70px;
+                    max-height: 70px;
+                    border-radius: 100%;
+                    border: 2px solid #C9D6E5;
                 }
 
                 .widget-body {
@@ -636,11 +632,11 @@
                                         <tr>
                                             <td valign="top" class="headerContent" style="color: #fff;">
                                                 <h1>SELink</h1>
-                                                <h3>新しいメッセージ</h3>
+                                                <h3><%= message.authorName %>から新しいメッセージ</h3>
                                             </td>
-                                            <td style="width: 10%; height: 100%; background: #42a8e1;"></td>
-                                            <td style="width: 10%; height: 100%; background: #fcac6f;"></td>
-                                            <td style="width: 10%; height: 100%; background: #B0D876;"></td>
+                                            <td align="center" style="width: 74px; height: 100%; padding-right: 20px; background: #42a8e1;">
+                                                <img class="avatar" src="http://new.selink.jp/<%= message.authorPhoto %>">
+                                            </td>
                                         </tr>
                                     </table>
                                     <!-- // END HEADER -->
@@ -654,18 +650,13 @@
                                             <td valign="top" class="bodyContent" mc:edit="body_content">
                                                 <div class="widget-box">
                                                     <div class="widget-header widget-header-flat">
-                                                        <img class="avatar" src="http://192.168.1.33:8081/<%= message.authorPhoto %>">
                                                         <h4>
-                                                            <strong><%= message.authorName %></strong>
-                                                            <br />
-                                                            <br />
-                                                            <%= message.subject %>
+                                                            <strong><%= message.subject %></strong>
                                                         </h4>
                                                     </div>
 
                                                     <div class="widget-body">
                                                         <div class="widget-main">
-                                                            <div style="clear: both;"></div>
                                                             <%- message.content %>
                                                         </div>
                                                         <div class="widget-toolbox">

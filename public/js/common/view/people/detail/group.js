@@ -25,7 +25,7 @@ define([
                 html: true,
                 trigger: 'hover',
                 container: 'body',
-                placement: 'auto',
+                placement: 'auto right',
                 title: '<img src="' + this.model.get('cover') + '" />',
                 content: _.template(popoverTemplate, this.model.attributes),
             });
@@ -36,7 +36,7 @@ define([
             e.preventDefault();
 
             this.$el.find('img').popover('destroy');
-            window.location = '#profile/' + this.model.get('_id');
+            window.location = '#group/' + this.model.get('_id');
         }
 
     });

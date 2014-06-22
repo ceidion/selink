@@ -187,20 +187,23 @@ exports.invite = function(req, res, next) {
                             }
                         });
 
-                        // // send email to all friends
-                        // User.find()
-                        //     .select('email')
-                        //     .where('_id').in(req.user.friends)
-                        //     .where('logicDelete').equals(false)
-                        //     .exec(function(err, users) {
-                        //         // send new-post mail
-                        //         Mailer.newPost(users, {
-                        //             _id: newPost._id,
-                        //             authorName: req.user.firstName + ' ' + req.user.lastName,
-                        //             authorPhoto: req.user.photo,
-                        //             summary: newPost.summary
-                        //         });
-                        //     });
+                        // send email to all friends
+                        User.find()
+                            .select('email')
+                            .where('_id').in(req.body.invited)
+                            .where('logicDelete').equals(false)
+                            .exec(function(err, users) {
+                                // send new-post mail
+                                Mailer.groupInvitation(users, {
+                                    _id: newGroup._id,
+                                    ownerId: req.user.id,
+                                    ownerName: req.user.firstName + ' ' + req.user.lastName,
+                                    ownerPhoto: req.user.photo,
+                                    name: newGroup.name,
+                                    cover: newGroup.cover,
+                                    description: newGroup.description
+                                });
+                            });
 
                         var populateQuery = [{
                             path:'invited',
