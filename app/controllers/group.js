@@ -295,6 +295,19 @@ exports.join = function(req, res, next) {
                         if (err) next(err);
                     });
 
+                    // send email to group owner
+                    User.findById(group._owner)
+                        .select('email')
+                        .where('logicDelete').equals(false)
+                        .exec(function(err, recipient) {
+
+                            Mailer.groupJoin({
+                                email: recipient.email,
+                                groupName: group.name,
+                                participant: req.user
+                            });
+                        });
+
                     // return updated group
                     group.populate({
                         path: '_owner',

@@ -5,9 +5,11 @@ define([
     'common/model/base',
     'common/model/job',
     'common/model/post',
+    'common/model/group',
     'common/view/post/item',
     'common/view/announcement/item',
-    'common/view/job/item'
+    'common/view/job/item',
+    'common/view/group/item'
 ], function(
     template,
     BaseView,
@@ -15,9 +17,11 @@ define([
     BaseModel,
     JobModel,
     PostModel,
+    GroupModel,
     PostItemView,
     AnnouncementItemView,
-    JobItemView
+    JobItemView,
+    GroupItemView
 ) {
 
     var NewsFeedCollection = BaseCollection.extend({
@@ -26,7 +30,9 @@ define([
 
         model: function(attrs, options) {
 
-            if (_.has(attrs, 'name'))
+            if (_.has(attrs, 'description'))
+                return new GroupModel(attrs, options);
+            else if (_.has(attrs, 'name'))
                 return new JobModel(attrs, options);
             else if (_.has(attrs, 'title'))
                 return new BaseModel(attrs, options);
@@ -49,7 +55,9 @@ define([
         // item view
         getItemView: function(item) {
 
-            if (item.has('name'))
+            if (item.has('description'))
+                return GroupItemView;
+            else if (item.has('name'))
                 return JobItemView;
             else if (item.has('title'))
                 return AnnouncementItemView;

@@ -370,7 +370,19 @@ exports.newsfeed = function(req, res, next) {
                                 .limit(10)
                                 .exec(function(err, announcements) {
                                     if (err) next(err);
-                                    else res.json(_.union(jobs, posts, announcements));
+                                    else {
+
+                                        Group.find()
+                                            .where('logicDelete').equals(false)
+                                            .populate('_owner', 'type firstName lastName title cover photo createDate')
+                                            .sort('-createDate')
+                                            .skip(3*page)  // skip n page
+                                            .limit(3)
+                                            .exec(function(err, groups) {
+                                                if (err) next(err);
+                                                else res.json(_.union(jobs, posts, announcements, groups));
+                                            });
+                                    }
                                 });
                         }
                     });

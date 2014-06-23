@@ -284,6 +284,19 @@ accept = function(req, res, next, notification) {
                         if (err) next(err);
                     });
 
+                    // send email to group owner
+                    User.findById(updatedGroup._owner)
+                        .select('email')
+                        .where('logicDelete').equals(false)
+                        .exec(function(err, recipient) {
+
+                            Mailer.groupJoin({
+                                email: recipient.email,
+                                groupName: updatedGroup.name,
+                                participant: req.user
+                            });
+                        });
+
                     // mark the notification as confirmed
                     notification.result = req.body.result;
                     notification.confirmed.addToSet(req.user.id);
@@ -292,10 +305,6 @@ accept = function(req, res, next, notification) {
                         else res.json(confirmedNotification);
                     });
 
-                    // Mailer.groupJoin({
-                    //     from: req.user,
-                    //     email: updatedFriend.email
-                    // });
                 }
             });
         }

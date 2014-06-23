@@ -49,6 +49,7 @@ define([
         // events
         events: {
             'click .btn-join': 'onJoin',
+            'click .avatar': 'toProfile',
             'click .btn-member': 'showMemberEditor',
             'click .btn-post': 'onPost',
             'keyup .wysiwyg-editor': 'enablePost'
@@ -169,6 +170,18 @@ define([
                 patch: true,
                 wait: true
             });
+        },
+
+        // turn to user profile page
+        toProfile: function(e) {
+
+            // stop defautl link behavior
+            e.preventDefault();
+
+            // destroy the popover on user's photo
+            this.$el.find('.avatar').popover('destroy');
+            // turn the page manually
+            window.location = '#profile/' + this.model.get('_owner')._id;
         },
 
         // edit group member

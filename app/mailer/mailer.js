@@ -186,6 +186,38 @@ exports.groupInvitation = function(recipients, group) {
     });
 };
 
+exports.groupJoin = function(recipient) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) {
+            console.log(err);
+        } else {
+
+            // send account active email
+            template('group-join', recipient, function(err, html, text) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    transport.sendMail({
+                        from: 'SELink <noreply@selink.jp>',
+                        to: recipient.email,
+                        subject: '新しいグループメンバー',
+                        html: html,
+                        text: text
+                    }, function(err, responseStatus) {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log(responseStatus.message);
+                        }
+                    });
+                }
+            });
+        }
+    });
+};
+
 exports.newPost = function(recipients, post) {
 
     emailTemplates(templatesDir, function(err, template) {
