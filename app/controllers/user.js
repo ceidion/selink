@@ -78,31 +78,11 @@ exports.show = function(req, res, next) {
     User.findById(req.params.user, '-password')
         .populate('friends', 'type firstName lastName title cover photo createDate')
         .populate('invited', 'type firstName lastName title cover photo createDate')
+        .populate({ path: 'posts', options: { limit: 20 }})
+        .populate({ path: 'groups', options: { limit: 20 }})
         .exec(function(err, user) {
-
             if (err) next(err);
-            else {
-
-                Post.count({_owner: req.params.user, logicDelete: false}, function(err, postNum) {
-
-                    if (err) next(err);
-                    else {
-
-                        Group.find().where('participants').equals(req.user.id).exec(function(err, groups){
-
-                            if (err) next(err);
-                            else {
-
-                                var userObj = user.toObject();
-                                    userObj.postNum = postNum;
-                                    userObj.groups = groups;
-
-                                res.json(userObj);
-                            }
-                        });
-                    }
-                });
-            }
+            else res.json(user);
         });
 };
 

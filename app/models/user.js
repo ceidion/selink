@@ -163,6 +163,18 @@ var User = new Schema({
         ref: 'User'
     }],
 
+    // User Posts
+    posts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+    }],
+
+    // User Participanting Group
+    groups: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Group'
+    }],
+
     // User Setting
     setting: {
 

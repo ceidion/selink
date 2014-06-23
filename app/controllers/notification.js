@@ -230,6 +230,12 @@ accept = function(req, res, next, notification) {
         if (err) next(err);
         else {
 
+            // save the group id in user profile
+            req.user.groups.addToSet(group._id);
+            req.user.save(function(err) {
+                if (err) next(err);
+            });
+
             // move user's id from group's invited list
             // to the participants list
             group.invited.pull(req.user._id);

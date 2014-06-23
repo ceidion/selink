@@ -117,10 +117,15 @@ exports.update = function(req, res, next) {
         if (err) next(err);
         else {
 
-            group.populate({
+            var populateQuery = [{
                 path:'invited',
                 select: 'type firstName lastName title cover photo createDate'
-            }, function(err, group) {
+            }, {
+                path:'participants',
+                select: 'type firstName lastName title cover photo createDate'
+            }];
+
+            group.populate(populateQuery, function(err, group) {
 
                 if (err) next(err);
                 else res.json(group);
@@ -236,6 +241,12 @@ exports.join = function(req, res, next) {
 
         if (err) next(err);
         else {
+
+            // save the group id in user profile
+            req.user.groups.addToSet(group._id);
+            req.user.save(function(err) {
+                if (err) next(err);
+            });
 
             // remove user's id from group's invited list, in case he had been invited
             group.invited.pull(req.user._id);

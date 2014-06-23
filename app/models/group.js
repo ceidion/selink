@@ -52,6 +52,12 @@ var Group = new Schema({
         ref: 'User'
     }],
 
+    // Group Posts
+    posts: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Post'
+    }],
+
     // Logic delete flag
     logicDelete: {
         type: Boolean,

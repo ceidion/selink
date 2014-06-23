@@ -33,49 +33,29 @@
             <% } %>
         </blockquote>
 
-        <div class="center" style="padding: 12px;">
+        <div class="clearfix" style="padding: 12px;">
 
-            <div class="infobox infobox-blue infobox-small infobox-dark">
-                <div class="infobox-icon">
-                    <i class="ace-icon fa fa-edit"></i>
-                </div>
-                <div class="infobox-data">
-                    <div class="infobox-content"><%= selink.userModel.get('postNum') %>件</div>
-                    <div class="infobox-content">投稿</div>
-                </div>
-            </div>
-
-            <div class="infobox infobox-orange infobox-small infobox-dark">
-                <div class="infobox-icon">
-                    <i class="ace-icon fa fa-tasks"></i>
-                </div>
-                <div class="infobox-data">
-                    <div class="infobox-content"><%= obj.invitationNum %>件</div>
-                    <div class="infobox-content">イベント</div>
-                </div>
-            </div>
-
-            <div class="infobox infobox-green infobox-small infobox-dark">
-                <div class="infobox-icon">
-                    <i class="ace-icon fa fa-group"></i>
-                </div>
-                <div class="infobox-data">
-                    <div class="infobox-content"><%= obj.memberNum %>人</div>
-                    <div class="infobox-content">メンバー</div>
-                </div>
+            <div class="pull-right green">
+                <i class="ace-icon fa fa-group tooltip-success"></i>
+                <%= obj.memberNum %>
             </div>
 
             <% if (obj.isMine) { %>
-            <div class="infobox infobox-orange2 infobox-small infobox-dark">
-                <div class="infobox-icon">
-                    <i class="ace-icon fa fa-paper-plane"></i>
-                </div>
-                <div class="infobox-data">
-                    <div class="infobox-content"><%= obj.invitationNum %>人</div>
-                    <div class="infobox-content">招待中</div>
-                </div>
+            <div class="pull-right red" style="padding-right: 10px;">
+                <i class="ace-icon fa fa-paper-plane tooltip-error"></i>
+                <%= obj.invitationNum %>
             </div>
             <% } %>
+
+            <div class="pull-right orange" style="padding-right: 10px;">
+                <i class="ace-icon fa fa-tasks tooltip-warning"></i>
+                <%= obj.invitationNum %>
+            </div>
+
+            <div class="pull-right blue" style="padding-right: 10px;">
+                <i class="ace-icon fa fa-edit tooltip-info"></i>
+                <%= obj.posts.length %>
+            </div>
 
         </div>
 

@@ -42,7 +42,7 @@ define([
 
             this.$el.find('.fa-edit').tooltip({
                 placement: 'top',
-                title: "投稿" + this.model.get('memberNum') + "件"
+                title: "投稿" + this.model.get('posts').length + "件"
             });
         },
 

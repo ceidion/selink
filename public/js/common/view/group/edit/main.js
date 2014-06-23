@@ -1,5 +1,6 @@
 define([
     'text!common/template/group/edit/main.html',
+    'text!common/template/people/popover.html',
     'common/view/composite-isotope',
     'common/view/group/edit/cover',
     'common/view/group/edit/name',
@@ -10,6 +11,7 @@ define([
     'common/view/post/item'
 ], function(
     template,
+    popoverTemplate,
     BaseView,
     CoverItem,
     NameItem,
@@ -84,6 +86,37 @@ define([
                     return $(this).closest('.widget-box').find('.btn-toolbar').prepend(toolbar).children(0).addClass('inline');
                 }
             }).prev().addClass('wysiwyg-style3');
+
+            // add popover on author photo
+            this.$el.find('.avatar').popover({
+                html: true,
+                trigger: 'hover',
+                container: 'body',
+                placement: 'auto top',
+                title: '<img src="' + this.model.get('_owner').cover + '" />',
+                content: _.template(popoverTemplate, this.model.get('_owner')),
+            });
+
+            this.$el.find('.fa-group').tooltip({
+                placement: 'top',
+                title: this.model.get('memberNum') + "人参加中"
+            });
+
+            this.$el.find('.fa-paper-plane').tooltip({
+                placement: 'top',
+                title: this.model.get('invitationNum') + "人要請中"
+            });
+
+            // add tooltip on add button
+            this.$el.find('.fa-tasks').tooltip({
+                placement: 'top',
+                title: "イベント" + this.model.get('memberNum') + "件"
+            });
+
+            this.$el.find('.fa-edit').tooltip({
+                placement: 'top',
+                title: "投稿" + this.model.get('posts').length + "件"
+            });
 
             Backbone.Validation.bind(this);
         },

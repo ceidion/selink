@@ -5,6 +5,7 @@ var _ = require('underscore'),
     mongoose = require('mongoose'),
     Post = mongoose.model('Post'),
     User = mongoose.model('User'),
+    Group = mongoose.model('Group'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
 
@@ -66,15 +67,17 @@ exports.show = function(req, res, next) {
     2* group participants = group's participants - author's friends
 
     1. create post with content and group
-        2. create user(author) activity
-        3. create notification for author's friends
-            4. send real-time notification to author's friends
-        5. send email notification to author's friends
-        6. create notification for group's participants
-            7. sent real-time notification to group's participants
-        8. send email notification to group's participants
-        9. commit post to solr
-        10. return the new post to client
+        2. save the post pointer in user profile
+        3. save the post pointer in group profile
+        4. create user(author) activity
+        5. create notification for author's friends
+            6. send real-time notification to author's friends
+        7. send email notification to author's friends
+        8. create notification for group's participants
+            9. sent real-time notification to group's participants
+        10. send email notification to group's participants
+        11. commit post to solr
+        12. return the new post to client
 */
 exports.create = function(req, res, next) {
 
@@ -87,6 +90,19 @@ exports.create = function(req, res, next) {
 
         if (err) next(err);
         else {
+
+            // save the post id in user profile
+            req.user.posts.addToSet(newPost._id);
+            req.user.save(function(err) {
+                if (err) next(err);
+            });
+
+            // if the post belong to some group
+            if (req.body.group)
+                // save the post id in group profile
+                Group.findByIdAndUpdate(req.body.group, {$addToSet: {posts: newPost._id}}, function(err) {
+                    if (err) next(err);
+                });
 
             // create activity
             Activity.create({
@@ -189,7 +205,23 @@ exports.remove = function(req, res, next) {
     // find the post and mark it as logical deleted
     Post.findByIdAndUpdate(req.params.post, {logicDelete: true}, function(err, post) {
         if (err) next(err);
-        else res.json(post);
+        else {
+
+            // remove the post id from user profile
+            req.user.posts.pull(post._id);
+            req.user.save(function(err) {
+                if (err) next(err);
+            });
+
+            // if this post belong to some group
+            if (post.group)
+                // remove it from group profile
+                Group.findByIdAndUpdate(post.group, {$pull: {posts: post._id}}, function(err) {
+                    if (err) next(err);
+                });
+
+            res.json(post);
+        }
     });
 };
 

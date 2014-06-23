@@ -24,3 +24,8 @@ note:
 10. all the email template must be convert by "http://templates.mailchimp.com/resources/inline-css/", and notice that the angle bracket will be escaped.
 
 export JAVA_HOME=/usr/lib/jvm/jre-1.7.0-openjdk.x86_64
+
+
+note:
+    need to update "type" field of notificationa and activity colleciton to new values.
+    need add "groups", "posts" to user collection and set with proper value
