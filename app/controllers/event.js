@@ -5,7 +5,8 @@ var _ = require('underscore'),
 
 exports.index = function(req, res, next) {
 
-    Event.find({_owner: req.user.id})
+    Event.find()
+        .or([{_owner: req.user.id}, {group: {$in: req.user.groups}}])
         .populate('group', 'name')
         .exec(function(err, events) {
 

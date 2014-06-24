@@ -23,6 +23,11 @@ define(['common/model/base'], function(BaseModel) {
         // Parse data
         parse: function(response, options) {
 
+            if (response._owner === selink.userModel.id)
+                response.isMine = true;
+            else
+                response.isMine = false;
+
             // parse date from ISO8601 date to javascript date
             if(response.start) {
                 response.start = moment(response.start).toDate();

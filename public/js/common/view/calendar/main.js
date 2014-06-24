@@ -202,6 +202,9 @@ define([
                 // when event was clicked
                 eventClick: function(event, jsEvent, view) {
 
+                    if (!event.isMine)
+                        return;
+
                     // create a event modal with selected event
                     var eventModal = new EventView({
                         model: self.collection.get(event._id),
