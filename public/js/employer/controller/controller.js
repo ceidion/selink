@@ -9,7 +9,7 @@ define([
     'common/view/job/main',
     'common/view/friend/main',
     'common/view/group/main',
-    'common/view/group/edit/main',
+    'common/view/group/detail',
     'common/view/people/main',
     'common/view/people/detail',
     'common/view/bookmark/main',
@@ -31,7 +31,7 @@ define([
     JobView,
     FriendView,
     GroupView,
-    GroupEditView,
+    GroupDetailView,
     PeopleView,
     PeopleDetailView,
     BookMarkView,
@@ -179,10 +179,10 @@ define([
                 group.fetch({
                     success: function() {
 
-                        selink.groupEditView = new GroupEditView({
+                        selink.groupDetailView = new GroupDetailView({
                             model: group
                         });
-                        selink.pageContent.show(selink.groupEditView);
+                        selink.pageContent.show(selink.groupDetailView);
                     }
                 });
 

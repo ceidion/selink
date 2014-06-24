@@ -1,6 +1,6 @@
 define([
     'common/view/item-base',
-    'text!common/template/group/edit/description.html'
+    'text!common/template/group/detail/description.html'
 ], function(
     BaseView,
     template) {

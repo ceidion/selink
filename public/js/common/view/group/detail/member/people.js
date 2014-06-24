@@ -1,7 +1,7 @@
 define([
-    'text!common/template/group/edit/member/people.html',
+    'text!common/template/group/detail/member/people.html',
     'common/collection/base',
-    'common/view/group/edit/member/item'
+    'common/view/group/detail/member/item'
 ], function(
     template,
     BaseCollection,

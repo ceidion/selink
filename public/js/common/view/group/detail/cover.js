@@ -1,6 +1,6 @@
 define([
-    'text!common/template/group/edit/cover.html',
-    'common/view/group/edit/cover-crop'
+    'text!common/template/group/detail/cover.html',
+    'common/view/group/detail/cover-crop'
 ], function(
     template,
     CropView

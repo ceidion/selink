@@ -55,6 +55,7 @@ img{max-width:100%}
 .isotope-item .btn-block{-webkit-transition:all 1s;transition:all 1s}
 .jcrop-holder{margin-right:auto;margin-left:auto}
 #modal-area .avatar{max-width:75px;max-height:75px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
+.external-event.label-xlg{line-height:2.2}
 @media screen and (min-width:768px){.job-modal,.post-modal,.crop-modal{width:80%}.job-modal .widget-body .widget-toolbox,.post-modal .widget-body .widget-toolbox,.crop-modal .widget-body .widget-toolbox{background-color:transparent} .job-modal .wysiwyg-editor,.post-modal .wysiwyg-editor,.crop-modal .wysiwyg-editor{height:500px;max-height:500px} .job-modal .modal-footer .alert-danger,.post-modal .modal-footer .alert-danger,.crop-modal .modal-footer .alert-danger{margin-bottom:0px;margin-top:10px;text-align:left} .job-modal input[name="name"],.post-modal input[name="name"],.crop-modal input[name="name"]{font-size:1.5em} .job-modal input,.post-modal input,.crop-modal input{width:100%} .announcement-modal,.message-modal{width:80%}}#event-modal .row{margin-top:15px}#event-modal .row:first-child{margin-top:0px}
 #event-modal .checkbox{margin-top:4px;margin-bottom:0px}
 #event-modal .wysiwyg-editor{margin:0 15px;height:150px}
@@ -67,7 +68,8 @@ img{max-width:100%}
 .gritter-image{height:auto}
 #gritter-notice-wrapper{top:50px}
 #external-events>div :hover{cursor:move}
-.fc-event-inner{padding:3px 5px}.fc-event-inner .sl-event-memo{padding:10px 15px;max-height:100px}.fc-event-inner .sl-event-memo img{max-height:100px;max-width:100px}
+.fc-event-inner{padding:3px 5px}.fc-event-inner .sl-event-group{font-weight:bold}
+.fc-event-inner .sl-event-memo{padding:10px 15px;max-height:100px}.fc-event-inner .sl-event-memo img{max-height:100px;max-width:100px}
 .sl-input-group-addon{padding:6px 12px !important;line-height:1 !important;border-width:1px 0 1px 1px !important}
 .animated-input-error{display:inline-block;animation:vertical 2.0s 3 ease 0.5s;-moz-animation:vertical 2.0s 3 ease 0.5s;-webkit-animation:vertical 2.0s 3 ease 0.5s;-o-animation:vertical 2.0s 3 ease 0.5s;-ms-animation:vertical 2.0s 3 ease 0.5s;animation:vertical 2.0s 3 ease 0.5s}
 @-moz-keyframes vertical{0%{-moz-transform:translate(0, -3px)} 4%{-moz-transform:translate(0, 3px)} 8%{-moz-transform:translate(0, -3px)} 12%{-moz-transform:translate(0, 3px)} 16%{-moz-transform:translate(0, -3px)} 20%{-moz-transform:translate(0, 3px)} 22%{-moz-transform:translate(0, 0)}}@-webkit-keyframes vertical{0%{-webkit-transform:translate(0, -3px)} 4%{-webkit-transform:translate(0, 3px)} 8%{-webkit-transform:translate(0, -3px)} 12%{-webkit-transform:translate(0, 3px)} 16%{-webkit-transform:translate(0, -3px)} 20%{-webkit-transform:translate(0, 3px)} 22%{-webkit-transform:translate(0, 0)}}@-ms-keyframes vertical{0%{-ms-transform:translate(0, -3px)} 4%{-ms-transform:translate(0, 3px)} 8%{-ms-transform:translate(0, -3px)} 12%{-ms-transform:translate(0, 3px)} 16%{-ms-transform:translate(0, -3px)} 20%{-ms-transform:translate(0, 3px)} 22%{-ms-transform:translate(0, 0)}}@keyframes vertical{0%{transform:translate(0, -3px)} 4%{transform:translate(0, 3px)} 8%{transform:translate(0, -3px)} 12%{transform:translate(0, 3px)} 16%{transform:translate(0, -3px)} 20%{transform:translate(0, 3px)} 22%{transform:translate(0, 0)}}#infscr-loading{position:fixed;text-align:center;bottom:30px;left:42%;z-index:100;background-color:#dff0d8;border:2px solid #d6e9c6;padding:15px;color:#468847;font-size:15px;font-weight:bold}

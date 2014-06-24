@@ -1,11 +1,11 @@
 define([
     'common/model/base',
     'common/collection/base',
-    'common/model/comment'
+    'common/model/event'
 ], function(
     BaseModel,
     BaseCollection,
-    CommentModel
+    EventModel
 ) {
 
     var Participants = BaseCollection.extend({
@@ -22,6 +22,20 @@ define([
         }
     });
 
+    var Events = BaseCollection.extend({
+
+        model: EventModel,
+
+        url:  function() {
+            return this.document.url() + '/events';
+        },
+
+        comparator: function(event) {
+            // sort by start desc
+            return Number(event.get('start').valueOf());
+        }
+    });
+
     return BaseModel.extend({
 
         // Url root
@@ -35,6 +49,9 @@ define([
 
             // create invited collection inside model
             this.invited = new Invited(null, {document: this});
+
+            // create events collection inside model
+            this.events = new Events(null, {document: this});
 
             // call super constructor
             Backbone.Model.apply(this, arguments);
@@ -69,6 +86,12 @@ define([
             // set invitation number, for display in the profile of group
             response.invitationNum = response.invited.length;
             delete response.invited;
+
+            // populate events collection
+            this.events.set(response.events, {parse: true, remove: false});
+            // set invitation number, for display in the profile of group
+            response.eventNum = response.events.length;
+            delete response.events;
 
             return response;
         },

@@ -1,9 +1,9 @@
 define([
-    'text!common/template/group/edit/member.html',
-    'common/view/group/edit/member/friends',
-    'common/view/group/edit/member/people',
-    'common/view/group/edit/member/invited',
-    'common/view/group/edit/member/participants',
+    'text!common/template/group/detail/member.html',
+    'common/view/group/detail/member/friends',
+    'common/view/group/detail/member/people',
+    'common/view/group/detail/member/invited',
+    'common/view/group/detail/member/participants',
 ], function(
     template,
     FriendsView,

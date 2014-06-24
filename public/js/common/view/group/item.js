@@ -31,13 +31,13 @@ define([
 
             this.$el.find('.fa-group').tooltip({
                 placement: 'top',
-                title: this.model.get('memberNum') + "人参加中"
+                title: this.model.get('participants').length + "人参加中"
             });
 
             // add tooltip on add button
             this.$el.find('.fa-tasks').tooltip({
                 placement: 'top',
-                title: "イベント" + this.model.get('memberNum') + "件"
+                title: "イベント" + this.model.get('events').length + "件"
             });
 
             this.$el.find('.fa-edit').tooltip({

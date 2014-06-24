@@ -1,5 +1,5 @@
 define([
-    'text!common/template/group/edit/member/item-ro.html',
+    'text!common/template/group/detail/member/item-ro.html',
     'text!common/template/people/popover.html'
 ],function(
     template,

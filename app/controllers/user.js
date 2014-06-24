@@ -374,6 +374,7 @@ exports.newsfeed = function(req, res, next) {
 
                                         Group.find()
                                             .where('logicDelete').equals(false)
+                                            .where('_owner').ne(req.user.id)
                                             .populate('_owner', 'type firstName lastName title cover photo createDate')
                                             .sort('-createDate')
                                             .skip(3*page)  // skip n page

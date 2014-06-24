@@ -1,5 +1,5 @@
 define([
-    'text!common/template/group/edit/cover-crop.html',
+    'text!common/template/group/detail/cover-crop.html',
 ], function(
     template
 ) {

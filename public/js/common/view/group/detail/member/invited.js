@@ -1,6 +1,6 @@
 define([
-    'text!common/template/group/edit/member/invited.html',
-    'common/view/group/edit/member/item-ro'
+    'text!common/template/group/detail/member/invited.html',
+    'common/view/group/detail/member/item-ro'
 ], function(
     template,
     ItemView

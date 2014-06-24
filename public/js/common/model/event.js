@@ -7,15 +7,16 @@ define(['common/model/base'], function(BaseModel) {
                 required: true,
                 msg: "イベントのタイトルをご入力ください"
             },
-            startDate: {
-                dateJa: true
-            },
+            startDate: [{
+                required: true,
+                msg: "開始日をご入力ください"
+            }, {
+                dateJa: true,
+                msg: "有効な日付でご入力ください"
+            }],
             endDate: {
-                dateJa: true
-            },
-            fee: {
-                range: [1, 10000],
-                msg: "交通費は10000円以下でご入力ください"
+                dateJa: true,
+                msg: "有効な日付でご入力ください"
             }
         },
 

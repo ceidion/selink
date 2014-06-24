@@ -14,8 +14,7 @@ define([
         // ui
         ui: {
             defaultEvents: '#external-events div.external-event',
-            calendar: '#calendar',
-            eventModal: '#event-modal'
+            calendar: '#calendar'
         },
 
         // Collection events
@@ -23,11 +22,6 @@ define([
             'add': 'createEvent',
             'change': 'updateEvent',
             'remove': 'removeEvent',
-        },
-
-        // Regions
-        regions: {
-            'eventModal': '#event-modal'
         },
 
         // Initializer
@@ -126,6 +120,10 @@ define([
                         $memo.appendTo(element.find('.fc-event-inner'));
                     }
 
+                    if (event.group) {
+                        var $group = $('<div class="sl-event-group">').html(event.group.name);
+                        $group.prependTo(element.find('.fc-event-inner'));
+                    }
                 },
                 // drag and drop setting
                 editable: true,
@@ -194,10 +192,10 @@ define([
                     });
 
                     // add modal to page
-                    self.eventModal.show(eventModal);
+                    selink.modalArea.show(eventModal);
 
                     // show modal
-                    self.ui.eventModal.modal('show');
+                    selink.modalArea.$el.modal('show');
 
                     calendar.fullCalendar('unselect');
                 },
@@ -211,10 +209,10 @@ define([
                     });
 
                     // add modal to page
-                    self.eventModal.show(eventModal);
+                    selink.modalArea.show(eventModal);
 
                     // show modal
-                    self.ui.eventModal.modal('show');
+                    selink.modalArea.$el.modal('show');
                 }
 
             });
@@ -235,7 +233,7 @@ define([
                     // the last `true` argument determines if the event "sticks"
                     // (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
                     self.ui.calendar.fullCalendar('renderEvent', response, true);
-                    self.ui.eventModal.modal('hide');
+                    selink.modalArea.$el.modal('hide');
                 },
                 // if error happend
                 error: function(model, xhr, options) {
@@ -265,7 +263,7 @@ define([
                     _.extend(updatedEvent[0], response);
 
                     self.ui.calendar.fullCalendar('updateEvent', updatedEvent[0]);
-                    self.ui.eventModal.modal('hide');
+                    selink.modalArea.$el.modal('hide');
                 },
 
                 // if other errors happend
@@ -297,7 +295,7 @@ define([
                         if (event._id == model.get('_id'))
                             return true;
                     });
-                    self.ui.eventModal.modal('hide');
+                    selink.modalArea.$el.modal('hide');
                 }
             });
 

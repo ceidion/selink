@@ -30,7 +30,7 @@ define([
 
         model: function(attrs, options) {
 
-            if (_.has(attrs, 'description'))
+            if (_.has(attrs, 'cover'))
                 return new GroupModel(attrs, options);
             else if (_.has(attrs, 'name'))
                 return new JobModel(attrs, options);
@@ -55,7 +55,7 @@ define([
         // item view
         getItemView: function(item) {
 
-            if (item.has('description'))
+            if (item.has('cover'))
                 return GroupItemView;
             else if (item.has('name'))
                 return JobItemView;

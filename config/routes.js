@@ -95,6 +95,7 @@ module.exports = function(app, sio) {
     app.post('/groups', checkLoginStatus, group.create);
     // Update group
     app.patch('/groups/:group', checkLoginStatus, group.update);
+
     // Upload group cover
     app.put('/groups/:group/cover', checkLoginStatus, group.uploadCover);
     app.put('/groups/:group/cover-scale', checkLoginStatus, group.scaleCover);
@@ -102,6 +103,15 @@ module.exports = function(app, sio) {
     app.patch('/groups/:group/invite', checkLoginStatus, group.invite);
     // Join group
     app.patch('/groups/:group/join', checkLoginStatus, group.join);
+
+    // Get group events
+    app.get('/groups/:group/events', checkLoginStatus, userEvent.index);
+    // Create new group event
+    app.post('/groups/:group/events', checkLoginStatus, userEvent.create);
+    // Update group events
+    app.patch('/groups/:group/events/:event', checkLoginStatus, userEvent.update);
+    // Remove group event
+    app.delete('/groups/:group/events/:event', checkLoginStatus, userEvent.remove);
 
     // Get jobs (employer only)
     app.get('/jobs', checkLoginStatus, job.index);

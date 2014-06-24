@@ -58,6 +58,12 @@ var Group = new Schema({
         ref: 'Post'
     }],
 
+    // Group Events
+    events: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Event'
+    }],
+
     // Logic delete flag
     logicDelete: {
         type: Boolean,

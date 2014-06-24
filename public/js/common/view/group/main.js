@@ -13,9 +13,6 @@ define([
 ) {
 
     var GroupsCollection = BaseCollection.extend({
-
-        model: GroupModel,
-
         url: '/groups'
     });
 

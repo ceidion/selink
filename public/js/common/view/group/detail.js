@@ -1,12 +1,15 @@
 define([
-    'text!common/template/group/edit/main.html',
+    'text!common/template/group/detail.html',
     'text!common/template/people/popover.html',
     'common/view/composite-isotope',
-    'common/view/group/edit/cover',
-    'common/view/group/edit/name',
-    'common/view/group/edit/description',
-    'common/view/group/edit/member',
+    'common/view/group/detail/cover',
+    'common/view/group/detail/name',
+    'common/view/group/detail/description',
+    'common/view/group/detail/events',
+    'common/view/group/detail/member',
+    'common/view/calendar/event',
     'common/collection/base',
+    'common/model/event',
     'common/model/post',
     'common/view/post/item'
 ], function(
@@ -16,8 +19,11 @@ define([
     CoverItem,
     NameItem,
     DescriptionItem,
+    EventsItem,
     MemberItem,
+    EventView,
     BaseCollection,
+    EventModel,
     PostModel,
     ItemView
 ) {
@@ -51,6 +57,7 @@ define([
             'click .btn-join': 'onJoin',
             'click .avatar': 'toProfile',
             'click .btn-member': 'showMemberEditor',
+            'click .btn-event': 'showEventEditor',
             'click .btn-post': 'onPost',
             'keyup .wysiwyg-editor': 'enablePost'
         },
@@ -62,6 +69,7 @@ define([
             this.coverItem = new CoverItem({model: this.model});
             this.nameItem = new NameItem({model: this.model});
             this.descriptionItem = new DescriptionItem({model: this.model});
+            this.eventsItem = new EventsItem({collection: this.model.events});
 
             // create region manager (this composite view will have layout ability)
             this.rm = new Backbone.Marionette.RegionManager();
@@ -69,7 +77,8 @@ define([
             this.regions = this.rm.addRegions({
                 coverRegion: '#cover',
                 nameRegion: '#name',
-                descriptionRegion: '#description'
+                descriptionRegion: '#description',
+                eventsRegion: '#events'
             });
 
             // create posts collection
@@ -111,7 +120,7 @@ define([
             // add tooltip on add button
             this.$el.find('.fa-tasks').tooltip({
                 placement: 'top',
-                title: "イベント" + this.model.get('memberNum') + "件"
+                title: "イベント" + this.model.get('eventNum') + "件"
             });
 
             this.$el.find('.fa-edit').tooltip({
@@ -129,6 +138,7 @@ define([
             this.regions.coverRegion.show(this.coverItem);
             this.regions.nameRegion.show(this.nameItem);
             this.regions.descriptionRegion.show(this.descriptionItem);
+            this.regions.eventsRegion.show(this.eventsItem);
 
             // call super onShow
             BaseView.prototype.onShow.apply(this);
@@ -194,6 +204,23 @@ define([
 
             // show edit dialog
             selink.modalArea.show(memberEditView);
+            selink.modalArea.$el.modal('show');
+        },
+
+        // edit group event
+        showEventEditor: function() {
+
+            // create a event editor modal, pass it the event collection
+            var eventModal = new EventView({
+                model: new EventModel({
+                    group: this.model.id,
+                    start: Date()
+                }),
+                collection: this.model.events
+            });
+
+            // show modal
+            selink.modalArea.show(eventModal);
             selink.modalArea.$el.modal('show');
         },
 

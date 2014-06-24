@@ -11,6 +11,12 @@ var Event = new Schema({
         required: true
     },
 
+    // Event group
+    group: {
+        type: Schema.Types.ObjectId,
+        ref: 'Group'
+    },
+
     // Event title
     title: {
         type: String,
@@ -44,6 +50,18 @@ var Event = new Schema({
     memo: {
         type: String,
         trim: true
+    },
+
+    // Logic delete flag
+    logicDelete: {
+        type: Boolean,
+        default: false
+    },
+
+    // Create date
+    createDate: {
+        type: Date,
+        default: Date.now
     }
 });
 

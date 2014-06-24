@@ -45,6 +45,7 @@ exports.show = function(req, res, next) {
         .populate('_owner', 'type firstName lastName title cover photo createDate')
         .populate('invited', 'type firstName lastName title cover photo createDate')
         .populate('participants', 'type firstName lastName title cover photo createDate')
+        .populate('events')
         .exec(function(err, group) {
             if (err) next(err);
             else res.json(group);
