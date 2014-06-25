@@ -12,7 +12,7 @@ define([
     MessageEditView
 ) {
 
-    return Backbone.Marionette.Layout.extend({
+    return Backbone.Marionette.LayoutView.extend({
 
         className: 'tabbable',
 

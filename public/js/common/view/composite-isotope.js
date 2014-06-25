@@ -47,24 +47,27 @@ define([], function() {
 
             var self = this;
 
-            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
+            // this.$el.find(this.itemViewContainer).imagesLoaded(function() {
 
-                // enable isotope
-                self.$el.find(self.itemViewContainer).isotope({
-                    itemSelector : '.isotope-item',
-                    stamp: '.stamp',
-                    masonry: {
-                        columnWidth: '.isotope-item'
-                    },
-                    getSortData: {
-                        createDate: function(elem) {
-                            return $(elem).find('[data-create-date]').data('create-date');
-                        }
-                    },
-                    sortBy: 'createDate',
-                    sortAscending: false
-                });
-            });
+            //     // enable isotope
+            //     self.$el.find(self.itemViewContainer).isotope({
+            //         itemSelector : '.isotope-item',
+            //         stamp: '.stamp',
+            //         masonry: {
+            //             columnWidth: '.isotope-item'
+            //         },
+            //         getSortData: {
+            //             createDate: function(elem) {
+            //                 return $(elem).find('[data-create-date]').data('create-date');
+            //             }
+            //         },
+            //         sortBy: 'createDate',
+            //         sortAscending: false
+            //     });
+            // }).progress( function( instance, image ) {
+            //     var result = image.isLoaded ? 'loaded' : 'broken';
+            //     console.log( 'image is ' + result + ' for ' + image.img.src );
+            //   });
 
             this.appendHtml = function(collectionView, itemView, index) {
 
@@ -86,6 +89,25 @@ define([], function() {
         onShow: function() {
 
             var self = this;
+
+            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
+
+                // enable isotope
+                self.$el.find(self.itemViewContainer).isotope({
+                    itemSelector : '.isotope-item',
+                    stamp: '.stamp',
+                    masonry: {
+                        columnWidth: '.isotope-item'
+                    },
+                    getSortData: {
+                        createDate: function(elem) {
+                            return $(elem).find('[data-create-date]').data('create-date');
+                        }
+                    },
+                    sortBy: 'createDate',
+                    sortAscending: false
+                });
+            });
 
             // attach infinite scroll
             this.$el.find(this.itemViewContainer).infinitescroll({

@@ -1,12 +1,14 @@
 define([
     'text!common/template/calendar/main.html',
+    'text!common/template/calendar/popover.html',
     'common/view/calendar/event'
 ], function(
     template,
+    popoverTemplate,
     EventView
 ) {
 
-    return Backbone.Marionette.Layout.extend({
+    return Backbone.Marionette.LayoutView.extend({
 
         // Template
         template: template,
@@ -121,9 +123,22 @@ define([
                     }
 
                     if (event.group) {
+
                         var $group = $('<div class="sl-event-group">').html(event.group.name);
                         $group.prependTo(element.find('.fc-event-inner'));
+
+                        element.popover({
+                            html: true,
+                            trigger: 'hover',
+                            container: 'body',
+                            placement: 'auto right',
+                            title: '<img src="' + event.group.cover + '" />',
+                            content: _.template(popoverTemplate, event),
+                        });
                     }
+
+                    if (!event.isMine)
+                        event.editable = false;
                 },
                 // drag and drop setting
                 editable: true,

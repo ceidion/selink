@@ -7,7 +7,7 @@ exports.index = function(req, res, next) {
 
     Event.find()
         .or([{_owner: req.user.id}, {group: {$in: req.user.groups}}])
-        .populate('group', 'name')
+        .populate('group', 'name cover description')
         .exec(function(err, events) {
 
             if (err) next(err);

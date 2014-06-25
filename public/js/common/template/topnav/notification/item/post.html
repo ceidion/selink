@@ -36,9 +36,12 @@
 %>
 
 <a href="#post/<%= obj.targetPost._id %>">
-    <img src="<%= obj._from.photo %>" class="msg-photo" alt="">
+    <img src="<%= obj._from.photo %>" class="msg-photo">
     <span class="msg-body">
         <span class="msg-title">
+            <span class="msg-time pull-right">
+                <i class="ace-icon fa fa-clock-o"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>
+            </span>
             <strong>
                 <span class="blue">
                     <%= obj._from.firstName %>&nbsp;
@@ -51,7 +54,6 @@
             <%= summary %>
         </span>
         <span class="msg-time">
-            <i class="ace-icon fa fa-clock-o"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>
             <button class="btn btn-minier btn-info btn-acknowledge pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;了解</button>
         </span>
     </span>

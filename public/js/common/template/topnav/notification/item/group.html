@@ -25,6 +25,9 @@
     <img src="<%= obj._from.photo %>" class="msg-photo">
     <span class="msg-body">
         <span class="msg-title">
+            <span class="msg-time pull-right">
+                <i class="ace-icon fa fa-clock-o"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>
+            </span>
             <strong>
                 <span class="blue">
                     <%= obj._from.firstName %>&nbsp;
@@ -36,7 +39,6 @@
             <%= content %>
         </span>
         <span class="msg-time">
-            <i class="ace-icon fa fa-clock-o"></i>&nbsp;<span><% print(moment(obj.createDate).fromNow()) %></span>
             <% if (obj.type == "group-invited") { %>
                 <div class="pull-right">
                     <button class="btn btn-minier btn-pink btn-refuse"><i class="ace-icon fa fa-times"></i>&nbsp;拒否</button>

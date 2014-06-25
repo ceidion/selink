@@ -50,8 +50,10 @@ define([
             // isotope will not work. so I wait 0.3s here
             setTimeout(function() {
                 // enable isotope
-                self.$el.find(self.itemViewContainer).isotope({
-                    itemSelector : '.isotope-item'
+                self.$el.find(self.itemViewContainer).imagesLoaded(function() {
+                    self.$el.find(self.itemViewContainer).isotope({
+                        itemSelector : '.isotope-item'
+                    });
                 });
             }, 300);
         },

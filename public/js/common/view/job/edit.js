@@ -10,7 +10,7 @@ define([
     JobModel
 ) {
 
-    return Backbone.Marionette.Layout.extend({
+    return Backbone.Marionette.LayoutView.extend({
 
         // template
         template: template,
