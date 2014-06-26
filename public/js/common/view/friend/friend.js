@@ -16,11 +16,11 @@ define([
         // template
         template: template,
 
-        // item view container
-        itemViewContainer: '.widget-main',
+        // child view container
+        childViewContainer: '.widget-main',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // empty view
         emptyView: EmptyView,
@@ -43,9 +43,9 @@ define([
 
             this.appendHtml = function(collectionView, itemView, index) {
                 // ensure the image are loaded
-                self.$el.find(self.itemViewContainer).imagesLoaded(function() {
+                self.$el.find(self.childViewContainer).imagesLoaded(function() {
                     // prepend new item and reIsotope
-                    self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
+                    self.$el.find(self.childViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
                 });
             };
         },

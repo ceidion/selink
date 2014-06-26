@@ -21,18 +21,18 @@ define([
         // template
         template: template,
 
-        // item view container
-        itemViewContainer: '.ace-thumbnails',
+        // child view container
+        childViewContainer: '.ace-thumbnails',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         events: {
             'click .btn-invite': 'onInvite'
         },
 
-        // item events
-        itemEvents: {
+        // child events
+        childEvents: {
             'clicked': 'onItemClick'
         },
 
@@ -63,17 +63,17 @@ define([
             setTimeout(function() {
 
                 // enable isotope
-                self.$el.find(self.itemViewContainer).imagesLoaded(function() {
-                    self.$el.find(self.itemViewContainer).isotope({
+                self.$el.find(self.childViewContainer).imagesLoaded(function() {
+                    self.$el.find(self.childViewContainer).isotope({
                         itemSelector : '.isotope-item'
                     });
                 });
 
                 self.appendHtml = function(collectionView, itemView, index) {
                     // ensure the image are loaded
-                    self.$el.find(self.itemViewContainer).imagesLoaded(function() {
+                    self.$el.find(self.childViewContainer).imagesLoaded(function() {
                         // prepend new item and reIsotope
-                        self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
+                        self.$el.find(self.childViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
                     });
                 };
 
@@ -85,7 +85,7 @@ define([
 
             // TODO: niceScroll is suck, not working in modal
             // make container scrollable
-            // this.$el.find(this.itemViewContainer).niceScroll({
+            // this.$el.find(this.childViewContainer).niceScroll({
             //     horizrailenabled: false
             // });
 
@@ -93,11 +93,11 @@ define([
 
             setTimeout(function() {
                 // attach infinite scroll
-                self.$el.find(self.itemViewContainer).infinitescroll({
+                self.$el.find(self.childViewContainer).infinitescroll({
                     navSelector  : self.navSelector || '#page_nav_sub',
                     nextSelector : self.nextSelector || '#page_nav_sub a',
                     behavior: 'local',
-                    binder: self.$el.find(self.itemViewContainer),
+                    binder: self.$el.find(self.childViewContainer),
                     dataType: 'json',
                     appendCallback: false,
                     loading: {
@@ -121,8 +121,8 @@ define([
                     // no more data
                     if (json.length === 0){
                         // destroy infinite scroll, or it will affect other page
-                        self.$el.find(self.itemViewContainer).infinitescroll('destroy');
-                        self.$el.find(self.itemViewContainer).data('infinitescroll', null);
+                        self.$el.find(self.childViewContainer).infinitescroll('destroy');
+                        self.$el.find(self.childViewContainer).data('infinitescroll', null);
                     } else
                         // add data to collection, don't forget parse the json object
                         // this will trigger 'add' event and will call on
@@ -161,7 +161,7 @@ define([
                     self.$el.find('.btn-invite').addClass('disabled');
 
                     _.each(self.selectView, function(view) {
-                        self.$el.find(self.itemViewContainer).isotope('remove', view).isotope('layout');
+                        self.$el.find(self.childViewContainer).isotope('remove', view).isotope('layout');
                     });
 
                     self.selectFriends = [];

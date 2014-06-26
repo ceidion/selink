@@ -20,11 +20,11 @@ define([
         // template
         template: template,
 
-        // item view container
-        itemViewContainer: '.dialogs',
+        // child view container
+        childViewContainer: '.dialogs',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // ui
         ui: {
@@ -97,7 +97,7 @@ define([
             'add': 'renderComments',
         },
 
-        itemEvents: {
+        childEvents: {
             'remove': 'onCommentRemove',
             'reply': 'onCommentReply',
             'shiftColumn': 'proxyShiftColumn'

@@ -60,8 +60,8 @@ define([
         // empty view
         emptyView: EmptyView,
 
-        // item view
-        getItemView: function(item) {
+        // child view
+        getChildView: function(item) {
 
             if (item.has('name'))
                 return JobItemView;
@@ -81,9 +81,9 @@ define([
             var self = this;
 
             // use imageLoaded plugin
-            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
+            this.$el.find(this.childViewContainer).imagesLoaded(function() {
                 // enable isotope
-                self.$el.find(self.itemViewContainer).isotope({
+                self.$el.find(self.childViewContainer).isotope({
                     itemSelector : '.isotope-item',
                     stamp: '.stamp',
                     masonry: {
@@ -128,7 +128,7 @@ define([
             var self = this;
 
             // attach infinite scroll
-            this.$el.find(this.itemViewContainer).infinitescroll({
+            this.$el.find(this.childViewContainer).infinitescroll({
                 navSelector  : this.navSelector || '#page_nav',
                 nextSelector : this.nextSelector || '#page_nav a',
                 dataType: 'json',
@@ -154,8 +154,8 @@ define([
                 // no more data
                 if (json.length === 0){
                     // destroy infinite scroll, or it will affect other page
-                    self.$el.find(self.itemViewContainer).infinitescroll('destroy');
-                    self.$el.find(self.itemViewContainer).data('infinitescroll', null);
+                    self.$el.find(self.childViewContainer).infinitescroll('destroy');
+                    self.$el.find(self.childViewContainer).data('infinitescroll', null);
                 } else {
 
                     // replace the buffer collection with the new data
@@ -184,9 +184,9 @@ define([
             var self = this;
 
             // use imageLoaded plugin
-            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
+            this.$el.find(this.childViewContainer).imagesLoaded(function() {
                 // re-isotope
-                self.$el.find(self.itemViewContainer).isotope('layout');
+                self.$el.find(self.childViewContainer).isotope('layout');
             });
         },
 

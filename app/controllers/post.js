@@ -37,8 +37,8 @@ exports.index = function(req, res, next) {
         .populate('_owner', 'type firstName lastName title cover photo createDate')
         .populate('comments._owner', 'type firstName lastName title cover photo createDate')
         .populate('group', 'name cover description')
-        .skip(20*page)  // skip n page
-        .limit(20)
+        .skip(10*page)  // skip n page
+        .limit(10)
         .sort('-createDate')
         .exec(function(err, posts) {
             if (err) next(err);

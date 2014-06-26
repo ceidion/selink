@@ -11,11 +11,11 @@ define([
         // template
         template: template,
 
-        // item view container
-        itemViewContainer: '#friend-list',
+        // child view container
+        childViewContainer: '#friend-list',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         displayLimit: 9,
 
@@ -30,7 +30,7 @@ define([
 
             // the displayed friend item won't exceed the display limit
             if (this.displayCount < this.displayLimit) {
-                this.$el.find(this.itemViewContainer).append(itemView.el);
+                this.$el.find(this.childViewContainer).append(itemView.el);
 
             // if the display limit was reached
             } else if (this.displayCount == this.displayLimit) {
@@ -38,7 +38,7 @@ define([
                 // draw a link to tell how many people left
                 var restNum = this.collection.length - this.displayLimit;
                 // TODO: where is the link lead to?
-                this.$el.find(this.itemViewContainer).append($('<div><a>他' + restNum + '人</a></div>'));
+                this.$el.find(this.childViewContainer).append($('<div><a>他' + restNum + '人</a></div>'));
 
             } else {
                 return;

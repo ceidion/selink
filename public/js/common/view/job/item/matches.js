@@ -15,11 +15,11 @@ define([
 
         className: 'row no-margin',
 
-        // item view container
-        itemViewContainer: '.match-result',
+        // child view container
+        childViewContainer: '.match-result',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         emptyView: emptyView
     });

@@ -14,11 +14,11 @@ define([
         // template
         template: template,
 
-        // item view container
-        itemViewContainer: '.ace-thumbnails',
+        // child view container
+        childViewContainer: '.ace-thumbnails',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // after the view collection rendered
         onCompositeCollectionRendered: function() {
@@ -31,15 +31,15 @@ define([
             // isotope will not work. so I wait 0.3s here
             setTimeout(function() {
                 // enable isotope
-                self.$el.find(self.itemViewContainer).isotope({
+                self.$el.find(self.childViewContainer).isotope({
                     itemSelector : '.isotope-item'
                 });
 
                 self.appendHtml = function(collectionView, itemView, index) {
                     // ensure the image are loaded
-                    self.$el.find(self.itemViewContainer).imagesLoaded(function() {
+                    self.$el.find(self.childViewContainer).imagesLoaded(function() {
                         // prepend new item and reIsotope
-                        self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
+                        self.$el.find(self.childViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
                     });
                 };
 

@@ -14,11 +14,11 @@ define([
         // className
         className: 'widget-box transparent',
 
-        // item view container
-        itemViewContainer: '.widget-main',
+        // child view container
+        childViewContainer: '.widget-main',
 
-        // item view
-        itemView: ItemView
+        // child view
+        childView: ItemView
 
     });
 });

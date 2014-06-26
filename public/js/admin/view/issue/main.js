@@ -19,11 +19,11 @@ define([
         // for dnd add class here
         className: 'widget-box transparent',
 
-        // item view container
-        itemViewContainer: '.panel-group',
+        // child view container
+        childViewContainer: '.panel-group',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // initializer
         initialize: function() {

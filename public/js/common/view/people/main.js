@@ -20,8 +20,8 @@ define([
         // template
         template: template,
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // initializer
         initialize: function() {

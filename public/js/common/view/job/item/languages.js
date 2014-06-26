@@ -11,11 +11,11 @@ define([
         // template
         template: template,
 
-        // item view container
-        itemViewContainer: '.clearfix',
+        // child view container
+        childViewContainer: '.clearfix',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // initializer
         initialize: function() {

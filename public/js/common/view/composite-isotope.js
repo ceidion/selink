@@ -2,37 +2,37 @@ define([], function() {
 
     return Backbone.Marionette.CompositeView.extend({
 
-        // item view container
-        itemViewContainer: '.isotope',
+        // child view container
+        childViewContainer: '.isotope',
 
         // collection events
         collectionEvents: {
-            'sync': 'onSync',
+            // 'sync': 'onSync',
         },
 
-        // item view events
-        itemEvents: {
+        // child view events
+        childEvents: {
             'remove': 'onRemove',
             'expand': 'onExpand',
             'shiftColumn': 'shiftColumn'
         },
 
-        // appendHtml: function(collectionView, itemView, index) {
+        attachHtml: function(collectionView, itemView, index) {
 
-        //     var self = this;
+            var self = this;
 
-        //     // ensure the image are loaded
-        //     this.$el.find(this.itemViewContainer).imagesLoaded(function() {
-        //         // if the item is newly created one
-        //         if (index === 0)
-        //             // prepend new item and reIsotope
-        //             self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
-        //         // if the item from infinit scroll loading
-        //         else
-        //             // append item and reIsotope
-        //             self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
-        //     });
-        // },
+            // ensure the image are loaded
+            this.$el.find(this.childViewContainer).imagesLoaded(function() {
+                // if the item is newly created one
+                if (index === 0)
+                    // prepend new item and reIsotope
+                    self.$el.find(self.childViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
+                // if the item from infinit scroll loading
+                else
+                    // append item and reIsotope
+                    self.$el.find(self.childViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
+            });
+        },
 
         // Initializer
         initialize: function() {
@@ -40,17 +40,17 @@ define([], function() {
             Pace.restart();
 
             // fetch collection items
-            this.collection.fetch();
+            // this.collection.fetch();
         },
 
-        onCompositeModelRendered: function() {
+        onBeforeRenderCollection: function() {
 
             var self = this;
 
-            // this.$el.find(this.itemViewContainer).imagesLoaded(function() {
+            // this.$el.find(this.childViewContainer).imagesLoaded(function() {
 
             //     // enable isotope
-            //     self.$el.find(self.itemViewContainer).isotope({
+            //     self.$el.find(self.childViewContainer).isotope({
             //         itemSelector : '.isotope-item',
             //         stamp: '.stamp',
             //         masonry: {
@@ -72,15 +72,15 @@ define([], function() {
             this.appendHtml = function(collectionView, itemView, index) {
 
                 // ensure the image are loaded
-                self.$el.find(self.itemViewContainer).imagesLoaded(function() {
+                self.$el.find(self.childViewContainer).imagesLoaded(function() {
                     // if the item is newly created one
                     if (index === 0)
                         // prepend new item and reIsotope
-                        self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
+                        self.$el.find(self.childViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
                     // if the item from infinit scroll loading
                     else
                         // append item and reIsotope
-                        self.$el.find(self.itemViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
+                        self.$el.find(self.childViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
                 });
             };
         },
@@ -90,27 +90,27 @@ define([], function() {
 
             var self = this;
 
-            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
-
-                // enable isotope
-                self.$el.find(self.itemViewContainer).isotope({
-                    itemSelector : '.isotope-item',
-                    stamp: '.stamp',
-                    masonry: {
-                        columnWidth: '.isotope-item'
-                    },
-                    getSortData: {
-                        createDate: function(elem) {
-                            return $(elem).find('[data-create-date]').data('create-date');
-                        }
-                    },
-                    sortBy: 'createDate',
-                    sortAscending: false
-                });
+            // enable isotope
+            self.$el.find(self.childViewContainer).isotope({
+                itemSelector : '.isotope-item',
+                stamp: '.stamp',
+                masonry: {
+                    columnWidth: '.isotope-item'
+                },
+                getSortData: {
+                    createDate: function(elem) {
+                        return $(elem).find('[data-create-date]').data('create-date');
+                    }
+                },
+                sortBy: 'createDate',
+                sortAscending: false
             });
+            // this.$el.find(this.childViewContainer).imagesLoaded(function() {
+
+            // });
 
             // attach infinite scroll
-            this.$el.find(this.itemViewContainer).infinitescroll({
+            this.$el.find(this.childViewContainer).infinitescroll({
                 navSelector  : this.navSelector || '#page_nav',
                 nextSelector : this.nextSelector || '#page_nav a',
                 dataType: 'json',
@@ -136,25 +136,30 @@ define([], function() {
                 // no more data
                 if (json.length === 0){
                     // destroy infinite scroll, or it will affect other page
-                    self.$el.find(self.itemViewContainer).infinitescroll('destroy');
-                    self.$el.find(self.itemViewContainer).data('infinitescroll', null);
+                    self.$el.find(self.childViewContainer).infinitescroll('destroy');
+                    self.$el.find(self.childViewContainer).data('infinitescroll', null);
                 } else
                     // add data to collection, don't forget parse the json object
                     // this will trigger 'add' event and will call on
                     // the appendHtml method that changed on initialization
                     self.collection.add(json, {parse: true});
             });
+
+            // fetch collection items
+            this.collection.fetch();
         },
 
         // before close
         onBeforeClose: function() {
             // destroy infinite scroll, or it will affect other page
-            this.$el.find(this.itemViewContainer).infinitescroll('destroy');
-            this.$el.find(this.itemViewContainer).data('infinitescroll', null);
+            this.$el.find(this.childViewContainer).infinitescroll('destroy');
+            this.$el.find(this.childViewContainer).data('infinitescroll', null);
         },
 
         // re-isotope after collection get synced
         onSync: function(model_or_collection, resp, options) {
+
+            console.log("sync!");
 
             var self = this;
 
@@ -163,9 +168,9 @@ define([], function() {
             if (options && _.has(options, 'reIsotope') && !options.reIsotope) return;
 
             // use imageLoaded plugin
-            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
+            this.$el.find(this.childViewContainer).imagesLoaded(function() {
                 // re-isotope
-                self.$el.find(self.itemViewContainer).isotope({
+                self.$el.find(self.childViewContainer).isotope({
                     sortBy: 'createDate',
                     sortAscending: false
                 });
@@ -176,7 +181,7 @@ define([], function() {
         onRemove: function(event, view) {
 
             // first remove it form screen
-            this.$el.find(this.itemViewContainer).isotope('remove', view.$el).isotope('layout');
+            this.$el.find(this.childViewContainer).isotope('remove', view.$el).isotope('layout');
 
             // then remove the model
             view.model.destroy({
@@ -203,8 +208,8 @@ define([], function() {
 
             var self = this;
 
-            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
-                self.$el.find(self.itemViewContainer).isotope('layout');
+            this.$el.find(this.childViewContainer).imagesLoaded(function() {
+                self.$el.find(self.childViewContainer).isotope('layout');
             });
         }
 

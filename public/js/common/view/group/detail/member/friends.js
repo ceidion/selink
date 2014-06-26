@@ -14,19 +14,19 @@ define([
         // template
         template: template,
 
-        // item view container
-        itemViewContainer: '.ace-thumbnails',
+        // child view container
+        childViewContainer: '.ace-thumbnails',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         events: {
             'click .btn-add-all': 'onAddAll',
             'click .btn-invite': 'onInvite'
         },
 
-        // item events
-        itemEvents: {
+        // child events
+        childEvents: {
             'clicked': 'onItemClick'
         },
 
@@ -50,8 +50,8 @@ define([
             // isotope will not work. so I wait 0.3s here
             setTimeout(function() {
                 // enable isotope
-                self.$el.find(self.itemViewContainer).imagesLoaded(function() {
-                    self.$el.find(self.itemViewContainer).isotope({
+                self.$el.find(self.childViewContainer).imagesLoaded(function() {
+                    self.$el.find(self.childViewContainer).isotope({
                         itemSelector : '.isotope-item'
                     });
                 });
@@ -106,7 +106,7 @@ define([
                     self.$el.find('.btn-invite').addClass('disabled');
 
                     _.each(self.selectView, function(view) {
-                        self.$el.find(self.itemViewContainer).isotope('remove', view).isotope('layout');
+                        self.$el.find(self.childViewContainer).isotope('remove', view).isotope('layout');
                     });
 
                     self.selectFriends = [];

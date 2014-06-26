@@ -16,13 +16,13 @@ define([
         // className
         className: 'widget-box transparent',
 
-        // item view container
-        itemViewContainer: '.widget-main',
+        // child view container
+        childViewContainer: '.widget-main',
 
         itemName: 'languages',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // max item number
         itemLimit: 6,

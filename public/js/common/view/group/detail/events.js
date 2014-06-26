@@ -11,11 +11,11 @@ define([
         // template
         template: template,
 
-        // item view container
-        itemViewContainer: this.$el,
+        // child view container
+        childViewContainer: this.$el,
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // Collection events
         collectionEvents: {

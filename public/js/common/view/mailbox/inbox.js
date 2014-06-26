@@ -28,11 +28,11 @@ define([
         // template
         template: template,
 
-        // item view container
-        itemViewContainer: '.message-container',
+        // child view container
+        childViewContainer: '.message-container',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // empty view
         // emptyView: EmptyView,
@@ -73,16 +73,16 @@ define([
 
             var self = this;
 
-            // item events
+            // child events
             this.itemEvents = _.extend({}, this.itemEvents, {
                 'selected': 'itemSelected',
                 'unselected': 'itemUnselected'
             });
 
             // use imageLoaded plugin
-            this.$el.find(this.itemViewContainer).imagesLoaded(function() {
+            this.$el.find(this.childViewContainer).imagesLoaded(function() {
                 // enable isotope
-                self.$el.find(self.itemViewContainer).isotope({
+                self.$el.find(self.childViewContainer).isotope({
                     itemSelector : '.isotope-item',
                     stamp: '.stamp',
                     masonry: {
@@ -288,7 +288,7 @@ define([
             // stop default click event
             e.preventDefault();
 
-            this.$el.find(this.itemViewContainer).isotope({sortBy: 'createDate'});
+            this.$el.find(this.childViewContainer).isotope({sortBy: 'createDate'});
 
             this.$el.find('.sort-menu i').addClass('hide');
             this.$el.find('.sort-createDate i').removeClass('hide');
@@ -300,7 +300,7 @@ define([
             // stop default click event
             e.preventDefault();
 
-            this.$el.find(this.itemViewContainer).isotope({sortBy: 'from'});
+            this.$el.find(this.childViewContainer).isotope({sortBy: 'from'});
 
             this.$el.find('.sort-menu i').addClass('hide');
             this.$el.find('.sort-from i').removeClass('hide');
@@ -312,7 +312,7 @@ define([
             // stop default click event
             e.preventDefault();
 
-            this.$el.find(this.itemViewContainer).isotope({sortBy: 'subject'});
+            this.$el.find(this.childViewContainer).isotope({sortBy: 'subject'});
 
             this.$el.find('.sort-menu i').addClass('hide');
             this.$el.find('.sort-subject i').removeClass('hide');

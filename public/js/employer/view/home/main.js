@@ -52,8 +52,8 @@ define([
         // Template
         template: template,
 
-        // item view
-        getItemView: function(item) {
+        // child view
+        getChildView: function(item) {
 
             if (item.has('cover'))
                 return GroupItemView;

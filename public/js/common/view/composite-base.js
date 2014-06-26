@@ -33,7 +33,7 @@ define(['common/view/composite-empty'], function(EmptyView) {
             // if (itemView.model.isNew()) {
 
                 // append the subview
-                this.$el.find(this.itemViewContainer).append(itemView.el);
+                this.$el.find(this.childViewContainer).append(itemView.el);
 
                 itemView.$el.slBounceIn();
 
@@ -53,7 +53,7 @@ define(['common/view/composite-empty'], function(EmptyView) {
             else {
 
                 // just append the subview
-                this.$el.find(this.itemViewContainer).append(itemView.el);
+                this.$el.find(this.childViewContainer).append(itemView.el);
             }
         },
 

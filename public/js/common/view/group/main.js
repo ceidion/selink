@@ -21,8 +21,8 @@ define([
         // Template
         template: pageTemplate,
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // ui
         ui: {

@@ -18,10 +18,10 @@ define([
         // class name
         className: 'light-orange',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
-        itemViewContainer: '.dropdown-body',
+        childViewContainer: '.dropdown-body',
 
         emptyView: EmptyView,
 

@@ -11,11 +11,11 @@ define([
         // template
         template: template,
 
-        // item view container
-        itemViewContainer: '.profile-skills',
+        // child view container
+        childViewContainer: '.profile-skills',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // initializer
         initialize: function() {

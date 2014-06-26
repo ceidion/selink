@@ -12,11 +12,11 @@ define([
 
         className: 'timeline-container',
 
-        // item view container
-        itemViewContainer: '.timeline-items',
+        // child view container
+        childViewContainer: '.timeline-items',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // initializer
         initialize: function() {

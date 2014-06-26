@@ -15,11 +15,11 @@ define([
         // template
         template: template,
 
-        // item view container
-        itemViewContainer: '.widget-main',
+        // child view container
+        childViewContainer: '.widget-main',
 
-        // item view
-        itemView: ItemView,
+        // child view
+        childView: ItemView,
 
         // initializer
         initialize: function() {

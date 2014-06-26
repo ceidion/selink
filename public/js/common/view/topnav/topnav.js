@@ -18,7 +18,7 @@ define([
 
     var ReplaceRegion = Backbone.Marionette.Region.extend({
 
-        open: function(view) {
+        attachHtml: function(view) {
             this.$el.hide();
             this.$el.replaceWith(view.el);
             this.$el.slideDown("fast");
@@ -55,15 +55,15 @@ define([
         regions: {
             eventNavRegion: {
                 selector: '#event-nav',
-                regionType: ReplaceRegion
+                regionClass: ReplaceRegion
             },
             notificationNavRegion: {
                 selector: '#notification-nav',
-                regionType: ReplaceRegion
+                regionClass: ReplaceRegion
             },
             messageNavRegion: {
                 selector: '#message-nav',
-                regionType: ReplaceRegion
+                regionClass: ReplaceRegion
             }
         },
 
