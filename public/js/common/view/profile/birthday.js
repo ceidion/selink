@@ -46,7 +46,7 @@ define([
         },
 
         // remove the datepicker before close
-        onBeforeClose: function() {
+        onBeforeDestroy: function() {
             this.ui.input.datepicker('remove');
         },
 

@@ -161,10 +161,10 @@ define([
             BaseView.prototype.onShow.apply(this);
         },
 
-        // before close
-        onBeforeClose: function() {
-            // close region manager
-            this.rm.close();
+        // before destroy
+        onBeforeDestroy: function() {
+            // destroy region manager
+            this.rm.destroy();
         },
 
         showMessageEditor: function() {

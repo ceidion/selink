@@ -31,19 +31,21 @@ define([
             'remove': 'updateBadge'
         },
 
-        // override appendHtml
-        appendHtml: function(collectionView, itemView, index) {
+        // override attachHtml
+        attachHtml: function(collectionView, itemView, index) {
 
             // event menu only display the future events
             if (moment(itemView.model.get('start')).isBefore(moment()))
                 return;
 
             // insert sub view before dropdown menu's footer (this is imply a order of items)
-            this.$el.find('.dropdown-body').prepend(itemView.el);
+            this.$el.find('.dropdown-body').append(itemView.el);
         },
 
         // initializer
         initialize: function() {
+
+            var self = this;
 
             this.model = new Backbone.Model();
 
@@ -56,6 +58,18 @@ define([
 
             // set the number of future events in the model
             this.model.set('eventsNum', futureEvents.length, {silent:true});
+
+            // accept group event real-time
+            selink.socket.on('group-event-new', function(data) {
+                $.gritter.add({
+                    title: '<img src="' + data.group.cover + '">',
+                    text: data.group.name + 'イベント開催しました。<br/><strong>' + data.title + '</strong>',
+                    time: 8000,
+                    class_name: 'gritter-success'
+                });
+                // add the notification to collection
+                self.collection.add(data);
+            });
 
         },
 

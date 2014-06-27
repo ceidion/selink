@@ -79,8 +79,8 @@ define([
             });
         },
 
-        // before close
-        onBeforeClose: function() {
+        // before destroy
+        onBeforeDestroy: function() {
             // destroy infinite scroll, or it will affect other page
             this.$el.infinitescroll('destroy');
             this.$el.data('infinitescroll', null);

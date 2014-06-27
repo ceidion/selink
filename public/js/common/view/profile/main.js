@@ -3,7 +3,6 @@ define([
     'common/view/profile/cover',
     'common/view/profile/photo',
     'common/view/profile/name',
-    'common/view/profile/title',
     'common/view/profile/birthday',
     'common/view/profile/gender',
     'common/view/profile/marriage',
@@ -23,7 +22,6 @@ define([
     CoverItem,
     PhotoItem,
     NameItem,
-    TitleItem,
     BirthDayItem,
     GenderItem,
     MarriageItem,
@@ -51,7 +49,6 @@ define([
             coverRegion: '#cover',
             photoRegion: '#photo',
             nameRegion: '#name',
-            titleRegion: '#title',
             birthdayRegion: '#birthday',
             genderRegion: '#gender',
             marriageRegion: '#marriage',
@@ -74,7 +71,6 @@ define([
             this.coverItem = new CoverItem({model: this.model});
             this.photoItem = new PhotoItem({model: this.model});
             this.nameItem = new NameItem({model: this.model});
-            this.titleItem = new TitleItem({model: this.model});
             this.birthdayItem = new BirthDayItem({model: this.model});
             this.genderItem = new GenderItem({model: this.model});
             this.marriageItem = new MarriageItem({model: this.model});
@@ -97,7 +93,6 @@ define([
             this.coverRegion.show(this.coverItem);
             this.photoRegion.show(this.photoItem);
             this.nameRegion.show(this.nameItem);
-            this.titleRegion.show(this.titleItem);
             this.birthdayRegion.show(this.birthdayItem);
             this.genderRegion.show(this.genderItem);
             this.marriageRegion.show(this.marriageItem);

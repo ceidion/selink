@@ -54,6 +54,12 @@ var Activity = new Schema({
         ref: 'Group'
     },
 
+    // activity target (event)
+    targetEvent: {
+        type: Schema.Types.ObjectId,
+        ref: 'Event'
+    },
+
     // Logical Delete flag
     logicDelete: {
         type: Boolean,

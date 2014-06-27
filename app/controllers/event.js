@@ -1,7 +1,8 @@
 var _ = require('underscore'),
     mongoose = require('mongoose'),
     Event = mongoose.model('Event'),
-    Group = mongoose.model('Group');
+    Group = mongoose.model('Group'),
+    Activity = mongoose.model('Activity');
 
 exports.index = function(req, res, next) {
 
@@ -24,13 +25,53 @@ exports.create = function(req, res, next) {
         if (err) next(err);
         else {
 
-            if (newEvent.group)
-                Group.findByIdAndUpdate(newEvent.group, {$addToSet: {events: newEvent._id}}, function(err) {
+            if (newEvent.group)　{
+
+                Group.findByIdAndUpdate(newEvent.group, {$addToSet: {events: newEvent._id}}, function(err, group) {
                     if (err) next(err);
-                    else res.json(newEvent);
+                    else {
+
+                        // create activity
+                        Activity.create({
+                            _owner: req.user.id,
+                            type: 'group-event-new',
+                            targetEvent: newEvent._id,
+                            targetGroup: group._id
+                        }, function(err, activity) {
+                            if (err) next(err);
+                        });
+
+                        newEvent.populate({
+                            path: 'group',
+                            select: 'name cover description'
+                        }, function(err, event) {
+
+                            if (err) next(err);
+                            else {
+
+                                // TODO: send email to group participants
+
+                                group.participants.forEach(function(room) {
+                                    sio.sockets.in(room).emit('group-event-new', event);
+                                });
+                            }
+                        });
+
+                        res.json(newEvent);
+                    }
+                });
+            } else {
+
+                Activity.create({
+                    _owner: req.user.id,
+                    type: 'event-new',
+                    targetEvent: newEvent._id
+                }, function(err, activity) {
+                    if (err) next(err);
                 });
 
-            else res.json(newEvent);
+                res.json(newEvent);
+            }
         }
     });
 };

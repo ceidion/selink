@@ -55,7 +55,7 @@ define([
     });
 
     // before application initialization, config plug-ins
-    selink.on('initialize:before', function(options) {
+    selink.on('before:start', function(options) {
 
         // THIS IS VITAL, change the default behavior of views load template,
         // or the underscore template won't work

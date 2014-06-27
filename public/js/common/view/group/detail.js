@@ -135,23 +135,26 @@ define([
         onShow: function() {
 
             // show every component
-            this.regions.coverRegion.show(this.coverItem);
-            this.regions.nameRegion.show(this.nameItem);
-            this.regions.descriptionRegion.show(this.descriptionItem);
+            if (this.regions.coverRegion.$el.length)
+                this.regions.coverRegion.show(this.coverItem);
+            if (this.regions.nameRegion.$el.length)
+                this.regions.nameRegion.show(this.nameItem);
+            if (this.regions.descriptionRegion.$el.length)
+                this.regions.descriptionRegion.show(this.descriptionItem);
             this.regions.eventsRegion.show(this.eventsItem);
 
             // call super onShow
             BaseView.prototype.onShow.apply(this);
         },
 
-        // before close
-        onBeforeClose: function() {
+        // before destroy
+        onBeforeDestroy: function() {
 
-            // close region manager
-            this.rm.close();
+            // destroy region manager
+            this.rm.destroy();
 
-            // call super onBeforeClose
-            BaseView.prototype.onBeforeClose.apply(this);
+            // call super onBeforeDestroy
+            BaseView.prototype.onBeforeDestroy.apply(this);
         },
 
         // join group

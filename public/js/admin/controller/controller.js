@@ -82,7 +82,8 @@ define([
 
             // create home view
             selink.homeView = new HomeView({
-                model: selink.userModel
+                model: selink.userModel,
+                sort: false
             });
             // show main page
             selink.pageContent.show(selink.homeView);

@@ -47,8 +47,8 @@ define([
             Backbone.Validation.bind(this);
         },
 
-        // before close
-        onBeforeClose: function() {
+        // before destroy
+        onBeforeDestroy: function() {
             // close datepicker
             this.ui.date.datepicker('remove');
         },

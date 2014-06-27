@@ -129,7 +129,7 @@ define([
                 Backbone.Validation.bind(this);
         },
 
-        onBeforeClose: function() {
+        onBeforeDestroy: function() {
            this.$el.find('input[name="startDate"],input[name="endDate"]').datepicker('remove');
         },
 

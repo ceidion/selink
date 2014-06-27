@@ -30,7 +30,7 @@ define([
 
         jobTargetActivity: ['job-new', 'job-bookmarked'],
 
-        groupTargetActivity: ['group-new', 'group-invited', 'group-joined', 'group-refused'],
+        groupTargetActivity: ['group-new', 'group-invited', 'group-joined', 'group-refused', 'group-event-new'],
 
         // template
         getTemplate: function(){

@@ -52,8 +52,8 @@ define([
             Backbone.Validation.bind(this);
         },
 
-        // before close
-        onBeforeClose: function() {
+        // before destroy
+        onBeforeDestroy: function() {
             // close datepicker
             this.$el.find('input[name="startDate"],input[name="endDate"]').datepicker('remove');
         },
