@@ -100,8 +100,26 @@ exports.create = function(req, res, next) {
             // if the post belong to some group
             if (req.body.group)
                 // save the post id in group profile
-                Group.findByIdAndUpdate(req.body.group, {$addToSet: {posts: newPost._id}}, function(err) {
+                Group.findByIdAndUpdate(req.body.group, {$addToSet: {posts: newPost._id}}, function(err, group) {
                     if (err) next(err);
+                    else {
+
+                        // send email to all group member (that not friend)
+                        User.find()
+                            .select('email')
+                            .where('_id').in(_.difference(group.participants, req.user.friends))
+                            .where('logicDelete').equals(false)
+                            .exec(function(err, users) {
+                                // send new-post mail
+                                Mailer.newPost(users, {
+                                    _id: newPost._id,
+                                    authorId: req.user.id,
+                                    authorName: req.user.firstName + ' ' + req.user.lastName,
+                                    authorPhoto: req.user.photo,
+                                    content: newPost.content
+                                });
+                            });
+                    }
                 });
 
             // create activity

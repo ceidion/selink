@@ -101,6 +101,18 @@ exports.create = function(req, res, next) {
                 }
             });
 
+            // index group in solr
+            solr.add(group.toSolr(), function(err, solrResult) {
+                if (err) next(err);
+                else {
+                    console.log(solrResult);
+                    solr.commit(function(err,res){
+                       if(err) console.log(err);
+                       if(res) console.log(res);
+                    });
+                }
+            });
+
             res.json(group);
         }
     });
@@ -118,12 +130,26 @@ exports.update = function(req, res, next) {
         if (err) next(err);
         else {
 
+            // index group in solr
+            solr.add(group.toSolr(), function(err, solrResult) {
+                if (err) next(err);
+                else {
+                    console.log(solrResult);
+                    solr.commit(function(err,res){
+                       if(err) console.log(err);
+                       if(res) console.log(res);
+                    });
+                }
+            });
+
             var populateQuery = [{
-                path:'invited',
+                path: 'invited',
                 select: 'type firstName lastName title cover photo createDate'
             }, {
-                path:'participants',
+                path: 'participants',
                 select: 'type firstName lastName title cover photo createDate'
+            }, {
+                path: 'events'
             }];
 
             group.populate(populateQuery, function(err, group) {
@@ -217,6 +243,8 @@ exports.invite = function(req, res, next) {
                         }, {
                             path:'participants',
                             select: 'type firstName lastName title cover photo createDate'
+                        }, {
+                            path: 'events'
                         }];
 
                         newGroup.populate(populateQuery, function(err, group) {
@@ -363,6 +391,7 @@ exports.scaleCover = function(req, res, next) {
 
     gm(coverPath)
         .crop(req.body.w, req.body.h, req.body.x, req.body.y)
+        .resize(600, 150)
         .write(coverPath, function(err) {
             if (err) next(err);
             else {

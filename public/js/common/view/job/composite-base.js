@@ -18,7 +18,7 @@ define(['common/view/composite-empty'], function(EmptyView) {
         },
 
         // SubView append behavior
-        appendHtml: function(collectionView, itemView, index) {
+        attachHtml: function(collectionView, itemView, index) {
 
             // TODO: the second condition for stop the bounce effect on empty view ...
             // this happend on user click add button

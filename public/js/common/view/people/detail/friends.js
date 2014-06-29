@@ -25,8 +25,8 @@ define([
             this.displayCount = 0;
         },
 
-        // override appendHtml
-        appendHtml: function(collectionView, itemView, index) {
+        // override attachHtml
+        attachHtml: function(collectionView, itemView, index) {
 
             // the displayed friend item won't exceed the display limit
             if (this.displayCount < this.displayLimit) {

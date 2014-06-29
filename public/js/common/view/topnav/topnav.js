@@ -3,7 +3,6 @@ define([
     'common/view/topnav/event/menu',
     'common/view/topnav/message/menu',
     'common/view/topnav/notification/menu',
-    'common/view/issue/main',
     'common/view/setting/main',
     'common/view/password/main'
 ], function(
@@ -11,7 +10,6 @@ define([
     EventMenu,
     MessageMenu,
     NotificationMenu,
-    IssueView,
     SettingView,
     PasswordView
 ) {
@@ -38,7 +36,6 @@ define([
         },
 
         events: {
-            'click #issue': 'showIssueView',
             'click #setting': 'showSettingView',
             'click #password': 'showPasswordView',
             'click @ui.searchBtn': 'onSearch',
@@ -91,21 +88,6 @@ define([
             this.eventNavRegion.show(this.eventNav);
             this.notificationNavRegion.show(this.notificationNav);
             this.messageNavRegion.show(this.messageNav);
-        },
-
-        showIssueView: function(event) {
-
-            event.preventDefault();
-
-            // create issue view
-            var issueView = new IssueView({
-                model: selink.userModel
-            });
-
-            // attention: access the selink object directly here
-            selink.modalArea.show(issueView);
-
-            selink.modalArea.$el.modal('show');
         },
 
         showSettingView: function(event) {

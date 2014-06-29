@@ -66,8 +66,8 @@ define([
         // after show
         onShow: function() {
 
-            // override appendHtml after the view been shown
-            this.appendHtml = function(collectionView, itemView, index) {
+            // override attachHtml after the view been shown
+            this.attachHtml = function(collectionView, itemView, index) {
                 // insert new item into the very begining of the list
                 this.$el.find('.dropdown-body').prepend(itemView.el);
             };

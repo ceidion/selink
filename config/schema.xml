@@ -49,6 +49,9 @@
         <!-- post, message, announcement -->
         <field name="content" type="text_ja" indexed="true" stored="true" termVectors="true"/>
 
+        <!-- group -->
+        <field name="description" type="text_ja" indexed="true" stored="true" termVectors="true"/>
+
         <!-- message -->
         <field name="subject" type="text_ja" indexed="true" stored="true" termVectors="true"/>
 
@@ -124,6 +127,9 @@
 
     <!-- job: remark -->
     <copyField source="remark" dest="text"/>
+
+    <!-- group: description -->
+    <copyField source="description" dest="text"/>
 
     <!-- message: subject -->
     <copyField source="subject" dest="text"/>

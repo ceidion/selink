@@ -1,19 +1,31 @@
 define([
     'text!common/template/group/item.html',
     'text!common/template/people/popover.html',
+    'common/view/group/detail/event',
 ],function(
     template,
-    popoverTemplate
+    popoverTemplate,
+    EventView
 ) {
 
-    return Backbone.Marionette.ItemView.extend({
+    return Backbone.Marionette.CompositeView.extend({
 
         template: template,
 
         className: 'isotope-item col-xs-12 col-sm-6 col-lg-4',
 
+        childView: EventView,
+
+        childViewContainer: '.events-container',
+
         events: {
             'click .avatar': 'toProfile',
+        },
+
+        initialize: function() {
+
+            // this.collection = new Backbone.Collection(this.model.get('events'));
+            // console.log(this.collection);
         },
 
         // after render

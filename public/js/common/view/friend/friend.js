@@ -25,33 +25,27 @@ define([
         // empty view
         emptyView: EmptyView,
 
-        // after the view collection rendered
-        onCompositeCollectionRendered: function() {
+        attachHtml: function(collectionView, itemView, index) {
 
             var self = this;
 
-            // use imageLoaded plugin
-            this.$el.find('.widget-main').imagesLoaded(function() {
-                // enable isotope
-                self.$el.find('.widget-main').isotope({
-                    itemSelector : '.photo-item',
-                    masonry: {
-                        columnWidth: '.photo-item'
-                    }
-                });
+            // ensure the image are loaded
+            self.$el.find(self.childViewContainer).imagesLoaded(function() {
+                // prepend new item and reIsotope
+                self.$el.find(self.childViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
             });
-
-            this.appendHtml = function(collectionView, itemView, index) {
-                // ensure the image are loaded
-                self.$el.find(self.childViewContainer).imagesLoaded(function() {
-                    // prepend new item and reIsotope
-                    self.$el.find(self.childViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
-                });
-            };
         },
 
         // after show
         onShow: function() {
+
+            var self = this;
+
+            // enable isotope
+            this.$el.find(this.childViewContainer).isotope({
+                itemSelector : '.photo-item'
+            });
+
             // make container scrollable
             this.$el.find('.widget-main').niceScroll({
                 horizrailenabled: false
@@ -60,7 +54,11 @@ define([
 
         // TODO: remove on friend-break
         onBeforeRemoveChild: function() {
-            console.log(arguments);
+            // console.log(arguments);
+        },
+
+        onAddChild: function() {
+            // console.log(arguments);
         }
 
     });

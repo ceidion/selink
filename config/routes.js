@@ -2,7 +2,6 @@ var tag = require('../app/controllers/tag'),
     job = require('../app/controllers/job'),
     user = require('../app/controllers/user'),
     post = require('../app/controllers/post'),
-    issue = require('../app/controllers/issue'),
     group = require('../app/controllers/group'),
     friend = require('../app/controllers/friend'),
     comment = require('../app/controllers/comment'),
@@ -188,15 +187,6 @@ module.exports = function(app, sio) {
     app.patch('/tags/:id', checkLoginStatus, tag.update);
     // Update tags (remove tag)
     app.delete('/tags/:id', checkLoginStatus, tag.remove);
-
-    // Show issues
-    app.get('/issues', checkLoginStatus, issue.index);
-    // Create new issue
-    app.post('/issues', checkLoginStatus, issue.create);
-    // Update issue (update issue)
-    app.patch('/issues/:issue', checkLoginStatus, issue.update);
-    // Update issue (remove issue)
-    app.delete('/issues/:issue', checkLoginStatus, issue.remove);
 
     // Show announcements
     app.get('/announcements', checkLoginStatus, announcement.index);

@@ -47,51 +47,39 @@ define([
             // create people collection
             this.collection = new Introductions();
 
-            this.collection.fetch();
-
         },
 
-        // after the view collection rendered
-        onCompositeCollectionRendered: function() {
+        attachHtml: function(collectionView, itemView, index) {
+
+            var self = this;
+
+            // ensure the image are loaded
+            this.$el.find(this.childViewContainer).imagesLoaded(function() {
+                // prepend new item and reIsotope
+                self.$el.find(self.childViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
+            });
+        },
+
+        // after show
+        onShow: function() {
 
             var self = this;
 
             // here we need a time-out call, cause this view is in a modal
             // and the modal will take a piece of time to be visible.
             // isotope only process the visible elements, if we isotope on it immediatly
-            // isotope will not work. so I wait 0.3s here
+            // isotope will not work. so I wait 0.5s here (niceScroll also)
             setTimeout(function() {
 
                 // enable isotope
-                self.$el.find(self.childViewContainer).imagesLoaded(function() {
-                    self.$el.find(self.childViewContainer).isotope({
-                        itemSelector : '.isotope-item'
-                    });
+                self.$el.find(self.childViewContainer).isotope({
+                    itemSelector : '.isotope-item'
                 });
 
-                self.appendHtml = function(collectionView, itemView, index) {
-                    // ensure the image are loaded
-                    self.$el.find(self.childViewContainer).imagesLoaded(function() {
-                        // prepend new item and reIsotope
-                        self.$el.find(self.childViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
-                    });
-                };
+                self.$el.find(self.childViewContainer).niceScroll({
+                    horizrailenabled: false
+                });
 
-            }, 300);
-        },
-
-        // after show
-        onShow: function() {
-
-            // TODO: niceScroll is suck, not working in modal
-            // make container scrollable
-            // this.$el.find(this.childViewContainer).niceScroll({
-            //     horizrailenabled: false
-            // });
-
-            var self = this;
-
-            setTimeout(function() {
                 // attach infinite scroll
                 self.$el.find(self.childViewContainer).infinitescroll({
                     navSelector  : self.navSelector || '#page_nav_sub',
@@ -126,13 +114,17 @@ define([
                     } else
                         // add data to collection, don't forget parse the json object
                         // this will trigger 'add' event and will call on
-                        // the appendHtml method that changed on initialization
+                        // the attachHtml method that changed on initialization
                         self.collection.add(json, {parse: true});
                 });
-            }, 300);
+
+                self.collection.fetch();
+
+            }, 500);
+
         },
 
-        onItemClick: function(event, view) {
+        onItemClick: function(view) {
 
             if (_.indexOf(this.selectFriends, view.model.id) < 0) {
                 this.selectFriends.push(view.model.id);

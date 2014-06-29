@@ -25,18 +25,18 @@ define([
             });
         },
 
-        // after render
-        onRender: function() {
-            this.$el.find('.wysiwyg-editor')
-                .ace_wysiwyg().prev().addClass('wysiwyg-style3');
-        },
+        // // after render
+        // onRender: function() {
+        //     this.$el.find('.wysiwyg-editor')
+        //         .ace_wysiwyg().prev().addClass('wysiwyg-style3');
+        // },
 
         // get user input data
         getData: function() {
 
-            var inputText = this.$el.find('.wysiwyg-editor').html(),
-                cleanText = _.str.stripTags(inputText);
-
+            var inputText = this.$el.find('textarea').val(),
+                cleanText = inputText.replace(/(?:\r\n|\r|\n)/g, '<br />');
+                
             // if the clean text is blank
             if (_.str.isBlank(cleanText))
                 // set description to blank
@@ -46,7 +46,7 @@ define([
             else
                 // or set the input text
                 return {
-                    description: inputText
+                    description: cleanText
                 };
         },
 

@@ -77,4 +77,14 @@ var Group = new Schema({
     }
 });
 
+Group.methods.toSolr = function() {
+    return {
+        type: 'Group',
+        id: this.id,
+        name: this.name,
+        description: this.description,
+        logicDelete: this.logicDelete
+    };
+};
+
 mongoose.model('Group', Group);

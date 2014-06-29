@@ -5,17 +5,6 @@ define([
     BaseView,
     template) {
 
-    var labelList = [
-        'primary',
-        'info',
-        'success',
-        'purple',
-        'danger',
-        'pink',
-        'warning',
-        'yellow'
-    ];
-
     var EventItem = BaseView.extend({
 
         // template
@@ -26,19 +15,6 @@ define([
 
         // initializer
         initialize: function() {
-
-            // these properties are for display, we set them silently(won't trigger event)
-            if (this.model.has('start')) {
-                this.model.set('startDate', moment(this.model.get('start')).format('YYYY/MM/DD'), {silent: true});
-                this.model.set('startTime', moment(this.model.get('start')).format('HH:mm'), {silent: true});
-            }
-
-            if (this.model.has('end')) {
-                this.model.set('endDate', moment(this.model.get('end')).format('YYYY/MM/DD'), {silent: true});
-                this.model.set('endTime', moment(this.model.get('end')).format('HH:mm'), {silent: true});
-            }
-
-            this.model.set('labels', labelList, {silent: true});
 
             this.ui = _.extend({}, this.ui, {
                 'title': 'input[name="title"]',
@@ -63,42 +39,7 @@ define([
         onRender: function() {
 
             // initiate wysiwyg eidtor for memo
-            this.ui.memo.ace_wysiwyg({
-                toolbar:
-                [
-                    'font',
-                    null,
-                    'fontSize',
-                    null,
-                    {name:'bold', className:'btn-info'},
-                    {name:'italic', className:'btn-info'},
-                    {name:'strikethrough', className:'btn-info'},
-                    {name:'underline', className:'btn-info'},
-                    null,
-                    {name:'insertunorderedlist', className:'btn-success'},
-                    {name:'insertorderedlist', className:'btn-success'},
-                    {name:'outdent', className:'btn-purple'},
-                    {name:'indent', className:'btn-purple'},
-                    null,
-                    {name:'justifyleft', className:'btn-primary'},
-                    {name:'justifycenter', className:'btn-primary'},
-                    {name:'justifyright', className:'btn-primary'},
-                    {name:'justifyfull', className:'btn-inverse'},
-                    null,
-                    {name:'createLink', className:'btn-pink'},
-                    {name:'unlink', className:'btn-pink'},
-                    null,
-                    {name:'insertImage', className:'btn-success'},
-                    null,
-                    'foreColor',
-                    null,
-                    {name:'undo', className:'btn-grey'},
-                    {name:'redo', className:'btn-grey'}
-                ],
-                'wysiwyg': {
-                    // fileUploadError: showErrorAlert
-                }
-            }).prev().addClass('wysiwyg-style3');
+            this.ui.memo.ace_wysiwyg().prev().addClass('wysiwyg-style3');
 
             // append data picker
             this.$el.find('input[name="startDate"],input[name="endDate"]').datepicker({
@@ -153,18 +94,32 @@ define([
             if (this.inputValid()) {
 
                 // produce start/end datetime
-                var startDate = new Date(this.ui.startDate.val()),
-                    endDate = new Date(this.ui.endDate.val()),
+                var startDate = this.ui.startDate.val() ? new Date(this.ui.startDate.val()) : null,
+                    endDate = this.ui.endDate.val() ? new Date(this.ui.endDate.val()) : null,
                     startTime = this.ui.startTime.val() ? this.ui.startTime.val().split(':') : ["0","0"],
                     endTime = this.ui.endTime.val() ? this.ui.endTime.val().split(':') : ["0","0"];
 
-                startDate.setHours(Number(startTime[0]));
-                startDate.setMinutes(Number(startTime[1]));
-                endDate.setHours(Number(endTime[0]));
-                endDate.setMinutes(Number(endTime[1]));
+                if (startDate) {                
+                    startDate.setHours(Number(startTime[0]));
+                    startDate.setMinutes(Number(startTime[1]));
+                }
+
+                if (endDate) {                
+                    endDate.setHours(Number(endTime[0]));
+                    endDate.setMinutes(Number(endTime[1]));
+                }
 
                 // produce allDay value
                 var allDay = this.ui.allDay.is(':checked') ? true : false;
+
+                var values = {
+                    title: this.ui.title.val(),
+                    className: this.$el.find('input[name="label"]:checked').val(),
+                    allDay: allDay,
+                    start: startDate,
+                    end: endDate,
+                    memo: this.ui.memo.cleanHtml()
+                };
 
                 // set value to model
                 this.model.set({
@@ -173,7 +128,7 @@ define([
                     allDay: allDay,
                     start: startDate,
                     end: endDate,
-                    memo: this.ui.memo.html()
+                    memo: this.ui.memo.cleanHtml()
                 });
 
                 // if this model is a new event
@@ -181,6 +136,8 @@ define([
                     // add it to eventcollection
                     this.collection.add(this.model.toJSON());
                 }
+
+                selink.modalArea.$el.modal('hide');
             }
         },
 

@@ -5,7 +5,5 @@
     %>
 </small>
 <div class="sl-editor">
-    <div class="wysiwyg-editor">
-        <%= obj.description %>
-    </div>
+    <textarea style="width: 100%; height: 200px;"><%= obj.description ? obj.description.replace(/<br\s*\/?>/mg, "\n") : "" %></textarea>
 </div>

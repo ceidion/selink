@@ -19,7 +19,6 @@ define([
     'admin/view/data/skill/main',
     'admin/view/data/solr/main',
     'admin/view/announcement/main',
-    'admin/view/issue/main',
     'common/model/user',
     'common/model/post',
     'common/model/group'
@@ -44,7 +43,6 @@ define([
     SkillsView,
     SolrView,
     AnnouncementView,
-    IssueView,
     UserModel,
     PostModel,
     GroupModel
@@ -273,14 +271,6 @@ define([
             selink.announcementView = new AnnouncementView();
             // show main page
             selink.pageContent.show(selink.announcementView);
-        },
-
-        showIssueView: function() {
-
-            // create issue view
-            selink.issueView = new IssueView();
-            // show main page
-            selink.pageContent.show(selink.issueView);
         },
 
     });

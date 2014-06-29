@@ -4,20 +4,24 @@ define([
     'common/model/job',
     'common/model/user',
     'common/model/post',
+    'common/model/group',
     'common/view/search/empty',
     'common/view/post/item',
     'common/view/people/item',
-    'common/view/job/item'
+    'common/view/job/item',
+    'common/view/group/item'
 ], function(
     template,
     BaseView,
     JobModel,
     UserModel,
     PostModel,
+    GroupModel,
     EmptyView,
     PostItemView,
     PeopleItemView,
-    JobItemView
+    JobItemView,
+    GroupItemView
 ) {
 
     var SearchCollection = Backbone.Collection.extend({
@@ -41,6 +45,8 @@ define([
                 model = new UserModel({_id: attrs.id});
             else if (attrs.type === 'Post')
                 model = new PostModel({_id: attrs.id});
+            else if (attrs.type === 'Group')
+                model = new GroupModel({_id: attrs.id});
 
             return model;
         },
@@ -63,7 +69,9 @@ define([
         // child view
         getChildView: function(item) {
 
-            if (item.has('name'))
+            if (item.has('description'))
+                return GroupItemView;
+            else if (item.has('name'))
                 return JobItemView;
             else if (item.has('firstName'))
                 return PeopleItemView;

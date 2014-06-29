@@ -60,7 +60,7 @@ define([
 
                     // add data to collection
                     // this will trigger 'add' event and will call on
-                    // the appendHtml method that changed on initialization
+                    // the attachHtml method that changed on initialization
                     self.collection.add(json);
                 }
             });

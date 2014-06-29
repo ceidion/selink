@@ -55,7 +55,7 @@ define([
         // events
         events: {
             'click .btn-join': 'onJoin',
-            'click .avatar': 'toProfile',
+            'click .avatar-owner': 'toProfile',
             'click .btn-member': 'showMemberEditor',
             'click .btn-event': 'showEventEditor',
             'click .btn-post': 'onPost',
@@ -65,10 +65,13 @@ define([
         // initializer
         initialize: function() {
 
-            // create component
-            this.coverItem = new CoverItem({model: this.model});
-            this.nameItem = new NameItem({model: this.model});
-            this.descriptionItem = new DescriptionItem({model: this.model});
+            if (this.model.get('isMine')) {            
+                // create component
+                this.coverItem = new CoverItem({model: this.model});
+                this.nameItem = new NameItem({model: this.model});
+                this.descriptionItem = new DescriptionItem({model: this.model});
+            }
+
             this.eventsItem = new EventsItem({collection: this.model.events});
 
             // create region manager (this composite view will have layout ability)
@@ -134,13 +137,13 @@ define([
         // After show
         onShow: function() {
 
-            // show every component
-            if (this.regions.coverRegion.$el.length)
+            if (this.model.get('isMine')) {  
+                // show every component
                 this.regions.coverRegion.show(this.coverItem);
-            if (this.regions.nameRegion.$el.length)
                 this.regions.nameRegion.show(this.nameItem);
-            if (this.regions.descriptionRegion.$el.length)
                 this.regions.descriptionRegion.show(this.descriptionItem);
+            }
+
             this.regions.eventsRegion.show(this.eventsItem);
 
             // call super onShow

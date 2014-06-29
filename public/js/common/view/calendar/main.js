@@ -87,24 +87,25 @@ define([
                     center: 'title',
                     right: 'month,agendaWeek,agendaDay'
                 },
-                buttonText: {
-                    prev: '<i class="ace-icon fa fa-chevron-left"></i>',
-                    next: '<i class="ace-icon fa fa-chevron-right"></i>',
-                    today: '本日',
-                    month: '月',
-                    week: '週',
-                    day: '日'
-                },
-                titleFormat: {
-                    month: 'yyyy年 MMMM',
-                    week: "yyyy年 MMM d日{ '&#8212;'[ MMM] d日}",
-                    day: 'yyyy年 MMM d日 dddd'
-                },
-                monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
-                monthNamesShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
-                dayNames: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
-                dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],
-                allDayText: '終日',
+                // buttonText: {
+                //     prev: '<i class="ace-icon fa fa-chevron-left"></i>',
+                //     next: '<i class="ace-icon fa fa-chevron-right"></i>',
+                //     today: '本日',
+                //     month: '月',
+                //     week: '週',
+                //     day: '日'
+                // },
+                // titleFormat: {
+                //     month: 'yyyy年 MMMM',
+                //     week: "yyyy年 MMM d日{ '&#8212;'[ MMM] d日}",
+                //     day: 'yyyy年 MMM d日 dddd'
+                // },
+                // monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                // monthNamesShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                // dayNames: ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'],
+                // dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],
+                // allDayText: '終日',
+                // timezone: 'UTC',
                 // event setting
                 events: {
                     url: 'https://www.google.com/calendar/feeds/ja.japanese%23holiday%40group.v.calendar.google.com/public/basic',
@@ -144,7 +145,7 @@ define([
                 editable: true,
                 droppable: true, // this allows things to be dropped onto the calendar !!!
                 // this function is called when something is dropped
-                drop: function(date, allDay) {
+                drop: function(date, jsEvent, ui) {
 
                     // retrieve the dropped element's stored Event Object
                     var eventObject = $(this).data('eventObject');
@@ -167,23 +168,31 @@ define([
                     endDateTime.setMinutes(endTime[1]);
                     postEventObject.end = endDateTime;
 
-                    postEventObject.allDay = allDay;
+                    postEventObject.allDay = !date.hasTime();
 
                     // create the event
                     self.collection.add(postEventObject);
                 },
+                // when drag begin
+                eventDragStart: function(event, jsEvent, ui, view) {
+                    // remove the popover on event
+                    ui.helper.popover('destroy');
+                },
                 // when event was moved to another place
-                eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc) {
+                eventDrop: function(event, delta, revertFunc, jsEvent, ui, view) {
 
                     // find the event in collection and reset the datetime
                     self.collection.get(event._id).set({
-                        allDay: allDay,
                         start: event.start,
                         end: event.end
                     });
                 },
+                eventResizeStart: function(event, jsEvent, ui, view) {
+                    // remove the popover on event
+                    ui.helper.popover('destroy');
+                },
                 // when event dragged to expand
-                eventResize:function(event, dayDelta, minuteDelta, revertFunc) {
+                eventResize:function(event, delta, revertFunc, jsEvent, ui, view) {
 
                     // find the event in collection and reset the datetime
                     self.collection.get(event._id).set({
@@ -195,13 +204,16 @@ define([
                 selectable: true,
                 selectHelper: true,
                 // when the calendar date was selected
-                select: function(start, end, allDay) {
+                select: function(start, end, jsEvent, view) {
+
+                    console.log(arguments)
 
                     // create a event editor modal, pass it the event collection
                     var eventModal = new EventView({
                         model: new self.collection.model({
-                            allDay: allDay,
-                            start: start
+                            // allDay: allDay,
+                            start: start.toDate(),
+                            end: end.toDate()
                         }),
                         collection: self.collection
                     });
@@ -298,7 +310,8 @@ define([
                 },
 
                 // use patch
-                patch: true
+                patch: true,
+                wait: true,
             });
         },
 

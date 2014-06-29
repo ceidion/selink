@@ -87,7 +87,7 @@ define([], function() {
                 } else
                     // add data to collection, don't forget parse the json object
                     // this will trigger 'add' event and will call on
-                    // the appendHtml method that changed on initialization
+                    // the attachHtml method that changed on initialization
                     self.collection.add(json, {parse: true});
             });
 

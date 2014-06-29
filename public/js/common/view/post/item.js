@@ -103,8 +103,8 @@ define([
             'shiftColumn': 'proxyShiftColumn'
         },
 
-        // override appendHtml
-        appendHtml: function(collectionView, itemView, index) {
+        // override attachHtml
+        attachHtml: function(collectionView, itemView, index) {
 
             if (!this.options.modal && index < this.collection.length - 3)
                 itemView.$el.addClass('hide');
@@ -523,7 +523,7 @@ define([
         },
 
         // remove comment
-        onCommentRemove: function(event, view) {
+        onCommentRemove: function(view) {
 
             var self = this;
 
@@ -539,7 +539,7 @@ define([
         },
 
         // reply comment
-        onCommentReply: function(event, view) {
+        onCommentReply: function(view) {
 
             var person = view.model.get('_owner'),
                 atPerson = "@" + person.firstName + ' ' + person.lastName + ' ';

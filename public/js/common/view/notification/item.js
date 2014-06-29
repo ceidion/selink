@@ -28,6 +28,12 @@ define([
         events: {
             'click @ui.avatar': 'toProfile',
             'click @ui.groupLink': 'toGroup',
+
+            'click .btn-approve': 'onApproveClick',
+            'click .btn-decline': 'onDeclineClick',
+            'click .btn-join': 'onJoinClick',
+            'click .btn-refuse': 'onRefuseClick',
+            'click .btn-acknowledge': 'onAcknowledgeClick',
         },
 
         // template

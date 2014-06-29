@@ -1,5 +1,8 @@
 var _ = require('underscore'),
     mongoose = require('mongoose'),
+    moment = require('moment'),
+    Mailer = require('../mailer/mailer.js'),
+    User = mongoose.model('User'),
     Event = mongoose.model('Event'),
     Group = mongoose.model('Group'),
     Activity = mongoose.model('Activity');
@@ -41,6 +44,30 @@ exports.create = function(req, res, next) {
                             if (err) next(err);
                         });
 
+                        var startDate = newEvent.start ? moment(newEvent.start).format('L HH:mm') : "",
+                            endDate = newEvent.end ? moment(newEvent.end).format('L HH:mm') : "";
+
+                        // TODO: send email to group participants
+                        User.find()
+                            .select('email')
+                            .where('_id').in(group.participants)
+                            .where('logicDelete').equals(false)
+                            .exec(function(err, users) {
+                                // send new-post mail
+                                Mailer.newEvent(users, {
+                                    _id: group._id,
+                                    ownerId: req.user.id,
+                                    ownerName: req.user.firstName + ' ' + req.user.lastName,
+                                    ownerPhoto: req.user.photo,
+                                    groupName: group.name,
+                                    eventName: newEvent.title,
+                                    cover: group.cover,
+                                    memo: newEvent.memo,
+                                    startDate: startDate,
+                                    endDate: endDate
+                                });
+                            });
+
                         newEvent.populate({
                             path: 'group',
                             select: 'name cover description'
@@ -48,8 +75,6 @@ exports.create = function(req, res, next) {
 
                             if (err) next(err);
                             else {
-
-                                // TODO: send email to group participants
 
                                 group.participants.forEach(function(room) {
                                     sio.sockets.in(room).emit('group-event-new', event);
@@ -78,19 +103,22 @@ exports.create = function(req, res, next) {
 
 exports.update = function(req, res, next) {
 
-    var newEvent = _.omit(req.body, '_id');
-
-    console.info("#########################");
-    console.log(req.params);
-    console.log(req.body);
-    console.info("#########################");
+    var newEvent = _.omit(req.body, '_id', 'group');
 
     Event.findByIdAndUpdate(req.params.event, newEvent, function(err, event) {
 
-        console.log(err);
-
         if (err) next(err);
-        else res.json(event);
+        else {
+
+            event.populate({
+                path: 'group',
+                select: 'name cover description'
+            }, function(err, event) {
+
+                if (err) next(err);
+                else res.json(event);
+            });
+        }
     });
 };
 

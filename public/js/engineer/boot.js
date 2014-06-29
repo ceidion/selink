@@ -24,6 +24,7 @@ require.config({
         'pie-chart': "lib/jquery.easypiechart",
         // calendar
         'full-calendar': "lib/fullcalendar",
+        'full-calendar-lang': "lib/fullcalendar-lang/ja",
         'google-calendar': "lib/gcal",
         // date time
         'datepicker-locale': "lib/date-time/locales/bootstrap-datepicker.ja",
@@ -92,7 +93,10 @@ require.config({
             deps: ['jquery']
         },
         'full-calendar': {
-            deps: ['jquery']
+            deps: ['jquery', 'moment']
+        },
+        'full-calendar-lang': {
+            deps: ['full-calendar']
         },
         'google-calendar': {
             deps: ['full-calendar']
@@ -174,6 +178,7 @@ require.config({
                 'ace-element',
                 'pie-chart',
                 'full-calendar',
+                'full-calendar-lang',
                 'google-calendar',
                 'datepicker-locale',
                 'timepicker',

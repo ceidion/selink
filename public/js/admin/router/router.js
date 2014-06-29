@@ -20,8 +20,7 @@ define([], function() {
             "mailbox": "showMailBoxView",
             "tag": "showSkillsView",
             "solr": "showSolrView",
-            "announcement": "showAnnouncementView",
-            "issue": "showIssueView",
+            "announcement": "showAnnouncementView"
         }
     });
 

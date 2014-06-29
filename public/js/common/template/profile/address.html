@@ -11,14 +11,13 @@
         %>
     </div>
     <div class="sl-editor form-group">
-        <div id="zipCodeArea" class="col-sm-12 input-group">
-            <span class="input-group-addon">〒</span>
-            <input type="text" id="zipCode" class="input-small" placeholder="郵便番号" name="zipCode" value="<%- obj.zipCode %>">
-        </div>
-        <div class="col-sm-12 input-group">
-            <span class="input-group-addon">
-                <i class="ace-icon fa fa-home bigger-110"></i>
+        <div id="zipCodeArea" class="col-sm-12">
+            <span class="input-icon">
+                <input type="text" id="zipCode" class="input-medium" placeholder="郵便番号" name="zipCode" value="<%- obj.zipCode %>">
+                <i class="ace-icon fa fa-nothing blue">〒</i>
             </span>
+        </div>
+        <div class="col-sm-12">
             <input type="text" id="address" class="col-xs-12" placeholder="住所" name="address" value="<%- obj.address %>">
         </div>
     </div>

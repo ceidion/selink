@@ -24,10 +24,6 @@ define([
             this.collection = new Backbone.Collection(this.model.get('activities'));
         },
 
-        onRender: function() {
-
-        },
-
         onShow: function() {
             this.$el.slFadeInUp();
         }
