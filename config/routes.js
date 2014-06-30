@@ -211,6 +211,7 @@ module.exports = function(app, sio) {
 
     // Solr index
     app.get('/solr/user', checkLoginStatus, solrController.user);
+    app.get('/solr/group', checkLoginStatus, solrController.group);
     app.get('/solr/job', checkLoginStatus, solrController.job);
     app.get('/solr/post', checkLoginStatus, solrController.post);
     app.get('/solr/message', checkLoginStatus, solrController.message);

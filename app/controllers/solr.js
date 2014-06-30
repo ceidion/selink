@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
     User = mongoose.model('User'),
+    Group = mongoose.model('Group'),
     Job = mongoose.model('Job'),
     Post = mongoose.model('Post'),
     Message = mongoose.model('Message'),
@@ -28,6 +29,33 @@ exports.user = function(req, res, next) {
             res.json({
                 title: 'Success',
                 text: 'User index successed.'
+            });
+        }
+    });
+};
+
+exports.group = function(req, res, next) {
+
+    Group.find({}, function(err, groups) {
+
+        if (err) next(err);
+        else {
+
+            groups.forEach(function(group) {
+                solr.add(group.toSolr(), function(err, solrResult) {
+                    if (err) next(err);
+                    else console.log(solrResult);
+                });
+            });
+
+            solr.commit(function(err, res) {
+                if(err) console.log(err);
+                if(res) console.log(res);
+            });
+
+            res.json({
+                title: 'Success',
+                text: 'Group index successed.'
             });
         }
     });

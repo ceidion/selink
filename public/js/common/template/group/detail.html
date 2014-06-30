@@ -22,7 +22,7 @@
             <a href="#profile/<%= obj._owner._id %>" style="position: absolute; bottom: -20px; right: 10px;">
                 <img class="avatar-owner" src="<%= obj._owner.photo %>" style="max-width: 50px; border-radius: 100%; border: 2px solid white;">
             </a>
-            
+
         </div>
 
         <blockquote>
@@ -48,7 +48,7 @@
             <% if (obj.isMine) { %>
             <div class="pull-right red" style="padding-right: 10px;">
                 <i class="ace-icon fa fa-paper-plane tooltip-error"></i>
-                <%= obj.invitationNum %>
+                <span class="invitationNum"><%= obj.invitationNum %></span>
             </div>
             <% } %>
 

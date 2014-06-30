@@ -24,7 +24,7 @@ var mongoose = require('mongoose'),
     18. | group-joined    | group   | group
     19. | group-refused   | group   | group
     20. | event-new       | event   | event
-    20. | group-event-new | event   | event
+    21. | group-event-new | event   | event
 */
 
 // Activity index

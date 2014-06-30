@@ -180,7 +180,7 @@ exports.remove = function(req, res, next) {
         else {
 
             // index job in solr
-            solr.add(job.toSolr(), function(err, solrResult) {
+            solr.delete('id', job.id, function(err, solrResult) {
                 if (err) next(err);
                 else {
                     console.log(solrResult);

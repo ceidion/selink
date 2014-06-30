@@ -79,19 +79,19 @@ define([
             this.participants.set(response.participants, {parse: true, remove: false});
             // set participants number, for display in the profile of group
             response.memberNum = response.participants.length;
-            delete response.participants;
+            // delete response.participants;
 
             // populate invited collection
             this.invited.set(response.invited, {parse: true, remove: false});
             // set invitation number, for display in the profile of group
             response.invitationNum = response.invited.length;
-            delete response.invited;
+            // delete response.invited;
 
             // populate events collection
             this.events.set(response.events, {parse: true, remove: false});
             // set invitation number, for display in the profile of group
             response.eventNum = response.events.length;
-            delete response.events;
+            // delete response.events;
 
             return response;
         },

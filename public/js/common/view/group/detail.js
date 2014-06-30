@@ -62,10 +62,18 @@ define([
             'keyup .wysiwyg-editor': 'enablePost'
         },
 
+        modelEvents: {
+            'change:invited': 'renderInvited'
+        },
+
+        renderInvited: function() {
+            this.$el.find('.invitationNum').empty().text(this.model.get('invitationNum'));
+        },
+
         // initializer
         initialize: function() {
 
-            if (this.model.get('isMine')) {            
+            if (this.model.get('isMine')) {
                 // create component
                 this.coverItem = new CoverItem({model: this.model});
                 this.nameItem = new NameItem({model: this.model});
@@ -137,7 +145,7 @@ define([
         // After show
         onShow: function() {
 
-            if (this.model.get('isMine')) {  
+            if (this.model.get('isMine')) {
                 // show every component
                 this.regions.coverRegion.show(this.coverItem);
                 this.regions.nameRegion.show(this.nameItem);

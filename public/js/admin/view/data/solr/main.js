@@ -12,6 +12,7 @@ define([
         // Events
         events: {
             'click #user': 'indexUser',
+            'click #group': 'indexGroup',
             'click #job': 'indexJob',
             'click #post': 'indexPost',
             'click #message': 'indexMessage',
@@ -21,6 +22,10 @@ define([
 
         indexUser: function() {
             this.sendRequest('/solr/user');
+        },
+
+        indexGroup: function() {
+            this.sendRequest('/solr/group');
         },
 
         indexJob: function() {
