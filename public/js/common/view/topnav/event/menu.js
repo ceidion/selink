@@ -67,6 +67,7 @@ define([
                     time: 8000,
                     class_name: 'gritter-success'
                 });
+                console.log(data);
                 // add the notification to collection
                 self.collection.add(data);
             });

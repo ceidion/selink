@@ -252,23 +252,30 @@ define([
 
             var self = this;
 
-            // safe the event
-            this.collection.create(event, {
+            // if the event is new, means it create by calendar page
+            if (event.isNew())
+                // safe the event
+                this.collection.create(event, {
 
-                // event saved successful
-                success: function(model, response, options) {
+                    // event saved successful
+                    success: function(model, response, options) {
 
-                    // render the event(the response from server) on the calendar
-                    // the last `true` argument determines if the event "sticks"
-                    // (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-                    self.ui.calendar.fullCalendar('renderEvent', response, true);
-                    selink.modalArea.$el.modal('hide');
-                },
-                // if error happend
-                error: function(model, xhr, options) {
+                        // render the event(the response from server) on the calendar
+                        // the last `true` argument determines if the event "sticks"
+                        // (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+                        self.ui.calendar.fullCalendar('renderEvent', response, true);
+                        selink.modalArea.$el.modal('hide');
+                    },
+                    // if error happend
+                    error: function(model, xhr, options) {
 
-                }
-            });
+                    }
+                });
+            // if the event is not new, means it transmit from socket
+            else
+                // just render it (note that I have to copy the attribute from model to a new object, 
+                // cause calendar will populate a "source" field on it, which is itself, this gonna lead loop reference.)
+                this.ui.calendar.fullCalendar('renderEvent', $.extend({}, event.attributes), true);
         },
 
         // update event

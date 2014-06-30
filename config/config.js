@@ -31,10 +31,10 @@ module.exports = {
             core : 'selink',
         },
         mail: {
-            service: "Gmail",
+            port: 587,
             auth: {
-                user: "joe.19840729.china@gmail.com",
-                pass: "19840729"
+                user: "administrator@selink.jp",
+                pass: "ZSkikuD2O5"
             }
         },
         root: rootPath,

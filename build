@@ -3,6 +3,9 @@ node r.js -o build-employer.js
 node r.js -o build-engineer.js
 node r.js -o build-landing.js
 
+optimize=none
+
+
 node ../../r.js -o cssIn=build.css out=style-built.css
 lessc 404.less > ../public/stylesheets/404.css
 lessc home.less > ../public/stylesheets/home.css

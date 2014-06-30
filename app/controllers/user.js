@@ -377,8 +377,8 @@ exports.newsfeed = function(req, res, next) {
                                             .where('_owner').ne(req.user.id)
                                             .populate('_owner', 'type firstName lastName title cover photo createDate')
                                             .sort('-createDate')
-                                            .skip(3*page)  // skip n page
-                                            .limit(3)
+                                            .skip(10*page)  // skip n page
+                                            .limit(10)
                                             .exec(function(err, groups) {
                                                 if (err) next(err);
                                                 else res.json(_.union(jobs, posts, announcements, groups));

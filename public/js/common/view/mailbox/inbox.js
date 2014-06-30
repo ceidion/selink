@@ -71,46 +71,82 @@ define([
         // initializer
         initialize: function() {
 
-            var self = this;
-
             // child events
-            this.itemEvents = _.extend({}, this.itemEvents, {
+            this.childEvents = _.extend({}, this.childEvents, {
                 'selected': 'itemSelected',
                 'unselected': 'itemUnselected'
-            });
-
-            // use imageLoaded plugin
-            this.$el.find(this.childViewContainer).imagesLoaded(function() {
-                // enable isotope
-                self.$el.find(self.childViewContainer).isotope({
-                    itemSelector : '.isotope-item',
-                    stamp: '.stamp',
-                    masonry: {
-                        columnWidth: '.isotope-item'
-                    },
-                    getSortData: {
-                        createDate: function(elem) {
-                            return $(elem).find('[data-create-date]').data('create-date');
-                        },
-                        from: function(elem) {
-                            return $(elem).find('.sender').text();
-                        },
-                        subject: function(elem) {
-                            return $(elem).find('.text').text();
-                        }
-                    },
-                    sortBy: 'createDate',
-                    sortAscending: false
-                });
             });
 
             // create collection
             this.collection = new Messages();
 
+            this.listenTo(this.selectedItem, 'all', this.toggleTools);
+        },
+
+        onShow: function() {
+
+            var self = this;
+
+            // enable isotope
+            this.$el.find(this.childViewContainer).isotope({
+                itemSelector : '.isotope-item',
+                stamp: '.stamp',
+                masonry: {
+                    columnWidth: '.isotope-item'
+                },
+                getSortData: {
+                    createDate: function(elem) {
+                        return $(elem).find('[data-create-date]').data('create-date');
+                    },
+                    from: function(elem) {
+                        return $(elem).find('.sender').text();
+                    },
+                    subject: function(elem) {
+                        return $(elem).find('.text').text();
+                    }
+                },
+                sortBy: 'createDate',
+                sortAscending: false
+            });
+
+            // attach infinite scroll
+            this.$el.find(this.childViewContainer).infinitescroll({
+                navSelector  : this.navSelector || '#page_nav',
+                nextSelector : this.nextSelector || '#page_nav a',
+                dataType: 'json',
+                appendCallback: false,
+                loading: {
+                    msgText: '<em>読込み中・・・</em>',
+                    finishedMsg: 'No more pages to load.',
+                    img: 'http://i.imgur.com/qkKy8.gif',
+                    speed: 'slow',
+                },
+                state: {
+                    currPage: 0
+                },
+                // the default determine path fuction is not fit selink,
+                // here just use the specific one. (from infinitescroll.js line 283)
+                pathParse: function(path) {
+                    if (path.match(/^(.*?page=)1(\/.*|$)/)) {
+                        path = path.match(/^(.*?page=)1(\/.*|$)/).slice(1);
+                        return path;
+                    }
+                }
+            }, function(json, opts) {
+                // no more data
+                if (json.length === 0){
+                    // destroy infinite scroll, or it will affect other page
+                    self.$el.find(self.childViewContainer).infinitescroll('destroy');
+                    self.$el.find(self.childViewContainer).data('infinitescroll', null);
+                } else
+                    // add data to collection, don't forget parse the json object
+                    // this will trigger 'add' event and will call on
+                    // the attachHtml method that changed on initialization
+                    self.collection.add(json, {parse: true});
+            });
+
             // fetch collection items
             this.collection.fetch();
-
-            this.listenTo(this.selectedItem, 'all', this.toggleTools);
         },
 
         // toggle tool bar
@@ -222,12 +258,12 @@ define([
         },
 
         // select one message
-        itemSelected: function(e, view) {
+        itemSelected: function(view) {
             this.selectedItem.add(view.model);
         },
 
         // unselect one message
-        itemUnselected: function(e, view) {
+        itemUnselected: function(view) {
             this.selectedItem.remove(view.model);
         },
 
