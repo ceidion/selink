@@ -1,82 +1,85 @@
 <div class="isotope">
 
-    <div class="stamp col-xs-12 col-md-4 no-padding" style="border: 1px solid #CCC;">
+    <div class="stamp col-xs-12 col-md-4">
 
-        <div style="position: relative;">
+        <div style="border: 1px solid #CCC;">
 
-        <% if (obj.isMine) { %>
-            <div id="cover"></div>
-        <% } else if (obj.isParticipated) { %>
-            <img src="<%= obj.cover %>">
-            <button class="btn btn-success btn-leave" style="position: absolute; right: 10px; top: 10px;">
-                <i class="ace-icon fa fa-plus"></i>&nbsp;参加中
-            </button>
-        <% } else { %>
-            <img src="<%= obj.cover %>">
-            <button class="btn btn-info btn-join"
-                    data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・" style="position: absolute; right: 10px; top: 10px;">
-                <i class="ace-icon fa fa-plus"></i>&nbsp;参加
-            </button>
-        <% } %>
+            <div style="position: relative;">
 
-            <a href="#profile/<%= obj._owner._id %>" style="position: absolute; bottom: -20px; right: 10px;">
-                <img class="avatar-owner" src="<%= obj._owner.photo %>" style="max-width: 50px; border-radius: 100%; border: 2px solid white;">
-            </a>
-
-        </div>
-
-        <blockquote>
             <% if (obj.isMine) { %>
-                <p id="name" class="sl-editable" style="margin-bottom: 0px;"></p>
-                <div id="description" class="sl-editable"></div>
+                <div id="cover"></div>
+            <% } else if (obj.isParticipated) { %>
+                <img src="<%= obj.cover %>">
+                <button class="btn btn-success btn-leave" style="position: absolute; right: 10px; top: 10px;">
+                    <i class="ace-icon fa fa-plus"></i>&nbsp;参加中
+                </button>
             <% } else { %>
-                <p><%= obj.name %></p>
-                <small><%= obj.description %></small>
+                <img src="<%= obj.cover %>">
+                <button class="btn btn-info btn-join"
+                        data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・" style="position: absolute; right: 10px; top: 10px;">
+                    <i class="ace-icon fa fa-plus"></i>&nbsp;参加
+                </button>
             <% } %>
-        </blockquote>
 
-        <div id="events" class="clearfix" style="padding: 12px;">
-        </div>
+                <a href="#profile/<%= obj._owner._id %>" style="position: absolute; bottom: -20px; right: 10px;">
+                    <img class="avatar-owner" src="<%= obj._owner.photo %>" style="max-width: 50px; border-radius: 100%; border: 2px solid white;">
+                </a>
 
-        <div class="clearfix" style="padding: 12px;">
+            </div>
 
-            <div class="pull-right green">
-                <i class="ace-icon fa fa-group tooltip-success"></i>
-                <%= obj.memberNum %>
+            <blockquote>
+                <% if (obj.isMine) { %>
+                    <p id="name" class="sl-editable" style="margin-bottom: 0px;"></p>
+                    <div id="description" class="sl-editable"></div>
+                <% } else { %>
+                    <p><%= obj.name %></p>
+                    <small><%= obj.description %></small>
+                <% } %>
+            </blockquote>
+
+            <div id="events" class="clearfix" style="padding: 12px;">
+            </div>
+
+            <div class="clearfix" style="padding: 12px;">
+
+                <div class="pull-right green">
+                    <i class="ace-icon fa fa-group tooltip-success"></i>
+                    <%= obj.memberNum %>
+                </div>
+
+                <% if (obj.isMine) { %>
+                <div class="pull-right red" style="padding-right: 10px;">
+                    <i class="ace-icon fa fa-paper-plane tooltip-error"></i>
+                    <span class="invitationNum"><%= obj.invitationNum %></span>
+                </div>
+                <% } %>
+
+                <div class="pull-right orange" style="padding-right: 10px;">
+                    <i class="ace-icon fa fa-tasks tooltip-warning"></i>
+                    <%= obj.eventNum %>
+                </div>
+
+                <div class="pull-right blue" style="padding-right: 10px;">
+                    <i class="ace-icon fa fa-edit tooltip-info"></i>
+                    <%= obj.posts.length %>
+                </div>
+
             </div>
 
             <% if (obj.isMine) { %>
-            <div class="pull-right red" style="padding-right: 10px;">
-                <i class="ace-icon fa fa-paper-plane tooltip-error"></i>
-                <span class="invitationNum"><%= obj.invitationNum %></span>
+            <hr style="margin: 0px;">
+
+            <div class="center" style="padding: 12px;">
+                <button class="btn btn-success btn-block btn-member">
+                    <i class="ace-icon fa fa-group"></i>&nbsp;お友達を誘う
+                </button>
+                <button class="btn btn-primary btn-block btn-event">
+                    <i class="ace-icon fa fa-beer"></i>&nbsp;イベント作成
+                </button>
             </div>
             <% } %>
 
-            <div class="pull-right orange" style="padding-right: 10px;">
-                <i class="ace-icon fa fa-tasks tooltip-warning"></i>
-                <%= obj.eventNum %>
-            </div>
-
-            <div class="pull-right blue" style="padding-right: 10px;">
-                <i class="ace-icon fa fa-edit tooltip-info"></i>
-                <%= obj.posts.length %>
-            </div>
-
         </div>
-
-        <% if (obj.isMine) { %>
-        <hr style="margin: 0px;">
-
-        <div class="center" style="padding: 12px;">
-            <button class="btn btn-success btn-block btn-member">
-                <i class="ace-icon fa fa-group"></i>&nbsp;お友達を誘う
-            </button>
-            <button class="btn btn-primary btn-block btn-event">
-                <i class="ace-icon fa fa-beer"></i>&nbsp;イベント作成
-            </button>
-        </div>
-        <% } %>
-
     </div>
 
     <% if (obj.isMine || obj.isParticipated) { %>

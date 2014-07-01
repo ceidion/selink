@@ -18,20 +18,16 @@ define([], function() {
 
             // ensure the image are loaded
             this.$el.find(this.childViewContainer).imagesLoaded(function() {
-                // if the item is newly created one
-                if (index === 0)
-                    // prepend new item and reIsotope
-                    self.$el.find(self.childViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
-                // if the item from infinit scroll loading
-                else
+                // // if the item is newly created one
+                // if (index === 0)
+                //     // prepend new item and reIsotope
+                //     self.$el.find(self.childViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
+                // // if the item from infinit scroll loading
+                // else
                     // append item and reIsotope
-                    self.$el.find(self.childViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
+                    // self.$el.find(self.childViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
+                    self.$el.find(self.childViewContainer).isotope('insert', itemView.$el);
             });
-        },
-
-        // Initializer
-        initialize: function() {
-            Pace.restart();
         },
 
         // After show
@@ -43,9 +39,9 @@ define([], function() {
             this.$el.find(this.childViewContainer).isotope({
                 itemSelector : '.isotope-item',
                 stamp: '.stamp',
-                masonry: {
-                    columnWidth: '.isotope-item'
-                },
+                // masonry: {
+                //     columnWidth: '.isotope-item'
+                // },
                 getSortData: {
                     createDate: function(elem) {
                         return $(elem).find('[data-create-date]').data('create-date');

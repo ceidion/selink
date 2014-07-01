@@ -63,6 +63,11 @@ exports.create = function(req, res, next) {
         if (err) next(err);
         else {
 
+            req.user.groups.push(group.id);
+            req.user.save(function(err) {
+                if (err) next(err);
+            });
+
             // create activity
             Activity.create({
                 _owner: req.user.id,

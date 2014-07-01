@@ -64,7 +64,7 @@ exports.show = function(req, res, next) {
     Create post
 
     1* user = author
-    2* group participants = group's participants - author's friends
+    2* group participants = group's participants - author's friends - author himself
 
     1. create post with content and group
         2. save the post pointer in user profile
@@ -104,10 +104,10 @@ exports.create = function(req, res, next) {
                     if (err) next(err);
                     else {
 
-                        // send email to all group member (that not friend)
+                        // send email to all group member (that not friend and himself)
                         User.find()
                             .select('email')
-                            .where('_id').in(_.difference(group.participants, req.user.friends))
+                            .where('_id').in(_.difference(group.participants, req.user.friends, req.user.id))
                             .where('logicDelete').equals(false)
                             .exec(function(err, users) {
                                 // send new-post mail

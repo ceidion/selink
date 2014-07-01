@@ -50,7 +50,6 @@ require.config({
         'isotope': 'lib/isotope.pkgd',
         'nicescroll': 'lib/jquery.nicescroll',
         'infinite-scroll': 'lib/jquery.infinitescroll',
-        'pace': 'lib/pace',
         'tag': 'lib/bootstrap-tag',
         'typeahead': 'lib/typeahead.bundle',
         'selink': 'lib/selink',
@@ -151,9 +150,6 @@ require.config({
         'infinite-scroll': {
             deps: ['jquery']
         },
-        'pace': {
-            deps: ['bootstrap']
-        },
         'tag': {
             deps: ['bootstrap']
         },
@@ -192,7 +188,6 @@ require.config({
                 'isotope',
                 'nicescroll',
                 'infinite-scroll',
-                'pace',
                 'tag',
                 'typeahead',
                 'selink',
@@ -214,7 +209,6 @@ require([
     'imagesloaded',
     'isotope',
     'nicescroll',
-    'pace',
     'app'
 ], function(
     deepModel,
@@ -228,10 +222,8 @@ require([
     imagesloaded,
     isotope,
     nicescroll,
-    pace,
     engineer
 ) {
     $.bridget( 'isotope', isotope );
-    pace.start();
     engineer.start();
 });
