@@ -91,7 +91,7 @@ define([
             var inputs = {
                 recipient: _.pluck(this.$el.find('input[name="recipient"]').data('models'), 'id'),
                 subject: this.ui.subject.val(),
-                content: this.ui.message.html()
+                content: this.ui.message.cleanHtml()
             };
 
             if (_.isEmpty(this.checkInput(inputs))) {

@@ -154,7 +154,7 @@ define([
             return {
                 title: this.ui.title.val(),
                 expiredDate: expiredDate,
-                content: this.ui.content.html()
+                content: this.ui.content.cleanHtml()
             };
         }
 

@@ -87,7 +87,7 @@ define([
 
             // create new post
             this.collection.create({
-                content: this.ui.newPost.html()
+                content: this.ui.newPost.cleanHtml()
             }, {
                 wait: true,
                 at: 0  // new post at index 0, impile this post is newly create one

@@ -236,7 +236,7 @@ define([
                 recruitNum: this.ui.recruitNum.val().replace('_', ''),
                 interviewNum: this.ui.interviewNum.val().replace('_', ''),
                 foreignerAllowed: foreignerAllowed,
-                remark: this.ui.remark.html(),
+                remark: this.ui.remark.cleanHtml(),
                 languages: languages,
                 skills: skills
             };

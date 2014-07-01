@@ -37,7 +37,7 @@ define([
         // get user input data
         getData: function() {
 
-            var inputText = this.$el.find('.wysiwyg-editor').html(),
+            var inputText = this.$el.find('.wysiwyg-editor').cleanHtml(),
                 cleanText = _.str.stripTags(inputText);
 
             // if the clean text is blank

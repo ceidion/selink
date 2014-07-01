@@ -56,7 +56,7 @@ define([
             // ensure the image are loaded
             this.$el.find(this.childViewContainer).imagesLoaded(function() {
                 // prepend new item and reIsotope
-                self.$el.find(self.childViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
+                self.$el.find(self.childViewContainer).isotope('insert', itemView.$el);
             });
         },
 

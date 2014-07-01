@@ -259,7 +259,7 @@ define([
 
             // create new post
             this.collection.create({
-                content: this.ui.newPost.html(),
+                content: this.ui.newPost.cleanHtml(),
                 group: this.model.id
             }, {
                 wait: true,

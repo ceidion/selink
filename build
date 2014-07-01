@@ -5,7 +5,6 @@ node r.js -o build-landing.js
 
 optimize=none
 
-
 node ../../r.js -o cssIn=build.css out=style-built.css
 lessc 404.less > ../public/stylesheets/404.css
 lessc home.less > ../public/stylesheets/home.css
@@ -22,6 +21,7 @@ note:
 5. in the jade template, refer the built app
 6. in "public\js\lib\ace-element.js" the typeahead plugin was commented-out, cause it conflict with twitter typeahead
 7. the "public\js\lib\ace-element.js" was fully customized, don't update this file
+7. the "public\js\lib\bootstrap-wysiwyg.js" cleanHtml method was customized, attention
 8. selink need GraphicMagik for picture process
 9. selink need solr for matching and search
 10. all the email template must be convert by "http://templates.mailchimp.com/resources/inline-css/",

@@ -16,7 +16,7 @@
 	};
 	$.fn.cleanHtml = function () {
 		var html = $(this).html();
-		return html && html.replace(/(<br>|\s|<div><br><\/div>|&nbsp;)*$/, '');
+		return html && html.replace(/(<br>|\s|<div><br><\/div>|&nbsp;)*$/, '').replace(/(width=".*?"|width:.*?;)/img, '');
 	};
 	$.fn.wysiwyg = function (userOptions) {
 		var editor = this,
