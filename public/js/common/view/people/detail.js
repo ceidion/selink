@@ -50,7 +50,9 @@ define([
         events: {
             'click .btn-msg': 'showMessageEditor',
             'click .btn-friend': 'onAddFriend',
-            'click .btn-break': 'onBreakFriend',
+            'click .btn-break': 'showAlert',
+            'click .btn-break-cancel': 'hideAlert',
+            'click .btn-break-confirm': 'onBreakFriend',
             'click .btn-more': 'showMoreInfo',
             'click .btn-less': 'showLessInfo'
         },
@@ -167,6 +169,33 @@ define([
             this.rm.destroy();
         },
 
+        // show break confirm alert
+        showAlert: function(event) {
+
+            var self = this;
+
+            // stop defautl link behavior
+            event.preventDefault();
+            // show break confirm alert
+            this.$el.find('.alert')
+                .slideDown('fast', function() {
+                    self.$el.find(self.childViewContainer).isotope('layout');
+                })
+                .find('i')
+                .addClass('icon-animated-vertical');
+        },
+
+        // hide break confirm alert
+        hideAlert: function() {
+
+            var self = this;
+
+            this.$el.find('.alert')
+                .slideUp('fast', function() {
+                    self.$el.find(self.childViewContainer).isotope('layout');
+                });
+        },
+
         showMessageEditor: function() {
 
             var messageEditor = new MessageEditView({
@@ -226,6 +255,8 @@ define([
         onBreakFriend: function() {
 
             var self = this;
+
+            this.hideAlert();
 
             // show loading icon, and prevent user click twice
             this.$el.find('.btn-break').button('loading');

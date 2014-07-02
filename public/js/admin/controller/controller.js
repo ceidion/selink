@@ -208,7 +208,9 @@ define([
         showBookmarkView: function() {
 
             // create bookmark view
-            selink.bookmarkView = new BookMarkView();
+            selink.bookmarkView = new BookMarkView({
+                sort: false
+            });
             // show bookmark view
             selink.pageContent.show(selink.bookmarkView);
         },

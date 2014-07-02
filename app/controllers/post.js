@@ -107,7 +107,7 @@ exports.create = function(req, res, next) {
                         // send email to all group member (that not friend and himself)
                         User.find()
                             .select('email')
-                            .where('_id').in(_.difference(group.participants, req.user.friends, req.user.id))
+                            .where('_id').in(group.participants).nin(req.user.friends).ne(req.user.id)
                             .where('logicDelete').equals(false)
                             .exec(function(err, users) {
                                 // send new-post mail
@@ -176,6 +176,18 @@ exports.create = function(req, res, next) {
                     });
                 });
 
+            // index this post in solr
+            solr.add(newPost.toSolr(), function(err, solrResult) {
+                if (err) next(err);
+                else {
+
+                    solr.commit(function(err, res) {
+                        if(err) console.log(err);
+                        if(res) console.log(res);
+                    });
+                }
+            });
+
             var populateQuery = [{
                 path: '_owner',
                 select: 'type firstName lastName title cover photo createDate'
@@ -237,6 +249,17 @@ exports.remove = function(req, res, next) {
                 Group.findByIdAndUpdate(post.group, {$pull: {posts: post._id}}, function(err) {
                     if (err) next(err);
                 });
+
+            // remove this post in solr
+            solr.delete('id', post.id, function(err, solrResult) {
+                if (err) next(err);
+                else {
+                    solr.commit(function(err,res){
+                       if(err) console.log(err);
+                       if(res) console.log(res);
+                    });
+                }
+            });
 
             res.json(post);
         }

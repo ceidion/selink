@@ -65,6 +65,19 @@
 
             </div>
 
+            <div class="col-xs-8" style="margin-top: 10px;">
+                <!-- break confrim dialog -->
+                <div class="alert alert-danger clearfix" style="display: none;">
+                    <i class="ace-icon fa fa-warning"></i>&nbsp;
+                    <strong><%= obj.firstName %>&nbsp;<%= obj.lastName %>との友達関係を解除します、よろしいですか？</strong>
+                    <div class="space-10"></div>
+                    <p class="pull-right">
+                        <button class="btn btn-sm btn-warning btn-break-cancel">取消</button>
+                        <button class="btn btn-sm btn-danger btn-break-confirm">解除</button>
+                    </p>
+                </div>
+            </div>
+
             <!-- user info -->
             <div class="col-xs-8 col-sm-5" style="margin-top: 10px;">
 

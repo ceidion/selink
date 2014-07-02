@@ -179,11 +179,10 @@ exports.remove = function(req, res, next) {
         if (err) next(err);
         else {
 
-            // index job in solr
+            // remove this job in solr
             solr.delete('id', job.id, function(err, solrResult) {
                 if (err) next(err);
                 else {
-                    console.log(solrResult);
                     solr.commit(function(err,res){
                        if(err) console.log(err);
                        if(res) console.log(res);

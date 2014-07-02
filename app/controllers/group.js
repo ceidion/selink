@@ -63,6 +63,7 @@ exports.create = function(req, res, next) {
         if (err) next(err);
         else {
 
+            // put group id in creator's group list
             req.user.groups.push(group.id);
             req.user.save(function(err) {
                 if (err) next(err);

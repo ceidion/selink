@@ -239,7 +239,7 @@ accept = function(req, res, next, notification) {
             // move user's id from group's invited list
             // to the participants list
             group.invited.pull(req.user._id);
-            group.participants.push(req.user._id);
+            group.participants.addToSet(req.user._id);
 
             // update group
             group.save(function(err, updatedGroup) {

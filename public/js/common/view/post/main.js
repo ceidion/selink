@@ -63,7 +63,7 @@ define([
                 }
             }).prev().addClass('wysiwyg-style3');
 
-            this.ui.newPost.niceScroll();
+            // this.ui.newPost.niceScroll();
         },
 
         // change the status of post button
