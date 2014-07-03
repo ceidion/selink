@@ -54,7 +54,7 @@ define([
             var self = this;
 
             // ensure the image are loaded
-            this.$el.find(this.childViewContainer).imagesLoaded(function() {
+            itemView.$el.imagesLoaded(function() {
                 // prepend new item and reIsotope
                 self.$el.find(self.childViewContainer).isotope('insert', itemView.$el);
             });
@@ -74,10 +74,6 @@ define([
                 // enable isotope
                 self.$el.find(self.childViewContainer).isotope({
                     itemSelector : '.isotope-item'
-                });
-
-                self.$el.find(self.childViewContainer).niceScroll({
-                    horizrailenabled: false
                 });
 
                 // attach infinite scroll
@@ -121,6 +117,16 @@ define([
                 self.collection.fetch();
 
             }, 500);
+
+            setTimeout(function() {
+
+                self.$el.find(self.childViewContainer).niceScroll({
+                    horizrailenabled: false,
+                    railoffset: {
+                        left: 11
+                    }
+                });
+            }, 1200);
 
         },
 

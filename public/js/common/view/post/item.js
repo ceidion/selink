@@ -100,7 +100,7 @@ define([
         childEvents: {
             'remove': 'onCommentRemove',
             'reply': 'onCommentReply',
-            'shiftColumn': 'proxyShiftColumn'
+            'ensureLayout': 'proxyEnsureLayout'
         },
 
         // override attachHtml
@@ -171,6 +171,24 @@ define([
             });
         },
 
+        // after show
+        onShow: function() {
+
+            var self = this;
+
+            // use setTimeout to delay the activiation of niceScroll
+            // or it will calulate it's position wrong. I wait 1.2s for the wrost case
+            setTimeout(function() {
+                // make content scrollable
+                self.ui.postContent.niceScroll({
+                    horizrailenabled: false,
+                    railoffset: {
+                        left: 11
+                    }
+                });
+            }, 1200);
+        },
+
         // show operation menu toggler
         toggleMenuIndicator: function() {
             this.ui.menuToggler.toggleClass('hidden');
@@ -210,7 +228,7 @@ define([
             // show remove confirm alert
             this.ui.alert
                 .slideDown('fast', function() {
-                    self.trigger("shiftColumn");
+                    self.trigger("ensureLayout");
                 })
                 .find('i')
                 .addClass('icon-animated-vertical');
@@ -223,7 +241,7 @@ define([
 
             this.ui.alert
                 .slideUp('fast', function() {
-                    self.trigger("shiftColumn");
+                    self.trigger("ensureLayout");
                 });
         },
 
@@ -250,7 +268,7 @@ define([
                     self.$el.find('.widget-toolbox').toggleClass('hidden');
                     // toggle forbid button status
                     self.$el.find('.btn-forbid').closest('li').toggleClass('hidden');
-                    self.trigger("shiftColumn");
+                    self.trigger("ensureLayout");
                 },
                 reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
                 patch: true,
@@ -261,7 +279,7 @@ define([
         // rerender post content
         renderContent: function() {
             this.ui.postContent.empty().html(this.model.get('content'));
-            this.trigger("shiftColumn");
+            this.trigger("ensureLayout");
         },
 
         // expand post content to full screen
@@ -280,7 +298,7 @@ define([
             this.expanded = !this.expanded;
 
             // re-isotope
-            this.trigger("shiftColumn");
+            this.trigger("ensureLayout");
             this.trigger("expand");
         },
 
@@ -311,7 +329,7 @@ define([
                 self.ui.postEditor.slideDown('fast', function() {
 
                     // re-isotope
-                    self.trigger("shiftColumn");
+                    self.trigger("ensureLayout");
                 });
             });
         },
@@ -341,7 +359,7 @@ define([
                 self.ui.postContent.slideDown('fast', function() {
 
                     // re-isotope
-                    self.trigger("shiftColumn");
+                    self.trigger("ensureLayout");
                 });
             });
         },
@@ -444,7 +462,7 @@ define([
 
             this.ui.comments.find('.hide').removeClass('hide').slideDown(function() {
                 self.ui.showAllBtn.hide();
-                self.trigger("shiftColumn");
+                self.trigger("ensureLayout");
             });
         },
 
@@ -460,7 +478,7 @@ define([
                 self.ui.commentInput.autosize({
                     callback: function() {
                         setTimeout(function() {
-                            self.trigger("shiftColumn");
+                            self.trigger("ensureLayout");
                         }, 200);
                     }
                 });
@@ -476,7 +494,7 @@ define([
             this.$el.find('.photo-area').hide();
             this.$el.find('.btn-area').slideUp('fast', function() {
                 self.ui.commentInput.val('').trigger('autosize.destroy');
-                self.trigger("shiftColumn");
+                self.trigger("ensureLayout");
             });
         },
 
@@ -519,7 +537,7 @@ define([
 
         // rerender comments
         renderComments: function() {
-            this.trigger("shiftColumn");
+            this.trigger("ensureLayout");
         },
 
         // remove comment
@@ -531,7 +549,7 @@ define([
 
                 view.model.destroy({
                     success: function(model, response) {
-                        self.trigger("shiftColumn");
+                        self.trigger("ensureLayout");
                     },
                     wait: true
                 });
@@ -549,9 +567,9 @@ define([
         },
 
         // child view size changed
-        proxyShiftColumn: function() {
-            // fire shift column event to re-layout
-            this.trigger("shiftColumn");
+        proxyEnsureLayout: function() {
+            // fire ensure layout event to re-layout
+            this.trigger("ensureLayout");
         }
 
     });

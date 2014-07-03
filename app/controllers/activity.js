@@ -33,11 +33,15 @@ exports.index = function(req, res, next) {
     // page number
     var page = req.query.page || 0;
 
+    var query = Activity.find();
+
+    if (req.user.type !== 'admin') {
+        query.where('_owner').ne(req.user.id).in(req.user.friends)
+            .where('type').nin(['user-login', 'user-logout', 'friend-declined', 'friend-break', 'group-refused', 'message-new', 'event-new']); // surppress the negative or private activity
+    }
+
     // find the activities of all users
-    Activity.find()
-        .where('_owner').ne(req.user.id).in(req.user.friends)
-        .where('type').nin(['user-login', 'user-logout', 'friend-declined', 'friend-break', 'group-refused', 'message-new', 'event-new']) // surppress the negative or private activity
-        .sort('-createDate')
+    query.sort('-createDate')
         .skip(20*page)  // skip n page
         .limit(20)  // 20 user per page
         .populate('_owner', 'type firstName lastName title cover photo createDate')

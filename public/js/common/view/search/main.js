@@ -81,50 +81,10 @@ define([
 
         // Initializer
         initialize: function() {
-
-            /*
-                initializer are fully overrided, cause we need a different way to populate collecion.
-            */
-
-            var self = this;
-
-            // use imageLoaded plugin
-            this.$el.find(this.childViewContainer).imagesLoaded(function() {
-                // enable isotope
-                self.$el.find(self.childViewContainer).isotope({
-                    itemSelector : '.isotope-item',
-                    stamp: '.stamp',
-                    masonry: {
-                        columnWidth: '.isotope-item'
-                    }
-                });
-            });
-
             // this collection used as buffer
             this.searchCollection = new SearchCollection(null, {term: this.model.get('term')});
             // this is the real collection for this page
             this.collection = new Backbone.Collection();
-
-            // use another way to populate collection, this is **not** good for performace!! need to find a better way!
-            // fetch the buffer collection, server will return the result like {type, id, score}
-            // the buffer collection will create model by "type", and paste id on it.
-            this.searchCollection.fetch({
-
-                success: function(collection, response, options) {
-
-                    // for each model of the buffer collection (we already know the type of model here)
-                    collection.each(function(model){
-
-                        // fetch the model
-                        model.fetch({
-                            success: function(model, response, options) {
-                                // add model to real collection to display
-                                self.collection.add(model);
-                            }
-                        });
-                    });
-                }
-            });
         },
 
         // After show
@@ -134,6 +94,15 @@ define([
                 onShow are fully overrided, cause we need a different way to populate collecion.
             */
             var self = this;
+
+            // enable isotope
+            this.$el.find(this.childViewContainer).isotope({
+                itemSelector : '.isotope-item',
+                stamp: '.stamp',
+                masonry: {
+                    columnWidth: '.isotope-item'
+                }
+            });
 
             // attach infinite scroll
             this.$el.find(this.childViewContainer).infinitescroll({
@@ -181,14 +150,32 @@ define([
                     });
                 }
             });
+
+            // use another way to populate collection, this is **not** good for performace!! need to find a better way!
+            // fetch the buffer collection, server will return the result like {type, id, score}
+            // the buffer collection will create model by "type", and paste id on it.
+            this.searchCollection.fetch({
+
+                success: function(collection, response, options) {
+
+                    // for each model of the buffer collection (we already know the type of model here)
+                    collection.each(function(model){
+
+                        // fetch the model
+                        model.fetch({
+                            success: function(model, response, options) {
+                                // add model to real collection to display
+                                self.collection.add(model);
+                            }
+                        });
+                    });
+                }
+            });
         },
 
         // re-isotope after collection get synced
         onSync: function(model_or_collection, resp, options) {
 
-            /*
-                onSync are fully overrided, cause we don't need sort the data by create date.
-            */
             var self = this;
 
             // use imageLoaded plugin

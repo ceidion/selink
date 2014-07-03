@@ -73,8 +73,7 @@ define([
                         success: function(model, response, options) {
                             selink.modalArea.$el.modal('hide');
                         },
-                        wait: true,
-                        at: 0
+                        wait: true
                     });
 
                 } else {

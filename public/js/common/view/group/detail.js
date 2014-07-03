@@ -262,8 +262,7 @@ define([
                 content: this.ui.newPost.cleanHtml(),
                 group: this.model.id
             }, {
-                wait: true,
-                at: 0  // new post at index 0, impile this post is newly create one
+                wait: true
             });
 
             // clear input area

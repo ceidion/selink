@@ -89,8 +89,7 @@ define([
             this.collection.create({
                 content: this.ui.newPost.cleanHtml()
             }, {
-                wait: true,
-                at: 0  // new post at index 0, impile this post is newly create one
+                wait: true
             });
 
             // clear input area

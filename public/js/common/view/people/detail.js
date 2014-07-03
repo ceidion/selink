@@ -212,7 +212,7 @@ define([
             this.$el.find('.more-info').slideDown('fast', function() {
                 self.$el.find('.btn-more').addClass('hide');
                 self.$el.find('.btn-less').removeClass('hide');
-                self.shiftColumn();
+                self.ensureLayout();
             });
         },
 
@@ -222,7 +222,7 @@ define([
             this.$el.find('.more-info').slideUp('fast', function() {
                 self.$el.find('.btn-more').removeClass('hide');
                 self.$el.find('.btn-less').addClass('hide');
-                self.shiftColumn();
+                self.ensureLayout();
             });
         },
 

@@ -173,7 +173,7 @@ define([
 
             // show alert
             this.ui.alert.slideDown('fast', function() {
-                    self.trigger("shiftColumn");
+                    self.trigger("ensureLayout");
                 })
                 .find('i')
                 .addClass('icon-animated-vertical');
@@ -185,7 +185,7 @@ define([
             var self = this;
 
             this.ui.alert.slideUp('fast', function() {
-                self.trigger("shiftColumn");
+                self.trigger("ensureLayout");
             });
         },
 
@@ -230,7 +230,7 @@ define([
                     // show language view
                     self.matchingArea.show(self.matchesView);
 
-                    self.trigger("shiftColumn");
+                    self.trigger("ensureLayout");
                 }
             });
         },

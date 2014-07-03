@@ -39,9 +39,9 @@ define([
                 self.attachHtml = function(collectionView, itemView, index) {
 
                     // ensure the image are loaded
-                    self.$el.find(self.childViewContainer).imagesLoaded(function() {
+                    itemView.$el.imagesLoaded(function() {
                         // prepend new item and reIsotope
-                        self.$el.find(self.childViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
+                        self.$el.find(self.childViewContainer).isotope('insert', itemView.$el);
                     });
                 };
 
@@ -49,7 +49,7 @@ define([
                 self.$el.find('.widget-main').niceScroll({
                     horizrailenabled: false
                 });
-                
+
             }, 500);
         }
 

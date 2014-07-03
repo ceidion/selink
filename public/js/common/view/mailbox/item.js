@@ -137,7 +137,7 @@ define([
 
             this.$el.toggleClass('message-inline-open')
                 .find('.message-content').slideToggle(0, function() {
-                    self.trigger("shiftColumn");
+                    self.trigger("ensureLayout");
                 });
         },
 

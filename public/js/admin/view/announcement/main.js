@@ -80,8 +80,7 @@ define([
                         selink.modalArea.$el.modal('hide');
                     },
                     silent: true,
-                    wait: true,
-                    at: 0
+                    wait: true
                 });
 
             } else {

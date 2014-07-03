@@ -9,7 +9,7 @@ define([], function() {
         childEvents: {
             'remove': 'onRemove',
             'expand': 'onExpand',
-            'shiftColumn': 'shiftColumn'
+            'ensureLayout': 'ensureLayout'
         },
 
         attachHtml: function(collectionView, itemView, index) {
@@ -17,16 +17,9 @@ define([], function() {
             var self = this;
 
             // ensure the image are loaded
-            this.$el.find(this.childViewContainer).imagesLoaded(function() {
-                // // if the item is newly created one
-                // if (index === 0)
-                //     // prepend new item and reIsotope
-                //     self.$el.find(self.childViewContainer).append(itemView.$el).isotope('prepended', itemView.$el);
-                // // if the item from infinit scroll loading
-                // else
-                    // append item and reIsotope
-                    // self.$el.find(self.childViewContainer).append(itemView.$el).isotope('appended', itemView.$el);
-                    self.$el.find(self.childViewContainer).isotope('insert', itemView.$el);
+            itemView.$el.imagesLoaded(function() {
+                // append item and reIsotope
+                self.$el.find(self.childViewContainer).isotope('insert', itemView.$el);
             });
         },
 
@@ -88,7 +81,15 @@ define([], function() {
             });
 
             // fetch collection items
-            this.collection.fetch();
+            this.collection.fetch({
+                // after collection populate
+                success: function() {
+                    // call ensureLayout after 0.5s, for ensure the layout
+                    setTimeout(function() {
+                        self.ensureLayout();
+                    }, 500);
+                }
+            });
         },
 
         // before destroy
@@ -125,13 +126,8 @@ define([], function() {
         },
 
         // re-layout after item size changed
-        shiftColumn: function(view) {
-
-            var self = this;
-
-            this.$el.find(this.childViewContainer).imagesLoaded(function() {
-                self.$el.find(self.childViewContainer).isotope('layout');
-            });
+        ensureLayout: function(view) {
+            this.$el.find(this.childViewContainer).isotope('layout');
         }
 
     });

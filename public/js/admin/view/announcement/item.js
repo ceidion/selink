@@ -67,7 +67,7 @@ define([
 
             this.ui.alertArea
                 .slideDown('fast', function() {
-                    self.trigger("shiftColumn");
+                    self.trigger("ensureLayout");
                 })
                 .find('i')
                 .addClass('icon-animated-vertical');
@@ -80,7 +80,7 @@ define([
 
             this.ui.alertArea
                 .slideUp('fast', function() {
-                    self.trigger("shiftColumn");
+                    self.trigger("ensureLayout");
                 });
         },
 
@@ -145,7 +145,7 @@ define([
 
         renderContent: function() {
             this.ui.contentArea.empty().html(this.model.get('content'));
-            this.trigger("shiftColumn");
+            this.trigger("ensureLayout");
         },
 
         // show operation menu indicator

@@ -138,7 +138,7 @@ define([
                     self.ui.editInput.autosize({
                         callback: function() {
                             setTimeout(function() {
-                                self.trigger("shiftColumn");
+                                self.trigger("ensureLayout");
                             }, 200);
                         }
                     });
@@ -162,7 +162,7 @@ define([
 
                     // destroy autosize
                     self.ui.editInput.trigger('autosize.destroy');
-                    self.trigger('shiftColumn');
+                    self.trigger('ensureLayout');
                 });
             });
         },
@@ -199,7 +199,7 @@ define([
 
             this.ui.action.slideUp('fast', function() {
                 self.ui.alert.slideDown('fast', function() {
-                    self.trigger("shiftColumn");
+                    self.trigger("ensureLayout");
                 })
                 .find('i')
                 .addClass('icon-animated-vertical');
@@ -213,7 +213,7 @@ define([
 
             this.ui.alert.slideUp('fast', function() {
                 self.ui.action.slideDown('fast');
-                self.trigger("shiftColumn");
+                self.trigger("ensureLayout");
             });
         },
 
