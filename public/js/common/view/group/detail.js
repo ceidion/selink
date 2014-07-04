@@ -7,6 +7,7 @@ define([
     'common/view/group/detail/description',
     'common/view/group/detail/events',
     'common/view/group/detail/member',
+    'common/view/group/detail/member/participants',
     'common/view/calendar/event',
     'common/collection/base',
     'common/model/event',
@@ -21,6 +22,7 @@ define([
     DescriptionItem,
     EventsItem,
     MemberItem,
+    MemberListItem,
     EventView,
     BaseCollection,
     EventModel,
@@ -81,6 +83,7 @@ define([
             }
 
             this.eventsItem = new EventsItem({collection: this.model.events});
+            this.memberListItem = new MemberListItem({collection: this.model.participants});
 
             // create region manager (this composite view will have layout ability)
             this.rm = new Backbone.Marionette.RegionManager();
@@ -89,7 +92,8 @@ define([
                 coverRegion: '#cover',
                 nameRegion: '#name',
                 descriptionRegion: '#description',
-                eventsRegion: '#events'
+                eventsRegion: '#events',
+                memberListRegion: '#member-list'
             });
 
             // create posts collection
@@ -153,6 +157,7 @@ define([
             }
 
             this.regions.eventsRegion.show(this.eventsItem);
+            this.regions.memberListRegion.show(this.memberListItem);
 
             // call super onShow
             BaseView.prototype.onShow.apply(this);
