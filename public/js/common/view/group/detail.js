@@ -82,7 +82,10 @@ define([
                 this.descriptionItem = new DescriptionItem({model: this.model});
             }
 
-            this.eventsItem = new EventsItem({collection: this.model.events});
+            if (this.model.get('eventNum')) {
+                this.eventsItem = new EventsItem({collection: this.model.events});
+            }
+
             this.memberListItem = new MemberListItem({collection: this.model.participants});
 
             // create region manager (this composite view will have layout ability)
@@ -156,7 +159,10 @@ define([
                 this.regions.descriptionRegion.show(this.descriptionItem);
             }
 
-            this.regions.eventsRegion.show(this.eventsItem);
+            if (this.model.get('eventNum')) {
+                this.regions.eventsRegion.show(this.eventsItem);
+            }
+            
             this.regions.memberListRegion.show(this.memberListItem);
 
             // call super onShow

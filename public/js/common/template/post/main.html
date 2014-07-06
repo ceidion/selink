@@ -29,23 +29,23 @@
 
                     <div class="btn-group">
                         <button class="btn btn-sm btn-info dropdown-toggle" data-toggle="dropdown">
-                            <i class="ace-icon fa fa-group bigger-110"></i>&nbsp;ルグープ指定なし
+                            <i class="ace-icon fa fa-group bigger-110"></i>
+                            <span class="group-name">ルグープ指定なし</span>
                             <i class="ace-icon fa fa-angle-down fa-on-right bigger-125"></i>
                         </button>
                         <ul class="dropdown-menu dropdown-info ace-thumbnails">
-                            <li><a href="#">ルグープ指定なし</a></li>
-                            <li class="divider"></li>
+                            <li><a href="#" class="group-item" data-group-id="">ルグープ指定なし</a></li>
                             <% _.each(selink.userModel.groups.models, function(group){ %>
-                                <li>
-                                    <a href="#">
-                                        <img src="<%= group.get('cover') %>">
-                                        <div class="tags">
-                                            <span class="label-holder">
-                                                <span class="label label-info"><%= group.get('name') %></span>
-                                            </span>
-                                        </div>
-                                    </a>
-                                </li>
+                            <li>
+                                <a href="#" class="group-item" data-group-id="<%= group.id %>">
+                                    <img src="<%= group.get('cover') %>">
+                                    <div class="tags">
+                                        <span class="label-holder">
+                                            <span class="label label-info"><%= group.get('name') %></span>
+                                        </span>
+                                    </div>
+                                </a>
+                            </li>
                             <% }); %>
                         </ul>
                     </div>

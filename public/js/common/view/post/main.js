@@ -36,6 +36,7 @@ define([
         // events
         events: {
             'click .btn-post': 'onPost',
+            'click .group-item': 'onSelectGroup',
             'keyup .wysiwyg-editor': 'enablePost'
         },
 
@@ -45,6 +46,8 @@ define([
             this.itemEvents = _.extend({}, this.itemEvents, {
                 'edit': 'showEditorModal'
             });
+
+            this.selectGroup = null;
 
             // create posts collection
             this.collection = new PostsCollection();
@@ -64,6 +67,20 @@ define([
             }).prev().addClass('wysiwyg-style3');
 
             // this.ui.newPost.niceScroll();
+        },
+
+        onSelectGroup: function(e) {
+
+            e.preventDefault();
+
+            this.selectGroup = $(e.target).closest('.group-item').attr('data-group-id');
+
+            if (this.selectGroup) {                
+                var groupName = selink.userModel.groups.get(this.selectGroup).get('name');
+                this.$el.find('.group-name').empty().text(groupName);
+            } else {
+                this.$el.find('.group-name').empty().text('グループ指定なし');
+            }
         },
 
         // change the status of post button
@@ -87,7 +104,8 @@ define([
 
             // create new post
             this.collection.create({
-                content: this.ui.newPost.cleanHtml()
+                content: this.ui.newPost.cleanHtml(),
+                group: this.selectGroup
             }, {
                 wait: true
             });

@@ -12,6 +12,21 @@
             <div class="widget-body">
 
                 <div class="widget-main">
+                    <ul class="ace-thumbnails clearfix">
+                        <% _.each(selink.userModel.groups.models, function(group){ %>
+                        <li>
+                            <a href="#group/<%= group.id %>">
+                                <img src="<%= group.get('cover') %>">
+                                <div class="tags">
+                                    <span class="label-holder">
+                                        <span class="label label-info"><%= group.get('name') %></span>
+                                    </span>
+                                </div>
+                            </a>
+                        </li>
+                        <% }); %>
+                    </ul>
+
                     <div class="alert alert-block alert-danger">
                         <p class="center">
                             <strong>

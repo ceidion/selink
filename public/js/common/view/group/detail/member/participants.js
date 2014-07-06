@@ -33,7 +33,7 @@ define([
 
                 // enable isotope
                 self.$el.find(self.childViewContainer).isotope({
-                    itemSelector : '.isotope-item'
+                    itemSelector : '.isotope-item-2'
                 });
 
                 self.attachHtml = function(collectionView, itemView, index) {

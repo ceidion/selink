@@ -12,7 +12,7 @@ define([
 
         tagName: 'li',
 
-        className: 'isotope-item col-xs-2 no-padding',
+        className: 'isotope-item-2 col-xs-2 no-padding',
 
         onShow: function() {
 

@@ -127,7 +127,8 @@ define([
             // show skill area
             this.skillArea.show(this.skillsView);
 
-            this.onMatch();
+            if (this.model.get('isMine'))
+                this.onMatch();
         },
 
         // show operation menu indicator
