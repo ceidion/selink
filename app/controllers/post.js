@@ -22,6 +22,9 @@ exports.index = function(req, res, next) {
     // if requested for 'my friends' posts
     if (category == "friend") {
         query.where('_owner').in(req.user.friends);
+    // or requested for 'my groups' posts
+    } else if (category == "community") {
+        query.where('group').in(req.user.groups);
     // or requested for 'some group' posts
     } else if (group) {
         query.where('group').equals(group);
@@ -231,6 +234,7 @@ exports.update = function(req, res, next){
 exports.remove = function(req, res, next) {
 
     // TODO: check post's ownership
+    // TODO: if this post was removed, what to do with the activites and notifications relate on it? and comments, bookmarks?
 
     // find the post and mark it as logical deleted
     Post.findByIdAndUpdate(req.params.post, {logicDelete: true}, function(err, post) {

@@ -33,13 +33,16 @@ define([
 
                 // enable isotope
                 self.$el.find(self.childViewContainer).isotope({
-                    itemSelector : '.isotope-item'
+                    itemSelector : '.isotope-item-2'
                 });
 
                 self.attachHtml = function(collectionView, itemView, index) {
 
+                    console.log("message");
+
                     // ensure the image are loaded
                     itemView.$el.imagesLoaded(function() {
+                        console.log("message2");
                         // prepend new item and reIsotope
                         self.$el.find(self.childViewContainer).isotope('insert', itemView.$el);
                     });

@@ -27,7 +27,10 @@ exports.index = function(req, res, next) {
     // }
 
     query.where('logicDelete').equals(false)
+        .where('_id').nin(req.user.groups)
         .populate('_owner', 'type firstName lastName title cover photo createDate')
+        .populate('participants', 'type firstName lastName title cover photo createDate')
+        .populate('events')
         .skip(20*page)  // skip n page
         .limit(20)
         .sort('-createDate')
@@ -343,11 +346,18 @@ exports.join = function(req, res, next) {
                             });
                         });
 
-                    // return updated group
-                    group.populate({
-                        path: '_owner',
+                    var populateQuery = [{
+                        path:'_owner',
                         select: 'type firstName lastName title cover photo createDate'
-                    }, function(err, group) {
+                    }, {
+                        path: 'participants',
+                        select: 'type firstName lastName title cover photo createDate'
+                    }, {
+                        path:'events'
+                    }];
+
+                    // return updated group
+                    group.populate(populateQuery, function(err, group) {
 
                         if (err) next(err);
                         else res.json(group);

@@ -82,9 +82,8 @@ define([
                 this.descriptionItem = new DescriptionItem({model: this.model});
             }
 
-            if (this.model.get('eventNum')) {
-                this.eventsItem = new EventsItem({collection: this.model.events});
-            }
+            this.eventsItem = new EventsItem({collection: this.model.events});
+            this.listenTo(this.eventsItem, 'ensureLayout', BaseView.prototype.ensureLayout);
 
             this.memberListItem = new MemberListItem({collection: this.model.participants});
 
@@ -159,10 +158,8 @@ define([
                 this.regions.descriptionRegion.show(this.descriptionItem);
             }
 
-            if (this.model.get('eventNum')) {
-                this.regions.eventsRegion.show(this.eventsItem);
-            }
-            
+            this.regions.eventsRegion.show(this.eventsItem);
+
             this.regions.memberListRegion.show(this.memberListItem);
 
             // call super onShow
@@ -193,12 +190,21 @@ define([
             }, {
                 url: this.model.url() + '/join',
                 success: function(model, response, options) {
-                    // change the label of the add button, but still disabled
-                    self.$el.find('.btn-join')
-                        .removeClass('btn-info btn-join')
-                        .addClass('btn-success')
-                        .empty()
-                        .html('<i class="ace-icon fa fa-check light-green"></i>&nbsp;参加中');
+
+                    var joinedLabel = $('<span class="text-success"><i class="ace-icon fa fa-check"></i>&nbsp;参加中</span>');
+
+                    // change the add button to label
+                    self.$el.find('.btn-join').fadeOut(function() {
+                        self.$el.find('.group-info').prepend(joinedLabel);
+                    });
+
+                    // hide the warning message and display the post eidtor
+                    self.$el.find('.alert-area').slideUp(function() {
+                        self.$el.find('.post-area').slideDown(function() {
+                            self.ensureLayout();
+                        });
+                    });
+
                     // sycn with user model
                     selink.userModel.groups.add(model);
                 },

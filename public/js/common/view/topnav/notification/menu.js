@@ -199,7 +199,7 @@ define([
             selink.socket.on('group-invited', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
-                    text: 'グループに招待しました。',
+                    text: 'グループ「' + data.targetGroup.name + '」に招待しました。',
                     image: data._from.photo,
                     time: 8000,
                     class_name: 'gritter-success'
@@ -211,7 +211,7 @@ define([
             selink.socket.on('group-joined', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
-                    text: 'グループに参加しました。',
+                    text: 'グループ「' + data.targetGroup.name + '」に参加しました。',
                     image: data._from.photo,
                     time: 8000,
                     class_name: 'gritter-success'
@@ -223,7 +223,7 @@ define([
             selink.socket.on('group-refused', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
-                    text: 'グループ招待を拒否しました。',
+                    text: 'グループ「' + data.targetGroup.name + '」の招待を拒否しました。',
                     image: data._from.photo,
                     time: 8000,
                     class_name: 'gritter-info'

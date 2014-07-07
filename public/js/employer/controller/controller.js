@@ -8,6 +8,7 @@ define([
     'common/view/post/detail',
     'common/view/job/main',
     'common/view/friend/main',
+    'common/view/community/main',
     'common/view/group/main',
     'common/view/group/detail',
     'common/view/people/main',
@@ -30,6 +31,7 @@ define([
     PostDetailView,
     JobView,
     FriendView,
+    CommunityView,
     GroupView,
     GroupDetailView,
     PeopleView,
@@ -169,6 +171,24 @@ define([
             selink.friendView = new FriendView();
             // show friend view
             selink.pageContent.show(selink.friendView);
+        },
+
+        // show communities
+        showCommunityView: function() {
+
+            // if the user haven't join any group
+            if (!selink.userModel.groups.length) {
+
+                // go to people view
+                this.showGroupView();
+
+                return;
+            }
+
+            // create community view
+            selink.communityView = new CommunityView();
+            // show community view
+            selink.pageContent.show(selink.communityView);
         },
 
         // show groups

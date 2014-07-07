@@ -31,7 +31,7 @@ define([
         model: function(attrs, options) {
 
             if (_.has(attrs, 'cover'))
-                return new BaseModel(attrs, options);
+                return new GroupModel(attrs, options);
             else if (_.has(attrs, 'name'))
                 return new JobModel(attrs, options);
             else if (_.has(attrs, 'title'))

@@ -11,6 +11,7 @@ define([], function() {
             "post/:id": "showPostView",
             'job': 'showJobView',
             "friend": "showFriendView",
+            "community": "showCommunityView",
             "group": "showGroupView",
             "group/:id": "showGroupView",
             "people": "showPeopleView",

@@ -10,7 +10,7 @@ define([
 
         // class name
         className: "widget-box transparent",
-        
+
         // template
         template: template,
 
@@ -38,6 +38,7 @@ define([
                 // event saved successful
                 success: function(model, response, options) {
                     selink.modalArea.$el.modal('hide');
+                    self.trigger('ensureLayout');
                 },
                 wait: true
             });
@@ -69,15 +70,11 @@ define([
 
             model.destroy({
                 success: function() {
-                    self.ui.calendar.fullCalendar('removeEvents', function(event) {
-                        if (event._id == model.get('_id'))
-                            return true;
-                    });
                     selink.modalArea.$el.modal('hide');
+                    self.trigger('ensureLayout');
                 },
                 wait: true
             });
-
         }
 
     });

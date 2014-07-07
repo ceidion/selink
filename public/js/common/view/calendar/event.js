@@ -99,12 +99,12 @@ define([
                     startTime = this.ui.startTime.val() ? this.ui.startTime.val().split(':') : ["0","0"],
                     endTime = this.ui.endTime.val() ? this.ui.endTime.val().split(':') : ["0","0"];
 
-                if (startDate) {                
+                if (startDate) {
                     startDate.setHours(Number(startTime[0]));
                     startDate.setMinutes(Number(startTime[1]));
                 }
 
-                if (endDate) {                
+                if (endDate) {
                     endDate.setHours(Number(endTime[0]));
                     endDate.setMinutes(Number(endTime[1]));
                 }

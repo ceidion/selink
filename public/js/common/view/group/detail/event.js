@@ -46,7 +46,8 @@ define([
 
             // create a event editor modal, pass it the event collection
             var eventModal = new EventView({
-                model: this.model
+                model: this.model,
+                collection: this.model.collection
             });
 
             // show modal

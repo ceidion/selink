@@ -8,17 +8,8 @@
 
             <% if (obj.isMine) { %>
                 <div id="cover"></div>
-            <% } else if (obj.isParticipated) { %>
-                <img src="<%= obj.cover %>">
-                <button class="btn btn-success btn-leave" style="position: absolute; right: 10px; top: 10px;">
-                    <i class="ace-icon fa fa-plus"></i>&nbsp;参加中
-                </button>
             <% } else { %>
                 <img src="<%= obj.cover %>">
-                <button class="btn btn-info btn-join"
-                        data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・" style="position: absolute; right: 10px; top: 10px;">
-                    <i class="ace-icon fa fa-plus"></i>&nbsp;参加
-                </button>
             <% } %>
 
                 <a href="#profile/<%= obj._owner._id %>" style="position: absolute; bottom: -20px; right: 10px;">
@@ -43,7 +34,16 @@
             <div id="member-list" class="clearfix" style="padding: 12px;">
             </div>
 
-            <div class="clearfix" style="padding: 12px;">
+            <div class="clearfix group-info" style="padding: 12px;">
+
+                <% if (obj.isParticipated) { %>
+                    <span class="text-success"><i class="ace-icon fa fa-check"></i>&nbsp;参加中</span>
+                <% } else { %>
+                    <button class="btn btn-sm btn-info btn-join"
+                            data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
+                        <i class="ace-icon fa fa-plus"></i>&nbsp;参加
+                    </button>
+                <% } %>
 
                 <div class="pull-right green">
                     <i class="ace-icon fa fa-group tooltip-success"></i>
@@ -85,8 +85,7 @@
         </div>
     </div>
 
-    <% if (obj.isMine || obj.isParticipated) { %>
-    <div class="stamp col-xs-12 col-sm-6 col-lg-8">
+    <div class="stamp col-xs-12 col-md-8 post-area" style="<% if (!obj.isMine && !obj.isParticipated) print('display: none;') %>">
         <div class="widget-box widget-color-green">
 
             <div class="widget-header widget-header-small">
@@ -117,7 +116,17 @@
 
         </div>
     </div>
-    <% } %>
+
+    <div class="stamp col-xs-12 col-md-8 alert-area" style="<% if (obj.isMine || obj.isParticipated) print('display: none;') %>">
+        <div class="alert alert-block alert-danger">
+            <p class="center">
+                <strong>
+                    <i class="ace-icon fa fa-comments bigger-150"></i>
+                    「<%= obj.name %>」に参加していません。グループに投稿するには、該当グループを参加することが必要です。
+                </strong>
+            </p>
+        </div>
+    </div>
 
 </div>
 
