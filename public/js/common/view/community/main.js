@@ -2,12 +2,14 @@ define([
     'text!common/template/community/main.html',
     'common/view/composite-isotope',
     'common/collection/base',
+    'common/model/group',
     'common/model/post',
     'common/view/post/item'
 ], function(
     pageTemplate,
     BaseView,
     BaseCollection,
+    GroupModel,
     PostModel,
     ItemView
 ) {
@@ -75,6 +77,9 @@ define([
             newGroup.save({name: this.ui.groupName.val()}, {
                 // jump to the group detail page
                 success: function(model, response, options) {
+                    // sycn with user model
+                    selink.userModel.groups.add(model);
+                    // move to group detail
                     window.location = '#group/' + model.id;
                 }
             });
