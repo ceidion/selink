@@ -50,6 +50,11 @@ define([
             this.$el.find('.widget-main').niceScroll({
                 horizrailenabled: false
             });
+
+            // call ensureLayout after 0.5s, for ensure the layout
+            setTimeout(function() {
+                self.$el.find(self.childViewContainer).isotope('layout');
+            }, 500);
         },
 
         // TODO: remove on friend-break
