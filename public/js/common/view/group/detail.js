@@ -274,18 +274,32 @@ define([
         // new post
         onPost: function() {
 
+            var self = this;
+
             // create new post
             this.collection.create({
                 content: this.ui.newPost.cleanHtml(),
                 group: this.model.id
             }, {
+                success: function(model, response, options) {
+                    // clear input area
+                    self.ui.newPost.html("");
+                    // disable post button (can't post empty)
+                    self.ui.btnPost.addClass('disabled');
+                },
+                error: function(model, xhr, options) {
+
+                    if (xhr.status === 413)
+                        // show error
+                        $.gritter.add({
+                            title: '投稿は失敗しました',
+                            text: 'ご投稿した内容のサイズは大きすぎたため、投稿は受入ませんでした。画像を含めて投稿する場合は、直接に画像を挿入せずに、画像リンクをご利用ください。',
+                            class_name: 'gritter-error'
+                        });
+                },
                 wait: true
             });
-
-            // clear input area
-            this.ui.newPost.html("");
-            // disable post button (can't post empty)
-            this.ui.btnPost.addClass('disabled');
         }
+
     });
 });
