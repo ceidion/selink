@@ -12,7 +12,7 @@ define([
 
         template: template,
 
-        className: 'isotope-item col-xs-12 col-sm-6 col-lg-4',
+        className: 'isotope-item col-xs-12 col-md-6 col-lg-4',
 
         childView: EventView,
 

@@ -1,7 +1,5 @@
 var express = require('express'),
-    path = require('path'),
-    mongoose = require('mongoose'),
-    User = mongoose.model('User');
+    path = require('path');
 
 module.exports = function(app, config, cookieParser, sessionStore) {
 
@@ -59,30 +57,6 @@ module.exports = function(app, config, cookieParser, sessionStore) {
     if ('development' == app.get('env')) {
         app.use(express.errorHandler());
     }
-
-    // Load user info on request
-    app.use(function(req, res, next){
-
-        // if user's id exists in sessin (logged in user)
-        if (req.session && req.session.userId) {
-
-            // find user by his id
-            User.findById(req.session.userId, function(err, user){
-
-                if (!err && user) {
-                    // associate user with request
-                    req.user = user;
-                    next();
-                } else {
-                    next(new Error('Could not restore User from Session.'));
-                }
-            });
-
-        // user not login yet
-        } else {
-            next();
-        }
-    });
 
     // Routes
     app.use(app.router);

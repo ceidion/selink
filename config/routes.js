@@ -1,4 +1,6 @@
-var tag = require('../app/controllers/tag'),
+var mongoose = require('mongoose'),
+    User = mongoose.model('User'),
+    tag = require('../app/controllers/tag'),
     job = require('../app/controllers/job'),
     user = require('../app/controllers/user'),
     post = require('../app/controllers/post'),
@@ -15,7 +17,7 @@ var tag = require('../app/controllers/tag'),
     announcement = require('../app/controllers/announcement'),
     solrController = require('../app/controllers/solr');
 
-module.exports = function(app, sio) {
+module.exports = function(app) {
 
     // Landing
     app.get('/', function(req, res, next){
@@ -220,6 +222,7 @@ module.exports = function(app, sio) {
 };
 
 checkLoginStatus = function(req, res, next) {
+
     if (!req.session.userId) {
         if (req.xhr) {
             res.status(401).json({
@@ -230,6 +233,16 @@ checkLoginStatus = function(req, res, next) {
             res.redirect('/');
         }
     } else {
-        next();
+        // find user by his id
+        User.findById(req.session.userId, function(err, user){
+
+            if (!err && user) {
+                // associate user with request
+                req.user = user;
+                next();
+            } else {
+                next(new Error('Could not restore User from Session.'));
+            }
+        });
     }
 };

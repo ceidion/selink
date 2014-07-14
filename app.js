@@ -70,7 +70,7 @@ sessionSockets.on('connection', function(err, socket, session) {
 });
 
 // config route
-require('./config/routes')(app, sio);
+require('./config/routes')(app);
 
 // // socket.io configuration
 // sio.sockets.on('connection', function(socket) {
