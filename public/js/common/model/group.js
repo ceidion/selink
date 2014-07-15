@@ -31,8 +31,12 @@ define([
         },
 
         comparator: function(event) {
-            // sort by start desc
-            return Number(event.get('start').valueOf());
+
+            if (event.get('start'))
+                // sort by start desc
+                return Number(event.get('start').valueOf());
+            else
+                return;
         }
     });
 

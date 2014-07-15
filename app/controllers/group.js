@@ -11,6 +11,12 @@ var _ = require('underscore'),
     Notification = mongoose.model('Notification');
 
 // Group index
+// -----------
+// Call on:
+//   1, post create, for the group select list
+// Return:
+//   user's group list 
+
 exports.index = function(req, res, next) {
 
     var //user = req.query.user || null,
@@ -27,12 +33,12 @@ exports.index = function(req, res, next) {
     // }
 
     query.where('logicDelete').equals(false)
-        .where('_id').nin(req.user.groups)
-        .populate('_owner', 'type firstName lastName title cover photo createDate')
-        .populate('participants', 'type firstName lastName title cover photo createDate')
-        .populate('events')
-        .skip(20*page)  // skip n page
-        .limit(20)
+        .where('_id').in(req.user.groups)
+        // .populate('_owner', 'type firstName lastName title cover photo createDate')
+        // .populate('participants', 'type firstName lastName title cover photo createDate')
+        // .populate('events')
+        // .skip(20*page)  // skip n page
+        // .limit(20)
         .sort('-createDate')
         .exec(function(err, groups) {
             if (err) next(err);

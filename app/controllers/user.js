@@ -73,13 +73,20 @@ exports.index = function(req, res, next) {
 };
 
 // Get single user
+// ---------------
+// Called on: 
+//   1. first bootstrap
+//   2. user profile detail
+// Return:
+//   User profile info except password, don't populate any field
+
 exports.show = function(req, res, next) {
 
     User.findById(req.params.user, '-password')
-        .populate('friends', 'type firstName lastName title cover photo createDate')
-        .populate('invited', 'type firstName lastName title cover photo createDate')
-        .populate({ path: 'posts', options: { limit: 20 }})
-        .populate({ path: 'groups', options: { limit: 20 }})
+        // .populate('friends', 'type firstName lastName title cover photo createDate')
+        // .populate('invited', 'type firstName lastName title cover photo createDate')
+        // .populate({ path: 'posts', options: { limit: 20 }})
+        // .populate({ path: 'groups', options: { limit: 20 }})
         .exec(function(err, user) {
             if (err) next(err);
             else res.json(user);
