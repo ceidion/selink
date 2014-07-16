@@ -4,7 +4,7 @@ define([
     'common/collection/base',
     'common/model/post',
     'common/view/post/item',
-    'common/view/post/create'
+    'common/view/post/groups'
 ], function(
     template,
     BaseView,
@@ -18,7 +18,9 @@ define([
 
         model: PostModel,
 
-        url: '/posts'
+        url: function() {
+            return '/users/' + this.document.id + '/posts?&embed=_owner,group,comments._owner&per_page=10&page=0';
+        }
     });
 
     return BaseView.extend({
@@ -45,7 +47,7 @@ define([
         initialize: function() {
 
             // create posts collection
-            this.collection = new PostsCollection();
+            this.collection = new PostsCollection(null, {document: selink.userModel});
 
             // create region manager (this composite view will have layout ability)
             this.rm = new Backbone.Marionette.RegionManager();

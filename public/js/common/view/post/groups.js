@@ -1,12 +1,10 @@
 define([
-    'text!common/template/post/create.html',
+    'text!common/template/post/groups.html',
     'common/collection/base',
-    'common/model/post',
     'common/view/post/group'
 ], function(
     template,
     BaseCollection,
-    PostModel,
     ItemView
 ) {
 

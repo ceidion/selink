@@ -41,7 +41,7 @@ exports.index = function(req, res, next) {
     if (req.params.user && req.params.user === req.user.id) {
 
         // pass current user to internal method
-        _index(req, res, req.user, next);
+        _group_index(req, res, req.user, next);
 
     // if specified someone else
     } else if (req.params.user) {
@@ -50,18 +50,18 @@ exports.index = function(req, res, next) {
         User.findById(req.params.user, 'groups', function(err, uesr) {
             // pass the user to internal method
             if (err) next(err);
-            else _index(req, res, uesr, next);
+            else _group_index(req, res, uesr, next);
         });
 
     } else {
 
         // no specified user, pass null to internal method
-        _index(req, res, null, next);
+        _group_index(req, res, null, next);
     }
 };
 
 // internal method for index
-_index = function(req, res, user, next) {
+_group_index = function(req, res, user, next) {
 
     // create query
     var query = Group.find();
@@ -84,6 +84,8 @@ _index = function(req, res, user, next) {
     // if request specified sort order
     if (req.query.sort)
         query.sort(req.query.sort);
+    else
+        query.sort('-createDate');
 
     // if request specified pagination
     if (req.query.page && req.query.per_page)
