@@ -113,6 +113,104 @@ _post_index = function(req, res, user, group, next) {
         });
 };
 
+// Post index -- friends' posts
+// ---------------------------------------------
+// Return a list of posts that posted by user's friends, in descending order of create date, 
+// without populate any embeded fields. This is short cut method.
+// ---------------------------------------------
+// Parameter:
+//   1. fields: Comma separate select fields for output              default: none
+//   2. embed : Comma separate embeded fields for populate           default: none
+//   3. sort  : Fields name used for sort                            default: createDate
+//   4. page  : page number for pagination                           default: none
+//   5. per_page: record number of every page                        default: none
+// ---------------------------------------------
+
+exports.friendsIndex = function(req, res, next) {
+
+    // create query
+    var query = Post.find();
+
+    // query posts belong to current user's friends
+    query.where('_owner').in(req.user.friends);
+
+    // if request specified output fields
+    if (req.query.fields)
+        query.select(req.query.fields.replace(/,/g, ' '));
+
+    // if request specified population
+    if (req.query.embed) {
+        req.query.embed.split(',').forEach(function(field) {
+            query.populate(field, populateField[field]);
+        });
+    }
+
+    // if request specified sort order
+    if (req.query.sort)
+        query.sort(req.query.sort);
+    else
+        query.sort('-createDate');
+
+    // if request specified pagination
+    if (req.query.page && req.query.per_page)
+        query.skip(req.query.page*req.query.per_page).limit(req.query.per_page);
+
+    query.where('logicDelete').equals(false)
+        .exec(function(err, posts) {
+            if (err) next(err);
+            else res.json(posts);
+        });
+};
+
+// Post index -- groups' posts
+// ---------------------------------------------
+// Return a list of posts that posted in the user's groups, in descending order of create date, 
+// without populate any embeded fields. This is short cut method.
+// ---------------------------------------------
+// Parameter:
+//   1. fields: Comma separate select fields for output              default: none
+//   2. embed : Comma separate embeded fields for populate           default: none
+//   3. sort  : Fields name used for sort                            default: createDate
+//   4. page  : page number for pagination                           default: none
+//   5. per_page: record number of every page                        default: none
+// ---------------------------------------------
+
+exports.groupsIndex = function(req, res, next) {
+
+    // create query
+    var query = Post.find();
+
+    // query posts belong to current user's groups
+    query.where('group').in(req.user.groups);
+
+    // if request specified output fields
+    if (req.query.fields)
+        query.select(req.query.fields.replace(/,/g, ' '));
+
+    // if request specified population
+    if (req.query.embed) {
+        req.query.embed.split(',').forEach(function(field) {
+            query.populate(field, populateField[field]);
+        });
+    }
+
+    // if request specified sort order
+    if (req.query.sort)
+        query.sort(req.query.sort);
+    else
+        query.sort('-createDate');
+
+    // if request specified pagination
+    if (req.query.page && req.query.per_page)
+        query.skip(req.query.page*req.query.per_page).limit(req.query.per_page);
+
+    query.where('logicDelete').equals(false)
+        .exec(function(err, posts) {
+            if (err) next(err);
+            else res.json(posts);
+        });
+};
+
 // Show single post
 exports.show = function(req, res, next) {
 

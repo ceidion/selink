@@ -67,6 +67,10 @@ module.exports = function(app) {
     app.get('/posts', checkLoginStatus, post.index);
     // Get posts (user related)
     app.get('/users/:user/posts', checkLoginStatus, post.index);
+    // Get posts (friends post)
+    app.get('/users/:user/friends-posts', checkLoginStatus, post.friendsIndex);
+    // Get posts (groups post)
+    app.get('/users/:user/groups-posts', checkLoginStatus, post.groupsIndex);
     // Get posts (group related)
     app.get('/groups/:group/posts', checkLoginStatus, post.index);
     // Get specific posts

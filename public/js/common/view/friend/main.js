@@ -18,7 +18,9 @@ define([
 
         model: PostModel,
 
-        url: '/posts?category=friend'
+        url: function() {
+            return '/users/' + this.document.id + '/friends-posts?&embed=_owner,group,comments._owner&per_page=20&page=0';
+        }
     });
 
     return BaseView.extend({
@@ -32,12 +34,11 @@ define([
         // Initializer
         initialize: function() {
 
-            if (selink.userModel.friends.length)
-                // create firends view
-                this.friendsView = new FriendsView({collection: selink.userModel.friends});
+            // create firends view
+            this.friendsView = new FriendsView({collection: selink.userModel.friends});
 
             // create posts collection
-            this.collection = new PostsCollection();
+            this.collection = new PostsCollection(null, {document: selink.userModel});
 
             // call super initializer
             BaseView.prototype.initialize.apply(this);
@@ -57,9 +58,8 @@ define([
         // After show
         onShow: function() {
 
-            if (this.friendsView)
-                // show friends view
-                this.regions.friendsRegion.show(this.friendsView);
+            // show friends view
+            this.regions.friendsRegion.show(this.friendsView);
 
             // call super onShow
             BaseView.prototype.onShow.apply(this);
