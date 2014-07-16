@@ -60,8 +60,13 @@ module.exports = function(app) {
     // Update notification
     app.patch('/notifications/:notification', checkLoginStatus, notification.update);
 
+    // Posts
+    // -----------------
+
     // Get posts
     app.get('/posts', checkLoginStatus, post.index);
+    // Get posts (user related)
+    app.get('/users/:user/posts', checkLoginStatus, post.index);
     // Get new posts (for home)
     app.get('/posts/news', checkLoginStatus, post.news);
     // Get specific posts
@@ -88,8 +93,13 @@ module.exports = function(app) {
     // Remove comment
     app.delete('/posts/:post/comments/:comment', checkLoginStatus, comment.remove);
 
+    // Groups
+    // -----------------
+
     // Get groups
     app.get('/groups', checkLoginStatus, group.index);
+    // Get groups (user related)
+    app.get('/users/:user/groups', checkLoginStatus, group.index);
     // Get specific group
     app.get('/groups/:group', checkLoginStatus, group.show);
     // Create groups
@@ -113,6 +123,9 @@ module.exports = function(app) {
     app.patch('/groups/:group/events/:event', checkLoginStatus, userEvent.update);
     // Remove group event
     app.delete('/groups/:group/events/:event', checkLoginStatus, userEvent.remove);
+
+    // Jobs
+    // -------------------
 
     // Get jobs (employer only)
     app.get('/jobs', checkLoginStatus, job.index);

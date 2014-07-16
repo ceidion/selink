@@ -10,36 +10,86 @@ var _ = require('underscore'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
 
+var populateField = {
+    _owner: 'type firstName lastName title cover photo',
+    invited: 'type firstName lastName title cover photo',
+    participants: 'type firstName lastName title cover photo'
+};
+
 // Group index
-// -----------
-// Call on:
-//   1, post create, for the group select list
-// Return:
-//   user's group list 
+// ---------------------------------------------
+// By default, return a list of groups in descending order of create date, without populate any embeded fields.
+// In the case of get some user's groups list, user id must passed by the route: '/users/:user/groups'
+// ---------------------------------------------
+// Parameter:
+//   1. fields: Comma separate select fields for output               default: none
+//   2. user  : The user's id of groups list blong to, passed by url  default: none
+//   3. embed : Comma separate embeded fields for populate            default: none
+//   4. sort  : Fields name used for sort                             default: createDate
+//   5. page  : page number for pagination                            default: none
+//   6. per_page: record number of every page                         default: none
+// ---------------------------------------------
 
 exports.index = function(req, res, next) {
 
-    var //user = req.query.user || null,
-        page = req.query.page || 0;            // page number
+    // TODO: check parameters
 
+    // if the request was get some specific user's groups list
+    // we need to get the user from users collection
+
+    // if the specified user is current user
+    if (req.params.user && req.params.user === req.user.id) {
+
+        // pass current user to internal method
+        _index(req, res, req.user, next);
+
+    // if specified someone else
+    } else if (req.params.user) {
+
+        // get the user's groups info (group ids)
+        User.findById(req.params.user, 'groups', function(err, uesr) {
+            // pass the user to internal method
+            if (err) next(err);
+            else _index(req, res, uesr, next);
+        });
+
+    } else {
+
+        // no specified user, pass null to internal method
+        _index(req, res, null, next);
+    }
+};
+
+// internal method for index
+_index = function(req, res, user, next) {
+
+    // create query
     var query = Group.find();
 
-    // // if requested for 'someone' groups
-    // if (user) {
-    //     query.where('_owner').equals(user);
-    // // or requested for 'my' groups
-    // } else {
-    //     query.where('_owner').equals(req.user.id);
-    // }
+    // if request specified output fields
+    if (req.query.fields)
+        query.select(req.query.fields.replace(/,/g, ' '));
+
+    // if request specified user
+    if (user)
+        query.where('_id').in(user.groups);
+
+    // if request specified population
+    if (req.query.embed) {
+        req.query.embed.split(',').forEach(function(field) {
+            query.populate(field, populateField[field]);
+        });
+    }
+
+    // if request specified sort order
+    if (req.query.sort)
+        query.sort(req.query.sort);
+
+    // if request specified pagination
+    if (req.query.page && req.query.per_page)
+        query.skip(req.query.page*req.query.per_page).limit(req.query.per_page);
 
     query.where('logicDelete').equals(false)
-        .where('_id').in(req.user.groups)
-        // .populate('_owner', 'type firstName lastName title cover photo createDate')
-        // .populate('participants', 'type firstName lastName title cover photo createDate')
-        // .populate('events')
-        // .skip(20*page)  // skip n page
-        // .limit(20)
-        .sort('-createDate')
         .exec(function(err, groups) {
             if (err) next(err);
             else res.json(groups);

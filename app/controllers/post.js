@@ -9,15 +9,85 @@ var _ = require('underscore'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
 
+var populateField = {
+    _owner: 'type firstName lastName title cover photo',
+    invited: 'type firstName lastName title cover photo',
+    participants: 'type firstName lastName title cover photo'
+};
+
 // Post index
+// ---------------------------------------------
+// Return a list of posts in descending order of create date, without populate any embeded fields.
+// By default, it's single user's posts are extracted and return, if "range" parameter was provided,
+// this method could extract the posts of user's friends or user's groups
+// In the case of get some user's posts list, user id must passed by the route: '/users/:user/posts'
+// ---------------------------------------------
+// Parameter:
+//   1. fields: Comma separate select fields for output              default: none
+//   2. user  : The user's id of posts list blong to, passed by url  default: none
+//   3. range : Type of query range, possible values are             default: none
+//              a. friend -- query for user's friends' posts
+//              b. group  -- query for user's groups' posts
+//   4. embed : Comma separate embeded fields for populate           default: none
+//   5. sort  : Fields name used for sort                            default: createDate
+//   6. page  : page number for pagination                           default: none
+//   7. per_page: record number of every page                        default: none
+// ---------------------------------------------
+
 exports.index = function(req, res, next) {
 
-    var category = req.query.category || null, // category of request
-        group = req.query.group || null,
-        user = req.query.user || null,
-        page = req.query.page || 0;            // page number
+    // TODO: check parameters
 
+    // if the request was get some specific user's posts list
+    // we need to find the user from users collection first
+
+    // if the specified user is current user
+    if (req.params.user && req.params.user === req.user.id) {
+
+        // pass current user to internal method
+        _index(req, res, req.user, next);
+
+    // if specified someone else
+    } else if (req.params.user) {
+
+        // get the user's posts info (post ids)
+        User.findById(req.params.user, 'posts', function(err, uesr) {
+            // pass the user to internal method
+            if (err) next(err);
+            else _index(req, res, uesr, next);
+        });
+
+    } else {
+
+        // no specified user, pass null to internal method
+        _index(req, res, null, next);
+    }
+};
+
+// internal method for index
+_index = function(req, res, user, next) {
+
+    // create query
     var query = Post.find();
+
+    // if request specified output fields
+    if (req.query.fields)
+        query.select(req.query.fields.replace(/,/g, ' '));
+
+    // if request specified population
+    if (req.query.embed) {
+        req.query.embed.split(',').forEach(function(field) {
+            query.populate(field, populateField[field]);
+        });
+    }
+
+    // if request specified sort order
+    if (req.query.sort)
+        query.sort(req.query.sort);
+
+    // if request specified pagination
+    if (req.query.page && req.query.per_page)
+        query.skip(req.query.page*req.query.per_page).limit(req.query.per_page);
 
     // if requested for 'my friends' posts
     if (category == "friend") {
@@ -63,25 +133,25 @@ exports.show = function(req, res, next) {
         });
 };
 
-/*
-    Create post
 
-    1* user = author
-    2* group participants = group's participants - author's friends - author himself
+// Create post
+// ---------------------------------------------
+// 1* user = author
+// 2* group participants = group's participants - author's friends - author himself
 
-    1. create post with content and group
-        2. save the post pointer in user profile
-        3. save the post pointer in group profile
-        4. create user(author) activity
-        5. create notification for author's friends
-            6. send real-time notification to author's friends
-        7. send email notification to author's friends
-        8. create notification for group's participants
-            9. sent real-time notification to group's participants
-        10. send email notification to group's participants
-        11. commit post to solr
-        12. return the new post to client
-*/
+// 1. create post with content and group
+//     2. save the post pointer in user profile
+//     3. save the post pointer in group profile
+//     4. create user(author) activity
+//     5. create notification for author's friends
+//         6. send real-time notification to author's friends
+//     7. send email notification to author's friends
+//     8. create notification for group's participants
+//         9. sent real-time notification to group's participants
+//     10. send email notification to group's participants
+//     11. commit post to solr
+//     12. return the new post to client
+
 exports.create = function(req, res, next) {
 
     // create post
