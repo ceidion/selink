@@ -10,9 +10,9 @@ define([
     ItemView
 ) {
 
-    var Introductions = BaseCollection.extend({
+    var PeopleCollection = BaseCollection.extend({
 
-        url: '/people'
+        url: '/connections?type=discover&fields=type,firstName,lastName,title,cover,bio,photo,employments,educations,createDate&per_page=20&page=0'
     });
 
     return BaseView.extend({
@@ -27,10 +27,7 @@ define([
         initialize: function() {
 
             // create people collection
-            this.collection = new Introductions();
-
-            // call super initializer
-            BaseView.prototype.initialize.apply(this);
+            this.collection = new PeopleCollection();
         }
 
     });

@@ -18,7 +18,7 @@ define([
 
         model: PostModel,
 
-        url: '/posts?category=community'
+        url: '/groups-posts?&embed=_owner,group,comments._owner&per_page=20&page=0'
     });
 
     return BaseView.extend({
@@ -46,9 +46,6 @@ define([
 
             // create posts collection
             this.collection = new PostsCollection();
-
-            // call super initializer
-            BaseView.prototype.initialize.apply(this);
         },
 
         // enable create button if the group name was entered

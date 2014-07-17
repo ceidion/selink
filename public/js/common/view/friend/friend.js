@@ -1,12 +1,17 @@
 define([
     'text!common/template/friend/friend.html',
-    'common/view/friend/empty',
+    'common/collection/base',
     'common/view/friend/item',
 ], function(
     template,
-    EmptyView,
+    BaseCollection,
     ItemView
 ) {
+
+    var FriendsCollection = BaseCollection.extend({
+
+        url: '/connections?fields=type,firstName,lastName,title,cover,photo,createDate'
+    });
 
     return Backbone.Marionette.CompositeView.extend({
 
@@ -22,8 +27,12 @@ define([
         // child view
         childView: ItemView,
 
-        // empty view
-        emptyView: EmptyView,
+        // Initializer
+        initialize: function() {
+
+            // create posts collection
+            this.collection = new FriendsCollection();
+        },
 
         attachHtml: function(collectionView, itemView, index) {
 
@@ -51,10 +60,16 @@ define([
                 horizrailenabled: false
             });
 
-            // call ensureLayout after 0.5s, for ensure the layout
-            setTimeout(function() {
-                self.$el.find(self.childViewContainer).isotope('layout');
-            }, 500);
+            // fetch collection items
+            this.collection.fetch({
+                // after collection populate
+                success: function() {
+                    // call layout after 0.5s, for ensure the layout
+                    setTimeout(function() {
+                        self.$el.find(this.childViewContainer).isotope('layout');
+                    }, 500);
+                }
+            });
         },
 
         // TODO: remove on friend-break

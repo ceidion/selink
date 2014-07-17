@@ -18,9 +18,7 @@ define([
 
         model: PostModel,
 
-        url: function() {
-            return '/users/' + this.document.id + '/friends-posts?&embed=_owner,group,comments._owner&per_page=20&page=0';
-        }
+        url: '/friends-posts?&embed=_owner,group,comments._owner&per_page=20&page=0'
     });
 
     return BaseView.extend({
@@ -35,13 +33,10 @@ define([
         initialize: function() {
 
             // create firends view
-            this.friendsView = new FriendsView({collection: selink.userModel.friends});
+            this.friendsView = new FriendsView();
 
             // create posts collection
-            this.collection = new PostsCollection(null, {document: selink.userModel});
-
-            // call super initializer
-            BaseView.prototype.initialize.apply(this);
+            this.collection = new PostsCollection();
         },
 
         // After render

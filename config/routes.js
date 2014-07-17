@@ -5,13 +5,13 @@ var mongoose = require('mongoose'),
     user = require('../app/controllers/user'),
     post = require('../app/controllers/post'),
     group = require('../app/controllers/group'),
-    friend = require('../app/controllers/friend'),
     comment = require('../app/controllers/comment'),
     address = require('../app/controllers/address'),
     message = require('../app/controllers/message'),
     resetPs = require('../app/controllers/resetpassword'),
     activity = require('../app/controllers/activity'),
     userEvent = require('../app/controllers/event'),
+    connection = require('../app/controllers/connection'),
     tempaccount = require('../app/controllers/tempaccount'),
     notification = require('../app/controllers/notification'),
     announcement = require('../app/controllers/announcement'),
@@ -67,23 +67,26 @@ module.exports = function(app) {
     app.get('/posts', checkLoginStatus, post.index);
     // Get posts (user related)
     app.get('/users/:user/posts', checkLoginStatus, post.index);
-    // Get posts (friends post)
-    app.get('/users/:user/friends-posts', checkLoginStatus, post.friendsIndex);
-    // Get posts (groups post)
-    app.get('/users/:user/groups-posts', checkLoginStatus, post.groupsIndex);
     // Get posts (group related)
     app.get('/groups/:group/posts', checkLoginStatus, post.index);
+    // Get posts (friends post)
+    app.get('/friends-posts', checkLoginStatus, post.friendsIndex);
+    // Get posts (groups post)
+    app.get('/groups-posts', checkLoginStatus, post.groupsIndex);
+
     // Get specific posts
     app.get('/posts/:post', checkLoginStatus, post.show);
     
     // Create post
     app.post('/posts', checkLoginStatus, post.create);
+
     // Update post
     app.patch('/posts/:post', checkLoginStatus, post.update);
     // Like a post
     app.patch('/posts/:post/like', checkLoginStatus, post.like);
     // Bookmark a post
     app.patch('/posts/:post/bookmark', checkLoginStatus, post.bookmark);
+
     // Remove post
     app.delete('/posts/:post', checkLoginStatus, post.remove);
 
@@ -107,14 +110,17 @@ module.exports = function(app) {
     app.get('/users/:user/groups', checkLoginStatus, group.index);
     // Get specific group
     app.get('/groups/:group', checkLoginStatus, group.show);
+
     // Create groups
     app.post('/groups', checkLoginStatus, group.create);
+
     // Update group
     app.patch('/groups/:group', checkLoginStatus, group.update);
 
     // Upload group cover
     app.put('/groups/:group/cover', checkLoginStatus, group.uploadCover);
     app.put('/groups/:group/cover-scale', checkLoginStatus, group.scaleCover);
+
     // Invite people
     app.patch('/groups/:group/invite', checkLoginStatus, group.invite);
     // Join group
@@ -149,16 +155,27 @@ module.exports = function(app) {
     // Remove jobs
     app.delete('/jobs/:job', checkLoginStatus, job.remove);
 
-    // Introduce friend
-    app.get('/people', checkLoginStatus, friend.introduce);
-    // Get people not my friends
-    app.get('/non-friends', checkLoginStatus, friend.nonFriends);
-    // Get friends
-    app.get('/friends', checkLoginStatus, friend.index);
-    // Request new friend
-    app.patch('/friends', checkLoginStatus, friend.create);
-    // Remove friend
-    app.delete('/friends/:friend', checkLoginStatus, friend.remove);
+    // Connections
+    // ----------------------------------------------------------------------
+
+    // // Get people don't have any connection to user
+    // app.get('/people', checkLoginStatus, connection.introduce);
+    // // Get people not my friends
+    // app.get('/non-friends', checkLoginStatus, connection.nonFriends);
+
+    // Get connections
+    app.get('/connections', checkLoginStatus, connection.index);
+    // Get connections (user relate)
+    app.get('/users/:user/connections', checkLoginStatus, connection.index);
+
+    // Create new connection
+    app.patch('/friends', checkLoginStatus, connection.create);
+
+    // Remove connection
+    app.delete('/friends/:friend', checkLoginStatus, connection.remove);
+
+    // Messages
+    // ----------------------------------------------------------------------
 
     // Get messages
     app.get('/messages', checkLoginStatus, message.index);
@@ -220,7 +237,7 @@ module.exports = function(app) {
     // query address
     app.get('/address/:zipcode', checkLoginStatus, address.show);
     // suggeset user while type ahead
-    app.get('/suggest/user', checkLoginStatus, friend.suggest);
+    app.get('/suggest/user', checkLoginStatus, connection.suggest);
     // suggeset tag while type ahead
     app.get('/suggest/tag', checkLoginStatus, tag.suggest);
 

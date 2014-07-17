@@ -27,26 +27,11 @@ define([
         // child view
         childView: ItemView,
 
-        // ui
-        ui: {
-            groupName: 'input',
-            createBtn: 'button'
-        },
-
-        // events
-        events: {
-            'keyup input': 'enableCreateBtn',
-            'click button': 'createGroup'
-        },
-
         // Initializer
         initialize: function() {
 
             // create posts collection
             this.collection = new GroupsCollection();
-
-            // call super initializer
-            BaseView.prototype.initialize.apply(this);
         }
 
     });

@@ -18,12 +18,12 @@ var populateField = {
 
 // Group index
 // ---------------------------------------------
-// By default, return a list of groups in descending order of create date, without populate any embeded fields.
+// By default, return a list of groups in descending order of create date.
 // In the case of get some user's groups list, user id must passed by the route: '/users/:user/groups'
 // ---------------------------------------------
 // Parameter:
-//   1. fields: Comma separate select fields for output               default: none
-//   2. user  : The user's id of groups list blong to, passed by url  default: none
+//   1. user  : The user's id of groups list blong to, passed by url  default: none
+//   2. fields: Comma separate select fields for output               default: none
 //   3. embed : Comma separate embeded fields for populate            default: none
 //   4. sort  : Fields name used for sort                             default: createDate
 //   5. page  : page number for pagination                            default: none
@@ -66,13 +66,13 @@ _group_index = function(req, res, user, next) {
     // create query
     var query = Group.find();
 
-    // if request specified output fields
-    if (req.query.fields)
-        query.select(req.query.fields.replace(/,/g, ' '));
-
     // if request specified user
     if (user)
         query.where('_id').in(user.groups);
+
+    // if request specified output fields
+    if (req.query.fields)
+        query.select(req.query.fields.replace(/,/g, ' '));
 
     // if request specified population
     if (req.query.embed) {

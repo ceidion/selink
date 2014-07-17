@@ -17,14 +17,14 @@ var populateField = {
 
 // Post index
 // ---------------------------------------------
-// Return a list of posts in descending order of create date, without populate any embeded fields.
+// Return a list of posts in descending order of create date.
 // In the case of get some user's posts list, user id must passed by the route: '/users/:user/posts'
 // In the case of get some group's posts list, group id must passed by the route: '/groups/:group/posts'
 // ---------------------------------------------
 // Parameter:
-//   1. fields: Comma separate select fields for output              default: none
-//   2. user  : The user's id of posts list blong to, passed by url  default: none
-//   3. group : The group's id of posts list blong to, passed by url default: none
+//   1. user  : The user's id of posts list blong to, passed by url  default: none
+//   2. group : The group's id of posts list blong to, passed by url default: none
+//   3. fields: Comma separate select fields for output              default: none
 //   4. embed : Comma separate embeded fields for populate           default: none
 //   5. sort  : Fields name used for sort                            default: createDate
 //   6. page  : page number for pagination                           default: none
@@ -77,10 +77,6 @@ _post_index = function(req, res, user, group, next) {
     // create query
     var query = Post.find();
 
-    // if request specified output fields
-    if (req.query.fields)
-        query.select(req.query.fields.replace(/,/g, ' '));
-
     // if request specified user
     if (user)
         query.where('_id').in(user.posts);
@@ -88,6 +84,10 @@ _post_index = function(req, res, user, group, next) {
     // if request specified group
     if (group)
         query.where('_id').in(group.posts);
+
+    // if request specified output fields
+    if (req.query.fields)
+        query.select(req.query.fields.replace(/,/g, ' '));
 
     // if request specified population
     if (req.query.embed) {
@@ -115,8 +115,8 @@ _post_index = function(req, res, user, group, next) {
 
 // Post index -- friends' posts
 // ---------------------------------------------
-// Return a list of posts that posted by user's friends, in descending order of create date, 
-// without populate any embeded fields. This is short cut method.
+// Return a list of posts that posted by user's friends, in descending order of create date,.
+// This is short cut method and always relate to current user.
 // ---------------------------------------------
 // Parameter:
 //   1. fields: Comma separate select fields for output              default: none
@@ -164,8 +164,8 @@ exports.friendsIndex = function(req, res, next) {
 
 // Post index -- groups' posts
 // ---------------------------------------------
-// Return a list of posts that posted in the user's groups, in descending order of create date, 
-// without populate any embeded fields. This is short cut method.
+// Return a list of posts that posted in the user's groups, in descending order of create date.
+// This is short cut method and always relate to current user.
 // ---------------------------------------------
 // Parameter:
 //   1. fields: Comma separate select fields for output              default: none

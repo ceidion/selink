@@ -4,91 +4,101 @@ var Mailer = require('../mailer/mailer.js'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
 
-// unknow friend list
-exports.introduce = function(req, res, next) {
+var populateField = {};
 
-    // page number
-    var page = req.query.page || 0;
+// Connection list
+// ---------------------------------------------
+// Return a list of people that have specific connection with user in descending order of create date.
+// In the case of get some user's connections, user id must passed by the route: '/users/:user/posts'
+// ---------------------------------------------
+// Parameter:
+//   1. user  : The user's id of posts list blong to, passed by url  default: current user
+//   2. type  : The type of connection, possible values as below     default: friends
+//              a. friends    -- the people are user's friends
+//              b. invited    -- the people that user had invited as friend
+//              c. nonfriends -- the people are not user's friends (include invited)
+//              d. discover   -- the people that user completely unknow (exclude invited)
+//   3. fields: Comma separate select fields for output              default: none
+//   4. embed : Comma separate embeded fields for populate           default: none
+//   5. sort  : Fields name used for sort                            default: createDate
+//   6. page  : page number for pagination                           default: none
+//   7. per_page: record number of every page                        default: none
+// ---------------------------------------------
 
-    // find user that:
-    User.find()
-        .where('_id')
-        .ne(req.user._id)  // not himself
-        .nin(req.user.friends.concat(req.user.invited))  // not his friend and haven't been invited by him
-        // .nin(req.user.invited)
-        .select('type firstName lastName title cover gender bio photo employments educations createDate')
-        .skip(30*page)  // skip n page
-        .limit(30)  // 30 user per page
-        .sort({createDate:-1})  // sort by createDate desc
-        .exec(function(err, users) {
-            if (err) next(err);
-            else
-                // return the user
-                res.json(users);
-        });
-};
-
-// non-friends list
-exports.nonFriends = function(req, res, next) {
-
-    // page number
-    var page = req.query.page || 0;
-
-    // find user that:
-    User.find()
-        .where('_id')
-        .ne(req.user._id)  // not himself
-        .nin(req.user.friends)  // not his friend
-        .select('type firstName lastName title cover gender bio photo employments educations createDate')
-        .skip(30*page)  // skip n page
-        .limit(30)  // 30 user per page
-        .sort({createDate:-1})  // sort by createDate desc
-        .exec(function(err, users) {
-            if (err) next(err);
-            else
-                // return the user
-                res.json(users);
-        });
-};
-
-// friend list
 exports.index = function(req, res, next) {
 
-    // type of request
-    var type = req.query.type || null;
+    // TODO: check parameters
 
-    // default to show user's friends
-    var friendIdList = req.user.friends;
+    // if the request was get some specific user's connections
+    // we need to get the user from users collection
 
-    // if requested for 'invited' friend
-    if (type == "invited") {
-        // change the query condition
-        friendIdList = req.user.invited;
-    }
+    // if specified someone not current user
+    if (req.params.user && req.params.user !== req.user.id) {
 
-    // get friends
-    User.find()
-        .where('_id')
-        .in(friendIdList)
-        .select('type firstName lastName title cover photo createDate')
-        .exec(function(err, friends) {
+        // get the user's connections (user ids)
+        User.findById(req.params.user, 'friends invited', function(err, uesr) {
+            // pass the user to internal method
             if (err) next(err);
-            else res.json(friends);
+            else _connection_index(req, res, uesr, next);
         });
 
-    // // if requested for 'my' friend
-    // if (req.params.user == req.user.id) {
+    } else {
 
+        // no specified user, pass current user to internal method
+        _connection_index(req, res, req.user, next);
+    }
 
-    // } else {
+}
 
-    //     User.findById(req.params.user, function(err, user) {
-    //         user.populate('friends', 'type firstName lastName title photo createDate', function(err, populateUser) {
-    //             if (err) next(err);
-    //             else res.json(populateUser.friends);
-    //         });
-    //     });
-    // }
+// internal method for index
+_connection_index = function(req, res, user, next) {
+
+    // create query
+    var query = User.find();
+
+    // if request "invited" connection type
+    if (req.query.type === "invited")
+        query.where('_id').in(user.invited);
+
+    // if request "nonfriends" connection type
+    else if (req.query.type === "nonfriends")
+        query.where('_id').ne(user._id).nin(user.friends);
+
+    // if request "discover" connection type
+    else if (req.query.type === "discover")
+        query.where('_id').ne(user._id).nin(user.friends.concat(user.invited));
+
+    // defaultly, find "friends"
+    else
+        query.where('_id').in(user.friends);
+
+    // if request specified output fields
+    if (req.query.fields)
+        query.select(req.query.fields.replace(/,/g, ' '));
+
+    // if request specified population
+    if (req.query.embed) {
+        req.query.embed.split(',').forEach(function(field) {
+            query.populate(field, populateField[field]);
+        });
+    }
+
+    // if request specified sort order
+    if (req.query.sort)
+        query.sort(req.query.sort);
+    else
+        query.sort('-createDate');
+
+    // if request specified pagination
+    if (req.query.page && req.query.per_page)
+        query.skip(req.query.page*req.query.per_page).limit(req.query.per_page);
+
+    query.where('logicDelete').equals(false)
+        .exec(function(err, users) {
+            if (err) next(err);
+            else res.json(users);
+        });
+
 };
 
 // Create Friend
