@@ -8,7 +8,7 @@ var populateField = {};
 
 // Connection list
 // ---------------------------------------------
-// Return a list of people that have specific connection with user in descending order of create date.
+// Return a list of 20 people that have specific connection with user in descending order of create date.
 // In the case of get some user's connections, user id must passed by the route: '/users/:user/posts'
 // ---------------------------------------------
 // Parameter:
@@ -48,7 +48,7 @@ exports.index = function(req, res, next) {
         _connection_index(req, res, req.user, next);
     }
 
-}
+};
 
 // internal method for index
 _connection_index = function(req, res, user, next) {
@@ -83,17 +83,15 @@ _connection_index = function(req, res, user, next) {
         });
     }
 
-    // if request specified sort order
-    if (req.query.sort)
-        query.sort(req.query.sort);
-    else
-        query.sort('-createDate');
-
-    // if request specified pagination
-    if (req.query.page && req.query.per_page)
-        query.skip(req.query.page*req.query.per_page).limit(req.query.per_page);
+    // if request specified sort order and pagination
+    var sort = req.query.sort || '-createDate',
+        page = req.query.page || 0,
+        per_page = req.query.per_page || 20;
 
     query.where('logicDelete').equals(false)
+        .skip(page*per_page)
+        .limit(per_page)
+        .sort(sort)
         .exec(function(err, users) {
             if (err) next(err);
             else res.json(users);

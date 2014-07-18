@@ -19,7 +19,7 @@ define([
         model: PostModel,
 
         url: function() {
-            return '/users/' + this.document.id + '/posts?&embed=_owner,group,comments._owner&per_page=20&page=0';
+            return '/users/' + this.document.id + '/posts?embed=_owner,group,comments._owner';
         }
     });
 
@@ -91,6 +91,8 @@ define([
         onBeforeDestroy: function() {
             // destroy region manager
             this.rm.destroy();
+            // call super onBeforeDestroy
+            BaseView.prototype.onBeforeDestroy.apply(this);
         },
 
         // hold the selected group

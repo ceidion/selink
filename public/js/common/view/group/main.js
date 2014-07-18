@@ -14,9 +14,7 @@ define([
 
     var GroupsCollection = BaseCollection.extend({
 
-        model: GroupModel,
-
-        url: '/groups'
+        url: '/groups?fields=_owner,type,name,cover,description,participants,posts,events,createDate&embed=_owner'
     });
 
     return BaseView.extend({

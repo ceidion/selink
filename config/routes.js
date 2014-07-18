@@ -76,7 +76,7 @@ module.exports = function(app) {
 
     // Get specific posts
     app.get('/posts/:post', checkLoginStatus, post.show);
-    
+
     // Create post
     app.post('/posts', checkLoginStatus, post.create);
 
@@ -163,7 +163,7 @@ module.exports = function(app) {
     // // Get people not my friends
     // app.get('/non-friends', checkLoginStatus, connection.nonFriends);
 
-    // Get connections
+    // Get current user's connections
     app.get('/connections', checkLoginStatus, connection.index);
     // Get connections (user relate)
     app.get('/users/:user/connections', checkLoginStatus, connection.index);

@@ -17,7 +17,7 @@ var populateField = {
 
 // Post index
 // ---------------------------------------------
-// Return a list of posts in descending order of create date.
+// Return a list of 20 posts in descending order of create date.
 // In the case of get some user's posts list, user id must passed by the route: '/users/:user/posts'
 // In the case of get some group's posts list, group id must passed by the route: '/groups/:group/posts'
 // ---------------------------------------------
@@ -27,8 +27,8 @@ var populateField = {
 //   3. fields: Comma separate select fields for output              default: none
 //   4. embed : Comma separate embeded fields for populate           default: none
 //   5. sort  : Fields name used for sort                            default: createDate
-//   6. page  : page number for pagination                           default: none
-//   7. per_page: record number of every page                        default: none
+//   6. page  : page number for pagination                           default: 0
+//   7. per_page: record number of every page                        default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -96,17 +96,15 @@ _post_index = function(req, res, user, group, next) {
         });
     }
 
-    // if request specified sort order
-    if (req.query.sort)
-        query.sort(req.query.sort);
-    else
-        query.sort('-createDate');
-
-    // if request specified pagination
-    if (req.query.page && req.query.per_page)
-        query.skip(req.query.page*req.query.per_page).limit(req.query.per_page);
+    // if request specified sort order and pagination
+    var sort = req.query.sort || '-createDate',
+        page = req.query.page || 0,
+        per_page = req.query.per_page || 20;
 
     query.where('logicDelete').equals(false)
+        .skip(page*per_page)
+        .limit(per_page)
+        .sort(sort)
         .exec(function(err, posts) {
             if (err) next(err);
             else res.json(posts);
@@ -115,15 +113,15 @@ _post_index = function(req, res, user, group, next) {
 
 // Post index -- friends' posts
 // ---------------------------------------------
-// Return a list of posts that posted by user's friends, in descending order of create date,.
+// Return a list 20 of posts that posted by user's friends, in descending order of create date,.
 // This is short cut method and always relate to current user.
 // ---------------------------------------------
 // Parameter:
 //   1. fields: Comma separate select fields for output              default: none
 //   2. embed : Comma separate embeded fields for populate           default: none
 //   3. sort  : Fields name used for sort                            default: createDate
-//   4. page  : page number for pagination                           default: none
-//   5. per_page: record number of every page                        default: none
+//   4. page  : page number for pagination                           default: 0
+//   5. per_page: record number of every page                        default: 20
 // ---------------------------------------------
 
 exports.friendsIndex = function(req, res, next) {
@@ -145,17 +143,15 @@ exports.friendsIndex = function(req, res, next) {
         });
     }
 
-    // if request specified sort order
-    if (req.query.sort)
-        query.sort(req.query.sort);
-    else
-        query.sort('-createDate');
-
-    // if request specified pagination
-    if (req.query.page && req.query.per_page)
-        query.skip(req.query.page*req.query.per_page).limit(req.query.per_page);
+    // if request specified sort order and pagination
+    var sort = req.query.sort || '-createDate',
+        page = req.query.page || 0,
+        per_page = req.query.per_page || 20;
 
     query.where('logicDelete').equals(false)
+        .skip(page*per_page)
+        .limit(per_page)
+        .sort(sort)
         .exec(function(err, posts) {
             if (err) next(err);
             else res.json(posts);
@@ -164,15 +160,15 @@ exports.friendsIndex = function(req, res, next) {
 
 // Post index -- groups' posts
 // ---------------------------------------------
-// Return a list of posts that posted in the user's groups, in descending order of create date.
+// Return a list 20 of posts that posted in the user's groups, in descending order of create date.
 // This is short cut method and always relate to current user.
 // ---------------------------------------------
 // Parameter:
 //   1. fields: Comma separate select fields for output              default: none
 //   2. embed : Comma separate embeded fields for populate           default: none
 //   3. sort  : Fields name used for sort                            default: createDate
-//   4. page  : page number for pagination                           default: none
-//   5. per_page: record number of every page                        default: none
+//   4. page  : page number for pagination                           default: 0
+//   5. per_page: record number of every page                        default: 20
 // ---------------------------------------------
 
 exports.groupsIndex = function(req, res, next) {
@@ -194,17 +190,15 @@ exports.groupsIndex = function(req, res, next) {
         });
     }
 
-    // if request specified sort order
-    if (req.query.sort)
-        query.sort(req.query.sort);
-    else
-        query.sort('-createDate');
-
-    // if request specified pagination
-    if (req.query.page && req.query.per_page)
-        query.skip(req.query.page*req.query.per_page).limit(req.query.per_page);
+    // if request specified sort order and pagination
+    var sort = req.query.sort || '-createDate',
+        page = req.query.page || 0,
+        per_page = req.query.per_page || 20;
 
     query.where('logicDelete').equals(false)
+        .skip(page*per_page)
+        .limit(per_page)
+        .sort(sort)
         .exec(function(err, posts) {
             if (err) next(err);
             else res.json(posts);

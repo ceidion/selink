@@ -22,7 +22,7 @@ define([
     DescriptionItem,
     EventsItem,
     MemberItem,
-    MemberListItem,
+    MembersItem,
     EventView,
     BaseCollection,
     EventModel,
@@ -35,7 +35,7 @@ define([
         model: PostModel,
 
         url: function() {
-            return '/posts?group=' + this.document.id;
+            return '/groups/' + this.document.id + '/posts?embed=_owner,group,comments._owner';
         }
     });
 
@@ -85,7 +85,7 @@ define([
             this.eventsItem = new EventsItem({collection: this.model.events});
             this.listenTo(this.eventsItem, 'ensureLayout', BaseView.prototype.ensureLayout);
 
-            this.memberListItem = new MemberListItem({collection: this.model.participants});
+            this.membersItem = new MembersItem({collection: this.model.participants});
 
             // create region manager (this composite view will have layout ability)
             this.rm = new Backbone.Marionette.RegionManager();
@@ -95,13 +95,11 @@ define([
                 nameRegion: '#name',
                 descriptionRegion: '#description',
                 eventsRegion: '#events',
-                memberListRegion: '#member-list'
+                membersRegion: '#members'
             });
 
             // create posts collection
             this.collection = new PostsCollection(null, {document: this.model});
-            // call super initializer
-            BaseView.prototype.initialize.apply(this);
         },
 
         // after render
@@ -160,7 +158,7 @@ define([
 
             this.regions.eventsRegion.show(this.eventsItem);
 
-            this.regions.memberListRegion.show(this.memberListItem);
+            this.regions.membersRegion.show(this.membersItem);
 
             // call super onShow
             BaseView.prototype.onShow.apply(this);

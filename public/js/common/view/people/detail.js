@@ -28,12 +28,12 @@ define([
     MessageEditView
 ) {
 
-    var Posts = BaseCollection.extend({
+    var PostsCollection = BaseCollection.extend({
 
         model: PostModel,
 
         url: function() {
-            return '/posts?user=' + this.document.id;
+            return '/users/' + this.document.id + '/posts?embed=_owner,group,comments._owner';
         }
     });
 
@@ -71,14 +71,6 @@ define([
                 // mark him as user's invited friend
                 this.model.set('isInvited', true, {silent:true});
 
-            // create friends view
-            if (this.model.friends.length)
-                this.friendsView = new FriendsView({collection: this.model.friends});
-
-            // create groups view
-            if (this.model.groups.length)
-                this.groupsView = new GroupsView({collection: this.model.groups});
-
             // create languages view
             if (this.model.languages.length)
                 this.languagesView = new LanguagesView({collection: this.model.languages});
@@ -99,11 +91,17 @@ define([
             if (this.model.employments.length)
                 this.employmentsView = new EmploymentsView({collection: this.model.employments});
 
-            // create post collection
-            this.collection = new Posts(null, {document: this.model});
+            // create friends view
+            if (this.model.friends.length)
+                this.friendsView = new FriendsView({model: this.model});
 
-            // call super initializer
-            BaseView.prototype.initialize.apply(this);
+            // create groups view
+            if (this.model.groups.length)
+                this.groupsView = new GroupsView({model: this.model});
+
+            // create post collection
+            this.collection = new PostsCollection(null, {document: this.model});
+
         },
 
         // after render
@@ -167,6 +165,8 @@ define([
         onBeforeDestroy: function() {
             // destroy region manager
             this.rm.destroy();
+            // call super onBeforeDestroy
+            BaseView.prototype.onBeforeDestroy.apply(this);
         },
 
         // show break confirm alert

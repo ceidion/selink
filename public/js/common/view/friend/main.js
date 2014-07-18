@@ -18,7 +18,7 @@ define([
 
         model: PostModel,
 
-        url: '/friends-posts?&embed=_owner,group,comments._owner&per_page=20&page=0'
+        url: '/friends-posts?embed=_owner,group,comments._owner'
     });
 
     return BaseView.extend({

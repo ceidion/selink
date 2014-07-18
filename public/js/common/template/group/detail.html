@@ -31,7 +31,7 @@
             <div id="events" class="clearfix" style="padding: 12px;">
             </div>
 
-            <div id="member-list" class="clearfix" style="padding: 12px;">
+            <div id="members" class="clearfix" style="padding: 12px;">
             </div>
 
             <div class="clearfix group-info" style="padding: 12px;">
@@ -131,5 +131,5 @@
 </div>
 
 <nav id="page_nav">
-  <a href="/posts?group=<%= obj._id %>&page=1"></a>
+  <a href="/groups/<%= obj._id %>/posts?embed=_owner,group,comments._owner&page=1"></a>
 </nav>

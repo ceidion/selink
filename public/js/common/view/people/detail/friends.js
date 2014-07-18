@@ -1,10 +1,19 @@
 define([
     'text!common/template/people/detail/friends.html',
+    'common/collection/base',
     'common/view/people/detail/friend'
 ], function(
     template,
+    BaseCollection,
     ItemView
 ) {
+
+    var FriendsCollection = BaseCollection.extend({
+
+        url: function() {
+            return '/users/' + this.document.id + '/connections?fields=type,firstName,lastName,title,cover,photo&per_page=9';
+        }
+    });
 
     return Backbone.Marionette.CompositeView.extend({
 
@@ -17,35 +26,13 @@ define([
         // child view
         childView: ItemView,
 
-        displayLimit: 9,
-
         // initializer
         initialize: function() {
 
-            this.displayCount = 0;
-        },
+            this.collection = new FriendsCollection(null, {document: this.model});
 
-        // override attachHtml
-        attachHtml: function(collectionView, itemView, index) {
-
-            // the displayed friend item won't exceed the display limit
-            if (this.displayCount < this.displayLimit) {
-                this.$el.find(this.childViewContainer).append(itemView.el);
-
-            // if the display limit was reached
-            } else if (this.displayCount == this.displayLimit) {
-
-                // draw a link to tell how many people left
-                var restNum = this.collection.length - this.displayLimit;
-                // TODO: where is the link lead to?
-                this.$el.find(this.childViewContainer).append($('<div><a>他' + restNum + '人</a></div>'));
-
-            } else {
-                return;
-            }
-
-            this.displayCount++;
-        },
+            this.collection.fetch();
+        }
 
     });
 });

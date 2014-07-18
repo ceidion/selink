@@ -18,7 +18,7 @@ var populateField = {
 
 // Group index
 // ---------------------------------------------
-// By default, return a list of groups in descending order of create date.
+// Return a list of 20 groups in descending order of create date.
 // In the case of get some user's groups list, user id must passed by the route: '/users/:user/groups'
 // ---------------------------------------------
 // Parameter:
@@ -26,8 +26,8 @@ var populateField = {
 //   2. fields: Comma separate select fields for output               default: none
 //   3. embed : Comma separate embeded fields for populate            default: none
 //   4. sort  : Fields name used for sort                             default: createDate
-//   5. page  : page number for pagination                            default: none
-//   6. per_page: record number of every page                         default: none
+//   5. page  : page number for pagination                            default: 0
+//   6. per_page: record number of every page                         default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -81,17 +81,15 @@ _group_index = function(req, res, user, next) {
         });
     }
 
-    // if request specified sort order
-    if (req.query.sort)
-        query.sort(req.query.sort);
-    else
-        query.sort('-createDate');
-
-    // if request specified pagination
-    if (req.query.page && req.query.per_page)
-        query.skip(req.query.page*req.query.per_page).limit(req.query.per_page);
+    // if request specified sort order and pagination
+    var sort = req.query.sort || '-createDate',
+        page = req.query.page || 0,
+        per_page = req.query.per_page || 20;
 
     query.where('logicDelete').equals(false)
+        .skip(page*per_page)
+        .limit(per_page)
+        .sort(sort)
         .exec(function(err, groups) {
             if (err) next(err);
             else res.json(groups);

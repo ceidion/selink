@@ -251,5 +251,5 @@
 </div>
 
 <nav id="page_nav">
-  <a href="/posts?user=<%= obj._id %>&page=1"></a>
+  <a href="/users/<%= obj._id %>/posts?embed=_owner,group,comments._owner&page=1"></a>
 </nav>

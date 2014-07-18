@@ -1,10 +1,19 @@
 define([
     'text!common/template/people/detail/groups.html',
+    'common/collection/base',
     'common/view/people/detail/group'
 ], function(
     template,
+    BaseCollection,
     ItemView
 ) {
+
+    var GroupsCollection = BaseCollection.extend({
+
+        url: function() {
+            return '/users/' + this.document.id + '/groups?fields=name,cover,description&per_page=3';
+        }
+    });
 
     return Backbone.Marionette.CompositeView.extend({
 
@@ -17,35 +26,14 @@ define([
         // child view
         childView: ItemView,
 
-        displayLimit: 3,
-
         // initializer
         initialize: function() {
 
-            this.displayCount = 0;
-        },
+            this.collection = new GroupsCollection(null, {document: this.model});
 
-        // override attachHtml
-        attachHtml: function(collectionView, itemView, index) {
+            this.collection.fetch();
 
-            // the displayed friend item won't exceed the display limit
-            if (this.displayCount < this.displayLimit) {
-                this.$el.find(this.childViewContainer).append(itemView.el);
-
-            // if the display limit was reached
-            } else if (this.displayCount == this.displayLimit) {
-
-                // draw a link to tell how many people left
-                var restNum = this.collection.length - this.displayLimit;
-                // TODO: where is the link lead to?
-                this.$el.find(this.childViewContainer).append($('<div><a>他' + restNum + 'グループ</a></div>'));
-
-            } else {
-                return;
-            }
-
-            this.displayCount++;
-        },
+        }
 
     });
 });
