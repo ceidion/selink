@@ -1,18 +1,26 @@
 define([
     'text!common/template/topnav/notification/menu.html',
+    'common/collection/base',
     'common/view/topnav/notification/item',
     'common/view/topnav/notification/empty'
 ], function(
     template,
+    BaseCollection,
     ItemView,
     EmptyView
 ) {
+
+    var Notifications = BaseCollection.extend({
+
+        url: '/notifications'
+    });
 
     return Backbone.Marionette.CompositeView.extend({
 
         // template
         template: template,
 
+        // tag name
         tagName: 'li',
 
         // class name
@@ -21,8 +29,10 @@ define([
         // child view
         childView: ItemView,
 
+        // child view container
         childViewContainer: '.dropdown-body',
 
+        // empty view
         emptyView: EmptyView,
 
         // collection events
@@ -36,13 +46,8 @@ define([
 
             var self = this;
 
-            this.model = new Backbone.Model();
-
-            // create notifications model(collection)
-            this.collection = selink.userModel.notifications;
-
-            // set the number of notifications in the model
-            this.model.set('notificationsNum', this.collection.length, {silent:true});
+            // create notifications collection
+            this.collection = new Notifications();
 
             // accept notification real-time
             selink.socket.on('friend-invited', function(data) {
@@ -236,11 +241,7 @@ define([
         // after show
         onShow: function() {
 
-            // override attachHtml after the view been shown
-            this.attachHtml = function(collectionView, itemView, index) {
-                // insert new item into the very begining of the list
-                this.$el.find('.dropdown-body').prepend(itemView.el);
-            };
+            var self = this;
 
             // keep dropdown menu open when click on the menu items.
             this.$el.find('.dropdown-menu').on('click', function(e){
@@ -250,9 +251,20 @@ define([
             // make dropdown menu scrollable
             this.$el.find('.dropdown-body').niceScroll();
 
-            if (this.collection.length > 0)
-                // let the icon swing
-                this.$el.find('.fa-bell').slShake();
+            this.collection.fetch({
+                success: function(collection, response, options) {
+
+                    // make dropdown menu scrollable
+                    self.$el.find('.dropdown-body').niceScroll();
+
+                    if (response.length > 0) {                        
+                        // let the icon swing
+                        self.$el.find('.fa-bell').slJump();
+
+                        self.updateBadge();
+                    }
+                }
+            });
         },
 
         // update the number badge when collection changed

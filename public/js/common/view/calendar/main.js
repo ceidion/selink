@@ -1,12 +1,25 @@
 define([
     'text!common/template/calendar/main.html',
     'text!common/template/calendar/popover.html',
+    'common/collection/base',
+    'common/model/event',
     'common/view/calendar/event'
 ], function(
     template,
     popoverTemplate,
+    BaseCollection,
+    EventModel,
     EventView
 ) {
+
+    var EventsCollection = BaseCollection.extend({
+
+        model: EventModel,
+
+        url:  function() {
+            return '/events';
+        }
+    });
 
     return Backbone.Marionette.LayoutView.extend({
 
@@ -28,13 +41,13 @@ define([
 
         // Initializer
         initialize: function() {
-            // create events model(collection) from user model
-            this.collection = selink.userModel.events;
+            // create events collection
+            this.collection = new EventsCollection();
         },
 
         // After render
         onRender: function() {
-            Backbone.Validation.bind(this);
+            // Backbone.Validation.bind(this);
         },
 
         // After show
@@ -106,13 +119,21 @@ define([
                 dayNamesShort: ['日', '月', '火', '水', '木', '金', '土'],
                 allDayText: '終日',
                 // event setting
-                events: {
-                    url: 'https://www.google.com/calendar/feeds/ja.japanese%23holiday%40group.v.calendar.google.com/public/basic',
-                    className: 'gcal-event',           // an option!
-                    currentTimezone: 'America/Chicago' // an option!
-                },
                 eventSources: [
-                    self.collection.toJSON()
+                    {
+                        url: 'https://www.google.com/calendar/feeds/ja.japanese%23holiday%40group.v.calendar.google.com/public/basic',
+                        className: 'gcal-event',           // an option!
+                        currentTimezone: 'America/Chicago' // an option!
+                    },{
+                        url: '/events?embed=group',
+                        success: function(events) {
+                            // this view's collection was populated by lazy loading full calendar
+                            // it will retrive the events of a month every time. after that, "reset"
+                            // the collection with parse option, so the data will alive for create, update and delete
+                            self.collection.reset(events, {parse: true});
+                        }
+                    }
+                    // self.collection.toJSON()
                 ],
                 // event rendering
                 eventRender: function(event, element, view) {
@@ -181,12 +202,15 @@ define([
                 eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
 
                     // find the event in collection and reset the datetime
-                    // TODO: here is a bug, if you move the event more than once, only the fisrt move saved
-                    self.collection.get(event._id).set({
-                        allDay: allDay,
-                        start: event.start,
-                        end: event.end
-                    });
+
+                    // TODO: Don't know why this not work
+                    // self.collection.get(event._id).set({
+                    //     // allDay: allDay,
+                    //     start: event.start,
+                    //     end: event.end
+                    // });
+                    // TODO: but this work. all right, working is good. look after this later
+                    self.updateEvent(self.collection.get(event._id));
                 },
                 eventResizeStart: function(event, jsEvent, ui, view) {
                     // remove the popover on event
@@ -265,10 +289,6 @@ define([
                         // (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
                         self.ui.calendar.fullCalendar('renderEvent', response, true);
                         selink.modalArea.$el.modal('hide');
-                    },
-                    // if error happend
-                    error: function(model, xhr, options) {
-
                     }
                 });
             // if the event is not new, means it transmit from socket
@@ -300,19 +320,6 @@ define([
 
                     self.ui.calendar.fullCalendar('updateEvent', updatedEvent[0]);
                     selink.modalArea.$el.modal('hide');
-                },
-
-                // if other errors happend
-                error: function(model, xhr, options) {
-
-                    var error = $.parseJSON(xhr.responseText);
-
-                    $.gritter.add({
-                        title: error.title,
-                        text: error.msg,
-                        sticky: true,
-                        class_name: 'gritter-error gritter-center',
-                    });
                 },
 
                 // use patch

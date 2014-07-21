@@ -26,6 +26,20 @@ var Mailer = require('../mailer/mailer.js'),
 */
 
 // Notification index
+// ---------------------------------------------
+// Return a list of 20 posts in descending order of create date.
+// In the case of get some user's posts list, user id must passed by the route: '/users/:user/posts'
+// ---------------------------------------------
+// Parameter:
+//   1. user  : The user's id of posts list blong to, passed by url  default: none
+//   2. group : The group's id of posts list blong to, passed by url default: none
+//   3. fields: Comma separate select fields for output              default: none
+//   4. embed : Comma separate embeded fields for populate           default: none
+//   5. sort  : Fields name used for sort                            default: createDate
+//   6. page  : page number for pagination                           default: 0
+//   7. per_page: record number of every page                        default: 20
+// ---------------------------------------------
+
 exports.index = function(req, res, next) {
 
     var category = req.query.category || null, // category of request

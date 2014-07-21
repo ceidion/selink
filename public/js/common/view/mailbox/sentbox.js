@@ -16,9 +16,9 @@ define([
 
     var Messages = BaseCollection.extend({
 
-        url: '/messages?category=sent',
+        model: MessageModel,
 
-        model: MessageModel
+        url: '/messages?type=sent&fields=-logicDelete&embed=_from,_recipient',
     });
 
     return BaseView.extend({

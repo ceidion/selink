@@ -1,18 +1,37 @@
 define([
     'text!common/template/topnav/event/menu.html',
+    'common/collection/base',
+    'common/model/event',
     'common/view/topnav/event/item',
     'common/view/topnav/event/empty'
 ], function(
     template,
+    BaseCollection,
+    EventModel,
     ItemView,
     EmptyView
 ) {
+
+    var EventsCollection = BaseCollection.extend({
+
+        model: EventModel,
+
+        url:  function() {
+            return '/events?embed=group&start=' + moment().unix();
+        },
+
+        comparator: function(event) {
+            // sort by start desc
+            return Number(event.get('start').valueOf());
+        }
+    });
 
     return Backbone.Marionette.CompositeView.extend({
 
         // template
         template: template,
 
+        // tag name
         tagName: 'li',
 
         // class name
@@ -21,8 +40,10 @@ define([
         // child view
         childView: ItemView,
 
+        // child view container
         childViewContainer: '.dropdown-body',
 
+        // empty view
         emptyView: EmptyView,
 
         // collection events
@@ -31,33 +52,12 @@ define([
             'remove': 'updateBadge'
         },
 
-        // override attachHtml
-        attachHtml: function(collectionView, itemView, index) {
-
-            // event menu only display the future events
-            if (moment(itemView.model.get('start')).isBefore(moment()))
-                return;
-
-            // insert sub view before dropdown menu's footer (this is imply a order of items)
-            this.$el.find('.dropdown-body').append(itemView.el);
-        },
-
         // initializer
         initialize: function() {
 
             var self = this;
 
-            this.model = new Backbone.Model();
-
-            this.collection = selink.userModel.events;
-
-            // filter out the past events
-            var futureEvents = _.filter(this.collection.models, function(event) {
-                return moment(event.get('start')).isAfter(moment());
-            });
-
-            // set the number of future events in the model
-            this.model.set('eventsNum', futureEvents.length, {silent:true});
+            this.collection = new EventsCollection();
 
             // accept group event real-time
             selink.socket.on('group-event-new', function(data) {
@@ -76,6 +76,8 @@ define([
         // after show
         onShow: function() {
 
+            var self = this;
+
             // keep dropdown menu open when click on the menu items.
             this.$el.find('.dropdown-menu').on('click', function(e){
                 e.stopPropagation();
@@ -84,42 +86,52 @@ define([
             // make dropdown menu scrollable
             this.$el.find('.dropdown-body').niceScroll();
 
-            if (this.model.get('eventsNum') > 0)
-                // let the icon swing
-                this.$el.find('.fa-tasks').slJump();
+            this.collection.fetch({
+                success: function(collection, response, options) {
+
+                    // make dropdown menu scrollable
+                    self.$el.find('.dropdown-body').niceScroll();
+
+                    if (response.length > 0) {                        
+                        // let the icon swing
+                        self.$el.find('.fa-tasks').slJump();
+
+                        self.updateBadge();
+                    }
+                }
+            });
+            
         },
 
         // update the number badge when collection changed
         updateBadge: function() {
 
             // filter out the past events
-            var futureEvents = _.filter(this.collection.models, function(event) {
-                    return moment(event.get('start')).isAfter(moment());
-                }).length;
+            var eventNum = this.collection.length;
 
             // badge
             var $badge = this.$el.find('.dropdown-toggle .badge');
 
             // TODO: this is crap. if no more events
-            if (futureEvents === 0)
+            if (eventNum === 0)
                 // remove the badge
                 $badge.slFlipOutY().remove();
             // if badge not exists
             else if ($badge.length === 0)
                 // create badge and show it
-                $('<span class="badge badge-primary">' + futureEvents + '</span>')
+                $('<span class="badge badge-primary">' + eventNum + '</span>')
                     .appendTo(this.$el.find('.dropdown-toggle')).slFlipInY();
             // or
             else
                 // update badge
                 $badge.slFlipOutY(null, function() {
-                    $badge.empty().text(futureEvents).removeClass('flipOutY').slFlipInY();
+                    $badge.empty().text(eventNum).removeClass('flipOutY').slFlipInY();
                 });
 
             // update notification number on title
-            this.$el.find('.title-num').empty().text(futureEvents);
+            this.$el.find('.title-num').empty().text(eventNum);
 
-            if (futureEvents > 0)
+            if (eventNum > 0)
                 // let the icon swing
                 this.$el.find('.fa-tasks').slJump();
 

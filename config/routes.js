@@ -158,11 +158,6 @@ module.exports = function(app) {
     // Connections
     // ----------------------------------------------------------------------
 
-    // // Get people don't have any connection to user
-    // app.get('/people', checkLoginStatus, connection.introduce);
-    // // Get people not my friends
-    // app.get('/non-friends', checkLoginStatus, connection.nonFriends);
-
     // Get current user's connections
     app.get('/connections', checkLoginStatus, connection.index);
     // Get connections (user relate)
@@ -188,14 +183,27 @@ module.exports = function(app) {
     // Remove message
     app.delete('/messages/:message', checkLoginStatus, message.remove);
 
+    // Events
+    // ----------------------------------------------------------------------
+
     // Get events
     app.get('/events', checkLoginStatus, userEvent.index);
+    // Get events (user relate)
+    app.get('/users/:user/events', checkLoginStatus, userEvent.index);
+    // Get events (group relate)
+    app.get('/groups/:group/events', checkLoginStatus, userEvent.index);
+
     // Create new event
     app.post('/events', checkLoginStatus, userEvent.create);
+
     // Update events
     app.patch('/events/:event', checkLoginStatus, userEvent.update);
+    
     // Remove event
     app.delete('/events/:event', checkLoginStatus, userEvent.remove);
+
+    // User Profile
+    // ----------------------------------------------------------------------
 
     // Upload user photo
     app.put('/users/:user/photo', checkLoginStatus, user.uploadPhoto);

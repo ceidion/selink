@@ -5,32 +5,66 @@ var _ = require('underscore'),
     Activity = mongoose.model('Activity'),
     Message = mongoose.model('Message');
 
+var populateField = {
+    '_from': 'type firstName lastName title cover photo',
+    '_recipient': 'type firstName lastName title cover photo'
+};
+
+// Messages index
+// ---------------------------------------------
+// Return a list of 20 messages in descending order of create date.
+// Messages are highly private, all requests are relate to current user and can't be changed
+// ---------------------------------------------
+// Parameter:
+//   1. type  : Messages type, "sent", "unread", "received" default: received
+//   2. fields: Comma separate select fields for output     default: none
+//   3. embed : Comma separate embeded fields for populate  default: none
+//   4. sort  : Fields name used for sort                   default: createDate
+//   5. page  : page number for pagination                  default: 0
+//   6. per_page: record number of every page               default: 20
+// ---------------------------------------------
+
 exports.index = function(req, res, next) {
 
-    var category = req.query.category || null, // category of request
-        page = req.query.page || 0;            // page number
-
+    // create query
     var query = Message.find();
 
-    if (category == 'sent')
+    // if request specified sent messages
+    if (req.query.type == 'sent')
         query.where('_from').equals(req.user.id)
-             .populate('_recipient', 'type firstName lastName title cover photo createDate');
 
-    else if (category == 'unread')
+    // if request specified unread messages
+    else if (req.query.type == 'unread')
         query.where('_recipient').equals(req.user.id)
              .where('opened').ne(req.user.id);
 
+    // default request received messages
     else
         query.where('_recipient').equals(req.user.id);
 
+    // if request specified output fields
+    if (req.query.fields)
+        query.select(req.query.fields.replace(/,/g, ' '));
+
+    // if request specified population
+    if (req.query.embed) {
+        req.query.embed.split(',').forEach(function(field) {
+            query.populate(field, populateField[field]);
+        });
+    }
+
+    // if request specified sort order and pagination
+    var sort = req.query.sort || '-createDate',
+        page = req.query.page || 0,
+        per_page = req.query.per_page || 20;
+
     query.where('logicDelete').ne(req.user.id)
-        .populate('_from', 'type firstName lastName title cover photo createDate')
-        .skip(20*page)  // skip n page
-        .limit(20)
-        .sort('-createDate')
-        .exec(function(err, messages) {
+        .skip(page*per_page)
+        .limit(per_page)
+        .sort(sort)
+        .exec(function(err, posts) {
             if (err) next(err);
-            else res.json(messages);
+            else res.json(posts);
         });
 };
 

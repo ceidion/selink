@@ -1,41 +1,22 @@
 define([
     'common/collection/base',
-    'common/model/event',
     'common/model/message',
     'common/model/user',
     'employer/router/router',
     'employer/controller/controller'
 ], function(
     BaseCollection,
-    EventModel,
     MessageModel,
     UserModel,
     Router,
     Controller
 ) {
 
-    var Events = BaseCollection.extend({
-
-        model: EventModel,
-
-        url:  '/events',
-
-        comparator: function(event) {
-            // sort by start desc
-            return Number(event.get('start').valueOf());
-        }
-    });
-
-    var Notifications = BaseCollection.extend({
-
-        url: '/notifications'
-    });
-
     var Messages = BaseCollection.extend({
 
         model: MessageModel,
 
-        url:  '/messages?category=unread',
+        url:  '/messages?type=unread&fields=-_recipient,-logicDelete&embed=_from',
 
         comparator: function(event) {
             // sort by start desc
@@ -134,35 +115,21 @@ define([
             // on success
             success: function() {
 
-                self.userModel.events = new Events();
-                self.userModel.events.fetch({
+                self.userModel.messages = new Messages();
+                self.userModel.messages.fetch({
 
                     success: function() {
 
-                        self.userModel.notifications = new Notifications();
-                        self.userModel.notifications.fetch({
+                        // make controller
+                        self.controller = new Controller();
 
-                            success: function() {
-
-                                self.userModel.messages = new Messages();
-                                self.userModel.messages.fetch({
-
-                                    success: function() {
-
-                                        // make controller
-                                        self.controller = new Controller();
-
-                                        // setup router
-                                        self.router = new Router({
-                                            controller: self.controller
-                                        });
-
-                                        // start history
-                                        Backbone.history.start();
-                                    }
-                                });
-                            }
+                        // setup router
+                        self.router = new Router({
+                            controller: self.controller
                         });
+
+                        // start history
+                        Backbone.history.start();
                     }
                 });
             },
