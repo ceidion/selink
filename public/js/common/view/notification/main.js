@@ -10,7 +10,7 @@ define([
 
     var Notifications = BaseCollection.extend({
 
-        url: '/notifications?category=all'
+        url: '/notifications?embed=_from'
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -43,14 +43,16 @@ define([
                 appendCallback: false,
                 loading: {
                     msgText: '<em>読込み中・・・</em>',
-                    finishedMsg: 'No more pages to load.',
-                    img: 'http://i.imgur.com/qkKy8.gif',
-                    speed: 'slow',
+                    finishedMsg: '通知は全部読込みました',
                 },
                 state: {
                     currPage: 0
+                },
+                path: function(pageNum) {
+                    return '/notifications?embed=_from&after=' + moment(self.collection.last().get('createDate')).unix();
                 }
             }, function(json, opts) {
+
                 // no more data
                 if (json.length === 0){
                     // destroy infinite scroll, or it will affect other page

@@ -55,8 +55,12 @@ module.exports = function(app) {
     // Bookmarked item
     app.get('/bookmark', checkLoginStatus, user.bookmark);
 
+    // Notifications
+    // -------------------------------------------------------------------
+
     // Get notification
     app.get('/notifications', checkLoginStatus, notification.index);
+
     // Update notification
     app.patch('/notifications/:notification', checkLoginStatus, notification.update);
 
@@ -198,7 +202,7 @@ module.exports = function(app) {
 
     // Update events
     app.patch('/events/:event', checkLoginStatus, userEvent.update);
-    
+
     // Remove event
     app.delete('/events/:event', checkLoginStatus, userEvent.remove);
 

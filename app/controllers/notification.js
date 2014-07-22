@@ -1,9 +1,14 @@
 var Mailer = require('../mailer/mailer.js'),
     mongoose = require('mongoose'),
+    moment = require('moment'),
     User = mongoose.model('User'),
     Group = mongoose.model('Group'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
+
+var populateField = {
+    '_from': 'type firstName lastName title cover photo'
+};
 
 /*
     Notification Type:
@@ -27,42 +32,66 @@ var Mailer = require('../mailer/mailer.js'),
 
 // Notification index
 // ---------------------------------------------
-// Return a list of 20 posts in descending order of create date.
-// In the case of get some user's posts list, user id must passed by the route: '/users/:user/posts'
+// Return a list of 20 notifications of current user, in descending order of create date.
+// Notifications are private, all requests are relate to current user and can't be changed
 // ---------------------------------------------
 // Parameter:
-//   1. user  : The user's id of posts list blong to, passed by url  default: none
-//   2. group : The group's id of posts list blong to, passed by url default: none
-//   3. fields: Comma separate select fields for output              default: none
-//   4. embed : Comma separate embeded fields for populate           default: none
-//   5. sort  : Fields name used for sort                            default: createDate
-//   6. page  : page number for pagination                           default: 0
-//   7. per_page: record number of every page                        default: 20
+//   1. type  : The type of notifications, "unconfirmed" or "all"  default: all
+//   2. fields: Comma separate select fields for output            default: none
+//   3. embed : Comma separate embeded fields for populate         default: targetPost,targetJob,targetMessage,targetGroup
+//   4. sort  : Fields name used for sort                          default: createDate
+//   5. after : A Unix time stamp used as start point of retrive   default: none
+//   6. size  : record number of query                             default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
 
-    var category = req.query.category || null, // category of request
-        page = req.query.page || 0;            // page number
+    // create query
+    var query = Notification.find();
 
-    var query = Notification.find().where('_owner').equals(req.user.id);
+    // notifications are relate with current user
+    query.where('_owner').equals(req.user.id);
 
-    if (category != 'all')
+    // if request specified unconfirmed notifications
+    if (req.query.type == "unconfirmed")
         query.where('confirmed').ne(req.user.id);
 
+    // if request specified output fields
+    if (req.query.fields)
+        query.select(req.query.fields.replace(/,/g, ' '));
+
+    // if request specified population
+    if (req.query.embed) {
+        req.query.embed.split(',').forEach(function(field) {
+
+            if (populateField[field])
+                query.populate(field, populateField[field]);
+            else
+                query.populate(field);
+        });
+    }
+
+    // if request items after some time point
+    if (req.query.after)
+        query.where('createDate').lt(moment.unix(req.query.after).toDate());
+
+    // if request specified sort order and pagination
+    var sort = req.query.sort || '-createDate',
+        size = req.query.size || 20;
+
     query.where('logicDelete').equals(false)
-        .populate('_from', 'type firstName lastName title cover photo createDate')
         .populate('targetPost')
         .populate('targetJob')
         .populate('targetMessage')
         .populate('targetGroup')   // there is no targetComment, cause comment was embedded in post
-        .skip(20*page)  // skip n page
-        .limit(20)
-        .sort('-createDate')
-        .exec(function(err, notifications) {
+        .limit(size)
+        .sort(sort)
+        .exec(function(err, posts) {
             if (err) next(err);
-            else res.json(notifications);
+            else if (posts.length === 0) res.json(404, {});
+            else res.json(posts);
         });
+
 };
 
 // Update Notification

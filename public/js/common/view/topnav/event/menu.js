@@ -83,16 +83,13 @@ define([
                 e.stopPropagation();
             });
 
-            // make dropdown menu scrollable
-            this.$el.find('.dropdown-body').niceScroll();
-
             this.collection.fetch({
                 success: function(collection, response, options) {
 
                     // make dropdown menu scrollable
                     self.$el.find('.dropdown-body').niceScroll();
 
-                    if (response.length > 0) {                        
+                    if (response.length > 0) {
                         // let the icon swing
                         self.$el.find('.fa-tasks').slJump();
 
@@ -100,7 +97,7 @@ define([
                     }
                 }
             });
-            
+
         },
 
         // update the number badge when collection changed
