@@ -61,6 +61,9 @@ module.exports = function(app) {
     // Get notification
     app.get('/notifications', checkLoginStatus, notification.index);
 
+    // Get notification number
+    app.get('/notifications/count', checkLoginStatus, notification.count);
+
     // Update notification
     app.patch('/notifications/:notification', checkLoginStatus, notification.update);
 
@@ -196,6 +199,13 @@ module.exports = function(app) {
     app.get('/users/:user/events', checkLoginStatus, userEvent.index);
     // Get events (group relate)
     app.get('/groups/:group/events', checkLoginStatus, userEvent.index);
+
+    // Get events number
+    app.get('/events/count', checkLoginStatus, userEvent.count);
+    // Get events number (user relate)
+    app.get('/users/:user/events/count', checkLoginStatus, userEvent.count);
+    // Get events number (group relate)
+    app.get('/groups/:group/events/count', checkLoginStatus, userEvent.count);
 
     // Create new event
     app.post('/events', checkLoginStatus, userEvent.create);

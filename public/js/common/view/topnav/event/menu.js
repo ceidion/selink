@@ -17,12 +17,7 @@ define([
         model: EventModel,
 
         url:  function() {
-            return '/events?embed=group&start=' + moment().unix();
-        },
-
-        comparator: function(event) {
-            // sort by start desc
-            return Number(event.get('start').valueOf());
+            return '/events?embed=group&after=' + moment().unix();
         }
     });
 
@@ -46,10 +41,9 @@ define([
         // empty view
         emptyView: EmptyView,
 
-        // collection events
-        collectionEvents: {
-            'add': 'updateBadge',
-            'remove': 'updateBadge'
+        // model events
+        modelEvents: {
+            'change:count': 'updateBadge'
         },
 
         // initializer
@@ -57,6 +51,10 @@ define([
 
             var self = this;
 
+            // model is used for retrive event number
+            this.model = new Backbone.Model();
+
+            // create events collection
             this.collection = new EventsCollection();
 
             // accept group event real-time
@@ -68,7 +66,9 @@ define([
                     class_name: 'gritter-success'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
 
         },
@@ -83,17 +83,54 @@ define([
                 e.stopPropagation();
             });
 
-            this.collection.fetch({
-                success: function(collection, response, options) {
+            // make dropdown menu scrollable
+            this.$el.find('.dropdown-body').niceScroll();
 
-                    // make dropdown menu scrollable
-                    self.$el.find('.dropdown-body').niceScroll();
+            // get the number of notifications
+            this.model.fetch({
 
-                    if (response.length > 0) {
-                        // let the icon swing
-                        self.$el.find('.fa-tasks').slJump();
+                // this url only return a number
+                url: '/events/count?type=future',
 
-                        self.updateBadge();
+                // this.model will have only one data: count
+                success: function(model, response, options) {
+
+                    // if the nubmer of event greater than 0
+                    if (response.count > 0) {
+
+                        // fetch the notifications   
+                        self.collection.fetch();
+
+                        // attach infinite scroll
+                        self.$el.find(self.childViewContainer).infinitescroll({
+                            navSelector  : '#event_page_nav',
+                            nextSelector : '#event_page_nav a',
+                            behavior: 'local',
+                            binder: self.$el.find(self.childViewContainer),
+                            dataType: 'json',
+                            appendCallback: false,
+                            loading: {
+                                msgText: '<em>読込み中・・・</em>',
+                                finishedMsg: 'イベントは全部読込みました'
+                            },
+                            state: {
+                                currPage: 0
+                            },
+                            path: function(pageNum) {
+                                return '/events?embed=group&after=' + moment(self.collection.last().get('start')).unix();
+                            }
+                        }, function(json, opts) {
+                            // no more data
+                            if (json.length === 0){
+                                // destroy infinite scroll, or it will affect other page
+                                self.$el.find(self.childViewContainer).infinitescroll('destroy');
+                                self.$el.find(self.childViewContainer).data('infinitescroll', null);
+                            } else
+                                // add data to collection, don't forget parse the json object
+                                // this will trigger 'add' event and will call on
+                                // the attachHtml method that changed on initialization
+                                self.collection.add(json, {parse: true});
+                        });
                     }
                 }
             });
@@ -104,7 +141,7 @@ define([
         updateBadge: function() {
 
             // filter out the past events
-            var eventNum = this.collection.length;
+            var eventNum = this.model.get('count');
 
             // badge
             var $badge = this.$el.find('.dropdown-toggle .badge');

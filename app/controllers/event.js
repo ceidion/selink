@@ -26,9 +26,10 @@ var populateField = {
 //   5. fields: Comma separate select fields for output              default: none
 //   6. embed : Comma separate embeded fields for populate           default: none
 //   7. sort  : Fields name used for sort                            default: start
-//   8. page  : page number for pagination                           default: 0
-//   9. per_page: record number of every page                        default: 20
+//   8. after : A Unix time stamp used as start point of retrive     default: none
+//   9. size  : record number of query, only affect with "after"     default: 20
 // ---------------------------------------------
+
 exports.index = function(req, res, next) {
 
     // create query
@@ -61,24 +62,69 @@ exports.index = function(req, res, next) {
     // if request specified population
     if (req.query.embed) {
         req.query.embed.split(',').forEach(function(field) {
-            query.populate(field, populateField[field]);
+
+            if (populateField[field])
+                query.populate(field, populateField[field]);
+            else
+                query.populate(field);
         });
+    }
+
+    // if request items after some time point
+    // note that the "size" will affect query only in this case
+    if (req.query.after) {
+        query.where('start').gt(moment.unix(req.query.after).toDate())
+            .limit(req.query.size || 7)
     }
 
     // if request specified sort order and pagination
     var sort = req.query.sort || 'start';
-        // page = req.query.page || 0,
-        // per_page = req.query.per_page || 20;
 
     query.where('logicDelete').equals(false)
-        // .skip(page*per_page)
-        // .limit(per_page)
         .sort(sort)
         .exec(function(err, posts) {
             if (err) next(err);
             else res.json(posts);
         });
 
+};
+
+// Events count
+// ---------------------------------------------
+// Return the future events number of current user, in request specified criteria.
+// ---------------------------------------------
+// Parameter:
+//   1. user  : The user's id of posts list blong to, passed by url  default: current user
+//   2. group : The group's id of posts list blong to, passed by url default: none
+//   3. type  : The type of events, "future" or "all"  default: all
+// ---------------------------------------------
+
+exports.count = function(req, res, next) {
+
+    // create query
+    var query = Event.count();
+
+    // if request specified user
+    if (req.params.user && req.params.user !== req.user.id)
+        query.where('_owner').eq(req.params.user);
+
+    // if request specified group
+    else if (req.params.group)
+        query.where('group').eq(req.user.groups);
+
+    // default to current user and his group
+    else
+        query.or([{_owner: req.user.id}, {group: {$in: req.user.groups}}]);
+
+    // if request specified future events
+    if (req.query.type == "future")
+        query.where('start').gt(new Date());
+
+    query.where('logicDelete').equals(false)
+        .exec(function(err, count) {
+            if (err) next(err);
+            else res.json({count: count});
+        });
 };
 
 exports.create = function(req, res, next) {

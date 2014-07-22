@@ -77,7 +77,7 @@ exports.index = function(req, res, next) {
 
     // if request specified sort order and pagination
     var sort = req.query.sort || '-createDate',
-        size = req.query.size || 20;
+        size = req.query.size || 5;
 
     query.where('logicDelete').equals(false)
         .populate('targetPost')
@@ -92,6 +92,34 @@ exports.index = function(req, res, next) {
             else res.json(posts);
         });
 
+};
+
+// Notification count
+// ---------------------------------------------
+// Return the number notifications of current user, in request specified criteria.
+// Notifications are private, all requests are relate to current user and can't be changed
+// ---------------------------------------------
+// Parameter:
+//   1. type  : The type of notifications, "unconfirmed" or "all"  default: all
+// ---------------------------------------------
+
+exports.count = function(req, res, next) {
+
+    // create query
+    var query = Notification.count();
+
+    // notifications are relate with current user
+    query.where('_owner').equals(req.user.id);
+
+    // if request specified unconfirmed notifications
+    if (req.query.type == "unconfirmed")
+        query.where('confirmed').ne(req.user.id);
+
+    query.where('logicDelete').equals(false)
+        .exec(function(err, count) {
+            if (err) next(err);
+            else res.json({count: count});
+        });
 };
 
 // Update Notification

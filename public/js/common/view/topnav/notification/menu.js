@@ -10,8 +10,8 @@ define([
     EmptyView
 ) {
 
+    // Notification Collection, provide the url root for notification update
     var Notifications = BaseCollection.extend({
-
         url: '/notifications'
     });
 
@@ -35,16 +35,23 @@ define([
         // empty view
         emptyView: EmptyView,
 
+        // model events
+        modelEvents: {
+            'change:count': 'updateBadge'
+        },
+
         // collection events
         collectionEvents: {
-            'add': 'updateBadge',
-            'remove': 'updateBadge'
+            'remove': 'onRemove'
         },
 
         // initializer
         initialize: function() {
 
             var self = this;
+
+            // model is used for retrive notification number
+            this.model = new Backbone.Model();
 
             // create notifications collection
             this.collection = new Notifications();
@@ -59,7 +66,9 @@ define([
                     class_name: 'gritter-warning'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
 
             selink.socket.on('friend-approved', function(data) {
@@ -71,7 +80,9 @@ define([
                     class_name: 'gritter-success'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
                 // sync with local user model
                 selink.userModel.invited.remove(data._from._id);
                 selink.userModel.friends.push(data._from);
@@ -86,7 +97,9 @@ define([
                     class_name: 'gritter-info'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
                 // sync with local user model
                 selink.userModel.invited.remove(data._from._id);
             });
@@ -100,7 +113,9 @@ define([
                     class_name: 'gritter-error'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
                 // sync with local user model
                 selink.userModel.friends.remove(data._from._id);
             });
@@ -114,7 +129,9 @@ define([
                     class_name: 'gritter-success'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
 
             selink.socket.on('post-liked', function(data) {
@@ -126,7 +143,9 @@ define([
                     class_name: 'gritter-success'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
 
             selink.socket.on('post-bookmarked', function(data) {
@@ -138,7 +157,9 @@ define([
                     class_name: 'gritter-success'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
 
             selink.socket.on('post-commented', function(data) {
@@ -150,7 +171,9 @@ define([
                     class_name: 'gritter-success'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
 
             selink.socket.on('comment-liked', function(data) {
@@ -162,7 +185,9 @@ define([
                     class_name: 'gritter-success'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
 
             selink.socket.on('job-new', function(data) {
@@ -174,7 +199,9 @@ define([
                     class_name: 'gritter-success'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
 
             selink.socket.on('job-bookmarked', function(data) {
@@ -186,7 +213,9 @@ define([
                     class_name: 'gritter-success'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
 
             selink.socket.on('group-new', function(data) {
@@ -198,7 +227,9 @@ define([
                     class_name: 'gritter-success'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
 
             selink.socket.on('group-invited', function(data) {
@@ -210,7 +241,9 @@ define([
                     class_name: 'gritter-success'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
 
             selink.socket.on('group-joined', function(data) {
@@ -222,7 +255,9 @@ define([
                     class_name: 'gritter-success'
                 });
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
 
             selink.socket.on('group-refused', function(data) {
@@ -234,11 +269,9 @@ define([
                     class_name: 'gritter-info'
                 });
                 // add the notification to collection
-                self.collection.add(data);
-            });
-
-            this.$el.on('show.bs.dropdown', function(e) {
-                self.$el.find(self.childViewContainer).infinitescroll('update', {pixelsFromNavToBottom: $(document).height() - $('#notification_page_nav').offset().top});
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
             });
         },
 
@@ -252,59 +285,66 @@ define([
                 e.stopPropagation();
             });
 
-            // attach infinite scroll
-            this.$el.find(this.childViewContainer).infinitescroll({
-                debug: true,
-                navSelector  : '#notification_page_nav',
-                nextSelector : '#notification_page_nav a',
-                behavior: 'local',
-                binder: this.$el.find(this.childViewContainer),
-                dataType: 'json',
-                appendCallback: false,
-                loading: {
-                    msgText: '<em>読込み中・・・</em>',
-                    finishedMsg: '通知は全部読込みました'
-                },
-                state: {
-                    currPage: 0
-                },
-                path: function(pageNum) {
-                    return '/notifications?type=unconfirmed&embed=_from&after=' + moment(self.collection.last().get('createDate')).unix();
-                }
-            }, function(json, opts) {
-                // no more data
-                if (json.length === 0){
-                    // destroy infinite scroll, or it will affect other page
-                    self.$el.find(self.childViewContainer).infinitescroll('destroy');
-                    self.$el.find(self.childViewContainer).data('infinitescroll', null);
-                } else
-                    // add data to collection, don't forget parse the json object
-                    // this will trigger 'add' event and will call on
-                    // the attachHtml method that changed on initialization
-                    self.collection.add(json, {parse: true});
-            });
+            // make dropdown menu scrollable
+            this.$el.find('.dropdown-body').niceScroll();
 
-            this.collection.fetch({
-                url: '/notifications?type=unconfirmed&embed=_from',
-                success: function(collection, response, options) {
+            // get the number of notifications
+            this.model.fetch({
 
-                    // make dropdown menu scrollable
-                    self.$el.find('.dropdown-body').niceScroll();
+                // this url only return a number
+                url: '/notifications/count?type=unconfirmed',
 
-                    if (response.length > 0) {
-                        // let the icon swing
-                        self.$el.find('.fa-bell').slShake();
+                // this.model will have only one data: count
+                success: function(model, response, options) {
 
-                        self.updateBadge();
+                    // if the nubmer of notification greater than 0
+                    if (response.count > 0) {
+
+                        // fetch the notifications   
+                        self.collection.fetch({
+                            url: '/notifications?type=unconfirmed&embed=_from',
+                        });
+
+                        // attach infinite scroll
+                        self.$el.find(self.childViewContainer).infinitescroll({
+                            navSelector  : '#notification_page_nav',
+                            nextSelector : '#notification_page_nav a',
+                            behavior: 'local',
+                            binder: self.$el.find(self.childViewContainer),
+                            dataType: 'json',
+                            appendCallback: false,
+                            loading: {
+                                msgText: '<em>読込み中・・・</em>',
+                                finishedMsg: '通知は全部読込みました'
+                            },
+                            state: {
+                                currPage: 0
+                            },
+                            path: function(pageNum) {
+                                return '/notifications?type=unconfirmed&embed=_from&after=' + moment(self.collection.last().get('createDate')).unix();
+                            }
+                        }, function(json, opts) {
+                            // no more data
+                            if (json.length === 0){
+                                // destroy infinite scroll, or it will affect other page
+                                self.$el.find(self.childViewContainer).infinitescroll('destroy');
+                                self.$el.find(self.childViewContainer).data('infinitescroll', null);
+                            } else
+                                // add data to collection, don't forget parse the json object
+                                // this will trigger 'add' event and will call on
+                                // the attachHtml method that changed on initialization
+                                self.collection.add(json, {parse: true});
+                        });
                     }
                 }
             });
+
         },
 
         // update the number badge when collection changed
         updateBadge: function() {
 
-            var notyNum = this.collection.length;
+            var notyNum = this.model.get('count');
 
             // badge
             var $badge = this.$el.find('.dropdown-toggle .badge');
@@ -328,11 +368,21 @@ define([
             // update notification number on title
             this.$el.find('.title-num').empty().text(notyNum);
 
+            // if notification number greater than 0
             if (notyNum > 0)
                 // let the icon swing
                 this.$el.find('.fa-bell').slShake();
+        },
 
-            if (notyNum < 5)
+        // when notification removed from collection
+        onRemove: function() {
+
+            // discount the data on model, this will trigger the updateBadge
+            this.model.set('count', this.model.get('count') - 1);
+
+            // if the collection is shorter than 5            
+            if (this.collection.length < 5)
+                // retrieve more data from infinitescorll
                 this.$el.find(this.childViewContainer).infinitescroll('retrieve');
         }
     });
