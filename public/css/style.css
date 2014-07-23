@@ -50,7 +50,7 @@ img{max-width:100%}
 .itemdiv .body .action>i{cursor:pointer}
 .itemdiv .body:hover .action>.blink{display:inline}
 .isotope-item{margin:0px !important;word-wrap:break-word}.isotope-item div{max-width:100%}
-.isotope-item .avatar{max-width:75px;max-height:75px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
+.isotope-item .avatar{max-width:100px;max-height:100px;margin-top:8px;margin-bottom:8px;margin-right:12px;float:left}
 .isotope-item .widget-header .label{margin-bottom:5px}
 .isotope-item .btn-block{-webkit-transition:all 1s;transition:all 1s}
 .jcrop-holder{margin-right:auto;margin-left:auto}

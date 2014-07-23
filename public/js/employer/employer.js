@@ -13,7 +13,7 @@ define([
 
     // create regions
     selink.addRegions({
-        pageContent: '.page-main',
+        pageContent: '.page-content',
         topnavArea: '#navbar-container',
         sidenavArea: '#sidebar',
         modalArea: '#modal-area'

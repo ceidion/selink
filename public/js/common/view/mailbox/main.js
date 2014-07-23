@@ -1,12 +1,10 @@
 define([
     'text!common/template/mailbox/main.html',
-    'common/collection/base',
     'common/view/mailbox/inbox',
     'common/view/mailbox/sentbox',
     'common/view/mailbox/edit'
 ], function(
     template,
-    BaseCollection,
     InBoxView,
     SentBoxView,
     MessageEditView

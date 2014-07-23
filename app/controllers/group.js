@@ -4,6 +4,7 @@ var _ = require('underscore'),
     util = require('util'),
     path = require('path'),
     mongoose = require('mongoose'),
+    moment = require('moment'),
     Mailer = require('../mailer/mailer.js'),
     Group = mongoose.model('Group'),
     User = mongoose.model('User'),
@@ -22,12 +23,17 @@ var populateField = {
 // In the case of get some user's groups list, user id must passed by the route: '/users/:user/groups'
 // ---------------------------------------------
 // Parameter:
-//   1. user  : The user's id of groups list belong to, passed by url  default: none
-//   2. fields: Comma separate select fields for output               default: none
-//   3. embed : Comma separate embeded fields for populate            default: none
-//   4. sort  : Fields name used for sort                             default: createDate
-//   5. page  : page number for pagination                            default: 0
-//   6. per_page: record number of every page                         default: 20
+//   1. user  : The user's id of groups list belong to, passed by url        default: none
+//   2. type  : The type of groups, possible values as below,                default: joined
+//              note that this parameter will affect query only with "user"
+//                a. mine     -- the groups belong to user
+//                b. joined   -- the groups user had joined
+//                c. discover -- the groups that have no connection to user
+//   3. fields: Comma separate select fields for output                      default: none
+//   4. embed : Comma separate embeded fields for populate                   default: none
+//   5. sort  : Fields name used for sort                                    default: createDate
+//   6. before: A Unix time stamp used as start point of retrive             default: none
+//   7. size  : record number of query                                       default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -38,7 +44,9 @@ exports.index = function(req, res, next) {
     // we need to get the user from users collection
 
     // if the specified user is current user
-    if (req.params.user && req.params.user === req.user.id) {
+    if ((req.params.user && req.params.user === req.user.id) || 
+        // in the case of only "type" was passed in, consider this like omit user
+        (!req.params.user && req.query.type)) {
 
         // pass current user to internal method
         _group_index(req, res, req.user, next);
@@ -67,8 +75,20 @@ _group_index = function(req, res, user, next) {
     var query = Group.find();
 
     // if request specified user
-    if (user)
-        query.where('_id').in(user.groups);
+    if (user) {
+
+        // if request "mine" groups
+        if (req.query.type === "mine")
+            query.where('_owner').equals(user.id);
+        
+        // if request "discover" groups
+        else if (req.query.type === "discover")
+            query.where('_id').nin(user.groups);
+
+        // default to joined groups
+        else
+            query.where('_id').in(user.groups);
+    }
 
     // if request specified output fields
     if (req.query.fields)
@@ -77,21 +97,28 @@ _group_index = function(req, res, user, next) {
     // if request specified population
     if (req.query.embed) {
         req.query.embed.split(',').forEach(function(field) {
-            query.populate(field, populateField[field]);
+
+            if (populateField[field])
+                query.populate(field, populateField[field]);
+            else
+                query.populate(field);
         });
     }
 
+    // if request items before some time point
+    if (req.query.before)
+        query.where('createDate').lt(moment.unix(req.query.before).toDate());
+
     // if request specified sort order and pagination
     var sort = req.query.sort || '-createDate',
-        page = req.query.page || 0,
-        per_page = req.query.per_page || 20;
+        size = req.query.size || 20;
 
     query.where('logicDelete').equals(false)
-        .skip(page*per_page)
-        .limit(per_page)
+        .limit(size)
         .sort(sort)
         .exec(function(err, groups) {
             if (err) next(err);
+            else if (groups.length === 0) res.json(404, {});
             else res.json(groups);
         });
 };

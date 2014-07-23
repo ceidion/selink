@@ -8,55 +8,43 @@
     }
 %>
 
-<div class="widget-box" data-create-date="<%= moment(obj.createDate).valueOf() %>">
+<div style="border: 1px solid #CCC; margin-top: 3px; margin-bottom: 3px;" data-create-date="<%= moment(obj.createDate).valueOf() %>">
 
-    <div class="widget-header widget-header-flat">
-
-        <a href="#profile/<%= obj._id %>">
-            <img class="avatar" src="<%= avatar %>" width="75px" height="75px">
+    <div style="position: relative;">
+        <a href="#group/<%= obj._id %>">
+            <img src="<%= obj.cover %>" style="width: 100%; overflow: hidden;"/>
         </a>
 
-        <h4 class="widget-title smaller">
-            <strong><%= obj.firstName %>&nbsp;<%= obj.lastName %></strong>
-        </h4>
+        <a href="#profile/<%= obj._id %>" style="position: absolute; top: 5px; right: 5px;">
+            <img class="avatar" src="<%= obj.photo %>" style="border-radius: 100%; border: 2px solid white;">
+        </a>
 
-        <% if (obj.title) { %>
-        <div class="widget-toolbar">
-            <span class="label label-primary arrowed-in-right arrowed-in"><%= obj.title %></span>
-        </div>
-        <% } %>
-
+        <span class="label label-xlg label-primary arrowed-in-right" style="position: absolute; top: 0px;"><%= obj.title %></span>
     </div>
 
-    <div class="widget-body">
+    <blockquote style="margin-bottom: 0px;">
+        <p><%= obj.firstName %>&nbsp;<%= obj.lastName %></p>
+        <small><%= obj.bio %></small>
+    </blockquote>
 
+    <div class="clearfix" style="padding: 12px;">
 
-        <div class="widget-main" style="padding-top: 0px;">
+        <% if (obj.employments.length) { %>
+            <h5 class="blue">
+                <i class="ace-icon fa fa-briefcase"></i>&nbsp;<%= _.last(obj.employments).company %>
+            </h5>
+        <% } %>
 
-            <% if (obj.employments.length) { %>
-                <h5 class="blue">
-                    <i class="ace-icon fa fa-briefcase"></i>&nbsp;<%= _.last(obj.employments).company %>
-                </h5>
-            <% } %>
+        <% if (obj.educations.length) { %>
+            <h5 class="green">
+                <i class="ace-icon fa fa-university"></i>&nbsp;<%= _.last(obj.educations).school %>
+            </h5>
+        <% } %>
 
-            <% if (obj.educations.length) { %>
-                <h5 class="green">
-                    <i class="ace-icon fa fa-university"></i>&nbsp;<%= _.last(obj.educations).school %>
-                </h5>
-            <% } %>
+        <button class="btn btn-info btn-block btn-friend" data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
+            <i class="ace-icon fa fa-plus light-blue"></i>&nbsp;友達
+        </button>
 
-            <div class="clearfix"></div>
-
-            <%= obj.bio %>
-
-            <div class="clearfix"></div>
-        </div>
-
-        <div class="widget-toolbox padding-8 clearfix">
-            <button class="btn btn-info btn-block btn-friend" data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
-                <i class="ace-icon fa fa-plus light-blue"></i>&nbsp;友達
-            </button>
-        </div>
     </div>
 
 </div>

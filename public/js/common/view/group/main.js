@@ -1,36 +1,67 @@
 define([
     'text!common/template/group/main.html',
-    'common/view/composite-isotope',
-    'common/collection/base',
-    'common/view/group/item',
-    'common/model/group'
+    'common/view/group/list',
+    'common/view/group/joined',
+    'common/view/group/mine',
 ], function(
-    pageTemplate,
-    BaseView,
-    BaseCollection,
-    ItemView,
-    GroupModel
+    template,
+    ListView,
+    JoinedView,
+    MineView
 ) {
 
-    var GroupsCollection = BaseCollection.extend({
-
-        url: '/groups?fields=_owner,type,name,cover,description,participants,posts,events,createDate&embed=_owner'
-    });
-
-    return BaseView.extend({
+    return Backbone.Marionette.LayoutView.extend({
 
         // Template
-        template: pageTemplate,
+        template: template,
 
-        // child view
-        childView: ItemView,
+        // events
+        events: {
+            'click button[href="#list"]': 'showListView',
+            'click button[href="#joined"]': 'showJoinedView',
+            'click button[href="#mine"]': 'showMineView'
+        },
 
-        // Initializer
-        initialize: function() {
+        // regions
+        regions: {
+            listRegion: '#list',
+            joinedRegion: '#joined',
+            mineRegion: '#mine'
+        },
 
-            // create posts collection
-            this.collection = new GroupsCollection();
+        // after show
+        onShow: function() {
+
+            // create group list view, don't do this in initialize method
+            // cause the infinite scroll need the item container in the dom tree
+            this.listView = new ListView();
+            // show list view on start
+            this.listRegion.show(this.listView);
+
+        },
+
+        showListView: function() {
+            // lazy load group list view
+            if (!this.listView) {
+                this.listView = new ListView();
+                this.listRegion.show(this.listView);
+            }
+        },
+
+        showJoinedView: function() {
+            // lazy load joined group view
+            if (!this.joinedView) {
+                this.joinedView = new JoinedView();
+                this.joinedRegion.show(this.joinedView);
+            }
+        },
+
+        showMineView: function() {
+            // lazy load mine group view
+            if (!this.mineView) {
+                this.mineView = new MineView();
+                this.mineRegion.show(this.mineView);
+            }
         }
-
     });
 });

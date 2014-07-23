@@ -19,7 +19,6 @@ define([
         childViewContainer: '.events-container',
 
         events: {
-            'click .avatar': 'toProfile',
             'click .btn-join': 'onJoin',
         },
 
@@ -31,16 +30,6 @@ define([
 
         // after render
         onRender: function() {
-
-            // add popover on author photo
-            this.$el.find('.avatar').popover({
-                html: true,
-                trigger: 'hover',
-                container: 'body',
-                placement: 'auto top',
-                title: '<img src="' + this.model.get('_owner').cover + '" />',
-                content: _.template(popoverTemplate, this.model.get('_owner')),
-            });
 
             this.$el.find('.fa-group').tooltip({
                 placement: 'top',
@@ -57,18 +46,6 @@ define([
                 placement: 'top',
                 title: "投稿" + this.model.get('posts').length + "件"
             });
-        },
-
-        // turn to user profile page
-        toProfile: function(e) {
-
-            // stop defautl link behavior
-            e.preventDefault();
-
-            // destroy the popover on user's photo
-            this.$el.find('.avatar').popover('destroy');
-            // turn the page manually
-            window.location = '#profile/' + this.model.get('_owner')._id;
         },
 
         // join group

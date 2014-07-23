@@ -1,9 +1,24 @@
-<div class="isotope">
-
-    <div class="isotope-item grid-sizer col-xs-12 col-sm-6 col-lg-4"></div>
-
+<div class="page-header">
+    <h1 class="inline align-bottom">
+        <i class="ace-icon fa fa-group"></i>
+        グループ
+    </h1>
+    <button class="btn btn-sm btn-success" data-toggle="tab" href="#list">
+        <i class="ace-icon fa fa-th"></i>
+        一覧
+    </button>
+    <button class="btn btn-sm btn-info" data-toggle="tab" href="#joined">
+        <i class="ace-icon fa fa-child"></i>
+        参加中
+    </button>
+    <button class="btn btn-sm btn-yellow" data-toggle="tab" href="#mine">
+        <i class="ace-icon fa fa-list"></i>
+        自分
+    </button>
 </div>
 
-<nav id="page_nav">
-  <a href="/groups?fields=_owner,type,name,cover,description,participants,posts,events,createDate&embed=_owner&page=1"></a>
-</nav>
+<div class="tab-content no-border no-padding">
+    <div id="list" class="tab-pane active"></div>
+    <div id="joined" class="tab-pane"></div>
+    <div id="mine" class="tab-pane"></div>
+</div>
