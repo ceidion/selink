@@ -98,7 +98,7 @@ define([
                     // if the nubmer of event greater than 0
                     if (response.count > 0) {
 
-                        // fetch the notifications   
+                        // fetch the notifications
                         self.collection.fetch();
 
                         // attach infinite scroll
@@ -113,22 +113,15 @@ define([
                                 msgText: '<em>読込み中・・・</em>',
                                 finishedMsg: 'イベントは全部読込みました'
                             },
-                            state: {
-                                currPage: 0
-                            },
                             path: function(pageNum) {
                                 return '/events?embed=group&after=' + moment(self.collection.last().get('start')).unix();
                             }
                         }, function(json, opts) {
-                            // no more data
-                            if (json.length === 0){
-                                // destroy infinite scroll, or it will affect other page
-                                self.$el.find(self.childViewContainer).infinitescroll('destroy');
-                                self.$el.find(self.childViewContainer).data('infinitescroll', null);
-                            } else
+
+                            // if there are more data
+                            if (json.length > 0)
                                 // add data to collection, don't forget parse the json object
                                 // this will trigger 'add' event and will call on
-                                // the attachHtml method that changed on initialization
                                 self.collection.add(json, {parse: true});
                         });
                     }

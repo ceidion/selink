@@ -181,6 +181,10 @@ module.exports = function(app) {
 
     // Get messages
     app.get('/messages', checkLoginStatus, message.index);
+
+    // Get message number
+    app.get('/messages/count', checkLoginStatus, message.count);
+
     // Create new message
     app.post('/messages', checkLoginStatus, message.create);
     // Update messages

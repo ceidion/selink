@@ -300,7 +300,7 @@ define([
                     // if the nubmer of notification greater than 0
                     if (response.count > 0) {
 
-                        // fetch the notifications   
+                        // fetch the notifications
                         self.collection.fetch({
                             url: '/notifications?type=unconfirmed&embed=_from',
                         });
@@ -317,22 +317,15 @@ define([
                                 msgText: '<em>読込み中・・・</em>',
                                 finishedMsg: '通知は全部読込みました'
                             },
-                            state: {
-                                currPage: 0
-                            },
                             path: function(pageNum) {
-                                return '/notifications?type=unconfirmed&embed=_from&after=' + moment(self.collection.last().get('createDate')).unix();
+                                return '/notifications?type=unconfirmed&embed=_from&before=' + moment(self.collection.last().get('createDate')).unix();
                             }
                         }, function(json, opts) {
-                            // no more data
-                            if (json.length === 0){
-                                // destroy infinite scroll, or it will affect other page
-                                self.$el.find(self.childViewContainer).infinitescroll('destroy');
-                                self.$el.find(self.childViewContainer).data('infinitescroll', null);
-                            } else
+
+                            // if there are more data
+                            if (json.length > 0)
                                 // add data to collection, don't forget parse the json object
                                 // this will trigger 'add' event and will call on
-                                // the attachHtml method that changed on initialization
                                 self.collection.add(json, {parse: true});
                         });
                     }
@@ -380,7 +373,7 @@ define([
             // discount the data on model, this will trigger the updateBadge
             this.model.set('count', this.model.get('count') - 1);
 
-            // if the collection is shorter than 5            
+            // if the collection is shorter than 5
             if (this.collection.length < 5)
                 // retrieve more data from infinitescorll
                 this.$el.find(this.childViewContainer).infinitescroll('retrieve');

@@ -3,6 +3,7 @@ var _ = require('underscore'),
     Mailer = require('../mailer/mailer.js'),
     util = require('util'),
     mongoose = require('mongoose'),
+    moment = require('moment'),
     Post = mongoose.model('Post'),
     User = mongoose.model('User'),
     Group = mongoose.model('Group'),
@@ -22,13 +23,13 @@ var populateField = {
 // In the case of get some group's posts list, group id must passed by the route: '/groups/:group/posts'
 // ---------------------------------------------
 // Parameter:
-//   1. user  : The user's id of posts list blong to, passed by url  default: none
-//   2. group : The group's id of posts list blong to, passed by url default: none
-//   3. fields: Comma separate select fields for output              default: none
-//   4. embed : Comma separate embeded fields for populate           default: none
-//   5. sort  : Fields name used for sort                            default: createDate
-//   6. page  : page number for pagination                           default: 0
-//   7. per_page: record number of every page                        default: 20
+//   1. user  : The user's id of posts list belong to, passed by url  default: none
+//   2. group : The group's id of posts list belong to, passed by url default: none
+//   3. fields: Comma separate select fields for output               default: none
+//   4. embed : Comma separate embeded fields for populate            default: none
+//   5. sort  : Fields name used for sort                             default: createDate
+//   6. before: A Unix time stamp used as start point of retrive      default: none
+//   7. size  : record number of query                                default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -92,21 +93,28 @@ _post_index = function(req, res, user, group, next) {
     // if request specified population
     if (req.query.embed) {
         req.query.embed.split(',').forEach(function(field) {
-            query.populate(field, populateField[field]);
+
+            if (populateField[field])
+                query.populate(field, populateField[field]);
+            else
+                query.populate(field);
         });
     }
 
+    // if request items before some time point
+    if (req.query.before)
+        query.where('createDate').lt(moment.unix(req.query.before).toDate());
+
     // if request specified sort order and pagination
     var sort = req.query.sort || '-createDate',
-        page = req.query.page || 0,
-        per_page = req.query.per_page || 20;
+        size = req.query.size || 20;
 
     query.where('logicDelete').equals(false)
-        .skip(page*per_page)
-        .limit(per_page)
+        .limit(size)
         .sort(sort)
         .exec(function(err, posts) {
             if (err) next(err);
+            else if (posts.length === 0) res.json(404, {});
             else res.json(posts);
         });
 };

@@ -1,28 +1,12 @@
 define([
-    'common/collection/base',
-    'common/model/message',
     'common/model/user',
     'engineer/router/router',
     'engineer/controller/controller'
 ], function(
-    BaseCollection,
-    MessageModel,
     UserModel,
     Router,
     Controller
 ) {
-
-    var Messages = BaseCollection.extend({
-
-        model: MessageModel,
-
-        url:  '/messages?type=unread&fields=-_recipient,-logicDelete&embed=_from',
-
-        comparator: function(event) {
-            // sort by start desc
-            return Number(event.get('createDate').valueOf());
-        }
-    });
 
     // create application instance
     window.selink = new Backbone.Marionette.Application();
@@ -115,23 +99,16 @@ define([
             // on success
             success: function() {
 
-                self.userModel.messages = new Messages();
-                self.userModel.messages.fetch({
+                // make controller
+                self.controller = new Controller();
 
-                    success: function() {
-
-                        // make controller
-                        self.controller = new Controller();
-
-                        // setup router
-                        self.router = new Router({
-                            controller: self.controller
-                        });
-
-                        // start history
-                        Backbone.history.start();
-                    }
+                // setup router
+                self.router = new Router({
+                    controller: self.controller
                 });
+
+                // start history
+                Backbone.history.start();
             },
 
             // on error

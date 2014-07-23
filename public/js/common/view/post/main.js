@@ -68,8 +68,33 @@ define([
         // After show
         onShow: function() {
 
+            var self = this;
+
             // display group drop-down list
             this.regions.groupListRegion.show(this.groupListView);
+
+            // attach infinite scroll
+            this.$el.find(this.childViewContainer).infinitescroll({
+                navSelector  : '#page_nav',
+                nextSelector : '#page_nav a',
+                dataType: 'json',
+                appendCallback: false,
+                loading: {
+                    msgText: '<em>投稿を読込み中・・・</em>',
+                    finishedMsg: '投稿は全部読込みました',
+                },
+                path: function() {
+                    return '/users/' + selink.userModel.id + '/posts?embed=_owner,group,comments._owner&before=' + moment(self.collection.last().get('createDate')).unix();
+                }
+            }, function(json, opts) {
+
+                // if there are more data
+                if (json.length > 0)
+                    // add data to collection, don't forget parse the json object
+                    // this will trigger 'add' event and will call on
+                    self.collection.add(json, {parse: true});
+            });
+
             // call super onShow
             BaseView.prototype.onShow.apply(this);
         },

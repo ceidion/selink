@@ -19,15 +19,15 @@ var populateField = {
 // In the case of get some group's events list, group id must passed by the route: '/groups/:group/events'
 // ---------------------------------------------
 // Parameter:
-//   1. user  : The user's id of posts list blong to, passed by url  default: current user
-//   2. group : The group's id of posts list blong to, passed by url default: none
-//   3. start : A Unix timestamp for start point of a time span      default: none
-//   4. end   : A Unix timestamp for end point of a time span        default: none
-//   5. fields: Comma separate select fields for output              default: none
-//   6. embed : Comma separate embeded fields for populate           default: none
-//   7. sort  : Fields name used for sort                            default: start
-//   8. after : A Unix time stamp used as start point of retrive     default: none
-//   9. size  : record number of query, only affect with "after"     default: 20
+//   1. user  : The user's id of posts list belong to, passed by url   default: current user
+//   2. group : The group's id of posts list belong to, passed by url  default: none
+//   3. start : A Unix timestamp for start point of a time span        default: none
+//   4. end   : A Unix timestamp for end point of a time span          default: none
+//   5. fields: Comma separate select fields for output                default: none
+//   6. embed : Comma separate embeded fields for populate             default: none
+//   7. sort  : Fields name used for sort                              default: start
+//   8. after : A Unix time stamp used as start point of retrive       default: none
+//   9. size  : record number of query, only affect with "after"       default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -74,7 +74,7 @@ exports.index = function(req, res, next) {
     // note that the "size" will affect query only in this case
     if (req.query.after) {
         query.where('start').gt(moment.unix(req.query.after).toDate())
-            .limit(req.query.size || 7)
+            .limit(req.query.size || 20);
     }
 
     // if request specified sort order and pagination
@@ -82,9 +82,10 @@ exports.index = function(req, res, next) {
 
     query.where('logicDelete').equals(false)
         .sort(sort)
-        .exec(function(err, posts) {
+        .exec(function(err, events) {
             if (err) next(err);
-            else res.json(posts);
+            else if (events.length === 0) res.json(404, {});
+            else res.json(events);
         });
 
 };
@@ -94,9 +95,9 @@ exports.index = function(req, res, next) {
 // Return the future events number of current user, in request specified criteria.
 // ---------------------------------------------
 // Parameter:
-//   1. user  : The user's id of posts list blong to, passed by url  default: current user
-//   2. group : The group's id of posts list blong to, passed by url default: none
-//   3. type  : The type of events, "future" or "all"  default: all
+//   1. user  : The user's id of events list belong to, passed by url  default: current user
+//   2. group : The group's id of events list belong to, passed by url default: none
+//   3. type  : The type of events, "future" or "all"                  default: all
 // ---------------------------------------------
 
 exports.count = function(req, res, next) {

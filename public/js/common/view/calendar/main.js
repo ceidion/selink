@@ -201,9 +201,8 @@ define([
                 // when event was moved to another place
                 eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
 
-                    // find the event in collection and reset the datetime
-
                     // TODO: Don't know why this not work
+                    // find the event in collection and reset the datetime
                     // self.collection.get(event._id).set({
                     //     // allDay: allDay,
                     //     start: event.start,
@@ -293,7 +292,7 @@ define([
                 });
             // if the event is not new, means it transmit from socket
             else
-                // just render it (note that I have to copy the attribute from model to a new object, 
+                // just render it (note that I have to copy the attribute from model to a new object,
                 // cause calendar will populate a "source" field on it, which is itself, this gonna lead loop reference.)
                 this.ui.calendar.fullCalendar('renderEvent', $.extend({}, event.attributes), true);
         },

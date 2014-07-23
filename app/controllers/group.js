@@ -22,7 +22,7 @@ var populateField = {
 // In the case of get some user's groups list, user id must passed by the route: '/users/:user/groups'
 // ---------------------------------------------
 // Parameter:
-//   1. user  : The user's id of groups list blong to, passed by url  default: none
+//   1. user  : The user's id of groups list belong to, passed by url  default: none
 //   2. fields: Comma separate select fields for output               default: none
 //   3. embed : Comma separate embeded fields for populate            default: none
 //   4. sort  : Fields name used for sort                             default: createDate

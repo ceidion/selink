@@ -40,7 +40,7 @@ var populateField = {
 //   2. fields: Comma separate select fields for output            default: none
 //   3. embed : Comma separate embeded fields for populate         default: targetPost,targetJob,targetMessage,targetGroup
 //   4. sort  : Fields name used for sort                          default: createDate
-//   5. after : A Unix time stamp used as start point of retrive   default: none
+//   5. before: A Unix time stamp used as start point of retrive   default: none
 //   6. size  : record number of query                             default: 20
 // ---------------------------------------------
 
@@ -71,13 +71,13 @@ exports.index = function(req, res, next) {
         });
     }
 
-    // if request items after some time point
-    if (req.query.after)
-        query.where('createDate').lt(moment.unix(req.query.after).toDate());
+    // if request items before some time point
+    if (req.query.before)
+        query.where('createDate').lt(moment.unix(req.query.before).toDate());
 
     // if request specified sort order and pagination
     var sort = req.query.sort || '-createDate',
-        size = req.query.size || 5;
+        size = req.query.size || 20;
 
     query.where('logicDelete').equals(false)
         .populate('targetPost')
@@ -86,10 +86,10 @@ exports.index = function(req, res, next) {
         .populate('targetGroup')   // there is no targetComment, cause comment was embedded in post
         .limit(size)
         .sort(sort)
-        .exec(function(err, posts) {
+        .exec(function(err, notifications) {
             if (err) next(err);
-            else if (posts.length === 0) res.json(404, {});
-            else res.json(posts);
+            else if (notifications.length === 0) res.json(404, {});
+            else res.json(notifications);
         });
 
 };

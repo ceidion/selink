@@ -1,5 +1,6 @@
 var _ = require('underscore'),
     mongoose = require('mongoose'),
+    moment = require('moment'),
     Mailer = require('../mailer/mailer.js'),
     User = mongoose.model('User'),
     Activity = mongoose.model('Activity'),
@@ -16,12 +17,12 @@ var populateField = {
 // Messages are highly private, all requests are relate to current user and can't be changed
 // ---------------------------------------------
 // Parameter:
-//   1. type  : Messages type, "sent", "unread", "received" default: received
-//   2. fields: Comma separate select fields for output     default: none
-//   3. embed : Comma separate embeded fields for populate  default: none
-//   4. sort  : Fields name used for sort                   default: createDate
-//   5. page  : page number for pagination                  default: 0
-//   6. per_page: record number of every page               default: 20
+//   1. type  : Messages type, "sent", "unread", "received"        default: received
+//   2. fields: Comma separate select fields for output            default: none
+//   3. embed : Comma separate embeded fields for populate         default: none
+//   4. sort  : Fields name used for sort                          default: createDate
+//   5. before: A Unix time stamp used as start point of retrive   default: none
+//   6. size  : record number of query                             default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -31,7 +32,7 @@ exports.index = function(req, res, next) {
 
     // if request specified sent messages
     if (req.query.type == 'sent')
-        query.where('_from').equals(req.user.id)
+        query.where('_from').equals(req.user.id);
 
     // if request specified unread messages
     else if (req.query.type == 'unread')
@@ -53,18 +54,55 @@ exports.index = function(req, res, next) {
         });
     }
 
+    // if request items before some time point
+    if (req.query.before)
+        query.where('createDate').lt(moment.unix(req.query.before).toDate());
+
     // if request specified sort order and pagination
     var sort = req.query.sort || '-createDate',
-        page = req.query.page || 0,
-        per_page = req.query.per_page || 20;
+        size = req.query.size || 20;
 
     query.where('logicDelete').ne(req.user.id)
-        .skip(page*per_page)
-        .limit(per_page)
+        .limit(size)
         .sort(sort)
-        .exec(function(err, posts) {
+        .exec(function(err, messages) {
             if (err) next(err);
-            else res.json(posts);
+            else if (messages.length === 0) res.json(404, {});
+            else res.json(messages);
+        });
+};
+
+// Message count
+// ---------------------------------------------
+// Return the number messages of current user, in request specified criteria.
+// Messages are private, all requests are relate to current user and can't be changed
+// ---------------------------------------------
+// Parameter:
+//   1. type  : The type of messages, "sent", "unread", "received" default: received
+// ---------------------------------------------
+
+exports.count = function(req, res, next) {
+
+    // create query
+    var query = Message.count();
+
+    // if request specified sent messages
+    if (req.query.type == 'sent')
+        query.where('_from').equals(req.user.id);
+
+    // if request specified unread messages
+    else if (req.query.type == 'unread')
+        query.where('_recipient').equals(req.user.id)
+             .where('opened').ne(req.user.id);
+
+    // default request received messages
+    else
+        query.where('_recipient').equals(req.user.id);
+
+    query.where('logicDelete').ne(req.user.id)
+        .exec(function(err, count) {
+            if (err) next(err);
+            else res.json({count: count});
         });
 };
 

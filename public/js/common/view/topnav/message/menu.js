@@ -1,18 +1,30 @@
 define([
     'text!common/template/topnav/message/menu.html',
+    'common/collection/base',
+    'common/model/message',
     'common/view/topnav/message/item',
     'common/view/topnav/message/empty'
 ], function(
     template,
+    BaseCollection,
+    MessageModel,
     ItemView,
     EmptyView
 ) {
+
+    var MessagesCollection = BaseCollection.extend({
+
+        model: MessageModel,
+
+        url:  '/messages?type=unread&fields=-_recipient,-logicDelete&embed=_from',
+    });
 
     return Backbone.Marionette.CompositeView.extend({
 
         // template
         template: template,
 
+        // tag name
         tagName: 'li',
 
         // class name
@@ -21,29 +33,35 @@ define([
         // child view
         childView: ItemView,
 
+        // child view container
         childViewContainer: '.dropdown-body',
 
+        // empty view
         emptyView: EmptyView,
 
-        // collection events
-        collectionEvents: {
-            'add': 'updateBadge',
-            'remove': 'updateBadge'
+        // model events
+        modelEvents: {
+            'change:count': 'updateBadge'
         },
+
+        // // collection events
+        // collectionEvents: {
+        //     'add': 'updateBadge',
+        //     'remove': 'updateBadge'
+        // },
 
         // initializer
         initialize: function() {
 
             var self = this;
 
+            // model is used for retrive message number
             this.model = new Backbone.Model();
 
-            // create messages model(collection)
-            this.collection = selink.userModel.messages;
+            // create messages collection
+            this.collection = new MessagesCollection();
 
-            // set the number of messages in the model
-            this.model.set('messagesNum', this.collection.length, {silent:true});
-
+            // accept new messages at real-time
             selink.socket.on('message-new', function(data) {
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
@@ -54,7 +72,9 @@ define([
                 });
 
                 // add the notification to collection
-                self.collection.add(data);
+                self.collection.add(data, {at: 0});
+                // increase the count on model, this will trigger the updateBadge
+                self.model.set('count', self.model.get('count') + 1);
 
                 // if the mailboxView were displayed
                 if (selink.mailboxView)
@@ -66,11 +86,7 @@ define([
         // after show
         onShow: function() {
 
-            // override attachHtml after the view been shown
-            this.attachHtml = function(collectionView, itemView, index) {
-                // insert new item into the very begining of the list
-                this.$el.find('.dropdown-body').prepend(itemView.el);
-            };
+            var self = this;
 
             // keep dropdown menu open when click on the menu items.
             this.$el.find('.dropdown-menu').on('click', function(e){
@@ -80,15 +96,54 @@ define([
             // make dropdown menu scrollable
             this.$el.find('.dropdown-body').niceScroll();
 
-            if (this.collection.length > 0)
-                // let the icon swing
-                this.$el.find('.fa-envelope').slJump();
+            // get the number of messages
+            this.model.fetch({
+
+                // this url only return a number
+                url: '/messages/count?type=unread',
+
+                // this.model will have only one data: count
+                success: function(model, response, options) {
+
+                    // if the nubmer of event greater than 0
+                    if (response.count > 0) {
+
+                        // fetch the messages
+                        self.collection.fetch();
+
+                        // attach infinite scroll
+                        self.$el.find(self.childViewContainer).infinitescroll({
+                            navSelector  : '#message_page_nav',
+                            nextSelector : '#message_page_nav a',
+                            behavior: 'local',
+                            binder: self.$el.find(self.childViewContainer),
+                            dataType: 'json',
+                            appendCallback: false,
+                            loading: {
+                                msgText: '<em>読込み中・・・</em>',
+                                finishedMsg: 'メッセージは全部読込みました'
+                            },
+                            path: function(pageNum) {
+                                return '/messages?type=unread&fields=-_recipient,-logicDelete&embed=_from&before=' + moment(self.collection.last().get('createDate')).unix();
+                            }
+                        }, function(json, opts) {
+
+                            // if there are more data
+                            if (json.length > 0)
+                                // add data to collection, don't forget parse the json object
+                                // this will trigger 'add' event and will call on
+                                self.collection.add(json, {parse: true});
+                        });
+                    }
+                }
+            });
+
         },
 
         // update the number badge when collection changed
         updateBadge: function() {
 
-            var msgNum = this.collection.length;
+            var msgNum = this.model.get('count');
 
             // badge
             var $badge = this.$el.find('.dropdown-toggle .badge');
