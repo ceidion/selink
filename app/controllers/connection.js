@@ -1,5 +1,6 @@
 var Mailer = require('../mailer/mailer.js'),
     mongoose = require('mongoose'),
+    moment = require('moment'),
     User = mongoose.model('User'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
@@ -12,17 +13,17 @@ var populateField = {};
 // In the case of get some user's connections, user id must passed by the route: '/users/:user/posts'
 // ---------------------------------------------
 // Parameter:
-//   1. user  : The user's id of posts list blong to, passed by url  default: current user
-//   2. type  : The type of connection, possible values as below     default: friends
+//   1. user  : The user's id of posts list blong to, passed by url                          default: current user
+//   2. type  : The type of connection, possible values as below                             default: friends
 //              a. friends    -- the people are user's friends
 //              b. invited    -- the people that user had invited as friend
 //              c. nonfriends -- the people are not user's friends (include invited)
 //              d. discover   -- the people that user completely unknow (exclude invited)
-//   3. fields: Comma separate select fields for output              default: none
-//   4. embed : Comma separate embeded fields for populate           default: none
-//   5. sort  : Fields name used for sort                            default: createDate
-//   6. page  : page number for pagination                           default: none
-//   7. per_page: record number of every page                        default: none
+//   3. fields: Comma separate select fields for output                                      default: none
+//   4. embed : Comma separate embeded fields for populate                                   default: none
+//   5. sort  : Fields name used for sort                                                    default: createDate
+//   6. before: A Unix time stamp used as start point of retrive                             default: none
+//   7. size  : record number of query                                                       default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -79,21 +80,28 @@ _connection_index = function(req, res, user, next) {
     // if request specified population
     if (req.query.embed) {
         req.query.embed.split(',').forEach(function(field) {
-            query.populate(field, populateField[field]);
+
+            if (populateField[field])
+                query.populate(field, populateField[field]);
+            else
+                query.populate(field);
         });
     }
 
+    // if request items before some time point
+    if (req.query.before)
+        query.where('createDate').lt(moment.unix(req.query.before).toDate());
+
     // if request specified sort order and pagination
     var sort = req.query.sort || '-createDate',
-        page = req.query.page || 0,
-        per_page = req.query.per_page || 20;
+        size = req.query.size || 20;
 
     query.where('logicDelete').equals(false)
-        .skip(page*per_page)
-        .limit(per_page)
+        .limit(size)
         .sort(sort)
         .exec(function(err, users) {
             if (err) next(err);
+            else if (users.length === 0) res.json(404, {});
             else res.json(users);
         });
 

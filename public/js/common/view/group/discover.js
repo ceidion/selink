@@ -1,5 +1,5 @@
 define([
-    'text!common/template/group/list.html',
+    'text!common/template/group/discover.html',
     'common/view/composite-isotope',
     'common/collection/base',
     'common/view/group/item',
@@ -39,8 +39,8 @@ define([
 
             // attach infinite scroll
             this.$el.find(this.childViewContainer).infinitescroll({
-                navSelector  : '#list_page_nav',
-                nextSelector : '#list_page_nav a',
+                navSelector  : '#discover_page_nav',
+                nextSelector : '#discover_page_nav a',
                 dataType: 'json',
                 appendCallback: false,
                 loading: {

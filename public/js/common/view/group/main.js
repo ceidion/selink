@@ -1,11 +1,11 @@
 define([
     'text!common/template/group/main.html',
-    'common/view/group/list',
+    'common/view/group/discover',
     'common/view/group/joined',
     'common/view/group/mine',
 ], function(
     template,
-    ListView,
+    DiscoverView,
     JoinedView,
     MineView
 ) {
@@ -17,51 +17,43 @@ define([
 
         // events
         events: {
-            'click button[href="#list"]': 'showListView',
-            'click button[href="#joined"]': 'showJoinedView',
-            'click button[href="#mine"]': 'showMineView'
+            'click .btn-discover': 'showDiscoverView',
+            'click .btn-joined': 'showJoinedView',
+            'click .btn-mine': 'showMineView'
         },
 
         // regions
         regions: {
-            listRegion: '#list',
-            joinedRegion: '#joined',
-            mineRegion: '#mine'
+            displayRegion: '#display'
         },
 
         // after show
         onShow: function() {
 
-            // create group list view, don't do this in initialize method
+            // create group discover view, don't do this in initialize method
             // cause the infinite scroll need the item container in the dom tree
-            this.listView = new ListView();
-            // show list view on start
-            this.listRegion.show(this.listView);
+            this.discoverView = new DiscoverView();
+            // show discover view on start
+            this.displayRegion.show(this.discoverView);
 
         },
 
-        showListView: function() {
-            // lazy load group list view
-            if (!this.listView) {
-                this.listView = new ListView();
-                this.listRegion.show(this.listView);
-            }
+        showDiscoverView: function() {
+            // lazy load group discover view
+            this.discoverView = new DiscoverView();
+            this.displayRegion.show(this.discoverView);
         },
 
         showJoinedView: function() {
             // lazy load joined group view
-            if (!this.joinedView) {
-                this.joinedView = new JoinedView();
-                this.joinedRegion.show(this.joinedView);
-            }
+            this.joinedView = new JoinedView();
+            this.displayRegion.show(this.joinedView);
         },
 
         showMineView: function() {
             // lazy load mine group view
-            if (!this.mineView) {
-                this.mineView = new MineView();
-                this.mineRegion.show(this.mineView);
-            }
+            this.mineView = new MineView();
+            this.displayRegion.show(this.mineView);
         }
     });
 });

@@ -11,9 +11,7 @@
 <div style="border: 1px solid #CCC; margin-top: 3px; margin-bottom: 3px;" data-create-date="<%= moment(obj.createDate).valueOf() %>">
 
     <div style="position: relative;">
-        <a href="#group/<%= obj._id %>">
-            <img src="<%= obj.cover %>" style="width: 100%; overflow: hidden;"/>
-        </a>
+        <img src="<%= obj.cover %>" style="width: 100%; overflow: hidden;"/>
 
         <a href="#profile/<%= obj._id %>" style="position: absolute; top: 5px; right: 5px;">
             <img class="avatar" src="<%= obj.photo %>" style="border-radius: 100%; border: 2px solid white;">

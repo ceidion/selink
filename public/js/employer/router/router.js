@@ -10,8 +10,6 @@ define([], function() {
             "post": "showPostView",
             "post/:id": "showPostView",
             'job': 'showJobView',
-            "friend": "showFriendView",
-            "community": "showCommunityView",
             "group": "showGroupView",
             "group/:id": "showGroupView",
             "people": "showPeopleView",

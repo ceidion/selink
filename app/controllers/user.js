@@ -331,67 +331,6 @@ exports.removeSubDocument = function(req, res, next) {
     });
 };
 
-// news for home page
-exports.newsfeed = function(req, res, next) {
-
-    // page number
-    var page = req.query.page || 0;
-
-    Announcement.find()
-        .where('logicDelete').equals(false)
-        .where('expiredDate').gt(new Date())
-        .sort('-createDate')
-        .skip(10*page)  // skip n page
-        .limit(10)
-        .exec(function(err, announcements) {
-
-            if (err) next(err);
-            else {
-
-                Group.find()
-                    .where('logicDelete').equals(false)
-                    .where('_owner').ne(req.user.id)
-                    .populate('_owner', 'type firstName lastName title cover photo createDate')
-                    .populate('participants', 'type firstName lastName title cover photo createDate')
-                    .populate('events')
-                    .sort('-createDate')
-                    .skip(10*page)  // skip n page
-                    .limit(10)
-                    .exec(function(err, groups) {
-
-                        if (err) next(err);
-                        else res.json(_.union(announcements, groups));
-                    });
-            }
-        });
-
-    // Post.find()
-    //     .where('logicDelete').equals(false)
-    //     .populate('_owner', 'type firstName lastName title cover photo createDate')
-    //     .populate('comments._owner', 'type firstName lastName title cover photo createDate')
-    //     .populate('group', 'name cover description')
-    //     .sort('-createDate')
-    //     .skip(10*page)  // skip n page
-    //     .limit(10)
-    //     .exec(function(err, posts) {
-
-    //         if (err) next(err);
-    //         else res.json(_.union(announcements, groups, posts));
-    //     });
-
-    // Job.find()
-    //     .where('logicDelete').equals(false)
-    //     .where('expiredDate').gt(new Date())
-    //     .populate('_owner', 'type firstName lastName title cover photo createDate')
-    //     .sort('-createDate')
-    //     .skip(10*page)  // skip n page
-    //     .limit(10)
-    //     .exec(function(err, jobs) {
-    //         if (err) next(err);
-    //         else {}
-    //     });
-};
-
 // User's bookmark
 exports.bookmark = function(req, res, next) {
 

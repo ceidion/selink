@@ -26,7 +26,7 @@ define([
 
     var NewsFeedCollection = BaseCollection.extend({
 
-        url: '/newsfeed',
+        url: '/newsfeed?embed=_owner,group,comments._owner',
 
         model: function(attrs, options) {
 
@@ -69,9 +69,37 @@ define([
         initialize: function() {
 
             this.collection = new NewsFeedCollection();
+        },
 
-            // call super initializer
-            BaseView.prototype.initialize.apply(this);
+        // After show
+        onShow: function() {
+
+            var self = this;
+
+            // attach infinite scroll
+            this.$el.find(this.childViewContainer).infinitescroll({
+                navSelector  : '#page_nav',
+                nextSelector : '#page_nav a',
+                dataType: 'json',
+                appendCallback: false,
+                loading: {
+                    msgText: '<em>読込み中・・・</em>',
+                    finishedMsg: '全部読込みました',
+                },
+                path: function() {
+                    return '/newsfeed?embed=_owner,group,comments._owner&before=' + moment(self.collection.last().get('createDate')).unix();
+                }
+            }, function(json, opts) {
+
+                // if there are more data
+                if (json.length > 0)
+                    // add data to collection, don't forget parse the json object
+                    // this will trigger 'add' event and will call on
+                    self.collection.add(json, {parse: true});
+            });
+
+            // call super onShow
+            BaseView.prototype.onShow.apply(this);
         }
 
     });

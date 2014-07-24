@@ -50,7 +50,7 @@ module.exports = function(app) {
     app.get('/search', checkLoginStatus, user.search);
 
     // Get news
-    app.get('/newsfeed', checkLoginStatus, user.newsfeed);
+    app.get('/newsfeed', checkLoginStatus, post.newsfeed);
 
     // Bookmarked item
     app.get('/bookmark', checkLoginStatus, user.bookmark);
@@ -76,10 +76,6 @@ module.exports = function(app) {
     app.get('/users/:user/posts', checkLoginStatus, post.index);
     // Get posts (group related)
     app.get('/groups/:group/posts', checkLoginStatus, post.index);
-    // Get posts (friends post)
-    app.get('/friends-posts', checkLoginStatus, post.friendsIndex);
-    // Get posts (groups post)
-    app.get('/groups-posts', checkLoginStatus, post.groupsIndex);
 
     // Get specific posts
     app.get('/posts/:post', checkLoginStatus, post.show);
@@ -115,6 +111,7 @@ module.exports = function(app) {
     app.get('/groups', checkLoginStatus, group.index);
     // Get groups (user related)
     app.get('/users/:user/groups', checkLoginStatus, group.index);
+
     // Get specific group
     app.get('/groups/:group', checkLoginStatus, group.show);
 
