@@ -16,7 +16,7 @@ define([
 
         model: MessageModel,
 
-        url:  '/messages?type=unread&fields=-_recipient,-logicDelete&embed=_from',
+        url:  '/messages/unread',
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -100,7 +100,7 @@ define([
             this.model.fetch({
 
                 // this url only return a number
-                url: '/messages/count?type=unread',
+                url: '/messages/unread/count',
 
                 // this.model will have only one data: count
                 success: function(model, response, options) {
@@ -124,7 +124,7 @@ define([
                                 finishedMsg: 'メッセージは全部読込みました'
                             },
                             path: function(pageNum) {
-                                return '/messages?type=unread&fields=-_recipient,-logicDelete&embed=_from&before=' + moment(self.collection.last().get('createDate')).unix();
+                                return '/messages/unread?before=' + moment(self.collection.last().get('createDate')).unix();
                             }
                         }, function(json, opts) {
 

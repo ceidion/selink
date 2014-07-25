@@ -14,7 +14,7 @@ define([
 
     var GroupsCollection = BaseCollection.extend({
 
-        url: '/groups?type=mine&fields=type,name,cover,description,participants,posts,events,createDate'
+        url: '/groups/mine'
     });
 
     return BaseView.extend({
@@ -60,7 +60,7 @@ define([
                     finishedMsg: 'グループは全部読込みました',
                 },
                 path: function() {
-                    return '/groups?type=mine&fields=type,name,cover,description,participants,posts,events,createDate&before=' + moment(self.collection.last().get('createDate')).unix();
+                    return '/groups/mine?before=' + moment(self.collection.last().get('createDate')).unix();
                 }
             }, function(json, opts) {
 
@@ -102,7 +102,7 @@ define([
                 // jump to the group detail page
                 success: function(model, response, options) {
                     // sycn with user model
-                    selink.userModel.groups.add(model);
+                    selink.user.groups.add(model);
                     // move to group detail
                     window.location = '#group/' + model.id;
                 }

@@ -74,7 +74,7 @@ define([
 
             // create home view
             selink.homeView = new HomeView({
-                model: selink.userModel,
+                model: selink.user,
                 sort: false
             });
             // show main page
@@ -95,11 +95,11 @@ define([
         // show profile
         showProfileView: function(id) {
 
-            if (!id || id === selink.userModel.get('_id')) {
+            if (!id || id === selink.user.get('_id')) {
 
                 // create profile view
                 selink.profileView = new ProfileView({
-                    model: selink.userModel
+                    model: selink.user
                 });
                 // show profile view
                 selink.pageContent.show(selink.profileView);

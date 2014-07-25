@@ -48,7 +48,7 @@ define([
         initialize: function() {
 
             // create posts collection
-            this.collection = new GroupsCollection(null, {document: selink.userModel});
+            this.collection = new GroupsCollection(null, {document: selink.user});
 
             // populate collection
             this.collection.fetch();

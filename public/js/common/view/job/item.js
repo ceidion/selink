@@ -199,7 +199,7 @@ define([
         onBookmark: function() {
 
             this.model.save({
-                bookmarked: selink.userModel.get('_id') // TODO: no need to pass this parameter
+                bookmarked: selink.user.get('_id') // TODO: no need to pass this parameter
             }, {
                 url: '/jobs/' + this.model.get('_id') + '/bookmark',
                 reIsotope: false, // do not re-isotope whole collection, that will cause image flicker

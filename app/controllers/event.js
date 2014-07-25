@@ -23,11 +23,7 @@ var populateField = {
 //   2. group : The group's id of posts list belong to, passed by url  default: none
 //   3. start : A Unix timestamp for start point of a time span        default: none
 //   4. end   : A Unix timestamp for end point of a time span          default: none
-//   5. fields: Comma separate select fields for output                default: none
-//   6. embed : Comma separate embeded fields for populate             default: none
-//   7. sort  : Fields name used for sort                              default: start
-//   8. after : A Unix time stamp used as start point of retrive       default: none
-//   9. size  : record number of query, only affect with "after"       default: 20
+//   5. after : A Unix time stamp used as start point of retrive       default: none
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -55,33 +51,17 @@ exports.index = function(req, res, next) {
     if (req.query.end)
         query.where('start').lt(moment.unix(req.query.end).toDate());
 
-    // if request specified output fields
-    if (req.query.fields)
-        query.select(req.query.fields.replace(/,/g, ' '));
-
-    // if request specified population
-    if (req.query.embed) {
-        req.query.embed.split(',').forEach(function(field) {
-
-            if (populateField[field])
-                query.populate(field, populateField[field]);
-            else
-                query.populate(field);
-        });
-    }
-
     // if request items after some time point
-    // note that the "size" will affect query only in this case
+    // note that the "limit" will affect query only in this case
     if (req.query.after) {
         query.where('start').gt(moment.unix(req.query.after).toDate())
-            .limit(req.query.size || 20);
+            .limit(20);
     }
 
-    // if request specified sort order and pagination
-    var sort = req.query.sort || 'start';
-
-    query.where('logicDelete').equals(false)
-        .sort(sort)
+    query.select('-_owner -logicDelete')
+        .where('logicDelete').equals(false)
+        .populate('group', populateField['group'])
+        .sort('start')
         .exec(function(err, events) {
             if (err) next(err);
             else if (events.length === 0) res.json(404, {});
@@ -97,7 +77,6 @@ exports.index = function(req, res, next) {
 // Parameter:
 //   1. user  : The user's id of events list belong to, passed by url  default: current user
 //   2. group : The group's id of events list belong to, passed by url default: none
-//   3. type  : The type of events, "future" or "all"                  default: all
 // ---------------------------------------------
 
 exports.count = function(req, res, next) {
@@ -117,11 +96,8 @@ exports.count = function(req, res, next) {
     else
         query.or([{_owner: req.user.id}, {group: {$in: req.user.groups}}]);
 
-    // if request specified future events
-    if (req.query.type == "future")
-        query.where('start').gt(new Date());
-
-    query.where('logicDelete').equals(false)
+    query.where('start').gt(new Date())
+        .where('logicDelete').equals(false)
         .exec(function(err, count) {
             if (err) next(err);
             else res.json({count: count});

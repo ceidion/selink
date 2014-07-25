@@ -19,21 +19,16 @@ var populateField = {
 
 // Group index
 // ---------------------------------------------
-// Return a list of 20 groups in descending order of create date.
+// Return latest 20 groups of current user in descending order of create date.
 // In the case of get some user's groups list, user id must passed by the route: '/users/:user/groups'
 // ---------------------------------------------
 // Parameter:
-//   1. user  : The user's id of groups list belong to, passed by url        default: none
-//   2. type  : The type of groups, possible values as below,                default: joined
-//              note that this parameter will affect query only with "user"
+//   1. user  : The user's id of groups list belong to, passed by url        default: current user
+//   2. type  : The type of groups, identified by the path of request        default: joined
 //                a. mine     -- the groups belong to user
 //                b. joined   -- the groups user had joined
 //                c. discover -- the groups that have no connection to user
-//   3. fields: Comma separate select fields for output                      default: none
-//   4. embed : Comma separate embeded fields for populate                   default: none
-//   5. sort  : Fields name used for sort                                    default: createDate
-//   6. before: A Unix time stamp used as start point of retrive             default: none
-//   7. size  : record number of query                                       default: 20
+//   3. before: A Unix time stamp used as start point of retrive             default: none
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -43,16 +38,8 @@ exports.index = function(req, res, next) {
     // if the request was get some specific user's groups list
     // we need to get the user from users collection
 
-    // if the specified user is current user
-    if ((req.params.user && req.params.user === req.user.id) || 
-        // in the case of only "type" was passed in, consider this like omit user
-        (!req.params.user && req.query.type)) {
-
-        // pass current user to internal method
-        _group_index(req, res, req.user, next);
-
-    // if specified someone else
-    } else if (req.params.user) {
+    // if specified someone other than current user
+    if (req.params.user && req.params.user !== req.user.id) {
 
         // get the user's groups info (group ids)
         User.findById(req.params.user, 'groups', function(err, uesr) {
@@ -64,7 +51,7 @@ exports.index = function(req, res, next) {
     } else {
 
         // no specified user, pass null to internal method
-        _group_index(req, res, null, next);
+        _group_index(req, res, req.user, next);
     }
 };
 
@@ -74,48 +61,26 @@ _group_index = function(req, res, user, next) {
     // create query
     var query = Group.find();
 
-    // if request specified user
-    if (user) {
+    // if request "mine" groups
+    if (_s.endsWith(req.path, "/mine"))
+        query.where('_owner').equals(user.id);
 
-        // if request "mine" groups
-        if (req.query.type === "mine")
-            query.where('_owner').equals(user.id);
-        
-        // if request "discover" groups
-        else if (req.query.type === "discover")
-            query.where('_id').nin(user.groups);
+    // if request "discover" groups
+    else if (_s.endsWith(req.path, "/discover"))
+        query.where('_id').nin(user.groups);
 
-        // default to joined groups
-        else
-            query.where('_id').in(user.groups);
-    }
-
-    // if request specified output fields
-    if (req.query.fields)
-        query.select(req.query.fields.replace(/,/g, ' '));
-
-    // if request specified population
-    if (req.query.embed) {
-        req.query.embed.split(',').forEach(function(field) {
-
-            if (populateField[field])
-                query.populate(field, populateField[field]);
-            else
-                query.populate(field);
-        });
-    }
+    // default to joined groups
+    else
+        query.where('_id').in(user.groups);
 
     // if request items before some time point
     if (req.query.before)
         query.where('createDate').lt(moment.unix(req.query.before).toDate());
 
-    // if request specified sort order and pagination
-    var sort = req.query.sort || '-createDate',
-        size = req.query.size || 20;
-
-    query.where('logicDelete').equals(false)
-        .limit(size)
-        .sort(sort)
+    query.select('type name cover description participants posts events createDate')
+        .where('logicDelete').equals(false)
+        .limit(20)
+        .sort('-createDate')
         .exec(function(err, groups) {
             if (err) next(err);
             else if (groups.length === 0) res.json(404, {});

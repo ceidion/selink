@@ -17,7 +17,7 @@ define([
         model: EventModel,
 
         url:  function() {
-            return '/events?embed=group&after=' + moment().unix();
+            return '/events?after=' + moment().unix();
         }
     });
 
@@ -90,7 +90,7 @@ define([
             this.model.fetch({
 
                 // this url only return a number
-                url: '/events/count?type=future',
+                url: '/events/count',
 
                 // this.model will have only one data: count
                 success: function(model, response, options) {
@@ -114,7 +114,7 @@ define([
                                 finishedMsg: 'イベントは全部読込みました'
                             },
                             path: function(pageNum) {
-                                return '/events?embed=group&after=' + moment(self.collection.last().get('start')).unix();
+                                return '/events?after=' + moment(self.collection.last().get('start')).unix();
                             }
                         }, function(json, opts) {
 

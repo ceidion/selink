@@ -65,15 +65,15 @@ define([
         parse: function(response, options) {
 
             // if the group owner's id is user id
-            if (response._owner._id === selink.userModel.id)
+            if (response._owner._id === selink.user.id)
                 // mark as my group
                 response.isMine = true;
             else
                 response.isMine = false;
 
             // if user's id exists in group's participants list
-            // if (_.indexOf(response.participants, selink.userModel.id) >= 0)
-            if (_.findWhere(response.participants, {_id: selink.userModel.id}))
+            // if (_.indexOf(response.participants, selink.user.id) >= 0)
+            if (_.findWhere(response.participants, {_id: selink.user.id}))
                 // mark as participated
                 response.isParticipated = true;
             else

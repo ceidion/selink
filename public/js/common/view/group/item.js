@@ -58,7 +58,7 @@ define([
 
             // create a participant in this group
             this.model.save({
-                participants: selink.userModel.id //TODO: no need to pass this parameter
+                participants: selink.user.id //TODO: no need to pass this parameter
             }, {
                 url: this.model.url() + '/join',
                 success: function(model, response, options) {
@@ -72,7 +72,7 @@ define([
                     });
 
                     // sycn with user model
-                    selink.userModel.groups.add(model);
+                    selink.user.groups.add(model);
                 },
                 patch: true,
                 wait: true

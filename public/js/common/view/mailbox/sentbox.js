@@ -18,7 +18,7 @@ define([
 
         model: MessageModel,
 
-        url: '/messages?type=sent&fields=-logicDelete&embed=_from,_recipient',
+        url: '/messages/sent',
     });
 
     return BaseView.extend({
@@ -105,37 +105,23 @@ define([
 
             // attach infinite scroll
             this.$el.find(this.childViewContainer).infinitescroll({
-                navSelector  : this.navSelector || '#page_nav',
-                nextSelector : this.nextSelector || '#page_nav a',
+                navSelector  : '#sentbox-page-nav',
+                nextSelector : '#sentbox-page-nav a',
                 dataType: 'json',
                 appendCallback: false,
                 loading: {
                     msgText: '<em>読込み中・・・</em>',
-                    finishedMsg: 'No more pages to load.',
-                    img: 'http://i.imgur.com/qkKy8.gif',
-                    speed: 'slow',
+                    finishedMsg: 'メッセージは全部読込みました'
                 },
-                state: {
-                    currPage: 0
-                },
-                // the default determine path fuction is not fit selink,
-                // here just use the specific one. (from infinitescroll.js line 283)
-                pathParse: function(path) {
-                    if (path.match(/^(.*?page=)1(\/.*|$)/)) {
-                        path = path.match(/^(.*?page=)1(\/.*|$)/).slice(1);
-                        return path;
-                    }
+                path: function(pageNum) {
+                    return '/messages/sent?before=' + moment(self.collection.last().get('createDate')).unix();
                 }
             }, function(json, opts) {
-                // no more data
-                if (json.length === 0){
-                    // destroy infinite scroll, or it will affect other page
-                    self.$el.find(self.childViewContainer).infinitescroll('destroy');
-                    self.$el.find(self.childViewContainer).data('infinitescroll', null);
-                } else
+
+                // if there are more data
+                if (json.length > 0)
                     // add data to collection, don't forget parse the json object
                     // this will trigger 'add' event and will call on
-                    // the attachHtml method that changed on initialization
                     self.collection.add(json, {parse: true});
             });
 
@@ -191,7 +177,7 @@ define([
 
             // clear selected item collection
             this.selectedItem.reset();
-            
+
             // for each message
             this.children.each(function(view) {
                 // mark as unselected

@@ -44,7 +44,7 @@ define([
                 this.$el.removeClass(this.className).addClass('modal-dialog post-modal');
 
             // if the viewer is administrator
-            if (selink.userModel.get('type') === "admin")
+            if (selink.user.get('type') === "admin")
             // mark his user type
                 this.model.set('isAdmin', true, {
                     silent: true

@@ -58,11 +58,14 @@ module.exports = function(app) {
     // Notifications
     // -------------------------------------------------------------------
 
-    // Get notification
+    // Get current user's notification
     app.get('/notifications', checkLoginStatus, notification.index);
-
-    // Get notification number
+    // Get current user's notification number
     app.get('/notifications/count', checkLoginStatus, notification.count);
+    // Get current user's unconfirmed notification
+    app.get('/notifications/unconfirmed', checkLoginStatus, notification.index);
+    // Get current user's unconfirmed notification number
+    app.get('/notifications/unconfirmed/count', checkLoginStatus, notification.count);
 
     // Update notification
     app.patch('/notifications/:notification', checkLoginStatus, notification.update);
@@ -107,8 +110,13 @@ module.exports = function(app) {
     // Groups
     // --------------------------------------------------------------------
 
-    // Get groups
-    app.get('/groups', checkLoginStatus, group.index);
+    // Get current user's joined groups
+    app.get('/groups/joined', checkLoginStatus, group.index);
+    // Get current user's groups
+    app.get('/groups/mine', checkLoginStatus, group.index);
+    // Get current user's unknow groups
+    app.get('/groups/discover', checkLoginStatus, group.index);
+
     // Get groups (user related)
     app.get('/users/:user/groups', checkLoginStatus, group.index);
 
@@ -162,8 +170,15 @@ module.exports = function(app) {
     // Connections
     // ----------------------------------------------------------------------
 
-    // Get current user's connections
-    app.get('/connections', checkLoginStatus, connection.index);
+    // Get current user's friends
+    app.get('/connections/friends', checkLoginStatus, connection.index);
+    // Get current user's invited people
+    app.get('/connections/invited', checkLoginStatus, connection.index);
+    // Get current user's non-friends
+    app.get('/connections/nonfriends', checkLoginStatus, connection.index);
+    // Get current user's unknow people
+    app.get('/connections/discover', checkLoginStatus, connection.index);
+
     // Get connections (user relate)
     app.get('/users/:user/connections', checkLoginStatus, connection.index);
 
@@ -176,11 +191,18 @@ module.exports = function(app) {
     // Messages
     // ----------------------------------------------------------------------
 
-    // Get messages
+    // Get current user's messages
     app.get('/messages', checkLoginStatus, message.index);
-
-    // Get message number
+    // Get current user's message number
     app.get('/messages/count', checkLoginStatus, message.count);
+    // Get current user's sent messages
+    app.get('/messages/sent', checkLoginStatus, message.index);
+    // Get current user's sent message number
+    app.get('/messages/sent/count', checkLoginStatus, message.count);
+    // Get current user's unread messages
+    app.get('/messages/unread', checkLoginStatus, message.index);
+    // Get current user's unread message number
+    app.get('/messages/unread/count', checkLoginStatus, message.count);
 
     // Create new message
     app.post('/messages', checkLoginStatus, message.create);
@@ -196,13 +218,14 @@ module.exports = function(app) {
 
     // Get events
     app.get('/events', checkLoginStatus, userEvent.index);
+    // Get events number
+    app.get('/events/count', checkLoginStatus, userEvent.count);
+
     // Get events (user relate)
     app.get('/users/:user/events', checkLoginStatus, userEvent.index);
     // Get events (group relate)
     app.get('/groups/:group/events', checkLoginStatus, userEvent.index);
 
-    // Get events number
-    app.get('/events/count', checkLoginStatus, userEvent.count);
     // Get events number (user relate)
     app.get('/users/:user/events/count', checkLoginStatus, userEvent.count);
     // Get events number (group relate)

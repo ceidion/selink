@@ -19,7 +19,7 @@ define([
         model: PostModel,
 
         url: function() {
-            return '/users/' + this.document.id + '/posts?embed=_owner,group,comments._owner';
+            return '/posts';
         }
     });
 
@@ -47,7 +47,7 @@ define([
         initialize: function() {
 
             // create posts collection
-            this.collection = new PostsCollection(null, {document: selink.userModel});
+            this.collection = new PostsCollection(null, {document: selink.user});
 
             // create region manager (this composite view will have layout ability)
             this.rm = new Backbone.Marionette.RegionManager();
@@ -84,7 +84,7 @@ define([
                     finishedMsg: '投稿は全部読込みました',
                 },
                 path: function() {
-                    return '/users/' + selink.userModel.id + '/posts?embed=_owner,group,comments._owner&before=' + moment(self.collection.last().get('createDate')).unix();
+                    return '/posts?before=' + moment(self.collection.last().get('createDate')).unix();
                 }
             }, function(json, opts) {
 

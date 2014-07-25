@@ -49,21 +49,26 @@ define([
             delete response.comments;
 
             // if the post owner's id is user id
-            if (response._owner._id === selink.userModel.id)
+            if (_.isObject(response._owner) && response._owner._id !== selink.user.id)
+                response.isMine = false;
+            else {
                 // mark as my post
                 response.isMine = true;
-            else
-                response.isMine = false;
+                // replace the owner field with current user info.
+                // the user info should passed in on collection initialization.
+                if (this.collection.document)
+                    response._owner = this.collection.document.attributes;
+            }
 
             // if user's id exists in post's liked list
-            if (_.indexOf(response.liked, selink.userModel.id) >= 0)
+            if (_.indexOf(response.liked, selink.user.id) >= 0)
                 // mark as liked
                 response.isLiked = true;
             else
                 response.isLiked = false;
 
             // if user's id exists in post's bookmark list
-            if (_.indexOf(response.bookmarked, selink.userModel.id) >= 0)
+            if (_.indexOf(response.bookmarked, selink.user.id) >= 0)
                 // mark as marked
                 response.isMarked = true;
             else

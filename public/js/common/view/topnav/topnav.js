@@ -67,7 +67,7 @@ define([
         // initializer
         initialize: function() {
 
-            this.model = selink.userModel;
+            this.model = selink.user;
 
             // create event menu
             this.eventNav = new EventMenu();
@@ -96,7 +96,7 @@ define([
 
             // create setting view
             var settingView = new SettingView({
-                model: selink.userModel
+                model: selink.user
             });
 
             // attention: access the selink object directly here
@@ -111,7 +111,7 @@ define([
 
             // create password reset view
             var passwordView = new PasswordView({
-                model: selink.userModel
+                model: selink.user
             });
 
             // attention: access the selink object directly here

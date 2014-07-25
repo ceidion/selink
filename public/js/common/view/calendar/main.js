@@ -125,7 +125,7 @@ define([
                         className: 'gcal-event',           // an option!
                         currentTimezone: 'America/Chicago' // an option!
                     },{
-                        url: '/events?embed=group',
+                        url: '/events',
                         success: function(events) {
                             // this view's collection was populated by lazy loading full calendar
                             // it will retrive the events of a month every time. after that, "reset"

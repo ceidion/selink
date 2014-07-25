@@ -1,4 +1,5 @@
-var Mailer = require('../mailer/mailer.js'),
+var _s = require('underscore.string'),
+    Mailer = require('../mailer/mailer.js'),
     mongoose = require('mongoose'),
     moment = require('moment'),
     User = mongoose.model('User'),
@@ -10,20 +11,16 @@ var populateField = {};
 // Connection list
 // ---------------------------------------------
 // Return a list of 20 people that have specific connection with user in descending order of create date.
-// In the case of get some user's connections, user id must passed by the route: '/users/:user/posts'
+// In the case of get some user's connections, user id must passed by the route: '/users/:user/connection'
 // ---------------------------------------------
 // Parameter:
 //   1. user  : The user's id of posts list blong to, passed by url                          default: current user
-//   2. type  : The type of connection, possible values as below                             default: friends
+//   2. type  : The type of connection, identified by the path of request                    default: friends
 //              a. friends    -- the people are user's friends
 //              b. invited    -- the people that user had invited as friend
 //              c. nonfriends -- the people are not user's friends (include invited)
 //              d. discover   -- the people that user completely unknow (exclude invited)
-//   3. fields: Comma separate select fields for output                                      default: none
-//   4. embed : Comma separate embeded fields for populate                                   default: none
-//   5. sort  : Fields name used for sort                                                    default: createDate
-//   6. before: A Unix time stamp used as start point of retrive                             default: none
-//   7. size  : record number of query                                                       default: 20
+//   3. before: A Unix time stamp used as start point of retrive                             default: none
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -58,47 +55,29 @@ _connection_index = function(req, res, user, next) {
     var query = User.find();
 
     // if request "invited" connection type
-    if (req.query.type === "invited")
+    if (_s.endsWith(req.path, "/invited"))
         query.where('_id').in(user.invited);
 
     // if request "nonfriends" connection type
-    else if (req.query.type === "nonfriends")
+    else if (_s.endsWith(req.path, "/nonfriends"))
         query.where('_id').ne(user._id).nin(user.friends);
 
     // if request "discover" connection type
-    else if (req.query.type === "discover")
+    else if (_s.endsWith(req.path, "/discover"))
         query.where('_id').ne(user._id).nin(user.friends.concat(user.invited));
 
     // defaultly, find "friends"
     else
         query.where('_id').in(user.friends);
 
-    // if request specified output fields
-    if (req.query.fields)
-        query.select(req.query.fields.replace(/,/g, ' '));
-
-    // if request specified population
-    if (req.query.embed) {
-        req.query.embed.split(',').forEach(function(field) {
-
-            if (populateField[field])
-                query.populate(field, populateField[field]);
-            else
-                query.populate(field);
-        });
-    }
-
     // if request items before some time point
     if (req.query.before)
         query.where('createDate').lt(moment.unix(req.query.before).toDate());
 
-    // if request specified sort order and pagination
-    var sort = req.query.sort || '-createDate',
-        size = req.query.size || 20;
-
-    query.where('logicDelete').equals(false)
-        .limit(size)
-        .sort(sort)
+    query.select('type firstName lastName title cover bio photo employments educations createDate')
+        .where('logicDelete').equals(false)
+        .limit(20)
+        .sort('-createDate')
         .exec(function(err, users) {
             if (err) next(err);
             else if (users.length === 0) res.json(404, {});

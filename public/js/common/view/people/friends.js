@@ -12,7 +12,7 @@ define([
 
     var PeopleCollection = BaseCollection.extend({
 
-        url: '/connections?type=friends&fields=type,firstName,lastName,title,cover,bio,photo,employments,educations,createDate'
+        url: '/connections/friends'
     });
 
     return BaseView.extend({
@@ -46,7 +46,7 @@ define([
                     finishedMsg: '友達は全部読込みました',
                 },
                 path: function() {
-                    return '/connections?type=friends&fields=type,firstName,lastName,title,cover,bio,photo,employments,educations,createDate&before=' + moment(self.collection.last().get('createDate')).unix();
+                    return '/connections/friends?before=' + moment(self.collection.last().get('createDate')).unix();
                 }
             }, function(json, opts) {
 

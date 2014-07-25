@@ -103,7 +103,7 @@ define([
         onBookmark: function() {
 
             this.model.save({
-                bookmarked: selink.userModel.id // TODO: no need to pass this parameter
+                bookmarked: selink.user.id // TODO: no need to pass this parameter
             }, {
                 url: '/messages/' + this.model.get('_id') + '/bookmark',
                 reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
@@ -172,7 +172,7 @@ define([
             // if the message is unread
             if (this.model.get('isUnread'))
                 // also remove it from local user model
-                selink.userModel.messages.remove(this.model.id);
+                selink.user.messages.remove(this.model.id);
         },
 
         openMessage: function() {
@@ -197,10 +197,10 @@ define([
 
             if (this.model.get('isUnread')) {
                 this.$el.addClass('message-unread');
-                selink.userModel.messages.add(this.model);
+                selink.user.messages.add(this.model);
             } else {
                 this.$el.removeClass('message-unread');
-                selink.userModel.messages.remove(this.model.id);
+                selink.user.messages.remove(this.model.id);
             }
         }
 

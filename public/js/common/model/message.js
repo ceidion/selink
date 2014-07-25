@@ -26,7 +26,7 @@ define(['common/model/base'], function(BaseModel) {
         // Parse data
         parse: function(response, options) {
 
-            var userId = selink.userModel.get('_id');
+            var userId = selink.user.get('_id');
 
             // if the message belong to the user
             if (response._from._id == userId)
@@ -45,7 +45,7 @@ define(['common/model/base'], function(BaseModel) {
                 response.isUnread = false;
 
             // if user's id exists in post's bookmark list
-            if (_.indexOf(response.bookmarked, selink.userModel.id) >= 0)
+            if (_.indexOf(response.bookmarked, selink.user.id) >= 0)
                 // mark as marked
                 response.isMarked = true;
             else

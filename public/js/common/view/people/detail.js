@@ -63,11 +63,11 @@ define([
             var self = this;
 
             // if this person's id in user's friends list
-            if (selink.userModel.friends.get(this.model.get('_id')))
+            if (selink.user.friends.get(this.model.get('_id')))
                 // mark him as user's friend
                 this.model.set('isFriend', true, {silent:true});
             // or if this person's id in user's invitaion list
-            else if (selink.userModel.invited.get(this.model.get('_id')))
+            else if (selink.user.invited.get(this.model.get('_id')))
                 // mark him as user's invited friend
                 this.model.set('isInvited', true, {silent:true});
 
@@ -235,7 +235,7 @@ define([
             this.$el.find('.btn-friend').button('loading');
 
             // create a friend in invited list
-            selink.userModel.invited.create({
+            selink.user.invited.create({
                 _id: this.model.get('_id')
             }, {
                 success: function() {
@@ -262,7 +262,7 @@ define([
             this.$el.find('.btn-break').button('loading');
 
             // remove this person from user's friends list
-            selink.userModel.friends.get(this.model.get('_id')).destroy({
+            selink.user.friends.get(this.model.get('_id')).destroy({
 
                 success: function() {
                     // change the button for success info, but won't enable it

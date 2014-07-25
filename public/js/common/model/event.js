@@ -23,7 +23,7 @@ define(['common/model/base'], function(BaseModel) {
         // Parse data
         parse: function(response, options) {
 
-            if (response._owner === selink.userModel.id)
+            if (response._owner === selink.user.id)
                 response.isMine = true;
             else
                 response.isMine = false;

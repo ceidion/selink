@@ -5,7 +5,7 @@
 
         <!-- author photo -->
         <a href="#profile/<%= obj._owner._id %>">
-            <img class="avatar" src="<%= obj._owner.photo %>">
+            <img class="avatar" src="<%= obj._owner.photo %>" style="max-width: 75px;">
         </a>
 
         <!-- if this post is mine -->
@@ -178,7 +178,7 @@
         <div class="widget-toolbox padding-4 clearfix <% if (!obj.setting.commentable) print('hidden') %>">
 
             <!-- user photo -->
-            <img class="photo-area pull-left" src="<%= selink.userModel.get('photo') %>" style="max-width: 55px; display: none;" />
+            <img class="photo-area pull-left" src="<%= selink.user.get('photo') %>" style="max-width: 55px; display: none;" />
 
             <!-- comment text area -->
             <div class="comment-area">

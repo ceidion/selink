@@ -10,14 +10,14 @@ define([
         parse: function(response, options) {
 
             // if the post owner's id is user id
-            if (response._owner._id === selink.userModel.id)
+            if (response._owner._id === selink.user.id)
                 // mark as my post
                 response.isMine = true;
             else
                 response.isMine = false;
 
             // if user's id exists in post's liked list
-            if (_.indexOf(response.liked, selink.userModel.id) >= 0)
+            if (_.indexOf(response.liked, selink.user.id) >= 0)
                 // mark as liked
                 response.isLiked = true;
             else

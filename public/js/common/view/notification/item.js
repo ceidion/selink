@@ -110,13 +110,13 @@ define([
             this.model.save({result: 'approved'}, {
                 url: '/notifications/' + this.model.get('_id'),
                 success: function() {
-                    selink.userModel.friends.add(friend);
+                    selink.user.friends.add(friend);
                     self.$el.find('.pull-right').fadeOut(function() {
                         $(this).empty()
                             .html('<div class="text-muted pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;承認済み</div>')
                             .fadeIn();
                     });
-                    selink.userModel.notifications.remove(self.model.get('_id'));
+                    selink.user.notifications.remove(self.model.get('_id'));
                 },
                 patch: true
             });
@@ -134,7 +134,7 @@ define([
                             .html('<div class="text-muted pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;拒否済み</div>')
                             .fadeIn();
                     });
-                    selink.userModel.notifications.remove(self.model.get('_id'));
+                    selink.user.notifications.remove(self.model.get('_id'));
                 },
                 patch: true
             });
@@ -153,7 +153,7 @@ define([
                             .html('<div class="text-muted pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;参加済み</div>')
                             .fadeIn();
                     });
-                    selink.userModel.notifications.remove(self.model.get('_id'));
+                    selink.user.notifications.remove(self.model.get('_id'));
                 },
                 patch: true
             });
@@ -172,7 +172,7 @@ define([
                             .html('<div class="text-muted pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;拒否済み</div>')
                             .fadeIn();
                     });
-                    selink.userModel.notifications.remove(self.model.get('_id'));
+                    selink.user.notifications.remove(self.model.get('_id'));
                 },
                 patch: true
             });
@@ -190,7 +190,7 @@ define([
                             .html('<div class="text-muted pull-right"><i class="ace-icon fa fa-check"></i>&nbsp;確認済み</div>')
                             .fadeIn();
                     });
-                    selink.userModel.notifications.remove(self.model.get('_id'));
+                    selink.user.notifications.remove(self.model.get('_id'));
                 },
                 patch: true
             });

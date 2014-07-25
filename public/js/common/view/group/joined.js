@@ -14,7 +14,7 @@ define([
 
     var GroupsCollection = BaseCollection.extend({
 
-        url: '/groups?type=joined&fields=type,name,cover,description,participants,posts,events,createDate'
+        url: '/groups/joined'
     });
 
     return BaseView.extend({
@@ -48,7 +48,7 @@ define([
                     finishedMsg: 'グループは全部読込みました',
                 },
                 path: function() {
-                    return '/groups?type=joined&fields=type,name,cover,description,participants,posts,events,createDate&before=' + moment(self.collection.last().get('createDate')).unix();
+                    return '/groups/joined?before=' + moment(self.collection.last().get('createDate')).unix();
                 }
             }, function(json, opts) {
 

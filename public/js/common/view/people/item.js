@@ -6,23 +6,27 @@ define([
 
     return Backbone.Marionette.ItemView.extend({
 
+        // template
         template: template,
 
+        // class name
         className: 'isotope-item col-xs-12 col-sm-6 col-lg-4',
 
+        // events
         events: {
             'click .btn-friend': 'onAddFriend'
         },
 
+        // add this person as friends
         onAddFriend: function() {
 
             var self = this;
 
-            // disable the button, user can't push twice
+            // disable the button, user can't push it twice
             this.$el.find('.btn-friend').button('loading');
 
             // create a friend in invited list
-            selink.userModel.invited.create({
+            selink.user.invited.create({
                 _id: this.model.get('_id')
             }, {
                 success: function() {

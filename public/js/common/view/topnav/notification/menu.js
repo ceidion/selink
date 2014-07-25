@@ -12,7 +12,7 @@ define([
 
     // Notification Collection, provide the url root for notification update
     var Notifications = BaseCollection.extend({
-        url: '/notifications'
+        url: '/notifications/unconfirmed'
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -84,8 +84,8 @@ define([
                 // increase the count on model, this will trigger the updateBadge
                 self.model.set('count', self.model.get('count') + 1);
                 // sync with local user model
-                selink.userModel.invited.remove(data._from._id);
-                selink.userModel.friends.push(data._from);
+                selink.user.invited.remove(data._from._id);
+                selink.user.friends.push(data._from);
             });
 
             selink.socket.on('friend-declined', function(data) {
@@ -101,7 +101,7 @@ define([
                 // increase the count on model, this will trigger the updateBadge
                 self.model.set('count', self.model.get('count') + 1);
                 // sync with local user model
-                selink.userModel.invited.remove(data._from._id);
+                selink.user.invited.remove(data._from._id);
             });
 
             selink.socket.on('friend-break', function(data) {
@@ -117,7 +117,7 @@ define([
                 // increase the count on model, this will trigger the updateBadge
                 self.model.set('count', self.model.get('count') + 1);
                 // sync with local user model
-                selink.userModel.friends.remove(data._from._id);
+                selink.user.friends.remove(data._from._id);
             });
 
             selink.socket.on('post-new', function(data) {
@@ -292,7 +292,7 @@ define([
             this.model.fetch({
 
                 // this url only return a number
-                url: '/notifications/count?type=unconfirmed',
+                url: '/notifications/unconfirmed/count',
 
                 // this.model will have only one data: count
                 success: function(model, response, options) {
@@ -301,9 +301,7 @@ define([
                     if (response.count > 0) {
 
                         // fetch the notifications
-                        self.collection.fetch({
-                            url: '/notifications?type=unconfirmed&embed=_from',
-                        });
+                        self.collection.fetch();
 
                         // attach infinite scroll
                         self.$el.find(self.childViewContainer).infinitescroll({
@@ -318,7 +316,7 @@ define([
                                 finishedMsg: '通知は全部読込みました'
                             },
                             path: function(pageNum) {
-                                return '/notifications?type=unconfirmed&embed=_from&before=' + moment(self.collection.last().get('createDate')).unix();
+                                return '/notifications/unconfirmed?before=' + moment(self.collection.last().get('createDate')).unix();
                             }
                         }, function(json, opts) {
 

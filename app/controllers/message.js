@@ -1,4 +1,5 @@
 var _ = require('underscore'),
+    _s = require('underscore.string'),
     mongoose = require('mongoose'),
     moment = require('moment'),
     Mailer = require('../mailer/mailer.js'),
@@ -18,11 +19,7 @@ var populateField = {
 // ---------------------------------------------
 // Parameter:
 //   1. type  : Messages type, "sent", "unread", "received"        default: received
-//   2. fields: Comma separate select fields for output            default: none
-//   3. embed : Comma separate embeded fields for populate         default: none
-//   4. sort  : Fields name used for sort                          default: createDate
-//   5. before: A Unix time stamp used as start point of retrive   default: none
-//   6. size  : record number of query                             default: 20
+//   2. before: A Unix time stamp used as start point of retrive   default: none
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -31,40 +28,30 @@ exports.index = function(req, res, next) {
     var query = Message.find();
 
     // if request specified sent messages
-    if (req.query.type == 'sent')
-        query.where('_from').equals(req.user.id);
+    if (_s.endsWith(req.path, "/sent"))
+        query.select('-logicDelete')
+            .where('_from').equals(req.user.id)
+            .populate('_recipient', populateField['_recipient']);
 
     // if request specified unread messages
-    else if (req.query.type == 'unread')
-        query.where('_recipient').equals(req.user.id)
-             .where('opened').ne(req.user.id);
+    else if (_s.endsWith(req.path, "/unread"))
+        query.select('-_recipient -logicDelete')
+            .where('_recipient').equals(req.user.id)
+            .where('opened').ne(req.user.id);
 
     // default request received messages
     else
-        query.where('_recipient').equals(req.user.id);
-
-    // if request specified output fields
-    if (req.query.fields)
-        query.select(req.query.fields.replace(/,/g, ' '));
-
-    // if request specified population
-    if (req.query.embed) {
-        req.query.embed.split(',').forEach(function(field) {
-            query.populate(field, populateField[field]);
-        });
-    }
+        query.select('-_recipient -logicDelete')
+            .where('_recipient').equals(req.user.id);
 
     // if request items before some time point
     if (req.query.before)
         query.where('createDate').lt(moment.unix(req.query.before).toDate());
 
-    // if request specified sort order and pagination
-    var sort = req.query.sort || '-createDate',
-        size = req.query.size || 20;
-
     query.where('logicDelete').ne(req.user.id)
-        .limit(size)
-        .sort(sort)
+        .populate('_from', populateField['_from'])
+        .limit(20)
+        .sort('-createDate')
         .exec(function(err, messages) {
             if (err) next(err);
             else if (messages.length === 0) res.json(404, {});
@@ -87,11 +74,11 @@ exports.count = function(req, res, next) {
     var query = Message.count();
 
     // if request specified sent messages
-    if (req.query.type == 'sent')
+    if (_s.endsWith(req.path, "/sent/count"))
         query.where('_from').equals(req.user.id);
 
     // if request specified unread messages
-    else if (req.query.type == 'unread')
+    else if (_s.endsWith(req.path, "/unread/count"))
         query.where('_recipient').equals(req.user.id)
              .where('opened').ne(req.user.id);
 

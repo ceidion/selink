@@ -18,18 +18,14 @@ var populateField = {
 
 // Post index
 // ---------------------------------------------
-// Return a list of 20 posts in descending order of create date.
-// In the case of get some user's posts list, user id must passed by the route: '/users/:user/posts'
+// Return latest 20 posts of current user in descending order of create date.
+// In the case of get other user's posts list, user id must passed by the route: '/users/:user/posts'
 // In the case of get some group's posts list, group id must passed by the route: '/groups/:group/posts'
 // ---------------------------------------------
 // Parameter:
-//   1. user  : The user's id of posts list belong to, passed by url  default: none
-//   2. group : The group's id of posts list belong to, passed by url default: none
-//   3. fields: Comma separate select fields for output               default: none
-//   4. embed : Comma separate embeded fields for populate            default: none
-//   5. sort  : Fields name used for sort                             default: createDate
-//   6. before: A Unix time stamp used as start point of retrive      default: none
-//   7. size  : record number of query                                default: 20
+//   1. user  : The user's id of posts list belong to, passed by url   default: current uer
+//   2. group : The group's id of posts list belong to, passed by url  default: none
+//   3. before: A Unix time stamp used as start point of retrive       efault: none
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -39,14 +35,8 @@ exports.index = function(req, res, next) {
     // if the request was get some specific user's posts list
     // we need to find the user from users collection first
 
-    // if the specified user is current user
-    if (req.params.user && req.params.user === req.user.id) {
-
-        // pass current user to internal method
-        _post_index(req, res, req.user, null, next);
-
     // if specified someone else
-    } else if (req.params.user) {
+    if (req.params.user && req.params.user !== req.user.id) {
 
         // get the user's posts info (post ids)
         User.findById(req.params.user, 'posts', function(err, uesr) {
@@ -67,8 +57,8 @@ exports.index = function(req, res, next) {
 
     } else {
 
-        // neither specified user nor group, pass null to internal method
-        _post_index(req, res, null, null, next);
+        // default to current user
+        _post_index(req, res, req.user, null, next);
     }
 };
 
@@ -78,40 +68,28 @@ _post_index = function(req, res, user, group, next) {
     // create query
     var query = Post.find();
 
-    // if request specified user
+    // if request specified user, populate the group.
+    // cause the client should have the _owner, so we don't populate _owner
     if (user)
-        query.where('_id').in(user.posts);
+        query.where('_id').in(user.posts)
+            .populate('group', populateField['group']);
 
-    // if request specified group
+    // if request specified group, populate the _owner
+    // cause the client should have the group, so we don't populate group
     if (group)
-        query.where('_id').in(group.posts);
-
-    // if request specified output fields
-    if (req.query.fields)
-        query.select(req.query.fields.replace(/,/g, ' '));
-
-    // if request specified population
-    if (req.query.embed) {
-        req.query.embed.split(',').forEach(function(field) {
-
-            if (populateField[field])
-                query.populate(field, populateField[field]);
-            else
-                query.populate(field);
-        });
-    }
+        query.where('_id').in(group.posts)
+            .populate('_owner', populateField['_owner']);
 
     // if request items before some time point
     if (req.query.before)
         query.where('createDate').lt(moment.unix(req.query.before).toDate());
 
-    // if request specified sort order and pagination
-    var sort = req.query.sort || '-createDate',
-        size = req.query.size || 20;
-
-    query.where('logicDelete').equals(false)
-        .limit(size)
-        .sort(sort)
+    // default query parameter below
+    query.select('-removedComments -logicDelete')
+        .populate('comments._owner', populateField['comments._owner'])
+        .where('logicDelete').equals(false)
+        .limit(20)
+        .sort('-createDate')
         .exec(function(err, posts) {
             if (err) next(err);
             else if (posts.length === 0) res.json(404, {});

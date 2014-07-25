@@ -1,4 +1,5 @@
-var Mailer = require('../mailer/mailer.js'),
+var _s = require('underscore.string'),
+    Mailer = require('../mailer/mailer.js'),
     mongoose = require('mongoose'),
     moment = require('moment'),
     User = mongoose.model('User'),
@@ -37,11 +38,7 @@ var populateField = {
 // ---------------------------------------------
 // Parameter:
 //   1. type  : The type of notifications, "unconfirmed" or "all"  default: all
-//   2. fields: Comma separate select fields for output            default: none
-//   3. embed : Comma separate embeded fields for populate         default: targetPost,targetJob,targetMessage,targetGroup
-//   4. sort  : Fields name used for sort                          default: createDate
-//   5. before: A Unix time stamp used as start point of retrive   default: none
-//   6. size  : record number of query                             default: 20
+//   2. before: A Unix time stamp used as start point of retrive   default: none
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -53,39 +50,22 @@ exports.index = function(req, res, next) {
     query.where('_owner').equals(req.user.id);
 
     // if request specified unconfirmed notifications
-    if (req.query.type == "unconfirmed")
+    if (_s.endsWith(req.path, "/unconfirmed"))
         query.where('confirmed').ne(req.user.id);
-
-    // if request specified output fields
-    if (req.query.fields)
-        query.select(req.query.fields.replace(/,/g, ' '));
-
-    // if request specified population
-    if (req.query.embed) {
-        req.query.embed.split(',').forEach(function(field) {
-
-            if (populateField[field])
-                query.populate(field, populateField[field]);
-            else
-                query.populate(field);
-        });
-    }
 
     // if request items before some time point
     if (req.query.before)
         query.where('createDate').lt(moment.unix(req.query.before).toDate());
 
-    // if request specified sort order and pagination
-    var sort = req.query.sort || '-createDate',
-        size = req.query.size || 20;
-
-    query.where('logicDelete').equals(false)
+    query.select('-logicDelete')
+        .where('logicDelete').equals(false)
+        .populate('_from', populateField['_from'])
         .populate('targetPost')
         .populate('targetJob')
         .populate('targetMessage')
         .populate('targetGroup')   // there is no targetComment, cause comment was embedded in post
-        .limit(size)
-        .sort(sort)
+        .limit(20)
+        .sort('-createDate')
         .exec(function(err, notifications) {
             if (err) next(err);
             else if (notifications.length === 0) res.json(404, {});
@@ -112,7 +92,7 @@ exports.count = function(req, res, next) {
     query.where('_owner').equals(req.user.id);
 
     // if request specified unconfirmed notifications
-    if (req.query.type == "unconfirmed")
+    if (_s.endsWith(req.path, "/unconfirmed/count"))
         query.where('confirmed').ne(req.user.id);
 
     query.where('logicDelete').equals(false)

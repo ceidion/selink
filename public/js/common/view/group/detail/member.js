@@ -34,7 +34,7 @@ define([
             var self = this;
 
             // people in my friend list but not in the group yet
-            var avaliableFriends = selink.userModel.friends.reject(function(friend) {
+            var avaliableFriends = selink.user.friends.reject(function(friend) {
                 // neither in invited list nor in pariticipants list
                 return self.model.invited.findWhere({_id: friend.id}) || self.model.participants.findWhere({_id: friend.id});
             });

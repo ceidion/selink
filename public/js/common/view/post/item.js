@@ -402,7 +402,7 @@ define([
         onLike: function() {
 
             this.model.save({
-                liked: selink.userModel.id // TODO: no need to pass this parameter
+                liked: selink.user.id // TODO: no need to pass this parameter
             }, {
                 url: '/posts/' + this.model.get('_id') + '/like',
                 reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
@@ -433,7 +433,7 @@ define([
         onBookmark: function() {
 
             this.model.save({
-                bookmarked: selink.userModel.id // TODO: no need to pass this parameter
+                bookmarked: selink.user.id // TODO: no need to pass this parameter
             }, {
                 url: '/posts/' + this.model.get('_id') + '/bookmark',
                 reIsotope: false, // do not re-isotope whole collection, that will cause image flicker

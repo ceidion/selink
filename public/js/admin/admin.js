@@ -89,12 +89,12 @@ define([
         var self = this;
 
         // create user model
-        this.userModel = new UserModel({
+        this.user = new UserModel({
             _id: $('#info-base').data('id')
         });
 
         // populate user model
-        this.userModel.fetch({
+        this.user.fetch({
 
             // on success
             success: function() {

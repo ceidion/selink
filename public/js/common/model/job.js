@@ -33,7 +33,7 @@ define([
                 response.createDateInput = moment(response.createDate).format('L');
             }
 
-            var userId = selink.userModel.get('_id');
+            var userId = selink.user.get('_id');
 
             // if the owner's id is user's id
             if (response._owner._id == userId)

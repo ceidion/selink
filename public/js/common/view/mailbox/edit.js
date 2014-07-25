@@ -49,7 +49,7 @@ define([
                 },
                 queryTokenizer: Bloodhound.tokenizers.whitespace,
                 // remote: '/suggestUser?initial=%QUERY'
-                local: selink.userModel.friends.models
+                local: selink.user.friends.models
             });
 
             // initialize the bloodhound suggestion engine

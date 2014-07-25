@@ -90,7 +90,7 @@ define([
         onLike: function() {
 
             this.model.save({
-                liked: selink.userModel.get('_id') // TODO: no need to pass this parameter
+                liked: selink.user.get('_id') // TODO: no need to pass this parameter
             }, {
                 url: this.model.url() + '/like',
                 reIsotope: false, // do not re-isotope whole collection, that will cause image flicker

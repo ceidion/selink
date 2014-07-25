@@ -1,19 +1,46 @@
+<!-- group item -->
 <div style="border: 1px solid #CCC; margin-top: 3px; margin-bottom: 3px;" data-create-date="<%= moment(obj.createDate).valueOf() %>">
 
+    <!-- header -->
     <div>
+        <!-- cover -->
         <a href="#group/<%= obj._id %>">
             <img src="<%= obj.cover %>" style="width: 100%; overflow: hidden;"/>
         </a>
     </div>
 
+    <!-- body -->
     <blockquote style="margin-bottom: 0px;">
+
+        <!-- group name -->
         <p><%= obj.name %></p>
-        <small><%= obj.description %></small>
+
+        <!-- description -->
+        <% if (obj.description) { %>
+            <small><%= obj.description %></small>
+        <% } %>
+
+        <div class="pull-right green" style="font-size: 14px;">
+            <i class="ace-icon fa fa-group tooltip-success"></i>
+            <%= obj.participants.length %>
+        </div>
+
+        <div class="pull-right orange" style="padding-right: 10px; font-size: 14px;">
+            <i class="ace-icon fa fa-tasks tooltip-warning"></i>
+            <%= obj.events.length %>
+        </div>
+
+        <div class="pull-right blue" style="padding-right: 10px; font-size: 14px;">
+            <i class="ace-icon fa fa-edit tooltip-info"></i>
+            <%= obj.posts.length %>
+        </div>
+
     </blockquote>
 
     <div class="clearfix events-container" style="padding: 12px;">
     </div>
 
+    <!-- footer -->
     <div class="clearfix group-info" style="padding: 12px;">
 
         <% if (obj.isParticipated) { %>
@@ -24,21 +51,6 @@
                 <i class="ace-icon fa fa-plus"></i>&nbsp;参加
             </button>
         <% } %>
-
-        <div class="pull-right green">
-            <i class="ace-icon fa fa-group tooltip-success"></i>
-            <%= obj.participants.length %>
-        </div>
-
-        <div class="pull-right orange" style="padding-right: 10px;">
-            <i class="ace-icon fa fa-tasks tooltip-warning"></i>
-            <%= obj.events.length %>
-        </div>
-
-        <div class="pull-right blue" style="padding-right: 10px;">
-            <i class="ace-icon fa fa-edit tooltip-info"></i>
-            <%= obj.posts.length %>
-        </div>
 
     </div>
 

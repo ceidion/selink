@@ -78,7 +78,7 @@ exports.index = function(req, res, next) {
 
 exports.show = function(req, res, next) {
 
-    User.findById(req.params.user, '-password', function(err, user) {
+    User.findById(req.params.user, '-password -logicDelete', function(err, user) {
         if (err) next(err);
         else res.json(user);
     });
