@@ -29,6 +29,7 @@ var populateField = {
 //                b. joined   -- the groups user had joined
 //                c. discover -- the groups that have no connection to user
 //   3. before: A Unix time stamp used as start point of retrive             default: none
+//   4. size  : Number of result to return                                   default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -79,7 +80,7 @@ _group_index = function(req, res, user, next) {
 
     query.select('type name cover description participants posts events createDate')
         .where('logicDelete').equals(false)
-        .limit(20)
+        .limit(req.query.size || 20)
         .sort('-createDate')
         .exec(function(err, groups) {
             if (err) next(err);
@@ -88,15 +89,18 @@ _group_index = function(req, res, user, next) {
         });
 };
 
-// Show single group
+// Get single user
+// ---------------------------------------------
+// Retrun user profile info except password
+
 exports.show = function(req, res, next) {
 
+    // check on logic delete flag, return 404 on not found
+
     Group.findById(req.params.group)
+        .select('-logicDelete')
         .where('logicDelete').equals(false)
-        .populate('_owner', 'type firstName lastName title cover photo createDate')
-        .populate('invited', 'type firstName lastName title cover photo createDate')
-        .populate('participants', 'type firstName lastName title cover photo createDate')
-        .populate('events')
+        .populate('_owner', populateField['_owner'])
         .exec(function(err, group) {
             if (err) next(err);
             else res.json(group);

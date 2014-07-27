@@ -39,6 +39,7 @@ var populateField = {
 // Parameter:
 //   1. type  : The type of notifications, "unconfirmed" or "all"  default: all
 //   2. before: A Unix time stamp used as start point of retrive   default: none
+//   3. size  : Number of result to return                         default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -64,7 +65,7 @@ exports.index = function(req, res, next) {
         .populate('targetJob')
         .populate('targetMessage')
         .populate('targetGroup')   // there is no targetComment, cause comment was embedded in post
-        .limit(20)
+        .limit(req.query.size || 20)
         .sort('-createDate')
         .exec(function(err, notifications) {
             if (err) next(err);

@@ -48,17 +48,26 @@ define([
 
             delete response.comments;
 
-            // if the post owner's id is user id
-            if (_.isObject(response._owner) && response._owner._id !== selink.user.id)
-                response.isMine = false;
-            else {
-                // mark as my post
-                response.isMine = true;
+            // if the post owner was not populated
+            if (_.isString(response._owner))
                 // replace the owner field with current user info.
                 // the user info should passed in on collection initialization.
                 if (this.collection.document)
                     response._owner = this.collection.document.attributes;
-            }
+
+            // if the post group was not populated
+            if (_.isString(response.group))
+                // replace the group field with current group info.
+                // the group info should passed in on collection initialization.
+                if (this.collection.document)
+                    response.group = this.collection.document.attributes;
+
+            // if post owner's id is current user's id
+            if (response._owner.id === selink.user.id)
+                // mark as my post
+                response.isMine = true;
+            else
+                response.isMine = false;
 
             // if user's id exists in post's liked list
             if (_.indexOf(response.liked, selink.user.id) >= 0)

@@ -1,11 +1,7 @@
 <%
-
-    var avatar = './asset/images/no_photo_male.jpg' || obj.photo,
-        isFriend = (_.indexOf(selink.user.get('friends'), obj._id) >= 0) ? true : false,
-        isInvited = (_.indexOf(selink.user.get('invited'), obj._id) >= 0) ? true : false;
-
-    if (obj.gender === "女")
-        avatar = './asset/images/no_photo_female.jpg';
+    var isFriend = (_.indexOf(selink.user.get('friends'), obj._id) >= 0) ? true : false,
+        isInvited = (_.indexOf(selink.user.get('invited'), obj._id) >= 0) ? true : false,
+        bioSummary = obj.bio ? _.str.truncate(bio, 100, '...') : "";
 %>
 
 <!-- people item -->
@@ -40,7 +36,7 @@
 
         <!-- bio -->
         <% if (obj.bio) { %>
-            <small><%= obj.bio %></small>
+            <small><%= bioSummary %></small>
         <% } %>
 
         <!-- final employment -->
@@ -66,7 +62,8 @@
         <div class="clearfix" style="padding: 12px;">
 
             <!-- operation buttons -->
-            <button class="btn btn-info btn-block btn-friend" data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
+            <button class="btn btn-info btn-block btn-friend" 
+                    data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
                 <i class="ace-icon fa fa-plus light-blue"></i>
                 友達
             </button>

@@ -6,11 +6,11 @@
 
             <div style="position: relative;">
 
-            <% if (obj.isMine) { %>
-                <div id="cover"></div>
-            <% } else { %>
-                <img src="<%= obj.cover %>">
-            <% } %>
+                <% if (obj.isMine) { %>
+                    <div id="cover"></div>
+                <% } else { %>
+                    <img src="<%= obj.cover %>">
+                <% } %>
 
                 <a href="#profile/<%= obj._owner._id %>" style="position: absolute; bottom: -20px; right: 10px;">
                     <img class="avatar-owner" src="<%= obj._owner.photo %>" style="max-width: 50px; border-radius: 100%; border: 2px solid white;">
@@ -47,19 +47,19 @@
 
                 <div class="pull-right green">
                     <i class="ace-icon fa fa-group tooltip-success"></i>
-                    <%= obj.memberNum %>
+                    <%= obj.participants.length %>
                 </div>
 
                 <% if (obj.isMine) { %>
                 <div class="pull-right red" style="padding-right: 10px;">
                     <i class="ace-icon fa fa-paper-plane tooltip-error"></i>
-                    <span class="invitationNum"><%= obj.invitationNum %></span>
+                    <span class="invitationNum"><%= obj.invited.length %></span>
                 </div>
                 <% } %>
 
                 <div class="pull-right orange" style="padding-right: 10px;">
                     <i class="ace-icon fa fa-tasks tooltip-warning"></i>
-                    <%= obj.eventNum %>
+                    <%= obj.events.length %>
                 </div>
 
                 <div class="pull-right blue" style="padding-right: 10px;">
@@ -131,5 +131,5 @@
 </div>
 
 <nav id="page_nav">
-  <a href="/groups/<%= obj._id %>/posts?embed=_owner,group,comments._owner&page=1"></a>
+  <a href="/groups/<%= obj._id %>/posts"></a>
 </nav>

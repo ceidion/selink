@@ -24,6 +24,7 @@ var populateField = {
 //   3. start : A Unix timestamp for start point of a time span        default: none
 //   4. end   : A Unix timestamp for end point of a time span          default: none
 //   5. after : A Unix time stamp used as start point of retrive       default: none
+//   6. size  : Number of result to return                             default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -37,7 +38,7 @@ exports.index = function(req, res, next) {
 
     // if request specified group
     else if (req.params.group)
-        query.where('group').eq(req.user.groups);
+        query.where('group').eq(req.params.groups);
 
     // default to current user and his group
     else
@@ -55,7 +56,7 @@ exports.index = function(req, res, next) {
     // note that the "limit" will affect query only in this case
     if (req.query.after) {
         query.where('start').gt(moment.unix(req.query.after).toDate())
-            .limit(20);
+            .limit(req.query.size || 20);
     }
 
     query.select('-_owner -logicDelete')

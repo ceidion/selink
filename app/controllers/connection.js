@@ -21,6 +21,7 @@ var populateField = {};
 //              c. nonfriends -- the people are not user's friends (include invited)
 //              d. discover   -- the people that user completely unknow (exclude invited)
 //   3. before: A Unix time stamp used as start point of retrive                             default: none
+//   4. size  : Number of result to return                                                   default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -76,7 +77,7 @@ _connection_index = function(req, res, user, next) {
 
     query.select('type firstName lastName title cover bio photo employments educations createDate')
         .where('logicDelete').equals(false)
-        .limit(20)
+        .limit(req.query.size || 20)
         .sort('-createDate')
         .exec(function(err, users) {
             if (err) next(err);

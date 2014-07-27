@@ -1,3 +1,8 @@
+<%
+    var isJoined = (_.indexOf(selink.user.get('groups'), obj._id) >= 0) ? true : false,
+        description = obj.description ? _.str.truncate(description, 100, '...') : "";
+%>
+
 <!-- group item -->
 <div style="border: 1px solid #CCC; margin-top: 3px; margin-bottom: 3px;" data-create-date="<%= moment(obj.createDate).valueOf() %>">
 
@@ -17,41 +22,44 @@
 
         <!-- description -->
         <% if (obj.description) { %>
-            <small><%= obj.description %></small>
+            <small><%= description %></small>
         <% } %>
 
+        <div class="space-4"></div>
+
+        <!-- participants number -->
         <div class="pull-right green" style="font-size: 14px;">
             <i class="ace-icon fa fa-group tooltip-success"></i>
             <%= obj.participants.length %>
         </div>
 
+        <!-- events number -->
         <div class="pull-right orange" style="padding-right: 10px; font-size: 14px;">
             <i class="ace-icon fa fa-tasks tooltip-warning"></i>
             <%= obj.events.length %>
         </div>
 
+        <!-- posts number -->
         <div class="pull-right blue" style="padding-right: 10px; font-size: 14px;">
             <i class="ace-icon fa fa-edit tooltip-info"></i>
             <%= obj.posts.length %>
         </div>
 
+        <div class="clearfix"></div>
+
     </blockquote>
 
-    <div class="clearfix events-container" style="padding: 12px;">
-    </div>
+    <% if (!isJoined) { %>
+        <!-- footer -->
+        <div class="clearfix group-info" style="padding: 12px;">
 
-    <!-- footer -->
-    <div class="clearfix group-info" style="padding: 12px;">
-
-        <% if (obj.isParticipated) { %>
-            <span class="text-success"><i class="ace-icon fa fa-check"></i>&nbsp;参加中</span>
-        <% } else { %>
-            <button class="btn btn-sm btn-info btn-join"
+            <!-- operation buttons -->
+            <button class="btn btn-info btn-block btn-join"
                     data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
                 <i class="ace-icon fa fa-plus"></i>&nbsp;参加
             </button>
-        <% } %>
 
-    </div>
+        </div>
+    <% } %>
 
 </div>

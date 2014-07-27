@@ -11,7 +11,7 @@ define([
     var FriendsCollection = BaseCollection.extend({
 
         url: function() {
-            return '/users/' + this.document.id + '/connections?fields=type,firstName,lastName,title,cover,photo&per_page=9';
+            return '/users/' + this.document.id + '/connections?size=8';
         }
     });
 

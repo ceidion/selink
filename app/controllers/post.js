@@ -25,7 +25,8 @@ var populateField = {
 // Parameter:
 //   1. user  : The user's id of posts list belong to, passed by url   default: current uer
 //   2. group : The group's id of posts list belong to, passed by url  default: none
-//   3. before: A Unix time stamp used as start point of retrive       efault: none
+//   3. before: A Unix time stamp used as start point of retrive       default: none
+//   4. size  : Number of result to return                             default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -88,7 +89,7 @@ _post_index = function(req, res, user, group, next) {
     query.select('-removedComments -logicDelete')
         .populate('comments._owner', populateField['comments._owner'])
         .where('logicDelete').equals(false)
-        .limit(20)
+        .limit(req.query.size || 20)
         .sort('-createDate')
         .exec(function(err, posts) {
             if (err) next(err);

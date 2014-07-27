@@ -11,7 +11,7 @@ define([
     var GroupsCollection = BaseCollection.extend({
 
         url: function() {
-            return '/users/' + this.document.id + '/groups?fields=name,cover,description&per_page=3';
+            return '/users/' + this.document.id + '/groups?size=3';
         }
     });
 

@@ -1,3 +1,8 @@
+<%
+    var isFriend = (_.indexOf(selink.user.get('friends'), obj._id) >= 0) ? true : false,
+        isInvited = (_.indexOf(selink.user.get('invited'), obj._id) >= 0) ? true : false;
+%>
+
 <div class="row isotope">
 
     <!-- user profile, it's an stamp which won't be isotope layout -->
@@ -11,12 +16,12 @@
                 <img src="<%= obj.cover %>">
 
                 <!-- friend buttons -->
-                <% if (obj.isFriend) { %>
+                <% if (isFriend) { %>
                     <button class="btn btn-sm btn-danger btn-break"
                             data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・" style="position: absolute; top: 10px; right: 190px;">
                         <i class="ace-icon fa fa-unlink"></i>&nbsp;友達を解除
                     </button>
-                <% } else if (obj.isInvited) { %>
+                <% } else if (isInvited) { %>
                     <button class="btn btn-sm btn-success disabled" style="position: absolute; top: 10px; right: 190px;">
                         <i class="ace-icon fa fa-check"></i>&nbsp;友達リクエスト送信済み
                     </button>
@@ -58,7 +63,7 @@
                         <i class="ace-icon fa fa-group"></i>
                     </div>
                     <div class="infobox-data">
-                        <div class="infobox-content"><%= obj.friendsNum %>人</div>
+                        <div class="infobox-content"><%= obj.friends.length %>人</div>
                         <div class="infobox-content">友達</div>
                     </div>
                 </div>
@@ -251,5 +256,5 @@
 </div>
 
 <nav id="page_nav">
-  <a href="/users/<%= obj._id %>/posts?embed=_owner,group,comments._owner&page=1"></a>
+  <a href="/users/<%= obj._id %>/posts"></a>
 </nav>

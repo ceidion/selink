@@ -6,8 +6,7 @@ define([
     'common/view/group/detail/name',
     'common/view/group/detail/description',
     'common/view/group/detail/events',
-    'common/view/group/detail/member',
-    'common/view/group/detail/member/participants',
+    'common/view/group/detail/members',
     'common/view/calendar/event',
     'common/collection/base',
     'common/model/event',
@@ -21,7 +20,6 @@ define([
     NameItem,
     DescriptionItem,
     EventsItem,
-    MemberItem,
     MembersItem,
     EventView,
     BaseCollection,
@@ -35,7 +33,7 @@ define([
         model: PostModel,
 
         url: function() {
-            return '/groups/' + this.document.id + '/posts?embed=_owner,group,comments._owner';
+            return '/groups/' + this.document.id + '/posts';
         }
     });
 
@@ -82,10 +80,10 @@ define([
                 this.descriptionItem = new DescriptionItem({model: this.model});
             }
 
-            this.eventsItem = new EventsItem({collection: this.model.events});
+            this.eventsItem = new EventsItem({model: this.model});
             this.listenTo(this.eventsItem, 'ensureLayout', BaseView.prototype.ensureLayout);
 
-            this.membersItem = new MembersItem({collection: this.model.participants});
+            this.membersItem = new MembersItem({model: this.model});
 
             // create region manager (this composite view will have layout ability)
             this.rm = new Backbone.Marionette.RegionManager();
@@ -124,18 +122,18 @@ define([
 
             this.$el.find('.fa-group').tooltip({
                 placement: 'top',
-                title: this.model.get('memberNum') + "人参加中"
+                title: this.model.get('participants').length + "人参加中"
             });
 
             this.$el.find('.fa-paper-plane').tooltip({
                 placement: 'top',
-                title: this.model.get('invitationNum') + "人要請中"
+                title: this.model.get('invited').length + "人要請中"
             });
 
             // add tooltip on add button
             this.$el.find('.fa-tasks').tooltip({
                 placement: 'top',
-                title: "イベント" + this.model.get('eventNum') + "件"
+                title: "イベント" + this.model.get('events').length + "件"
             });
 
             this.$el.find('.fa-edit').tooltip({
@@ -149,6 +147,8 @@ define([
         // After show
         onShow: function() {
 
+            var self = this;
+
             if (this.model.get('isMine')) {
                 // show every component
                 this.regions.coverRegion.show(this.coverItem);
@@ -159,6 +159,28 @@ define([
             this.regions.eventsRegion.show(this.eventsItem);
 
             this.regions.membersRegion.show(this.membersItem);
+
+            // attach infinite scroll
+            this.$el.find(this.childViewContainer).infinitescroll({
+                navSelector  : '#page_nav',
+                nextSelector : '#page_nav a',
+                dataType: 'json',
+                appendCallback: false,
+                loading: {
+                    msgText: '<em>投稿を読込み中・・・</em>',
+                    finishedMsg: '投稿は全部読込みました',
+                },
+                path: function() {
+                    return '/groups/' + self.model.id + '/posts?before=' + moment(self.collection.last().get('createDate')).unix();
+                }
+            }, function(json, opts) {
+
+                // if there are more data
+                if (json.length > 0)
+                    // add data to collection, don't forget parse the json object
+                    // this will trigger 'add' event and will call on
+                    self.collection.add(json, {parse: true});
+            });
 
             // call super onShow
             BaseView.prototype.onShow.apply(this);

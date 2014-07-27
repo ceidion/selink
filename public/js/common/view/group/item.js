@@ -1,31 +1,20 @@
 define([
-    'text!common/template/group/item.html',
-    'text!common/template/people/popover.html',
-    'common/view/group/detail/event',
+    'text!common/template/group/item.html'
 ],function(
-    template,
-    popoverTemplate,
-    EventView
+    template
 ) {
 
-    return Backbone.Marionette.CompositeView.extend({
+    return Backbone.Marionette.ItemView.extend({
 
+        // template
         template: template,
 
+        // class name
         className: 'isotope-item col-xs-12 col-md-6 col-lg-4',
 
-        childView: EventView,
-
-        childViewContainer: '.events-container',
-
+        // events
         events: {
             'click .btn-join': 'onJoin',
-        },
-
-        initialize: function() {
-
-            // this.collection = new Backbone.Collection(this.model.get('events'));
-            // console.log(this.model);
         },
 
         // after render

@@ -33,7 +33,7 @@ define([
         model: PostModel,
 
         url: function() {
-            return '/users/' + this.document.id + '/posts?embed=_owner,group,comments._owner';
+            return '/users/' + this.document.id + '/posts';
         }
     });
 
@@ -62,15 +62,6 @@ define([
 
             var self = this;
 
-            // if this person's id in user's friends list
-            if (selink.user.friends.get(this.model.get('_id')))
-                // mark him as user's friend
-                this.model.set('isFriend', true, {silent:true});
-            // or if this person's id in user's invitaion list
-            else if (selink.user.invited.get(this.model.get('_id')))
-                // mark him as user's invited friend
-                this.model.set('isInvited', true, {silent:true});
-
             // create languages view
             if (this.model.languages.length)
                 this.languagesView = new LanguagesView({collection: this.model.languages});
@@ -92,11 +83,11 @@ define([
                 this.employmentsView = new EmploymentsView({collection: this.model.employments});
 
             // create friends view
-            if (this.model.friends.length)
+            if (this.model.get('friends').length)
                 this.friendsView = new FriendsView({model: this.model});
 
             // create groups view
-            if (this.model.groups.length)
+            if (this.model.get('groups').length)
                 this.groupsView = new GroupsView({model: this.model});
 
             // create post collection
@@ -123,6 +114,8 @@ define([
 
         // after show
         onShow: function() {
+
+            var self = this;
 
             // show friends view
             if (this.friendsView)
@@ -152,9 +145,26 @@ define([
             if (this.employmentsView)
                 this.regions.employmentsRegion.show(this.employmentsView);
 
-            // make container scrollable
-            this.$el.find('#bio-area').niceScroll({
-                horizrailenabled: false
+            // attach infinite scroll
+            this.$el.find(this.childViewContainer).infinitescroll({
+                navSelector  : '#page_nav',
+                nextSelector : '#page_nav a',
+                dataType: 'json',
+                appendCallback: false,
+                loading: {
+                    msgText: '<em>投稿を読込み中・・・</em>',
+                    finishedMsg: '投稿は全部読込みました',
+                },
+                path: function() {
+                    return '/users/' + self.model.id + '/posts?before=' + moment(self.collection.last().get('createDate')).unix();
+                }
+            }, function(json, opts) {
+
+                // if there are more data
+                if (json.length > 0)
+                    // add data to collection, don't forget parse the json object
+                    // this will trigger 'add' event and will call on
+                    self.collection.add(json, {parse: true});
             });
 
             // call super initializer

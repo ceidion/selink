@@ -20,6 +20,7 @@ var populateField = {
 // Parameter:
 //   1. type  : Messages type, "sent", "unread", "received"        default: received
 //   2. before: A Unix time stamp used as start point of retrive   default: none
+//   3. size  : Number of result to return                         default: 20
 // ---------------------------------------------
 
 exports.index = function(req, res, next) {
@@ -50,7 +51,7 @@ exports.index = function(req, res, next) {
 
     query.where('logicDelete').ne(req.user.id)
         .populate('_from', populateField['_from'])
-        .limit(20)
+        .limit(req.query.size || 20)
         .sort('-createDate')
         .exec(function(err, messages) {
             if (err) next(err);
