@@ -12,7 +12,7 @@ define([
 
         tagName: 'li',
 
-        className: 'isotope-item col-xs-2',
+        className: 'thumbnail-item col-xs-2',
 
         ui: {
             checkMark: '.check-mark',

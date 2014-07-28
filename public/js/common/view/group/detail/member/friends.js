@@ -1,10 +1,17 @@
 define([
     'text!common/template/group/detail/member/friends.html',
+    'common/collection/base',
     'common/view/group/detail/member/item'
 ], function(
     template,
+    BaseCollection,
     ItemView
 ) {
+
+    var FriendsCollection = BaseCollection.extend({
+
+        url: '/connections/friends'
+    });
 
     return Backbone.Marionette.CompositeView.extend({
 
@@ -15,7 +22,7 @@ define([
         template: template,
 
         // child view container
-        childViewContainer: '.ace-thumbnails',
+        childViewContainer: '.widget-main',
 
         // child view
         childView: ItemView,
@@ -37,6 +44,24 @@ define([
             this.selectFriends = [];
             // selected friend view's $el will save here
             this.selectView = [];
+
+            // create friends collection
+            this.collection = new FriendsCollection();
+        },
+
+        attachHtml: function(collectionView, itemView, index) {
+
+            var self = this;
+
+            if (_.indexOf(this.model.get('participants'), itemView.model.id) >= 0
+                || _.indexOf(this.model.get('invited'), itemView.model.id) >= 0)
+                return;
+
+            // ensure the image are loaded
+            itemView.$el.imagesLoaded(function() {
+                // prepend new item and reIsotope
+                self.$el.find(self.childViewContainer).isotope('insert', itemView.$el);
+            });
         },
 
         // after show
@@ -51,13 +76,33 @@ define([
             setTimeout(function() {
 
                 self.$el.find(self.childViewContainer).isotope({
-                    itemSelector : '.isotope-item'
+                    itemSelector : '.thumbnail-item'
                 });
 
-                // make container scrollable
-                self.$el.find('.widget-main').niceScroll({
-                    horizrailenabled: false
+                // attach infinite scroll
+                self.$el.find(self.childViewContainer).infinitescroll({
+                    navSelector  : '#people_page_nav',
+                    nextSelector : '#people_page_nav a',
+                    behavior: 'local',
+                    binder: self.$el.find(self.childViewContainer),
+                    dataType: 'json',
+                    appendCallback: false,
+                    loading: {
+                        msgText: '<em>ユーザを読込み中・・・</em>',
+                        finishedMsg: 'ユーザ情報は全部読込みました',
+                    },
+                    path: function() {
+                        return '/connections/friends?before=' + moment(self.collection.last().get('createDate')).unix();
+                    }
+                }, function(json, opts) {
+                    // if there are more data
+                    if (json.length > 0)
+                        // add data to collection, don't forget parse the json object
+                        // this will trigger 'add' event and will call on
+                        self.collection.add(json, {parse: true});
                 });
+
+                self.collection.fetch();
 
             }, 500);
         },

@@ -1,6 +1,7 @@
 <div class="widget-header widget-header-small">
     <h5 class="widget-title">
-        <i class="ace-icon fa fa-glass"></i>&nbsp;他の人
+        <i class="ace-icon fa fa-glass"></i>
+        他の人
     </h5>
     <div class="widget-toolbar">
         <span class="input-icon">
@@ -11,19 +12,16 @@
 </div>
 
 <div class="widget-body">
-    <div class="widget-main">
-        <ul id="infinit" class="ace-thumbnails clearfix row" style="max-height: 400px; overflow: hidden;">
-            <div class="isotope-item grid-sizer col-xs-2"></div>
-        </ul>
-        <div id="page_nav_sub">
-          <a href="/non-friends?page=1"></a>
+    <div class="widget-main ace-thumbnails" style="max-height: 400px; overflow-y: auto; overflow-x: hidden;">
+        <div id="people_page_nav">
+            <a href="/connections/nonfriends"></a>
         </div>
     </div>
 </div>
 
 <div class="widget-toolbox clearfix">
     <button class="btn btn-xs btn-warning btn-invite disabled pull-right">
-          グループに要請
-          <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
+        グループに要請
+        <i class="ace-icon fa fa-arrow-right icon-on-right"></i>
     </button>
 </div>

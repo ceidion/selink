@@ -138,8 +138,13 @@ module.exports = function(app) {
     // Join group
     app.patch('/groups/:group/join', checkLoginStatus, group.join);
 
+    // Get group member
+    app.get('/groups/:group/connections/participants', checkLoginStatus, group.connections);
+    // Get group invited people
+    app.get('/groups/:group/connections/invited', checkLoginStatus, group.connections);
+
     // Get group events
-    app.get('/groups/:group/events', checkLoginStatus, userEvent.index);
+    // app.get('/groups/:group/events', checkLoginStatus, userEvent.index);
     // Create new group event
     app.post('/groups/:group/events', checkLoginStatus, userEvent.create);
     // Update group events
@@ -179,7 +184,7 @@ module.exports = function(app) {
     // Get current user's unknow people
     app.get('/connections/discover', checkLoginStatus, connection.index);
 
-    // Get connections (user relate)
+    // Get specific user's friends
     app.get('/users/:user/connections', checkLoginStatus, connection.index);
 
     // Create new connection

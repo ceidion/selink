@@ -34,11 +34,11 @@ exports.index = function(req, res, next) {
 
     // if request specified user
     if (req.params.user && req.params.user !== req.user.id)
-        query.where('_owner').eq(req.params.user);
+        query.where('_owner').equals(req.params.user);
 
     // if request specified group
     else if (req.params.group)
-        query.where('group').eq(req.params.groups);
+        query.where('group').equals(req.params.group);
 
     // default to current user and his group
     else
@@ -59,7 +59,7 @@ exports.index = function(req, res, next) {
             .limit(req.query.size || 20);
     }
 
-    query.select('-_owner -logicDelete')
+    query.select('-logicDelete')
         .where('logicDelete').equals(false)
         .populate('group', populateField['group'])
         .sort('start')

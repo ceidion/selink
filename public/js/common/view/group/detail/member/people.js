@@ -10,7 +10,7 @@ define([
 
     var Introductions = BaseCollection.extend({
 
-        url: '/non-friends'
+        url: '/connections/nonfriends'
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -22,7 +22,7 @@ define([
         template: template,
 
         // child view container
-        childViewContainer: '.ace-thumbnails',
+        childViewContainer: '.widget-main',
 
         // child view
         childView: ItemView,
@@ -73,44 +73,29 @@ define([
 
                 // enable isotope
                 self.$el.find(self.childViewContainer).isotope({
-                    itemSelector : '.isotope-item'
+                    itemSelector : '.thumbnail-item'
                 });
 
                 // attach infinite scroll
                 self.$el.find(self.childViewContainer).infinitescroll({
-                    navSelector  : self.navSelector || '#page_nav_sub',
-                    nextSelector : self.nextSelector || '#page_nav_sub a',
+                    navSelector  : '#people_page_nav',
+                    nextSelector : '#people_page_nav a',
                     behavior: 'local',
                     binder: self.$el.find(self.childViewContainer),
                     dataType: 'json',
                     appendCallback: false,
                     loading: {
-                        msgText: '<em>読込み中・・・</em>',
-                        finishedMsg: 'No more pages to load.',
-                        img: 'http://i.imgur.com/qkKy8.gif',
-                        speed: 'slow',
+                        msgText: '<em>ユーザを読込み中・・・</em>',
+                        finishedMsg: 'ユーザ情報は全部読込みました',
                     },
-                    state: {
-                        currPage: 0
-                    },
-                    // the default determine path fuction is not fit selink,
-                    // here just use the specific one. (from infinitescroll.js line 283)
-                    pathParse: function(path) {
-                        if (path.match(/^(.*?page=)1(\/.*|$)/)) {
-                            path = path.match(/^(.*?page=)1(\/.*|$)/).slice(1);
-                            return path;
-                        }
+                    path: function() {
+                        return '/connections/nonfriends?before=' + moment(self.collection.last().get('createDate')).unix();
                     }
                 }, function(json, opts) {
-                    // no more data
-                    if (json.length === 0){
-                        // destroy infinite scroll, or it will affect other page
-                        self.$el.find(self.childViewContainer).infinitescroll('destroy');
-                        self.$el.find(self.childViewContainer).data('infinitescroll', null);
-                    } else
+                    // if there are more data
+                    if (json.length > 0)
                         // add data to collection, don't forget parse the json object
                         // this will trigger 'add' event and will call on
-                        // the attachHtml method that changed on initialization
                         self.collection.add(json, {parse: true});
                 });
 
@@ -118,15 +103,12 @@ define([
 
             }, 500);
 
-            setTimeout(function() {
+            // setTimeout(function() {
 
-                self.$el.find(self.childViewContainer).niceScroll({
-                    horizrailenabled: false,
-                    railoffset: {
-                        left: 11
-                    }
-                });
-            }, 1200);
+            //     self.$el.find(self.childViewContainer).niceScroll({
+            //         horizrailenabled: false,
+            //     });
+            // }, 1200);
 
         },
 

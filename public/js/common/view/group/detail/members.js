@@ -12,7 +12,9 @@ define([
 
     var MembersCollection = BaseCollection.extend({
 
-        url: '/groups/discover'
+        url: function() {
+            return '/groups/' + this.document.id + '/connections/participants';
+        }
     });
 
     return BaseView.extend({
@@ -24,15 +26,30 @@ define([
         template: template,
 
         // child view container
-        childViewContainer: '.ace-thumbnails',
+        childViewContainer: '.widget-main',
 
         // child view
         childView: ItemView,
 
+        // child selector
+        childSelector: '.thumbnail-item',
+
         // initializer
         initialize: function() {
 
-            this.collection = new MembersCollection();
+            this.collection = new MembersCollection(null, {document: this.model});
+        },
+
+        // after render
+        onRender: function() {
+
+            // add tooltip on add button
+            this.$el.find('.btn-member').tooltip({
+                placement: 'top',
+                title: "メンバー管理",
+                container: 'body',
+                template: '<div class="tooltip tooltip-success"><div class="tooltip-arrow"></div><div class="tooltip-inner"></div></div>'
+            });
         }
 
     });

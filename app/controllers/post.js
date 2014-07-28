@@ -115,8 +115,12 @@ exports.newsfeed = function(req, res, next) {
     // create query
     var query = Post.find();
 
-    // query posts belong to current user's friends and groups
-    query.or({_owner: {$in: req.user.friends}}, {group: {$in: req.user.group}});
+    // query posts belong to current user and his/her friends and groups
+    query.or([
+        {_owner: req.user.id},
+        {_owner: {$in: req.user.friends}},
+        {group: {$in: req.user.groups}}
+    ]);
 
     // if request specified output fields
     if (req.query.fields)
@@ -164,39 +168,39 @@ exports.newsfeed = function(req, res, next) {
 //   5. per_page: record number of every page                        default: 20
 // ---------------------------------------------
 
-exports.friendsIndex = function(req, res, next) {
+// exports.friendsIndex = function(req, res, next) {
 
-    // create query
-    var query = Post.find();
+//     // create query
+//     var query = Post.find();
 
-    // query posts belong to current user's friends
-    query.where('_owner').in(req.user.friends);
+//     // query posts belong to current user's friends
+//     query.where('_owner').in(req.user.friends);
 
-    // if request specified output fields
-    if (req.query.fields)
-        query.select(req.query.fields.replace(/,/g, ' '));
+//     // if request specified output fields
+//     if (req.query.fields)
+//         query.select(req.query.fields.replace(/,/g, ' '));
 
-    // if request specified population
-    if (req.query.embed) {
-        req.query.embed.split(',').forEach(function(field) {
-            query.populate(field, populateField[field]);
-        });
-    }
+//     // if request specified population
+//     if (req.query.embed) {
+//         req.query.embed.split(',').forEach(function(field) {
+//             query.populate(field, populateField[field]);
+//         });
+//     }
 
-    // if request specified sort order and pagination
-    var sort = req.query.sort || '-createDate',
-        page = req.query.page || 0,
-        per_page = req.query.per_page || 20;
+//     // if request specified sort order and pagination
+//     var sort = req.query.sort || '-createDate',
+//         page = req.query.page || 0,
+//         per_page = req.query.per_page || 20;
 
-    query.where('logicDelete').equals(false)
-        .skip(page*per_page)
-        .limit(per_page)
-        .sort(sort)
-        .exec(function(err, posts) {
-            if (err) next(err);
-            else res.json(posts);
-        });
-};
+//     query.where('logicDelete').equals(false)
+//         .skip(page*per_page)
+//         .limit(per_page)
+//         .sort(sort)
+//         .exec(function(err, posts) {
+//             if (err) next(err);
+//             else res.json(posts);
+//         });
+// };
 
 // Post index -- groups' posts
 // ---------------------------------------------
@@ -211,39 +215,39 @@ exports.friendsIndex = function(req, res, next) {
 //   5. per_page: record number of every page                        default: 20
 // ---------------------------------------------
 
-exports.groupsIndex = function(req, res, next) {
+// exports.groupsIndex = function(req, res, next) {
 
-    // create query
-    var query = Post.find();
+//     // create query
+//     var query = Post.find();
 
-    // query posts belong to current user's groups
-    query.where('group').in(req.user.groups);
+//     // query posts belong to current user's groups
+//     query.where('group').in(req.user.groups);
 
-    // if request specified output fields
-    if (req.query.fields)
-        query.select(req.query.fields.replace(/,/g, ' '));
+//     // if request specified output fields
+//     if (req.query.fields)
+//         query.select(req.query.fields.replace(/,/g, ' '));
 
-    // if request specified population
-    if (req.query.embed) {
-        req.query.embed.split(',').forEach(function(field) {
-            query.populate(field, populateField[field]);
-        });
-    }
+//     // if request specified population
+//     if (req.query.embed) {
+//         req.query.embed.split(',').forEach(function(field) {
+//             query.populate(field, populateField[field]);
+//         });
+//     }
 
-    // if request specified sort order and pagination
-    var sort = req.query.sort || '-createDate',
-        page = req.query.page || 0,
-        per_page = req.query.per_page || 20;
+//     // if request specified sort order and pagination
+//     var sort = req.query.sort || '-createDate',
+//         page = req.query.page || 0,
+//         per_page = req.query.per_page || 20;
 
-    query.where('logicDelete').equals(false)
-        .skip(page*per_page)
-        .limit(per_page)
-        .sort(sort)
-        .exec(function(err, posts) {
-            if (err) next(err);
-            else res.json(posts);
-        });
-};
+//     query.where('logicDelete').equals(false)
+//         .skip(page*per_page)
+//         .limit(per_page)
+//         .sort(sort)
+//         .exec(function(err, posts) {
+//             if (err) next(err);
+//             else res.json(posts);
+//         });
+// };
 
 // Show single post
 exports.show = function(req, res, next) {

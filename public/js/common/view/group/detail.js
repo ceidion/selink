@@ -8,6 +8,7 @@ define([
     'common/view/group/detail/events',
     'common/view/group/detail/members',
     'common/view/calendar/event',
+    'common/view/group/detail/member/main',
     'common/collection/base',
     'common/model/event',
     'common/model/post',
@@ -22,6 +23,7 @@ define([
     EventsItem,
     MembersItem,
     EventView,
+    MemberView,
     BaseCollection,
     EventModel,
     PostModel,
@@ -249,12 +251,12 @@ define([
         showMemberEditor: function() {
 
             // create member edit dialog with this view's model
-            var memberEditView = new MemberItem({
+            var memberView = new MemberView({
                 model: this.model
             });
 
             // show edit dialog
-            selink.modalArea.show(memberEditView);
+            selink.modalArea.show(memberView);
             selink.modalArea.$el.modal('show');
         },
 

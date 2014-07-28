@@ -30,11 +30,11 @@ define([], function() {
 
             // enable isotope
             this.$el.find(this.childViewContainer).isotope({
-                itemSelector : '.isotope-item',
+                itemSelector : this.childSelector || '.isotope-item',
                 stamp: '.stamp',
-                masonry: {
-                    columnWidth: '.isotope-item'
-                },
+                // masonry: {
+                //     columnWidth: '.isotope-item'
+                // },
                 getSortData: {
                     createDate: function(elem) {
                         return $(elem).find('[data-create-date]').data('create-date');

@@ -10,9 +10,7 @@ define([
 
         template: template,
 
-        tagName: 'li',
-
-        className: 'isotope-item-2 col-xs-2 no-padding',
+        className: 'thumbnail-item col-xs-2',
 
         onShow: function() {
 

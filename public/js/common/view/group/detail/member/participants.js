@@ -1,10 +1,19 @@
 define([
     'text!common/template/group/detail/member/participants.html',
+    'common/collection/base',
     'common/view/group/detail/member/item-ro'
 ], function(
     template,
+    BaseCollection,
     ItemView
 ) {
+
+    var ParticipantsCollection = BaseCollection.extend({
+
+        url: function() {
+            return '/groups/' + this.document.id + '/connections/participants';
+        }
+    });
 
     return Backbone.Marionette.CompositeView.extend({
 
@@ -15,10 +24,17 @@ define([
         template: template,
 
         // child view container
-        childViewContainer: '.ace-thumbnails',
+        childViewContainer: '.widget-main',
 
         // child view
         childView: ItemView,
+
+        // initializer
+        initialize: function() {
+
+            this.collection = new ParticipantsCollection(null, {document: this.model});
+            this.collection.fetch();
+        },
 
         // after show
         onShow: function() {
@@ -33,7 +49,7 @@ define([
 
                 // enable isotope
                 self.$el.find(self.childViewContainer).isotope({
-                    itemSelector : '.isotope-item-2'
+                    itemSelector : '.thumbnail-item'
                 });
 
                 self.attachHtml = function(collectionView, itemView, index) {
