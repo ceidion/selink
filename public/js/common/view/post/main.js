@@ -59,8 +59,7 @@ define([
             });
 
             // create group drop-down list view
-            this.newPostView = new NewPostView();
-
+            this.newPostView = new NewPostView({targetCollection: this.collection});
         },
 
         // After show

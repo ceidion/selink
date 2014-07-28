@@ -1,16 +1,38 @@
 define([
     'text!common/template/post/new.html',
+    'common/collection/base',
+    'common/view/post/group'
 ], function(
-    template
+    template,
+    BaseCollection,
+    ItemView
 ) {
 
-    return Backbone.Marionette.ItemView.extend({
+    // groups that the user participating
+    var GroupsCollection = BaseCollection.extend({
+
+        // we don't need group model, cause we only request for group's id, name and cover
+        // this will save some performance on server. and skip parsing on client model also
+        // save the performance on client.
+
+        url: function() {
+            return '/users/' + this.document.id + '/groups';
+        }
+    });
+
+    return Backbone.Marionette.CompositeView.extend({
 
         // template
         template: template,
 
         // class name
         className: 'widget-box widget-color-green',
+
+        // child view container
+        childViewContainer: '.dropdown-menu',
+
+        // child view
+        childView: ItemView,
 
         // ui
         ui: {
@@ -21,36 +43,30 @@ define([
         // events
         events: {
             'click .btn-post': 'onPost',
-            'keyup .wysiwyg-editor': 'enablePost'
+            'keyup .wysiwyg-editor': 'enablePost',
+            'click .btn-cancel': 'onGroupClear'
+        },
+
+        // child events
+        childEvents: {
+            'selected': 'onGroupSelect'
         },
 
         // initializer
         initialize: function() {
 
-            // // create posts collection
-            // this.collection = new PostsCollection(null, {document: selink.user});
+            if (this.options.targetGroup) {
 
-            // // create region manager (this composite view will have layout ability)
-            // this.rm = new Backbone.Marionette.RegionManager();
+                this.model = this.options.targetGroup;
+                this.targetGroup = this.options.targetGroup;
+            }
+            else {
+                // create posts collection
+                this.collection = new GroupsCollection(null, {document: selink.user});
+                // populate collection
+                this.collection.fetch();
+            }
 
-            // // create regions
-            // this.regions = this.rm.addRegions({
-            //     groupListRegion: '#group-list',
-            // });
-
-            // // create group drop-down list view
-            // this.groupListView = new GroupListView();
-
-            // // listen to the group list view, for the selection of target group
-            // this.listenTo(this.groupListView, 'group-select', this.setGroup);
-            // this.listenTo(this.groupListView, 'group-clear', this.unsetGroup);
-        },
-
-        // After show
-        onShow: function() {
-
-            // display group drop-down list
-            // this.regions.groupListRegion.show(this.groupListView);
         },
 
         // on render
@@ -66,19 +82,21 @@ define([
             // this.ui.newPost.niceScroll();
         },
 
-        // before destroy
-        onBeforeDestroy: function() {
-            // destroy region manager
-            // this.rm.destroy();
-        },
+        // on post target group selected
+        onGroupSelect: function(event, model) {
 
-        // hold the selected group
-        setGroup: function(model) {
+            // change label text
+            this.$el.find('.group-name').empty().text(model.get('name'));
+            // hold the selected group
             this.targetGroup = model;
         },
 
-        // clear the target group
-        unsetGroup: function(event) {
+        // on post target group canceled
+        onGroupClear: function() {
+
+            // change label text
+            this.$el.find('.group-name').empty().text('グループ指定なし');
+            // clear the target group
             this.targetGroup = null;
         },
 
@@ -110,7 +128,7 @@ define([
                 post.group = this.targetGroup.id;
 
             // create new post
-            this.collection.create(post, {
+            this.options.targetCollection.create(post, {
                 success: function(model, response, options) {
                     // clear input area
                     self.ui.newPost.html("");

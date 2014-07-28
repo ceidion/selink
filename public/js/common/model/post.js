@@ -63,7 +63,7 @@ define([
                     response.group = this.collection.document.attributes;
 
             // if post owner's id is current user's id
-            if (response._owner.id === selink.user.id)
+            if (response._owner._id === selink.user.id)
                 // mark as my post
                 response.isMine = true;
             else

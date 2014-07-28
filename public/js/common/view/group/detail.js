@@ -12,7 +12,8 @@ define([
     'common/collection/base',
     'common/model/event',
     'common/model/post',
-    'common/view/post/item'
+    'common/view/post/item',
+    'common/view/post/new'
 ], function(
     template,
     popoverTemplate,
@@ -27,7 +28,8 @@ define([
     BaseCollection,
     EventModel,
     PostModel,
-    ItemView
+    ItemView,
+    NewPostView
 ) {
 
     var PostsCollection = BaseCollection.extend({
@@ -48,20 +50,12 @@ define([
         // child view
         childView: ItemView,
 
-        // ui
-        ui: {
-            newPost: '.wysiwyg-editor',
-            btnPost: '.btn-post'
-        },
-
         // events
         events: {
             'click .btn-join': 'onJoin',
             'click .avatar-owner': 'toProfile',
             'click .btn-member': 'showMemberEditor',
-            'click .btn-event': 'showEventEditor',
-            'click .btn-post': 'onPost',
-            'keyup .wysiwyg-editor': 'enablePost'
+            'click .btn-event': 'showEventEditor'
         },
 
         modelEvents: {
@@ -75,6 +69,9 @@ define([
         // initializer
         initialize: function() {
 
+            // create posts collection
+            this.collection = new PostsCollection(null, {document: this.model});
+
             if (this.model.get('isMine')) {
                 // create component
                 this.coverItem = new CoverItem({model: this.model});
@@ -87,6 +84,11 @@ define([
 
             this.membersItem = new MembersItem({model: this.model});
 
+            this.newPostView = new NewPostView({
+                targetGroup: this.model,
+                targetCollection: this.collection
+            });
+
             // create region manager (this composite view will have layout ability)
             this.rm = new Backbone.Marionette.RegionManager();
             // create regions
@@ -95,22 +97,13 @@ define([
                 nameRegion: '#name',
                 descriptionRegion: '#description',
                 eventsRegion: '#events',
-                membersRegion: '#members'
+                membersRegion: '#members',
+                newPostRegion: '#new-post'
             });
-
-            // create posts collection
-            this.collection = new PostsCollection(null, {document: this.model});
         },
 
         // after render
         onRender: function() {
-
-            // initiate wysiwyg eidtor for memo
-            this.ui.newPost.ace_wysiwyg({
-                toolbar_place: function(toolbar) {
-                    return $(this).closest('.widget-box').find('.btn-toolbar').prepend(toolbar).children(0).addClass('inline');
-                }
-            }).prev().addClass('wysiwyg-style3');
 
             // add popover on author photo
             this.$el.find('.avatar').popover({
@@ -161,6 +154,8 @@ define([
             this.regions.eventsRegion.show(this.eventsItem);
 
             this.regions.membersRegion.show(this.membersItem);
+
+            this.regions.newPostRegion.show(this.newPostView);
 
             // attach infinite scroll
             this.$el.find(this.childViewContainer).infinitescroll({
@@ -275,52 +270,6 @@ define([
             // show modal
             selink.modalArea.show(eventModal);
             selink.modalArea.$el.modal('show');
-        },
-
-        // change the status of post button
-        enablePost: function() {
-
-            // get user input
-            var input = this.ui.newPost.cleanHtml();
-
-            // if user input is not empty
-            if (input && !_.str.isBlank(input)) {
-                // enable the post button
-                this.ui.btnPost.removeClass('disabled');
-            } else {
-                // disable ths post button
-                this.ui.btnPost.addClass('disabled');
-            }
-        },
-
-        // new post
-        onPost: function() {
-
-            var self = this;
-
-            // create new post
-            this.collection.create({
-                content: this.ui.newPost.cleanHtml(),
-                group: this.model.id
-            }, {
-                success: function(model, response, options) {
-                    // clear input area
-                    self.ui.newPost.html("");
-                    // disable post button (can't post empty)
-                    self.ui.btnPost.addClass('disabled');
-                },
-                error: function(model, xhr, options) {
-
-                    if (xhr.status === 413)
-                        // show error
-                        $.gritter.add({
-                            title: '投稿は失敗しました',
-                            text: 'ご投稿した内容のサイズは大きすぎたため、投稿は受入ませんでした。画像を含めて投稿する場合は、直接に画像を挿入せずに、画像リンクをご利用ください。',
-                            class_name: 'gritter-error'
-                        });
-                },
-                wait: true
-            });
         }
 
     });

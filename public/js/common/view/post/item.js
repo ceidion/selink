@@ -121,6 +121,8 @@ define([
             // create comments collction
             this.collection = this.model.comments;
 
+            console.log(this.model)
+
         },
 
         // after render
