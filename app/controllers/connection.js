@@ -1,7 +1,8 @@
 var _s = require('underscore.string'),
-    Mailer = require('../mailer/mailer.js'),
-    mongoose = require('mongoose'),
+    async = require('async'),
     moment = require('moment'),
+    mongoose = require('mongoose'),
+    Mailer = require('../mailer/mailer.js'),
     User = mongoose.model('User'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
@@ -91,6 +92,29 @@ _connection_index = function(req, res, user, next) {
 exports.create = function(req, res, next) {
 
     // TODO: check friend id is already in the 'friend' or 'invited' list
+
+    async.waterfall([
+
+        function updateUser() {
+
+            // add the friend's id into user's invited list
+            req.user.invited.addToSet(req.body._id);
+            // update user
+            req.user.save(function(err, user) {});
+
+        },
+        function createNotification() {
+
+        },
+        function sentRealTimeMessage() {
+
+        },
+
+    ], function() {
+
+    });
+
+
 
     // add the friend's id into user's invited list
     req.user.invited.addToSet(req.body._id);
