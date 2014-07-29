@@ -62,27 +62,6 @@ define([
                 if (this.collection.document)
                     response.group = this.collection.document.attributes;
 
-            // if post owner's id is current user's id
-            if (response._owner._id === selink.user.id)
-                // mark as my post
-                response.isMine = true;
-            else
-                response.isMine = false;
-
-            // if user's id exists in post's liked list
-            if (_.indexOf(response.liked, selink.user.id) >= 0)
-                // mark as liked
-                response.isLiked = true;
-            else
-                response.isLiked = false;
-
-            // if user's id exists in post's bookmark list
-            if (_.indexOf(response.bookmarked, selink.user.id) >= 0)
-                // mark as marked
-                response.isMarked = true;
-            else
-                response.isMarked = false;
-
             return response;
         },
 

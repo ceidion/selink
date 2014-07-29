@@ -32,18 +32,6 @@ define([
         // child view
         childView: ItemView,
 
-        // ui
-        ui: {
-            newPost: '.wysiwyg-editor',
-            btnPost: '.btn-post'
-        },
-
-        // events
-        events: {
-            'click .btn-post': 'onPost',
-            'keyup .wysiwyg-editor': 'enablePost'
-        },
-
         // initializer
         initialize: function() {
 

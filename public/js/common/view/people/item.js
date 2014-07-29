@@ -26,9 +26,10 @@ define([
             this.$el.find('.btn-friend').button('loading');
 
             // create a friend in invited list
-            selink.user.invited.create({
+            selink.user.save({
                 _id: this.model.get('_id')
             }, {
+                url: '/friends',
                 success: function() {
                     // change the label of the add button, but still disabled
                     self.$el.find('.btn-friend')

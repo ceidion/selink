@@ -1,3 +1,9 @@
+<%
+    var isMine = (obj._owner._id === selink.user.id) ? true : false,
+        isLiked = (_.indexOf(obj.liked, selink.user.id) >= 0) ? true : false,
+        isMarked = (_.indexOf(obj.bookmarked, selink.user.id) >= 0) ? true : false;
+%>
+
 <div id="<%= obj._id %>" class="widget-box" data-create-date="<%= moment(obj.createDate).valueOf() %>">
 
     <!-- post header -->
@@ -9,7 +15,7 @@
         </a>
 
         <!-- if this post is mine -->
-        <% if (obj.isMine) { %>
+        <% if (isMine) { %>
             <!-- operation menu -->
             <div class="widget-toolbar no-border hidden">
 
@@ -81,7 +87,7 @@
         <div class="widget-main">
 
             <!-- if this post is mine -->
-            <% if (obj.isMine) { %>
+            <% if (isMine) { %>
 
                 <!-- remove confrim dialog -->
                 <div class="alert alert-danger clearfix" style="display: none;">
@@ -146,13 +152,13 @@
             <div class="pull-right">
 
                 <!-- bookmark button -->
-                <div class="inline orange tooltip-warning <% if (!obj.isMarked) print("btn-bookmark"); %>">
-                    <i class="ace-icon fa <% if (obj.isMarked) print("fa-star"); else print("fa-star-o"); %> bigger-110"></i>
+                <div class="inline orange tooltip-warning <% if (!isMarked) print("btn-bookmark"); %>">
+                    <i class="ace-icon fa <% if (isMarked) print("fa-star"); else print("fa-star-o"); %> bigger-110"></i>
                 </div>
 
                 <!-- like button -->
-                <div class="inline red tooltip-error <% if (!obj.isLiked) print("btn-like"); %>">
-                    <i class="ace-icon fa <% if (obj.isLiked) print("fa-heart"); else print("fa-heart-o"); %> "></i>
+                <div class="inline red tooltip-error <% if (!isLiked) print("btn-like"); %>">
+                    <i class="ace-icon fa <% if (isLiked) print("fa-heart"); else print("fa-heart-o"); %> "></i>
                     <span><%= obj.liked.length %></span>
                 </div>
 
