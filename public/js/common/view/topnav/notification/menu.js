@@ -12,7 +12,7 @@ define([
 
     // Notification Collection, provide the url root for notification update
     var Notifications = BaseCollection.extend({
-        url: '/notifications/unconfirmed'
+        url: '/notifications'
     });
 
     return Backbone.Marionette.CompositeView.extend({
@@ -301,7 +301,9 @@ define([
                     if (response.count > 0) {
 
                         // fetch the notifications
-                        self.collection.fetch();
+                        self.collection.fetch({
+                            url: '/notifications/unconfirmed'
+                        });
 
                         // attach infinite scroll
                         self.$el.find(self.childViewContainer).infinitescroll({

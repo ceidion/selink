@@ -245,9 +245,10 @@ define([
             this.$el.find('.btn-friend').button('loading');
 
             // create a friend in invited list
-            selink.user.invited.create({
-                _id: this.model.get('_id')
+            selink.user.save({
+                id: this.model.get('_id')
             }, {
+                url: '/connections/invite',
                 success: function() {
                     // change the label of the add button, but still disabled
                     self.$el.find('.btn-friend')
@@ -272,8 +273,10 @@ define([
             this.$el.find('.btn-break').button('loading');
 
             // remove this person from user's friends list
-            selink.user.friends.get(this.model.get('_id')).destroy({
-
+            selink.user.save({
+                id: this.model.get('_id')
+            },{
+                url: '/connections/break',
                 success: function() {
                     // change the button for success info, but won't enable it
                     self.$el.find('.btn-break')
@@ -281,7 +284,9 @@ define([
                         .addClass('btn-grey')
                         .empty()
                         .html('<i class="ace-icon fa fa-check light-green"></i>&nbsp;友達解除しました');
-                }
+                },
+                patch: true,
+                wait: true
             });
         }
 

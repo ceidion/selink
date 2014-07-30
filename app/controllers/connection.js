@@ -89,135 +89,179 @@ _connection_index = function(req, res, user, next) {
 };
 
 // Create Friend
+// ---------------------------------------------
+// Add a friend invitation for current user. This request will:
+//   1. update the "invited" field for current user
+//   2. create "friend-invited" activity for current user
+//   3. create "friend-invited" notification for invited user
+//   4. send real time message to invited user
+//   5. send email to invited user
+// ---------------------------------------------
+// Parameter:
+//   1. id  : The user's id that was invited
+// ---------------------------------------------
+
 exports.create = function(req, res, next) {
 
     // TODO: check friend id is already in the 'friend' or 'invited' list
 
-    async.waterfall([
+    async.parallel({
 
-        function updateUser() {
+        // add the friend's id into user's invited list
+        updateUser: function (callback) {
 
-            // add the friend's id into user's invited list
-            req.user.invited.addToSet(req.body._id);
-            // update user
-            req.user.save(function(err, user) {});
-
-        },
-        function createNotification() {
-
-        },
-        function sentRealTimeMessage() {
-
+            req.user.invited.addToSet(req.body.id);
+            req.user.save(callback);
         },
 
-    ], function() {
+        // create activity for current user
+        createActivity: function (callback) {
 
-    });
+            Activity.create({
+                _owner: req.user.id,
+                type: 'friend-invited',
+                targetUser: req.body.id
+            }, callback);
+        },
 
+        // create notification for target user
+        createNotification: function (callback) {
 
-
-    // add the friend's id into user's invited list
-    req.user.invited.addToSet(req.body._id);
-
-    // update user
-    req.user.save(function(err, user) {
-
-        if (err) next(err);
-        else {
-            // create notification
             Notification.create({
-                _owner: [req.body._id],
-                _from: user.id,
+                _owner: req.body.id,
+                _from: req.user.id,
                 type: 'friend-invited'
             }, function(err, notification) {
 
-                if (err) next(err);
+                if (err) callback(err);
                 else {
-                    // populate the notification with request sender's info
-                    notification.populate({path:'_from', select: 'type firstName lastName title cover photo email createDate'}, function(err, noty) {
-                        // send real time message
-                        if(err) next(err);
-                        else sio.sockets.in(req.body._id).emit('friend-invited', noty);
+                    // send real time message to target user
+                    sio.sockets.in(req.body.id).emit('friend-invited', {
+                        _id: notification._id,
+                        _from: {
+                            type: req.user.type,
+                            firstName: req.user.firstName,
+                            lastName: req.user.lastName,
+                            title: req.user.title,
+                            cover: req.user.cover,
+                            photo: req.user.photo
+                        },
+                        type: 'friend-invited',
+                        createDate: new Date()
                     });
 
-                    // send friend-invitation mail
-                    User.findById(req.body._id, 'type firstName lastName title cover photo email createDate', function(err, target){
-                        if (err) next(err);
-                        else {
+                    callback(null);
+                }
+            });
+        },
 
-                            // log user's activity
-                            Activity.create({
-                                _owner: user.id,
-                                type: 'friend-invited',
-                                targetUser: req.body._id
-                            }, function(err, activity) {
-                                // send back requested user's info
-                                if (err) next(err);
-                                else res.json(target);
-                            });
+        // send Email to target user
+        sendEmail: function (callback) {
 
-                            Mailer.friendInvitation({
-                                from: user,
-                                email: target.email
-                            });
-                        }
+            User.findById(req.body.id, 'email', function(err, user){
+                if (err) callback(err);
+                else {
+
+                    Mailer.friendInvitation({
+                        from: req.user,
+                        email: user.email
                     });
+
+                    callback(null);
                 }
             });
         }
+
+    }, function(err, results) {
+
+        if (err) next(err);
+        // return the updated user
+        else res.json(results.updateUser[0]);
     });
+
 };
 
 // Remove Friend
+// ---------------------------------------------
+// Remove a friend from the friends list current user. This request will:
+//   1. update the "friends" field for current user
+//   2. update the "friends" field for target user
+//   3. create "friend-break" activity for current user
+//   4. create "friend-break" notification for target user
+//   5. send real time message to target user
+// ---------------------------------------------
+// Parameter:
+//   1. id  : The user's id that will removed
+// ---------------------------------------------
+
 exports.remove = function(req, res, next) {
 
-    // remove the friend's id from user's friend list
-    req.user.friends.pull(req.params.friend);
+    // TODO: check friend id is already in the 'friend' or 'invited' list
 
-    // update user
-    req.user.save(function(err, user) {
+    async.parallel({
 
-        if (err) next(err);
-        else {
+        // remove the friend's id from user's friend list
+        updateUser: function(callback) {
 
-            // find that friend, remove this user from his friend list
-            User.findByIdAndUpdate(req.params.friend, {'$pull': {friends: user.id}}, function(err, friend) {
+            req.user.friends.pull(req.body.id);
+            req.user.save(callback);
+        },
 
-                if (err) next(err);
+        // find that friend, remove current user from his friend list
+        updateFriend: function(callback) {
+
+            User.findByIdAndUpdate(req.body.id, {'$pull': {friends: req.user.id}}, callback);
+        },
+
+        // create activity for current user
+        createActivity: function(callback) {
+
+            // log user's activity
+            Activity.create({
+                _owner: req.user.id,
+                type: 'friend-break',
+                targetUser: req.body.id
+            }, callback);
+        },
+
+        // create notification for target user
+        createNotification: function(callback) {
+
+            Notification.create({
+                _owner: req.body.id,
+                _from: req.user.id,
+                type: 'friend-break'
+            }, function(err, notification) {
+
+                if (err) callback(err);
                 else {
-                    // create notification
-                    Notification.create({
-                        _owner: [friend.id],
-                        _from: user.id,
-                        type: 'friend-break'
-                    }, function(err, notification) {
-
-                        if (err) next(err);
-                        else {
-                            // populate the notification with request sender's info
-                            notification.populate({path:'_from', select: 'firstName lastName photo'}, function(err, noty) {
-
-                                // send real time message
-                                if(err) next(err);
-                                else sio.sockets.in(friend.id).emit('friend-break', noty);
-                            });
-
-                            // log user's activity
-                            Activity.create({
-                                _owner: user.id,
-                                type: 'friend-break',
-                                targetUser: req.params.friend
-                            }, function(err, activity) {
-                                // send back requested user's info
-                                if (err) next(err);
-                                else res.json(friend);
-                            });
-                        }
+                    // send real time message to target user
+                    sio.sockets.in(req.body.id).emit('friend-break', {
+                        _id: notification._id,
+                        _from: {
+                            type: req.user.type,
+                            firstName: req.user.firstName,
+                            lastName: req.user.lastName,
+                            title: req.user.title,
+                            cover: req.user.cover,
+                            photo: req.user.photo
+                        },
+                        type: 'friend-break',
+                        createDate: new Date()
                     });
+
+                    callback(null);
                 }
             });
         }
+
+    }, function(err, results) {
+
+        if (err) next(err);
+        // return the updated user
+        else res.json(results.updateUser[0]);
     });
+
 };
 
 exports.suggest = function(req, res, next) {

@@ -188,10 +188,9 @@ module.exports = function(app) {
     app.get('/users/:user/connections', checkLoginStatus, connection.index);
 
     // Create new connection
-    app.patch('/friends', checkLoginStatus, connection.create);
-
+    app.patch('/connections/invite', checkLoginStatus, connection.create);
     // Remove connection
-    app.delete('/friends/:friend', checkLoginStatus, connection.remove);
+    app.patch('/connections/break', checkLoginStatus, connection.remove);
 
     // Messages
     // ----------------------------------------------------------------------

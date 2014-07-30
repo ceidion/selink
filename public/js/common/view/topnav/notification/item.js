@@ -55,18 +55,13 @@ define([
             // stop trigger the link on item
             e.preventDefault();
 
-            var self = this,
-                // TODO: this is may not good, server will return the updated notification,
-                // but only contain the "_from" as id, and it will be set back to model,
-                // cause I want add _from to friends list, have to put it here temporary
-                friend = this.model.get('_from');
-
-                console.log(friend);
+            var self = this;
 
             this.model.save({result: 'approved'}, {
-                success: function() {
+                success: function(model, response, options) {
                     self.$el.slideUp(function() {
-                        selink.user.friends.add(friend);
+                        // add _from to current user's friends list
+                        selink.user.get('friends').push(response._from);
                         self.model.collection.remove(self.model);
                     });
                 },

@@ -1,7 +1,8 @@
 var _s = require('underscore.string'),
-    Mailer = require('../mailer/mailer.js'),
-    mongoose = require('mongoose'),
+    async = require('async'),
     moment = require('moment'),
+    mongoose = require('mongoose'),
+    Mailer = require('../mailer/mailer.js'),
     User = mongoose.model('User'),
     Group = mongoose.model('Group'),
     Activity = mongoose.model('Activity'),
@@ -148,130 +149,204 @@ exports.update = function(req, res, next) {
     });
 };
 
+// Approve friend invitation
+// ---------------------------------------------
+// Add a friend to the friends list of current user. This request will:
+//   1. update the "invited" and "friends" field for current user
+//   2. update the "invited" and "friends" field for target user
+//   3. update the "result" field for notification as "approved"
+//   4. create "friend-approved" activity for current user
+//   5. create "friend-approved" notification for target user
+//   6. send real time message to target user
+//   7. send Email to target user
+// ---------------------------------------------
+// Parameter:
+//   1. id  : The user's id that was approved
+// ---------------------------------------------
+
 approve = function(req, res, next, notification) {
 
-    // remove the request sender's id from user's invited list
-    // (in case they invited each other)
-    req.user.invited.pull(notification._from);
+    async.parallel({
 
-    // add the request sender's id into user's friend list
-    req.user.friends.addToSet(notification._from);
+        // add the friend's id into user's friends list
+        updateUser: function(callback) {
 
-    // update user
-    req.user.save(function(err) {
+            // remove the request sender's id from user's invited list
+            // (in case they invited each other)
+            req.user.invited.pull(notification._from);
+            // add the request sender's id into user's friend list
+            req.user.friends.addToSet(notification._from);
 
-        if (err) next(err);
-        else {
+            req.user.save(callback);
+        },
 
-            // find request sender
-            User.findById(notification._from, function(err, friend){
+        // find that friend, add current user to his friend list
+        updateFriend: function(callback) {
 
-                if (err) next(err);
+            User.findByIdAndUpdate(notification._from, {
+                '$pull': {invited: req.user.id},
+                '$push': {friends: req.user.id},
+            }, callback);
+        },
+
+        // mark the notification as confirmed
+        updateNotification: function(callback) {
+
+            notification.result = req.body.result;
+            notification.confirmed.addToSet(req.user.id);
+            notification.save(callback);
+        },
+
+        // create activity for current user
+        createActivity: function(callback) {
+
+            Activity.create({
+                _owner: req.user.id,
+                type: 'friend-approved',
+                targetUser: notification._from
+            }, callback);
+        },
+
+        // create notification for target user
+        createNotification: function(callback) {
+
+            Notification.create({
+                _owner: notification._from,
+                _from: req.user.id,
+                type: 'friend-approved'
+            }, function(err, noty) {
+
+                if (err) callback(err);
                 else {
 
-                    // move user's id from request sender's invited list
-                    // to the friend list
-                    friend.invited.pull(req.user._id);
-                    friend.friends.push(req.user._id);
-
-                    // update request sender
-                    friend.save(function(err, updatedFriend) {
-
-                        // create respond notification
-                        Notification.create({
-                            _owner: [updatedFriend.id],
-                            _from: req.user.id,
-                            type: 'friend-approved'
-                        }, function(err, respond) {
-
-                            if (err) next(err);
-                            else {
-                                // populate the respond notification with user's info
-                                respond.populate({path:'_from', select: 'type firstName lastName title cover photo createDate'}, function(err, noty) {
-
-                                    if(err) next(err);
-                                    // send real time message
-                                    else sio.sockets.in(updatedFriend.id).emit('friend-approved', noty);
-                                });
-                            }
-                        });
-
-                        // log user's activity
-                        Activity.create({
-                            _owner: req.user.id,
-                            type: 'friend-approved',
-                            targetUser: updatedFriend._id
-                        }, function(err) {
-                            if (err) next(err);
-                        });
-
-                        // mark the notification as confirmed
-                        notification.result = req.body.result;
-                        notification.confirmed.addToSet(req.user.id);
-                        notification.save(function(err, confirmedNotification) {
-                            if (err) next(err);
-                            else res.json(confirmedNotification);
-                        });
-
-                        Mailer.friendApprove({
-                            from: req.user,
-                            email: updatedFriend.email
-                        });
+                    // send real time message to target user
+                    sio.sockets.in(notification._from).emit('friend-approved', {
+                        _id: noty._id,
+                        _from: {
+                            type: req.user.type,
+                            firstName: req.user.firstName,
+                            lastName: req.user.lastName,
+                            title: req.user.title,
+                            cover: req.user.cover,
+                            photo: req.user.photo
+                        },
+                        type: 'friend-approved',
+                        createDate: new Date()
                     });
+
+                    callback(null);
+                }
+            });
+        },
+
+        // send Email to target user
+        sendEmail: function (callback) {
+
+            User.findById(notification._from, 'email', function(err, user){
+                if (err) callback(err);
+                else {
+
+                    Mailer.friendApprove({
+                        from: req.user,
+                        email: user.email
+                    });
+
+                    callback(null);
                 }
             });
         }
+
+    }, function(err, results) {
+
+        if (err) next(err);
+        // return the updated notification
+        else res.json(results.updateNotification[0]);
     });
+
 };
+
+// Decline friend invitation
+// ---------------------------------------------
+// Remove a friend from the invited list of the user who create invitation. This request will:
+//   1. update the "invited" field for target user
+//   2. update the "result" field for notification as "declined"
+//   3. create "friend-declined" activity for current user
+//   4. create "friend-declined" notification for target user
+//   5. send real time message to target user
+// ---------------------------------------------
+// Parameter:
+//   1. id  : The user's id that was declined
+// ---------------------------------------------
 
 decline = function(req, res, next, notification) {
 
-    // find request sender
-    User.findById(notification._from, function(err, friend){
+    async.parallel({
 
         // remove user's id from request sender's invited list
-        friend.invited.pull(req.user._id);
+        updateUser: function(callback) {
 
-        // update request sender
-        friend.save(function(err, updatedFriend) {
+            User.findByIdAndUpdate(notification._from, {
+                '$pull': {invited: req.user.id}
+            }, callback);
+        },
 
-            // create respond notification
-            Notification.create({
-                _owner: [updatedFriend.id],
-                _from: req.user.id,
-                type: 'friend-declined'
-            }, function(err, respond) {
+        // mark the notification as confirmed
+        updateNotification: function(callback) {
 
-                if (err) next(err);
-                else {
-                    // populate the respond notification with user's info
-                    respond.populate({path:'_from', select: 'type firstName lastName title cover photo createDate'}, function(err, noty) {
+            notification.result = req.body.result;
+            notification.confirmed.addToSet(req.user.id);
+            notification.save(callback);
+        },
 
-                        if(err) next(err);
-                        // send real time message
-                        else sio.sockets.in(updatedFriend.id).emit('friend-declined', noty);
-                    });
-                }
-            });
+        // create activity for current user
+        createActivity: function(callback) {
 
-            // log user's activity
             Activity.create({
                 _owner: req.user.id,
                 type: 'friend-declined',
-                targetUser: updatedFriend._id
-            }, function(err) {
-                if (err) next(err);
-            });
+                targetUser: notification._from
+            }, callback);
+        },
 
-            // mark the notification as confirmed
-            notification.result = req.body.result;
-            notification.confirmed.addToSet(req.user.id);
-            notification.save(function(err, confirmedNotification) {
-                if (err) next(err);
-                else res.json(confirmedNotification);
+        // create notification for target user
+        createNotification: function(callback) {
+
+            Notification.create({
+                _owner: notification._from,
+                _from: req.user.id,
+                type: 'friend-declined'
+            }, function(err, noty) {
+
+                if (err) callback(err);
+                else {
+
+                    // send real time message to target user
+                    sio.sockets.in(notification._from).emit('friend-declined', {
+                        _id: noty._id,
+                        _from: {
+                            type: req.user.type,
+                            firstName: req.user.firstName,
+                            lastName: req.user.lastName,
+                            title: req.user.title,
+                            cover: req.user.cover,
+                            photo: req.user.photo
+                        },
+                        type: 'friend-declined',
+                        createDate: new Date()
+                    });
+
+                    callback(null);
+                }
             });
-        });
+        }
+
+    }, function(err, results) {
+
+        if (err) next(err);
+        // return the updated notification
+        else res.json(results.updateNotification[0]);
     });
+
 };
 
 accept = function(req, res, next, notification) {
@@ -435,8 +510,8 @@ acknowledge = function(req, res, next, notification) {
     // mark the notification as confirmed
     notification.result = req.body.result;
     notification.confirmed.addToSet(req.user.id);
-    notification.save(function(err, confirmedNotification) {
+    notification.save(function(err, notification) {
         if (err) next(err);
-        else res.json(confirmedNotification);
+        else res.json(notification);
     });
 };
