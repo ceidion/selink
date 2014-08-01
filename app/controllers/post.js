@@ -1,9 +1,10 @@
 var _ = require('underscore'),
     _s = require('underscore.string'),
-    Mailer = require('../mailer/mailer.js'),
     util = require('util'),
-    mongoose = require('mongoose'),
+    async = require('async'),
     moment = require('moment'),
+    mongoose = require('mongoose'),
+    Mailer = require('../mailer/mailer.js'),
     Post = mongoose.model('Post'),
     User = mongoose.model('User'),
     Group = mongoose.model('Group'),
@@ -285,128 +286,293 @@ exports.show = function(req, res, next) {
 
 exports.create = function(req, res, next) {
 
-    // create post
-    Post.create({
-        _owner: req.user.id,
-        group: req.body.group,
-        content: req.body.content
-    }, function(err, newPost) {
+    async.waterfall([
 
-        if (err) next(err);
-        else {
+        // create post
+        function createPost(callback) {
 
-            // save the post id in user profile
-            req.user.posts.addToSet(newPost._id);
-            req.user.save(function(err) {
-                if (err) next(err);
-            });
+            Post.create({
+                _owner: req.user.id,
+                group: req.body.group,
+                content: req.body.content
+            }, callback);
+        },
 
-            // if the post belong to some group
-            if (req.body.group)
+        // after post created
+        function afterProcess(post, callback) {
+
+            async.parallel({
+
+                // save the post id in user profile
+                updateUser: function(callback) {
+                    req.user.posts.addToSet(post._id);
+                    req.user.save(callback);
+                },
+
                 // save the post id in group profile
-                Group.findByIdAndUpdate(req.body.group, {$addToSet: {posts: newPost._id}}, function(err, group) {
-                    if (err) next(err);
-                    else {
+                updateGroup: function(callback) {
 
-                        // send email to all group member (that not friend and himself)
-                        User.find()
-                            .select('email')
-                            .where('_id').in(group.participants).nin(req.user.friends).ne(req.user.id)
-                            .where('logicDelete').equals(false)
-                            .exec(function(err, users) {
+                    if (req.body.group)
+                        // save the post id in group profile
+                        Group.findByIdAndUpdate(req.body.group, {$addToSet: {posts: post._id}}, function(err, group) {
+
+                            if (err) callback(err);
+                            else
+                                // send email to all group member (that not friend and himself)
+                                User.find()
+                                    .select('email')
+                                    .where('_id').in(group.participants).nin(req.user.friends).ne(req.user.id)
+                                    .where('logicDelete').equals(false)
+                                    .exec(function(err, users) {
+
+                                        if (err) callback(err);
+                                        else {
+
+                                            // send new-post mail
+                                            Mailer.newPost(users, {
+                                                _id: post._id,
+                                                authorId: req.user.id,
+                                                authorName: req.user.firstName + ' ' + req.user.lastName,
+                                                authorPhoto: req.user.photo,
+                                                content: post.content
+                                            });
+
+                                            callback(null);
+                                        }
+                                    });
+                        });
+                    else
+                        callback(null);
+                },
+
+                // create activity
+                createActivity: function(callback) {
+
+                    Activity.create({
+                        _owner: req.user.id,
+                        type: 'post-new',
+                        targetPost: post._id
+                    }, callback);
+                },
+
+                // send notificaton to all friends
+                createNotification: function(callback) {
+
+                    Notification.create({
+                        _owner: req.user.friends,
+                        _from: req.user.id,
+                        type: 'post-new',
+                        targetPost: post._id
+                    }, function(err, notification) {
+
+                        if (err) next(err);
+                        else {
+
+                            req.user.friends.forEach(function(room) {
+                                sio.sockets.in(room).emit('post-new', {
+                                    _id: notification._id,
+                                    _from:  {
+                                        type: req.user.type,
+                                        firstName: req.user.firstName,
+                                        lastName: req.user.lastName,
+                                        title: req.user.title,
+                                        cover: req.user.cover,
+                                        photo: req.user.photo
+                                    },
+                                    targetPost: post.toObject(),
+                                    type: 'post-new',
+                                    createDate: new Date()
+                                });
+                            });
+
+                            callback(null);
+                        }
+                    });
+                },
+
+                // index this post in solr
+                createSolr: function(callback) {
+
+                    solr.add(post.toSolr(), function(err, result) {
+                        if (err) callback(err);
+                        else
+                            solr.commit(function(err, result) {
+                                if(err) callback(err);
+                                else callback(null, result);
+                            });
+                    });
+                },
+
+                // send email to all friends
+                sendEmail: function(callback) {
+
+                    User.find()
+                        .select('email')
+                        .where('_id').in(req.user.friends)
+                        .where('logicDelete').equals(false)
+                        .exec(function(err, users) {
+
+                            if (err) callback(err);
+                            else {
+
                                 // send new-post mail
                                 Mailer.newPost(users, {
-                                    _id: newPost._id,
+                                    _id: post._id,
                                     authorId: req.user.id,
                                     authorName: req.user.firstName + ' ' + req.user.lastName,
                                     authorPhoto: req.user.photo,
-                                    content: newPost.content
+                                    content: post.content
                                 });
-                            });
-                    }
-                });
 
-            // create activity
-            Activity.create({
-                _owner: req.user.id,
-                type: 'post-new',
-                targetPost: newPost._id
-            }, function(err, activity) {
-                if (err) next(err);
-            });
-
-            // send notificaton to all friends
-            Notification.create({
-                _owner: req.user.friends,
-                _from: req.user.id,
-                type: 'post-new',
-                targetPost: newPost._id
-            }, function(err, notification) {
-                if (err) next(err);
-                else {
-
-                    var notyPopulateQuery = [{
-                        path:'_from',
-                        select: populateField['_owner']
-                    },{
-                        path:'targetPost'
-                    }];
-
-                    // populate the respond notification with user's info
-                    notification.populate(notyPopulateQuery, function(err, noty) {
-                        if(err) next(err);
-                        // send real time message
-                        else
-                            req.user.friends.forEach(function(room) {
-                                sio.sockets.in(room).emit('post-new', noty);
-                            });
-                    });
+                                callback(null);
+                            }
+                        });
                 }
-            });
 
-            // send email to all friends
-            User.find()
-                .select('email')
-                .where('_id').in(req.user.friends)
-                .where('logicDelete').equals(false)
-                .exec(function(err, users) {
-                    // send new-post mail
-                    Mailer.newPost(users, {
-                        _id: newPost._id,
-                        authorId: req.user.id,
-                        authorName: req.user.firstName + ' ' + req.user.lastName,
-                        authorPhoto: req.user.photo,
-                        content: newPost.content
-                    });
-                });
+            }, function(err, results) {
 
-            // index this post in solr
-            solr.add(newPost.toSolr(), function(err, solrResult) {
-                if (err) next(err);
-                else {
-
-                    solr.commit(function(err, res) {
-                        if(err) console.log(err);
-                        if(res) console.log(res);
-                    });
-                }
-            });
-
-            var populateQuery = [{
-                path: '_owner',
-                select: populateField['_owner']
-            }, {
-                path:'group',
-                select: populateField['group']
-            }];
-
-            // return the crearted post
-            newPost.populate(populateQuery, function(err, post) {
-                if (err) next(err);
-                else res.json(post);
+                if (err) callback(err);
+                // the last result is the created post
+                else callback(null, post);
             });
         }
+
+    ], function(err, post) {
+
+        if (err) next(err);
+        // return the created post
+        else res.json(post);
     });
+
+
+
+
+
+
+
+
+    // // create post
+    // Post.create({
+    //     _owner: req.user.id,
+    //     group: req.body.group,
+    //     content: req.body.content
+    // }, function(err, newPost) {
+
+    //     if (err) next(err);
+    //     else {
+
+    //         // save the post id in user profile
+    //         req.user.posts.addToSet(newPost._id);
+    //         req.user.save(function(err) {
+    //             if (err) next(err);
+    //         });
+
+    //         // if the post belong to some group
+    //         if (req.body.group)
+    //             // save the post id in group profile
+    //             Group.findByIdAndUpdate(req.body.group, {$addToSet: {posts: newPost._id}}, function(err, group) {
+    //                 if (err) next(err);
+    //                 else {
+
+    //                     // send email to all group member (that not friend and himself)
+    //                     User.find()
+    //                         .select('email')
+    //                         .where('_id').in(group.participants).nin(req.user.friends).ne(req.user.id)
+    //                         .where('logicDelete').equals(false)
+    //                         .exec(function(err, users) {
+    //                             // send new-post mail
+    //                             Mailer.newPost(users, {
+    //                                 _id: newPost._id,
+    //                                 authorId: req.user.id,
+    //                                 authorName: req.user.firstName + ' ' + req.user.lastName,
+    //                                 authorPhoto: req.user.photo,
+    //                                 content: newPost.content
+    //                             });
+    //                         });
+    //                 }
+    //             });
+
+    //         // create activity
+    //         Activity.create({
+    //             _owner: req.user.id,
+    //             type: 'post-new',
+    //             targetPost: newPost._id
+    //         }, function(err, activity) {
+    //             if (err) next(err);
+    //         });
+
+    //         // send notificaton to all friends
+    //         Notification.create({
+    //             _owner: req.user.friends,
+    //             _from: req.user.id,
+    //             type: 'post-new',
+    //             targetPost: newPost._id
+    //         }, function(err, notification) {
+    //             if (err) next(err);
+    //             else {
+
+    //                 var notyPopulateQuery = [{
+    //                     path:'_from',
+    //                     select: populateField['_owner']
+    //                 },{
+    //                     path:'targetPost'
+    //                 }];
+
+    //                 // populate the respond notification with user's info
+    //                 notification.populate(notyPopulateQuery, function(err, noty) {
+    //                     if(err) next(err);
+    //                     // send real time message
+    //                     else
+    //                         req.user.friends.forEach(function(room) {
+    //                             sio.sockets.in(room).emit('post-new', noty);
+    //                         });
+    //                 });
+    //             }
+    //         });
+
+    //         // send email to all friends
+    //         User.find()
+    //             .select('email')
+    //             .where('_id').in(req.user.friends)
+    //             .where('logicDelete').equals(false)
+    //             .exec(function(err, users) {
+    //                 // send new-post mail
+    //                 Mailer.newPost(users, {
+    //                     _id: newPost._id,
+    //                     authorId: req.user.id,
+    //                     authorName: req.user.firstName + ' ' + req.user.lastName,
+    //                     authorPhoto: req.user.photo,
+    //                     content: newPost.content
+    //                 });
+    //             });
+
+    //         // index this post in solr
+    //         solr.add(newPost.toSolr(), function(err, solrResult) {
+    //             if (err) next(err);
+    //             else {
+
+    //                 solr.commit(function(err, res) {
+    //                     if(err) console.log(err);
+    //                     if(res) console.log(res);
+    //                 });
+    //             }
+    //         });
+
+    //         var populateQuery = [{
+    //             path: '_owner',
+    //             select: populateField['_owner']
+    //         }, {
+    //             path:'group',
+    //             select: populateField['group']
+    //         }];
+
+    //         // return the crearted post
+    //         newPost.populate(populateQuery, function(err, post) {
+    //             if (err) next(err);
+    //             else res.json(post);
+    //         });
+    //     }
+    // });
 };
 
 // Update post

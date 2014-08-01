@@ -65,7 +65,7 @@ img{max-width:100%}
 .message-item .sender{width:120px;margin-top:2px}
 .message-item .text{margin-top:2px}
 .message-item .time{width:130px;margin-top:4px;text-align:right}
-.gritter-item{font-size:12px}
+.gritter-item{font-size:12px}.gritter-item a:link,.gritter-item a:visited,.gritter-item a:hover,.gritter-item a:active{color:#FFFFFF;text-decoration:none}
 .gritter-image{height:auto}
 #gritter-notice-wrapper{top:50px}
 #external-events>div :hover{cursor:move}

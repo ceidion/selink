@@ -65,10 +65,32 @@ define([
                 return PostItemView;
         },
 
+        events: {
+            'click .btn-load': 'loadNewPosts'
+        },
+
         // Initializer
         initialize: function() {
 
+            var self = this;
+
             this.collection = new NewsFeedCollection();
+
+            // this collection holds the posts delivered in real time
+            this.realtimePost = new BaseCollection();
+
+            // if new post delivered
+            selink.socket.on('post-new', function(data) {
+
+                // populate the owner field of post
+                data.targetPost._owner = data._from;
+                // save the post in collection
+                self.realtimePost.add(data.targetPost);
+                // update the number on indicator
+                self.$el.find('.indicator-num').empty().text(self.realtimePost.length);
+                // show the indicator to inform user
+                self.$el.find('.news-indicator').slideDown();
+            });
         },
 
         // After show
@@ -100,6 +122,23 @@ define([
 
             // call super onShow
             BaseView.prototype.onShow.apply(this);
+        },
+
+        // load the new posts
+        loadNewPosts: function() {
+
+            var self = this;
+
+            // scroll to the top of page
+            $('html, body').animate({ scrollTop: 0 }, 1000);
+
+            // hide the indicator
+            this.$el.find('.news-indicator').slideUp(function() {
+                // move the new posts to the real colleciton of the page
+                self.collection.add(self.realtimePost.models);
+                // clear the real time post collection
+                self.realtimePost.reset();
+            });
         }
 
     });

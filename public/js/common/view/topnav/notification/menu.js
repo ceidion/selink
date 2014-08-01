@@ -121,9 +121,10 @@ define([
             });
 
             selink.socket.on('post-new', function(data) {
+
                 $.gritter.add({
-                    title: data._from.firstName + ' ' + data._from.lastName,
-                    text: '新しい記事を投稿しました。',
+                    title: data._from.firstName + ' ' + data._from.lastName + ' <small>新しい記事を投稿しました。</small>',
+                    text: '<a href="#post/' + data.targetPost._id + '">' + data.targetPost.content + "</a>",
                     image: data._from.photo,
                     time: 8000,
                     class_name: 'gritter-success'
