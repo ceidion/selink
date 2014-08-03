@@ -337,7 +337,7 @@ exports.create = function(req, res, next) {
                                                 content: post.content
                                             });
 
-                                            callback(null);
+                                            callback(null, group);
                                         }
                                     });
                         });
@@ -433,7 +433,21 @@ exports.create = function(req, res, next) {
 
                 if (err) callback(err);
                 // the last result is the created post
-                else callback(null, post);
+                else {
+
+                    var group = results.updateGroup,
+                        result = post.toObject();
+
+                    if (group)
+                        result.group = {
+                            _id: group._id,
+                            name: group.name,
+                            cover: group.cover,
+                            description: group.description
+                        }
+                        
+                    callback(null, result);   
+                }
             });
         }
 
