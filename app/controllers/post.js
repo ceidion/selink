@@ -1,6 +1,9 @@
 var _ = require('underscore'),
     _s = require('underscore.string'),
+    fs = require('fs'),
     util = require('util'),
+    temp = require('temp'),
+    path = require('path'),
     async = require('async'),
     moment = require('moment'),
     mongoose = require('mongoose'),
@@ -286,8 +289,17 @@ exports.create = function(req, res, next) {
 
     async.waterfall([
 
+        // before save the post, extract the inlined base64 picture
+        function preProcess(callback) {
+
+            var base64Capture = /"data:image\/(.*?);base64,(.+)?"/g,
+                base64Data = base64Capture.exec(req.body.content);
+
+            callback(null, req.body.content);
+        },
+
         // create post
-        function createPost(callback) {
+        function createPost(content, callback) {
 
             Post.create({
                 _owner: req.user.id,
