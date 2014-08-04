@@ -49,18 +49,16 @@ define([
             delete response.comments;
 
             // if the post owner was not populated
-            if (_.isString(response._owner))
+            if (_.isString(response._owner) && this.collection.document)
                 // replace the owner field with current user info.
                 // the user info should passed in on collection initialization.
-                if (this.collection.document)
-                    response._owner = this.collection.document.attributes;
+                response._owner = this.collection.document.attributes;
 
             // if the post group was not populated
-            if (_.isString(response.group))
+            if (_.isString(response.group) && this.collection.document)
                 // replace the group field with current group info.
                 // the group info should passed in on collection initialization.
-                if (this.collection.document)
-                    response.group = this.collection.document.attributes;
+                response.group = this.collection.document.attributes;
 
             return response;
         },

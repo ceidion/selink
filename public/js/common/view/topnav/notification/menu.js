@@ -120,11 +120,17 @@ define([
                 selink.user.friends.remove(data._from._id);
             });
 
+            // New Post delivered
             selink.socket.on('post-new', function(data) {
+
+                var stripTags = _.str.stripTags(data.targetPost.content),
+                    clean = stripTags.replace(/&nbsp;/g, ''),
+                    ltrim = _.str.ltrim(clean),
+                    text = _.str.truncate(ltrim, 100, '...');
 
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName + ' <small>新しい記事を投稿しました。</small>',
-                    text: '<a href="#post/' + data.targetPost._id + '">' + data.targetPost.content + "</a>",
+                    text: '<a href="#post/' + data.targetPost._id + '">' + text + "</a>",
                     image: data._from.photo,
                     time: 8000,
                     class_name: 'gritter-success'
