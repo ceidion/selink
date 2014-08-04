@@ -20,8 +20,20 @@ var Post = new Schema({
         trim: true,
     },
 
-    // People who like this post
+    // People who liking this post
+    like: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
+    // People who liked this post
     liked: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
+    // People who bookmarking this post
+    bookmark: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
     }],

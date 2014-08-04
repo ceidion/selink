@@ -89,8 +89,8 @@ define([
 
         modelEvents: {
             'change:content': 'renderContent',
-            'change:liked': 'renderLike',
-            'change:bookmarked': 'renderBookmark',
+            'change:like': 'renderLike',
+            'change:bookmark': 'renderBookmark',
         },
 
         collectionEvents: {
@@ -401,11 +401,8 @@ define([
         // like this posts
         onLike: function() {
 
-            this.model.save({
-                liked: selink.user.id // TODO: no need to pass this parameter
-            }, {
+            this.model.save(null, {
                 url: '/posts/' + this.model.get('_id') + '/like',
-                reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
                 patch: true,
                 wait: true
             });
@@ -414,29 +411,23 @@ define([
         // rerender like mark
         renderLike: function() {
 
-            // update the liked number
+            // update the like number
             this.ui.likeBtn
                 .find('span')
                 .empty()
-                .text(this.model.get('liked').length);
-            // flip the icon and mark this post as liked
+                .text(this.model.get('like').length);
+            // flip the icon and toggle the like status
             this.ui.likeBtn
                 .find('i')
-                .removeClass('fa-heart-o')
-                .addClass('fa-heart')
+                .toggleClass('fa-heart-o fa-heart')
                 .slFlip();
-            // remove like button, can't like it twice
-            this.ui.likeBtn.removeClass('btn-like');
         },
 
         // Bookmark this posts
         onBookmark: function() {
 
-            this.model.save({
-                bookmarked: selink.user.id // TODO: no need to pass this parameter
-            }, {
+            this.model.save(null, {
                 url: '/posts/' + this.model.get('_id') + '/bookmark',
-                reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
                 patch: true,
                 wait: true
             });
@@ -448,11 +439,8 @@ define([
             // flip the icon and mark this post as bookmark
             this.ui.bookmarkBtn
                 .find('i')
-                .removeClass('fa-star-o')
-                .addClass('fa-star')
+                .toggleClass('fa-star-o fa-star')
                 .slFlip();
-            // remove bookmark button, can't bookmark it twice
-            this.ui.bookmarkBtn.removeClass('btn-bookmark');
         },
 
         // display all comments

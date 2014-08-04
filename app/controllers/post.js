@@ -259,8 +259,8 @@ exports.show = function(req, res, next) {
     Post.findById(req.params.post)
         .where('logicDelete').equals(false)
         .populate('_owner', 'type firstName lastName title cover photo createDate')
-        .populate('comments._owner', 'type firstName lastName title cover photo createDate')
         .populate('group', 'name cover description')
+        .populate('comments._owner', 'type firstName lastName title cover photo createDate')
         .exec(function(err, posts) {
             if (err) next(err);
             else res.json(posts);
@@ -315,7 +315,7 @@ exports.create = function(req, res, next) {
 
                 // save the post id in user profile
                 updateUser: function(callback) {
-                    req.user.posts.addToSet(post._id);
+                    req.user.posts.addToSet(post.id);
                     req.user.save(callback);
                 },
 
@@ -324,7 +324,7 @@ exports.create = function(req, res, next) {
 
                     if (req.body.group)
                         // save the post id in group profile
-                        Group.findByIdAndUpdate(req.body.group, {$addToSet: {posts: post._id}}, callback);
+                        Group.findByIdAndUpdate(req.body.group, {$addToSet: {posts: post.id}}, callback);
                     else
                         callback(null);
                 },
@@ -335,7 +335,7 @@ exports.create = function(req, res, next) {
                     Activity.create({
                         _owner: req.user.id,
                         type: 'post-new',
-                        targetPost: post._id
+                        targetPost: post.id
                     }, callback);
                 },
 
@@ -346,7 +346,7 @@ exports.create = function(req, res, next) {
                         _owner: req.user.friends,
                         _from: req.user.id,
                         type: 'post-new',
-                        targetPost: post._id
+                        targetPost: post.id
                     }, callback);
                 },
 
@@ -373,7 +373,7 @@ exports.create = function(req, res, next) {
                         notification = results.createNotification,
                         notifiedUser = req.user.friends,
                         owner = {
-                            _id: req.user._id,
+                            _id: req.user.id,
                             type: req.user.type,
                             firstName: req.user.firstName,
                             lastName: req.user.lastName,
@@ -389,7 +389,7 @@ exports.create = function(req, res, next) {
                     if (group) {
                         // manually populate post group (as needed)
                         postObj.group = {
-                            _id: group._id,
+                            _id: group.id,
                             name: group.name,
                             cover: group.cover,
                             description: group.description
@@ -415,7 +415,7 @@ exports.create = function(req, res, next) {
                     // send real time message to friends
                     notifiedUser.forEach(function(room) {
                         sio.sockets.in(room).emit('post-new', {
-                            _id: notification._id,
+                            _id: notification.id,
                             _from: owner,
                             targetPost: postObj,
                             type: 'post-new',
@@ -435,7 +435,7 @@ exports.create = function(req, res, next) {
 
                                 // send new-post mail
                                 Mailer.newPost(users, {
-                                    _id: post._id,
+                                    _id: post.id,
                                     authorId: req.user.id,
                                     authorName: req.user.firstName + ' ' + req.user.lastName,
                                     authorPhoto: req.user.photo,
@@ -536,68 +536,142 @@ exports.remove = function(req, res, next) {
 */
 exports.like = function(req, res, next){
 
-    // find post
-    Post.findById(req.params.post, function(err, post) {
+    async.waterfall([
+
+        // find post
+        function findPost(callback) {
+            Post.findById(req.params.post, callback);
+        },
+
+        // update like of the post
+        function updateLike(post, callback) {
+
+            // wether this is the first time this user like this post
+            var isFirstTime = true,
+                type = 'post-liked';
+
+            // if the user exists in the "liked" field
+            if (post.liked.indexOf(req.user.id) >= 0)
+                // it's not the first time he/she like it
+                isFirstTime = false;
+            else
+                // it is the first time, save the user's id in "liked" field
+                post.liked.push(req.user.id);
+
+            // if the user already liked this post
+            if (post.like.indexOf(req.user.id) >= 0) {
+                // unlike it
+                post.like.pull(req.user.id);
+                type = 'post-unliked';
+            }
+            else
+                // like it
+                post.like.push(req.user.id);
+
+            // update the post
+            post.save(function(err, post) {
+                if (err) callback(err);
+                else callback(null, post, type, isFirstTime);
+            });
+        },
+
+        // create related information
+        function createRelateInfo(post, type, isFirstTime, callback) {
+
+            async.parallel({
+
+                // create activity
+                createActivity: function(callback) {
+
+                    // only for the people other than post owner
+                    if (post._owner != req.user.id)
+                        Activity.create({
+                            _owner: req.user.id,
+                            type: type,
+                            targetPost: post.id
+                        }, callback);
+                    else
+                        callback(null);
+                },
+
+                // create notification for post owner
+                createNotification: function(callback) {
+
+                    // only in the firstTime other people like this post
+                    if (type === 'post-liked' && isFirstTime && post._owner != req.user.id)
+                        Notification.create({
+                            _owner: post._owner,
+                            _from: req.user.id,
+                            type: type,
+                            targetPost: post.id
+                        }, callback);
+                    else
+                        callback(null);
+                }
+
+            }, function(err, results) {
+
+                if (err) callback(err);
+                else callback(null, post, results.createNotification);
+            });
+        },
+
+        // get the full representation of the post
+        function populatePost(post, notification, callback) {
+
+            var setting = [{
+                    path:'_owner',
+                    select: populateField['_owner']
+                },{
+                    path:'group',
+                    select: populateField['group']
+                },{
+                    path:'comments._owner',
+                    select: populateField['comments._owner']
+                }];
+
+            // get the full representation of the post
+            post.populate(setting, function(err, post) {
+
+                if (err) callback(err);
+                else callback(null, post, notification);
+            });
+        },
+
+        // send the messages
+        function sendMessages(post, notification, callback) {
+
+            if (notification) {
+
+                // send real time message
+                sio.sockets.in(post._owner._id).emit('post-liked', {
+                    _id: notification.id,
+                    _from: {
+                        _id: req.user.id,
+                        type: req.user.type,
+                        firstName: req.user.firstName,
+                        lastName: req.user.lastName,
+                        title: req.user.title,
+                        cover: req.user.cover,
+                        photo: req.user.photo
+                    },
+                    targetPost: post,
+                    type: 'post-liked',
+                    createDate: new Date()
+                });
+
+                // send email
+            }
+            
+            // the last result is the updated post
+            callback(null, post);
+        }
+
+    ], function(err, post) {
 
         if (err) next(err);
-        else {
-
-            // TODO: one user can like a post only once!
-
-            // add one like
-            post.liked.addToSet(req.body.liked);
-
-            // save the post
-            post.save(function(err, newPost) {
-
-                if (err) next(err);
-                else {
-
-                    // if someone not post owner liked this post
-                    if (newPost._owner != req.user.id) {
-
-                        // create activity
-                        Activity.create({
-                            _owner: req.body.liked,
-                            type: 'post-liked',
-                            targetPost: newPost._id
-                        }, function(err, activity) {
-                            if (err) next(err);
-                        });
-
-                        // create notification for post owner
-                        Notification.create({
-                            _owner: [newPost._owner],
-                            _from: req.body.liked,
-                            type: 'post-liked',
-                            targetPost: newPost._id
-                        }, function(err, notification) {
-
-                            if (err) next(err);
-                            else {
-
-                                var notyPopulateQuery = [{
-                                    path:'_from',
-                                    select: 'type firstName lastName title cover photo createDate'
-                                },{
-                                    path:'targetPost'
-                                }];
-
-                                // populate the respond notification with user's info
-                                notification.populate(notyPopulateQuery, function(err, noty) {
-                                    if(err) next(err);
-                                    // send real time message
-                                    sio.sockets.in(newPost._owner).emit('post-liked', noty);
-                                });
-                            }
-                        });
-                    }
-
-                    // return the saved post
-                    res.json(newPost);
-                }
-            });
-        }
+        // return the updated post
+        else res.json(post);
     });
 };
 
@@ -616,65 +690,141 @@ exports.like = function(req, res, next){
 */
 exports.bookmark = function(req, res, next){
 
-    // find post
-    Post.findById(req.params.post, function(err, post) {
+    async.waterfall([
+
+        // find post
+        function findPost(callback) {
+            Post.findById(req.params.post, callback);
+        },
+
+        // update bookmark of the post
+        function updateBookmark(post, callback) {
+
+            // wether this is the first time this user bookmark this post
+            var isFirstTime = true,
+                type = 'post-bookmarked';
+
+            // if the user exists in the "bookmarked" field
+            if (post.bookmarked.indexOf(req.user.id) >= 0)
+                // it's not the first time he/she bookmark it
+                isFirstTime = false;
+            else
+                // it is the first time, save the user's id in "bookmarked" field
+                post.bookmarked.push(req.user.id);
+
+            // if the user already bookmarked this post
+            if (post.bookmark.indexOf(req.user.id) >= 0) {
+                // unbookmark it
+                post.bookmark.pull(req.user.id);
+                type = 'post-unbookmarked';
+            }
+            else
+                // bookmark it
+                post.bookmark.push(req.user.id);
+
+            // update the post
+            post.save(function(err, post) {
+                if (err) callback(err);
+                else callback(null, post, type, isFirstTime);
+            });
+        },
+
+        // create related information
+        function createRelateInfo(post, type, isFirstTime, callback) {
+
+            async.parallel({
+
+                // create activity
+                createActivity: function(callback) {
+
+                    // only for the people other than post owner
+                    if (post._owner != req.user.id)
+                        Activity.create({
+                            _owner: req.user.id,
+                            type: type,
+                            targetPost: post.id
+                        }, callback);
+                    else
+                        callback(null);
+                },
+
+                // create notification for post owner
+                createNotification: function(callback) {
+
+                    // only in the firstTime other people bookmark this post
+                    if (type === 'post-bookmarked' && isFirstTime && post._owner != req.user.id)
+                        Notification.create({
+                            _owner: post._owner,
+                            _from: req.user.id,
+                            type: type,
+                            targetPost: post.id
+                        }, callback);
+                    else
+                        callback(null);
+                }
+
+            }, function(err, results) {
+
+                if (err) callback(err);
+                else callback(null, post, results.createNotification);
+            });
+        },
+
+        // get the full representation of the post
+        function populatePost(post, notification, callback) {
+
+            var setting = [{
+                    path:'_owner',
+                    select: populateField['_owner']
+                },{
+                    path:'group',
+                    select: populateField['group']
+                },{
+                    path:'comments._owner',
+                    select: populateField['comments._owner']
+                }];
+
+            // get the full representation of the post
+            post.populate(setting, function(err, post) {
+
+                if (err) callback(err);
+                else callback(null, post, notification);
+            });
+        },
+
+        // send the messages
+        function sendMessages(post, notification, callback) {
+
+            if (notification) {
+
+                // send real time message
+                sio.sockets.in(post._owner._id).emit('post-bookmarked', {
+                    _id: notification.id,
+                    _from: {
+                        _id: req.user.id,
+                        type: req.user.type,
+                        firstName: req.user.firstName,
+                        lastName: req.user.lastName,
+                        title: req.user.title,
+                        cover: req.user.cover,
+                        photo: req.user.photo
+                    },
+                    targetPost: post,
+                    type: 'post-bookmarked',
+                    createDate: new Date()
+                });
+
+                // send email
+            }
+            
+            // the last result is the updated post
+            callback(null, post);
+        }
+
+    ], function(err, post) {
 
         if (err) next(err);
-        else {
-
-            // add one bookmarked people id
-            post.bookmarked.addToSet(req.body.bookmarked);
-
-            // save the post
-            post.save(function(err, newPost) {
-
-                if (err) next(err);
-                else {
-
-                    // if someone not post owner bookmarked this post
-                    if (newPost._owner != req.user.id) {
-
-                        // create activity
-                        Activity.create({
-                            _owner: req.body.bookmarked,
-                            type: 'post-bookmarked',
-                            targetPost: newPost._id
-                        }, function(err, activity) {
-                            if (err) next(err);
-                        });
-
-                        // create notification for post owner
-                        Notification.create({
-                            _owner: [newPost._owner],
-                            _from: req.body.bookmarked,
-                            type: 'post-bookmarked',
-                            targetPost: newPost._id
-                        }, function(err, notification) {
-
-                            if (err) next(err);
-                            else {
-
-                                var notyPopulateQuery = [{
-                                    path:'_from',
-                                    select: 'type firstName lastName title cover photo createDate'
-                                },{
-                                    path:'targetPost'
-                                }];
-
-                                // populate the respond notification with user's info
-                                notification.populate(notyPopulateQuery, function(err, noty) {
-                                    if(err) next(err);
-                                    // send real time message
-                                    sio.sockets.in(newPost._owner).emit('post-bookmarked', noty);
-                                });
-                            }
-                        });
-                    }
-
-                    // return the saved post
-                    res.json(newPost);
-                }
-            });
-        }
+        // return the created post
+        else res.json(post);
     });
 };

@@ -1,7 +1,7 @@
 <%
     var isMine = (obj._owner._id === selink.user.id) ? true : false,
-        isLiked = (_.indexOf(obj.liked, selink.user.id) >= 0) ? true : false,
-        isMarked = (_.indexOf(obj.bookmarked, selink.user.id) >= 0) ? true : false;
+        isLike = (_.indexOf(obj.like, selink.user.id) >= 0) ? true : false,
+        isMark = (_.indexOf(obj.bookmark, selink.user.id) >= 0) ? true : false;
 %>
 
 <div id="<%= obj._id %>" class="widget-box" data-create-date="<%= moment(obj.createDate).valueOf() %>">
@@ -61,7 +61,7 @@
 
         <!-- post time -->
         <h6>
-            <i class="ace-icon fa fa-clock-o"></i>&nbsp;
+            <i class="ace-icon fa fa-clock-o bigger-130"></i>&nbsp;
             <%= moment(obj.createDate).calendar() %>
         </h6>
 
@@ -152,14 +152,14 @@
             <div class="pull-right">
 
                 <!-- bookmark button -->
-                <div class="inline orange tooltip-warning <% if (!isMarked) print("btn-bookmark"); %>">
-                    <i class="ace-icon fa <% if (isMarked) print("fa-star"); else print("fa-star-o"); %> bigger-110"></i>
+                <div class="inline orange tooltip-warning btn-bookmark">
+                    <i class="ace-icon fa <% if (isMark) print("fa-star"); else print("fa-star-o"); %> bigger-110"></i>
                 </div>
 
                 <!-- like button -->
-                <div class="inline red tooltip-error <% if (!isLiked) print("btn-like"); %>">
-                    <i class="ace-icon fa <% if (isLiked) print("fa-heart"); else print("fa-heart-o"); %> "></i>
-                    <span><%= obj.liked.length %></span>
+                <div class="inline red tooltip-error btn-like">
+                    <i class="ace-icon fa <% if (isLike) print("fa-heart"); else print("fa-heart-o"); %> "></i>
+                    <span><%= obj.like.length %></span>
                 </div>
 
             </div>

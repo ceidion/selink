@@ -341,7 +341,7 @@ exports.bookmark = function(req, res, next) {
 
     Post.find()
         .where('logicDelete').equals(false)
-        .where('bookmarked').equals(req.user.id)
+        .where('bookmark').equals(req.user.id)
         .populate('_owner', 'type firstName lastName title cover photo createDate')
         .populate('comments._owner', 'type firstName lastName title cover photo createDate')
         .populate('group', 'name cover description')
@@ -354,7 +354,7 @@ exports.bookmark = function(req, res, next) {
 
                 Job.find()
                     .where('logicDelete').equals(false)
-                    .where('bookmarked').equals(req.user.id)
+                    .where('bookmark').equals(req.user.id)
                     .populate('_owner', 'type firstName lastName title cover photo createDate')
                     .sort('-createDate')
                     .skip(10*page)  // skip n page
