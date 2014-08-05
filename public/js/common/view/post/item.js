@@ -513,12 +513,10 @@ define([
             // replace newline in text to html newline
             var comment = this.ui.commentInput.val().replace(/(?:\r\n|\r|\n)/g, '<br />');
 
-            console.log(this.replyTo);
-
             // create new comment
             this.collection.create({
                 content: comment,
-                replyTo: 'this.replayTo'
+                replyTo: this.replyTo
             }, {
                 success: function() {
 

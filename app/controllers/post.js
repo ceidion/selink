@@ -17,6 +17,7 @@ var _ = require('underscore'),
 var populateField = {
     '_owner': 'type firstName lastName title cover photo',
     'comments._owner': 'type firstName lastName title cover photo',
+    'comments.replyTo': 'type firstName lastName title cover photo',
     'group': 'name cover description'
 };
 
@@ -92,6 +93,7 @@ _post_index = function(req, res, user, group, next) {
     // default query parameter below
     query.select('-removedComments -logicDelete')
         .populate('comments._owner', populateField['comments._owner'])
+        .populate('comments.replyTo', populateField['comments.replyTo'])
         .where('logicDelete').equals(false)
         .limit(req.query.size || 20)
         .sort('-createDate')

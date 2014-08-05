@@ -9,6 +9,11 @@ var _ = require('underscore'),
     Activity = mongoose.model('Activity'),
     Notification = mongoose.model('Notification');
 
+var populateField = {
+    '_owner': 'type firstName lastName title cover photo',
+    'replyTo': 'type firstName lastName title cover photo'
+};
+
 /*
     Create a comment
 
@@ -73,10 +78,23 @@ exports.create = function(req, res, next) {
                 // create notification for post owner
                 createNotification: function(callback) {
 
-                    // only for the user other than the post owner
+                    // determine the notify target
+                    var notifyTarget = [];
+
+                    // if the comment owner is not the post owner
                     if (post._owner != req.user.id)
+                        // notify the post owner
+                        notifyTarget.push(post._owner);
+
+                    // if the comment is reply someone other than the post owner
+                    if (req.body.replyTo && req.body.replyTo != post._owner)
+                        // notify that person
+                        notifyTarget.push(req.body.replyTo);
+
+                    // if there are anyone need to be notified
+                    if (notifyTarget.length)
                         Notification.create({
-                            _owner: post._owner,
+                            _owner: notifyTarget,
                             _from: req.user.id,
                             type: 'post-commented',
                             targetPost: post.id,
@@ -93,36 +111,43 @@ exports.create = function(req, res, next) {
             });
         },
 
+        function populateComment(post, comment, notification, callback) {
+
+            var setting = [{
+                    path:'_owner',
+                    select: populateField['_owner']
+                },{
+                    path:'replyTo',
+                    select: populateField['replyTo']
+                }];
+
+            // get the full representation of the comment
+            User.populate(comment, setting, function(err, comment) {
+
+                if (err) callback(err);
+                else callback(null, post, comment, notification);
+            });
+        },
+
         function sendMessages(post, comment, notification, callback) {
-
-            var commentObj = comment.toObject(),
-                commentOwner = {
-                    _id: req.user.id,
-                    type: req.user.type,
-                    firstName: req.user.firstName,
-                    lastName: req.user.lastName,
-                    title: req.user.title,
-                    cover: req.user.cover,
-                    photo: req.user.photo
-                };
-
-            commentObj._owner = commentOwner;
 
             if (notification) {
 
                 // send real time message
-                sio.sockets.in(post._owner).emit('post-commented', {
-                    _id: notification.id,
-                    _from: commentOwner,
-                    type: 'post-commented',
-                    targetPost: post.id,
-                    targetComment: commentObj
+                notification._owner.forEach(function(room) {
+                    sio.sockets.in(room).emit('post-commented', {
+                        _id: notification.id,
+                        _from: comment._owner,
+                        type: 'post-commented',
+                        targetPost: post,
+                        targetComment: comment.id
+                    });
                 });
 
                 // send email
             }
 
-            callback(null, commentObj);
+            callback(null, comment);
         }
 
     ], function(err, comment) {
@@ -132,93 +157,6 @@ exports.create = function(req, res, next) {
         else res.json(comment);
     });
 
-
-
-
-
-
-
-
-
-
-
-
-    // // find the post
-    // Post.findById(req.params.post, function(err, post) {
-
-    //     if (err) next(err);
-    //     else {
-
-    //         // create a comment object
-    //         var comment = post.comments.create({
-    //             _owner: req.user.id,
-    //             content: req.body.content,
-    //         });
-
-    //         // add comment to post
-    //         post.comments.push(comment);
-
-    //         // save the post
-    //         post.save(function(err, post) {
-
-    //             if (err) next(err);
-    //             else {
-
-    //                 // if someone not post owner commented this post
-    //                 if (newPost._owner != req.user.id) {
-
-    //                     // create activity
-    //                     Activity.create({
-    //                         _owner: req.user.id,
-    //                         type: 'post-commented',
-    //                         targetPost: newPost._id,
-    //                         targetComment: comment._id
-    //                     }, function(err, activity) {
-    //                         if (err) next(err);
-    //                     });
-
-    //                     // create notification for post owner
-    //                     Notification.create({
-    //                         _owner: [newPost._owner],
-    //                         _from: req.user.id,
-    //                         type: 'post-commented',
-    //                         targetPost: newPost._id,
-    //                         targetComment: comment._id
-    //                     }, function(err, notification) {
-
-    //                         if (err) next(err);
-    //                         else {
-
-    //                             var notyPopulateQuery = [{
-    //                                 path:'_from',
-    //                                 select: 'type firstName lastName title cover photo createDate'
-    //                             },{
-    //                                 path:'targetPost'
-    //                             }];
-
-    //                             // populate the respond notification with user's info
-    //                             notification.populate(notyPopulateQuery, function(err, noty) {
-    //                                 if(err) next(err);
-    //                                 // send real time message
-    //                                 sio.sockets.in(newPost._owner).emit('post-commented', noty);
-    //                             });
-    //                         }
-    //                     });
-    //                 }
-
-    //                 // populate the comment owner and send saved post back
-    //                 User.populate(comment, {
-    //                     path: '_owner',
-    //                     select: 'type firstName lastName title cover photo createDate'
-    //                 }, function(err, newComment) {
-    //                     if (err) next(err);
-    //                     else res.json(newComment);
-    //                 });
-
-    //             }
-    //         });
-    //     }
-    // });
 };
 
 // Update comment

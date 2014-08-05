@@ -20,7 +20,17 @@
     </div>
 
     <!-- comment content -->
-    <div class="text"><%= obj.content %></div>
+    <div class="text">
+        <% if (obj.replyTo) { %>
+        <a href="#profile/<%= obj.replyTo._id %>">            
+            <span class="label label-sm label-info arrowed-right">@
+                <%= obj.replyTo.firstName %>
+                <%= obj.replyTo.lastName %>
+            </span>
+        </a>
+        <% } %>
+        <%= obj.content %>
+    </div>
 
     <div class="editor" style="display: none;">
         <textarea name="edit" style="width: 100%;"><%= obj.content.replace(/<br\s*[\/]?>/gi, '\n') %></textarea>
