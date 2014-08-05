@@ -12,7 +12,7 @@ var Comment = new Schema({
     },
 
     // reply recipient
-    _replyTo: {
+    replyTo: {
         type: Schema.Types.ObjectId,
         ref: 'User',
     },

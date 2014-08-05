@@ -20,18 +20,18 @@ define([
         // after render
         onRender: function() {
 
-            this.$el.find('.fa-group').tooltip({
+            this.$el.find('.tooltip-success').tooltip({
                 placement: 'top',
                 title: this.model.get('participants').length + "人参加中"
             });
 
             // add tooltip on add button
-            this.$el.find('.fa-tasks').tooltip({
+            this.$el.find('.tooltip-warning').tooltip({
                 placement: 'top',
                 title: "イベント" + this.model.get('events').length + "件"
             });
 
-            this.$el.find('.fa-edit').tooltip({
+            this.$el.find('.tooltip-info').tooltip({
                 placement: 'top',
                 title: "投稿" + this.model.get('posts').length + "件"
             });

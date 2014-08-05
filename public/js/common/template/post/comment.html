@@ -14,7 +14,8 @@
     <!-- author name -->
     <div class="name">
         <a href="#profile/<%= obj._owner._id %>">
-            <%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %>
+            <%= obj._owner.firstName %>
+            <%= obj._owner.lastName %>
         </a>
     </div>
 
@@ -31,7 +32,7 @@
     <% if (obj.isMine) { %>
         <!-- remove confirm dialog -->
         <div class="alert alert-danger clearfix" style="display: none;">
-            <i class="ace-icon fa fa-warning"></i>&nbsp;
+            <i class="ace-icon fa fa-warning"></i>
             <strong>このコメントを削除します、よろしいですか？</strong>
             <div class="space-10"></div>
             <p class="pull-right">

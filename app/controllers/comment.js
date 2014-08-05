@@ -1,8 +1,9 @@
 var _ = require('underscore'),
     _s = require('underscore.string'),
-    Mailer = require('../mailer/mailer.js'),
     util = require('util'),
+    async = require('async'),
     mongoose = require('mongoose'),
+    Mailer = require('../mailer/mailer.js'),
     Post = mongoose.model('Post'),
     User = mongoose.model('User'),
     Activity = mongoose.model('Activity'),
@@ -27,82 +28,197 @@ exports.create = function(req, res, next) {
 
     // TODO: check post's forbidden flag, check ownership
 
-    // find the post
-    Post.findById(req.params.post, function(err, post) {
+    async.waterfall([
 
-        if (err) next(err);
-        else {
+        // find the post
+        function findPost(callback) {
+            Post.findById(req.params.post, callback);
+        },
 
-            // create a comment object
+        // create comment
+        function createComment(post, callback) {
+
             var comment = post.comments.create({
                 _owner: req.user.id,
                 content: req.body.content,
+                replyTo: req.body.replyTo
             });
 
             // add comment to post
             post.comments.push(comment);
 
             // save the post
-            post.save(function(err, newPost) {
+            post.save(function(err, post) {
+                if (err) callback(err);
+                else callback(null, post, comment);
+            });
+        },
 
-                if (err) next(err);
-                else {
+        // create relate information
+        function createRelateInfo(post, comment, callback) {
 
-                    // if someone not post owner commented this post
-                    if (newPost._owner != req.user.id) {
+            async.parallel({
 
-                        // create activity
-                        Activity.create({
-                            _owner: req.user.id,
-                            type: 'post-commented',
-                            targetPost: newPost._id,
-                            targetComment: comment._id
-                        }, function(err, activity) {
-                            if (err) next(err);
-                        });
+                // create activity
+                createActivity: function(callback) {
 
-                        // create notification for post owner
+                    Activity.create({
+                        _owner: req.user.id,
+                        type: 'post-commented',
+                        targetPost: post.id,
+                        targetComment: comment.id
+                    }, callback);
+                },
+
+                // create notification for post owner
+                createNotification: function(callback) {
+
+                    // only for the user other than the post owner
+                    if (post._owner != req.user.id)
                         Notification.create({
-                            _owner: [newPost._owner],
+                            _owner: post._owner,
                             _from: req.user.id,
                             type: 'post-commented',
-                            targetPost: newPost._id,
-                            targetComment: comment._id
-                        }, function(err, notification) {
-
-                            if (err) next(err);
-                            else {
-
-                                var notyPopulateQuery = [{
-                                    path:'_from',
-                                    select: 'type firstName lastName title cover photo createDate'
-                                },{
-                                    path:'targetPost'
-                                }];
-
-                                // populate the respond notification with user's info
-                                notification.populate(notyPopulateQuery, function(err, noty) {
-                                    if(err) next(err);
-                                    // send real time message
-                                    sio.sockets.in(newPost._owner).emit('post-commented', noty);
-                                });
-                            }
-                        });
-                    }
-
-                    // populate the comment owner and send saved post back
-                    User.populate(comment, {
-                        path: '_owner',
-                        select: 'type firstName lastName title cover photo createDate'
-                    }, function(err, newComment) {
-                        if (err) next(err);
-                        else res.json(newComment);
-                    });
-
+                            targetPost: post.id,
+                            targetComment: comment.id
+                        }, callback);
+                    else
+                        callback(null);
                 }
+
+            }, function(err, results) {
+
+                if (err) callback(err);
+                else callback(null, post, comment, results.createNotification);
             });
+        },
+
+        function sendMessages(post, comment, notification, callback) {
+
+            var commentObj = comment.toObject(),
+                commentOwner = {
+                    _id: req.user.id,
+                    type: req.user.type,
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    title: req.user.title,
+                    cover: req.user.cover,
+                    photo: req.user.photo
+                };
+
+            commentObj._owner = commentOwner;
+
+            if (notification) {
+
+                // send real time message
+                sio.sockets.in(post._owner).emit('post-commented', {
+                    _id: notification.id,
+                    _from: commentOwner,
+                    type: 'post-commented',
+                    targetPost: post.id,
+                    targetComment: commentObj
+                });
+
+                // send email
+            }
+
+            callback(null, commentObj);
         }
+
+    ], function(err, comment) {
+
+        if (err) next(err);
+        // return the created comment
+        else res.json(comment);
     });
+
+
+
+
+
+
+
+
+
+
+
+
+    // // find the post
+    // Post.findById(req.params.post, function(err, post) {
+
+    //     if (err) next(err);
+    //     else {
+
+    //         // create a comment object
+    //         var comment = post.comments.create({
+    //             _owner: req.user.id,
+    //             content: req.body.content,
+    //         });
+
+    //         // add comment to post
+    //         post.comments.push(comment);
+
+    //         // save the post
+    //         post.save(function(err, post) {
+
+    //             if (err) next(err);
+    //             else {
+
+    //                 // if someone not post owner commented this post
+    //                 if (newPost._owner != req.user.id) {
+
+    //                     // create activity
+    //                     Activity.create({
+    //                         _owner: req.user.id,
+    //                         type: 'post-commented',
+    //                         targetPost: newPost._id,
+    //                         targetComment: comment._id
+    //                     }, function(err, activity) {
+    //                         if (err) next(err);
+    //                     });
+
+    //                     // create notification for post owner
+    //                     Notification.create({
+    //                         _owner: [newPost._owner],
+    //                         _from: req.user.id,
+    //                         type: 'post-commented',
+    //                         targetPost: newPost._id,
+    //                         targetComment: comment._id
+    //                     }, function(err, notification) {
+
+    //                         if (err) next(err);
+    //                         else {
+
+    //                             var notyPopulateQuery = [{
+    //                                 path:'_from',
+    //                                 select: 'type firstName lastName title cover photo createDate'
+    //                             },{
+    //                                 path:'targetPost'
+    //                             }];
+
+    //                             // populate the respond notification with user's info
+    //                             notification.populate(notyPopulateQuery, function(err, noty) {
+    //                                 if(err) next(err);
+    //                                 // send real time message
+    //                                 sio.sockets.in(newPost._owner).emit('post-commented', noty);
+    //                             });
+    //                         }
+    //                     });
+    //                 }
+
+    //                 // populate the comment owner and send saved post back
+    //                 User.populate(comment, {
+    //                     path: '_owner',
+    //                     select: 'type firstName lastName title cover photo createDate'
+    //                 }, function(err, newComment) {
+    //                     if (err) next(err);
+    //                     else res.json(newComment);
+    //                 });
+
+    //             }
+    //         });
+    //     }
+    // });
 };
 
 // Update comment

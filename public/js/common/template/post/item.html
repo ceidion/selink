@@ -30,21 +30,24 @@
                     <!-- remove button -->
                     <li>
                         <a href="#" class="btn-remove">
-                            <i class="ace-icon fa fa-trash-o red bigger-110"></i>&nbsp;&nbsp;削除
+                            <i class="ace-icon fa fa-trash-o red"></i>
+                            削除
                         </a>
                     </li>
 
                     <!-- disable comment -->
                     <li class="<% if (!obj.setting.commentable) print("hidden") %>">
                         <a href="#" class="btn-forbid">
-                            <i class="ace-icon fa fa-ban pink bigger-110"></i>&nbsp;&nbsp;コメント禁止
+                            <i class="ace-icon fa fa-ban pink"></i>
+                            コメント禁止
                         </a>
                     </li>
 
                     <!-- enable comment -->
                     <li class="<% if (obj.setting.commentable) print("hidden") %>">
                         <a href="#" class="btn-forbid">
-                            <i class="ace-icon fa fa-check green bigger-110"></i>&nbsp;&nbsp;コメント許可
+                            <i class="ace-icon fa fa-check green"></i>
+                            コメント許可
                         </a>
                     </li>
 
@@ -55,13 +58,16 @@
 
         <!-- author name -->
         <h5>
-            <i class="ace-icon fa fa-edit"></i>&nbsp;
-            <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
+            <i class="ace-icon fa fa-edit"></i>
+            <strong>
+                <%= obj._owner.firstName %>
+                <%= obj._owner.lastName %>
+            </strong>
         </h5>
 
         <!-- post time -->
         <h6>
-            <i class="ace-icon fa fa-clock-o bigger-130"></i>&nbsp;
+            <i class="ace-icon fa fa-clock-o bigger-130"></i>
             <%= moment(obj.createDate).calendar() %>
         </h6>
 
@@ -91,7 +97,7 @@
 
                 <!-- remove confrim dialog -->
                 <div class="alert alert-danger clearfix" style="display: none;">
-                    <i class="ace-icon fa fa-warning"></i>&nbsp;
+                    <i class="ace-icon fa fa-warning"></i>
                     <strong>この投稿を削除します、よろしいですか？</strong>
                     <div class="space-10"></div>
                     <p class="pull-right">
@@ -115,13 +121,13 @@
 
                 <!-- save button -->
                 <div class="btn btn-xs btn-success btn-save hidden">
-                    <i class="ace-icon fa fa-save bigger-110"></i>&nbsp;
+                    <i class="ace-icon fa fa-save bigger-110"></i>
                     <span>保存</span>
                 </div>
 
                 <!-- cancel button -->
                 <div class="btn btn-xs btn-grey btn-edit-cancel hidden">
-                    <i class="ace-icon fa fa-times bigger-110"></i>&nbsp;
+                    <i class="ace-icon fa fa-times bigger-110"></i>
                     <span>取消</span>
                 </div>
 
@@ -134,39 +140,32 @@
 
             <% } %>
 
-            <br/>
-
-            <!-- detail button -->
-            <div class="btn btn-xs btn-primary btn-detail">
-                <i class="ace-icon fa fa-desktop bigger-110"></i>&nbsp;
-                <span>詳しく読む</span>
-            </div>
-
-            <!-- brief button -->
-            <div class="btn btn-xs btn-warning btn-brief hidden">
-                <i class="ace-icon fa fa-desktop bigger-110"></i>&nbsp;
-                <span>小さくする</span>
-            </div>
+            <div class="space-4"></div>
 
             <!-- action buttons -->
-            <div class="pull-right">
+            <div class="pull-right action-buttons">
+
+                <!-- detail button -->
+                <a href="#post/<%= obj._id %>" class="tooltip-info btn-detail">
+                    <i class="ace-icon fa fa-desktop"></i>
+                </a>
 
                 <!-- bookmark button -->
-                <div class="inline orange tooltip-warning btn-bookmark">
+                <a href="#" class="orange tooltip-warning btn-bookmark">
                     <i class="ace-icon fa <% if (isMark) print("fa-star"); else print("fa-star-o"); %> bigger-110"></i>
-                </div>
+                </a>
 
                 <!-- like button -->
-                <div class="inline red tooltip-error btn-like">
+                <a href="#" class="red tooltip-error btn-like">
                     <i class="ace-icon fa <% if (isLike) print("fa-heart"); else print("fa-heart-o"); %> "></i>
                     <span><%= obj.like.length %></span>
-                </div>
+                </a>
 
             </div>
 
             <div class="clearfix"></div>
 
-            <% if (obj.commentNum) { %>
+            <% if (obj.comments.length) { %>
                 <hr />
             <% }%>
 
@@ -174,8 +173,8 @@
             <div class="dialogs"></div>
 
             <!-- show more comments button -->
-            <% if (obj.commentNum > 3) { %>
-                <button class="btn btn-xs btn-info btn-block btn-show-all">もっと見る（<%= obj.commentNum - 3 %>件）</button>
+            <% if (obj.comments.length > 3) { %>
+                <button class="btn btn-xs btn-info btn-block btn-show-all">もっと見る（<%= obj.comments.length - 3 %>件）</button>
             <% }%>
 
         </div>
@@ -188,17 +187,25 @@
 
             <!-- comment text area -->
             <div class="comment-area">
+                <div class="reply-label btn-group" style="margin-bottom: 4px; display: none;">
+                    <span class="btn btn-xs btn-info"></span>
+                    <button class="btn btn-xs btn-info">
+                        <i class="ace-icon fa fa-times icon-only"></i>
+                    </button>
+                </div>
                 <textarea name="comment" placeholder="コメントを書く" style="width: 100%; heigth: 61px;"></textarea>
             </div>
 
             <div class="btn-area pull-right" style="display: none;">
                 <!-- post button -->
                 <button class="btn btn-sm btn-success btn-comment disabled">
-                    <i class="ace-icon fa fa-comment bigger-125"></i>&nbsp;コメントする
+                    <i class="ace-icon fa fa-comment bigger-125"></i>
+                    コメントする
                 </button>
                 <!-- cancel button -->
                 <button class="btn btn-sm btn-yellow btn-cancel">
-                    <i class="ace-icon fa fa-power-off bigger-125"></i>&nbsp;取消
+                    <i class="ace-icon fa fa-power-off bigger-125"></i>
+                    取消
                 </button>
             </div>
 

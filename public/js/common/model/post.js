@@ -43,10 +43,6 @@ define([
 
             // populate comments collection
             this.comments.set(response.comments, {parse: true, remove: false});
-            // set comment num
-            response.commentNum = response.comments.length;
-
-            delete response.comments;
 
             // if the post owner was not populated
             if (_.isString(response._owner) && this.collection.document)

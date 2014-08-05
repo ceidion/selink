@@ -43,16 +43,18 @@ define([
             postContent: '.content',
             postEditor: '.sl-editor',
             editorTool: '.editor-toolbox',
-            detailBtn: '.btn-detail',
-            briefBtn: '.btn-brief',
             saveBtn: '.btn-save',
             editCancelBtn: '.btn-edit-cancel',
 
+            detailBtn: '.btn-detail',
             likeBtn: '.btn-like',
             bookmarkBtn: '.btn-bookmark',
             showAllBtn: '.btn-show-all',
 
             comments: '.dialogs',
+            replyLabel: '.reply-label',
+            replyTarget: '.reply-label span',
+            replyCancelBtn: '.reply-label button',
             commentInput: 'textarea[name="comment"]',
             commentConfirmBtn: '.btn-comment',
             commentCancelBtn: '.btn-cancel',
@@ -66,12 +68,11 @@ define([
             'click @ui.avatar': 'toProfile',
             'click @ui.groupLabel': 'toGroup',
 
+            'click @ui.postContent': 'toggleExpand',
             'click @ui.removeBtn': 'showAlert',
             'click @ui.forbidBtn': 'toggleForbid',
             'click @ui.cancelBtn': 'hideAlert',
             'click @ui.confirmBtn': 'onRemove',
-            'click @ui.detailBtn': 'toggleExpand',
-            'click @ui.briefBtn': 'toggleExpand',
             'click @ui.editable': 'showEditor',
             'click @ui.editCancelBtn': 'hideEditor',
             'click @ui.saveBtn': 'onSave',
@@ -85,6 +86,7 @@ define([
             'keyup @ui.commentInput': 'checkComment',
             'click @ui.commentConfirmBtn': 'onComment',
             'click @ui.commentCancelBtn': 'closeComment',
+            'click @ui.replyCancelBtn': 'cancelReply'
         },
 
         modelEvents: {
@@ -99,7 +101,7 @@ define([
 
         childEvents: {
             'remove': 'onCommentRemove',
-            'reply': 'onCommentReply',
+            'reply': 'onReply',
             'ensureLayout': 'proxyEnsureLayout'
         },
 
@@ -117,6 +119,9 @@ define([
 
             // post is collapsed in the beginning
             this.expanded = false;
+
+            // comment reply target
+            this.replyTo = null;
 
             // create comments collction
             this.collection = this.model.comments;
@@ -168,6 +173,11 @@ define([
             this.ui.bookmarkBtn.tooltip({
                 placement: 'top',
                 title: "ブックマーク"
+            });
+
+            this.ui.detailBtn.tooltip({
+                placement: 'top',
+                title: "もっと見る"
             });
         },
 
@@ -270,7 +280,6 @@ define([
                     self.$el.find('.btn-forbid').closest('li').toggleClass('hidden');
                     self.trigger("ensureLayout");
                 },
-                reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
                 patch: true,
                 wait: true
             });
@@ -285,14 +294,8 @@ define([
         // expand post content to full screen
         toggleExpand: function() {
 
-            // window.location = "#post/" + this.model.id;
-
             // remove the gird class
             this.$el.toggleClass('col-sm-6 col-lg-4');
-
-            // toggle expand/brief button
-            this.ui.detailBtn.toggleClass('hidden');
-            this.ui.briefBtn.toggleClass('hidden');
 
             // toggle post status
             this.expanded = !this.expanded;
@@ -311,9 +314,6 @@ define([
             if (!this.expanded)
                 // expand it to full screen
                 this.toggleExpand();
-
-            // hide brief button
-            this.ui.briefBtn.addClass('hidden');
 
             // show save cancel button
             this.ui.saveBtn.removeClass('hidden');
@@ -338,9 +338,6 @@ define([
         hideEditor: function() {
 
             var self = this;
-
-            // show brief button
-            this.ui.briefBtn.removeClass('hidden');
 
             // at this point, post box must be expanded, callapse it
             this.toggleExpand();
@@ -399,7 +396,10 @@ define([
         },
 
         // like this posts
-        onLike: function() {
+        onLike: function(event) {
+
+            // stop defautl link behavior
+            event.preventDefault();
 
             this.model.save(null, {
                 url: '/posts/' + this.model.get('_id') + '/like',
@@ -424,7 +424,10 @@ define([
         },
 
         // Bookmark this posts
-        onBookmark: function() {
+        onBookmark: function(event) {
+
+            // stop defautl link behavior
+            event.preventDefault();
 
             this.model.save(null, {
                 url: '/posts/' + this.model.get('_id') + '/bookmark',
@@ -478,11 +481,15 @@ define([
 
             var self = this;
 
+            this.replyTo = null;
+
             this.$el.find('.comment-area').css('margin-left', '0px');
             this.$el.find('.photo-area').hide();
-            this.$el.find('.btn-area').slideUp('fast', function() {
-                self.ui.commentInput.val('').trigger('autosize.destroy');
-                self.trigger("ensureLayout");
+            this.ui.replyLabel.slideUp('fast', function() {
+                self.$el.find('.btn-area').slideUp('fast', function() {
+                    self.ui.commentInput.val('').trigger('autosize.destroy');
+                    self.trigger("ensureLayout");
+                });
             });
         },
 
@@ -506,9 +513,12 @@ define([
             // replace newline in text to html newline
             var comment = this.ui.commentInput.val().replace(/(?:\r\n|\r|\n)/g, '<br />');
 
+            console.log(this.replyTo);
+
             // create new comment
             this.collection.create({
-                content: comment
+                content: comment,
+                replyTo: 'this.replayTo'
             }, {
                 success: function() {
 
@@ -545,13 +555,30 @@ define([
         },
 
         // reply comment
-        onCommentReply: function(view) {
+        onReply: function(view) {
 
-            var person = view.model.get('_owner'),
+            var self = this,
+                person = view.model.get('_owner'),
                 atPerson = "@" + person.firstName + ' ' + person.lastName + ' ';
 
-            this.ui.commentInput.val(atPerson);
+            this.replyTo = person._id;
+
+            this.ui.replyTarget.empty().text(atPerson);
+            this.ui.replyLabel.slideDown('fast', function() {
+                self.trigger("ensureLayout");
+            });
             this.openComment();
+        },
+
+        cancelReply: function() {
+
+            var self = this;
+
+            this.replyTo = null;
+
+            this.ui.replyLabel.slideUp('fast', function() {
+                self.trigger("ensureLayout");
+            });
         },
 
         // child view size changed

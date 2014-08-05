@@ -25,29 +25,33 @@
             <small><%= description %></small>
         <% } %>
 
-        <div class="space-4"></div>
+    </blockquote>
 
-        <!-- participants number -->
-        <div class="pull-right green" style="font-size: 14px;">
-            <i class="ace-icon fa fa-group tooltip-success"></i>
-            <%= obj.participants.length %>
-        </div>
+    <div class="space-4"></div>
+
+    <div class="pull-right action-buttons" style="padding: 0px 12px;">
 
         <!-- events number -->
-        <div class="pull-right orange" style="padding-right: 10px; font-size: 14px;">
-            <i class="ace-icon fa fa-tasks tooltip-warning"></i>
+        <a class="orange tooltip-warning">
+            <i class="ace-icon fa fa-tasks"></i>
             <%= obj.events.length %>
-        </div>
+        </a>
 
         <!-- posts number -->
-        <div class="pull-right blue" style="padding-right: 10px; font-size: 14px;">
-            <i class="ace-icon fa fa-edit tooltip-info"></i>
+        <a class="blue tooltip-info">
+            <i class="ace-icon fa fa-edit"></i>
             <%= obj.posts.length %>
-        </div>
+        </a>
 
-        <div class="clearfix"></div>
+        <!-- participants number -->
+        <a class="green tooltip-success">
+            <i class="ace-icon fa fa-group"></i>
+            <%= obj.participants.length %>
+        </a>
 
-    </blockquote>
+    </div>
+
+    <div class="clearfix"></div>
 
     <% if (!isJoined) { %>
         <!-- footer -->

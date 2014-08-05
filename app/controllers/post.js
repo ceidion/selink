@@ -159,100 +159,6 @@ exports.newsfeed = function(req, res, next) {
         });
 };
 
-// Post index -- friends' posts
-// ---------------------------------------------
-// Return a list 20 of posts that posted by user's friends, in descending order of create date,.
-// This is short cut method and always relate to current user.
-// ---------------------------------------------
-// Parameter:
-//   1. fields: Comma separate select fields for output              default: none
-//   2. embed : Comma separate embeded fields for populate           default: none
-//   3. sort  : Fields name used for sort                            default: createDate
-//   4. page  : page number for pagination                           default: 0
-//   5. per_page: record number of every page                        default: 20
-// ---------------------------------------------
-
-// exports.friendsIndex = function(req, res, next) {
-
-//     // create query
-//     var query = Post.find();
-
-//     // query posts belong to current user's friends
-//     query.where('_owner').in(req.user.friends);
-
-//     // if request specified output fields
-//     if (req.query.fields)
-//         query.select(req.query.fields.replace(/,/g, ' '));
-
-//     // if request specified population
-//     if (req.query.embed) {
-//         req.query.embed.split(',').forEach(function(field) {
-//             query.populate(field, populateField[field]);
-//         });
-//     }
-
-//     // if request specified sort order and pagination
-//     var sort = req.query.sort || '-createDate',
-//         page = req.query.page || 0,
-//         per_page = req.query.per_page || 20;
-
-//     query.where('logicDelete').equals(false)
-//         .skip(page*per_page)
-//         .limit(per_page)
-//         .sort(sort)
-//         .exec(function(err, posts) {
-//             if (err) next(err);
-//             else res.json(posts);
-//         });
-// };
-
-// Post index -- groups' posts
-// ---------------------------------------------
-// Return a list 20 of posts that posted in the user's groups, in descending order of create date.
-// This is short cut method and always relate to current user.
-// ---------------------------------------------
-// Parameter:
-//   1. fields: Comma separate select fields for output              default: none
-//   2. embed : Comma separate embeded fields for populate           default: none
-//   3. sort  : Fields name used for sort                            default: createDate
-//   4. page  : page number for pagination                           default: 0
-//   5. per_page: record number of every page                        default: 20
-// ---------------------------------------------
-
-// exports.groupsIndex = function(req, res, next) {
-
-//     // create query
-//     var query = Post.find();
-
-//     // query posts belong to current user's groups
-//     query.where('group').in(req.user.groups);
-
-//     // if request specified output fields
-//     if (req.query.fields)
-//         query.select(req.query.fields.replace(/,/g, ' '));
-
-//     // if request specified population
-//     if (req.query.embed) {
-//         req.query.embed.split(',').forEach(function(field) {
-//             query.populate(field, populateField[field]);
-//         });
-//     }
-
-//     // if request specified sort order and pagination
-//     var sort = req.query.sort || '-createDate',
-//         page = req.query.page || 0,
-//         per_page = req.query.per_page || 20;
-
-//     query.where('logicDelete').equals(false)
-//         .skip(page*per_page)
-//         .limit(per_page)
-//         .sort(sort)
-//         .exec(function(err, posts) {
-//             if (err) next(err);
-//             else res.json(posts);
-//         });
-// };
-
 // Show single post
 exports.show = function(req, res, next) {
 
@@ -261,12 +167,11 @@ exports.show = function(req, res, next) {
         .populate('_owner', 'type firstName lastName title cover photo createDate')
         .populate('group', 'name cover description')
         .populate('comments._owner', 'type firstName lastName title cover photo createDate')
-        .exec(function(err, posts) {
+        .exec(function(err, post) {
             if (err) next(err);
-            else res.json(posts);
+            else res.json(post);
         });
 };
-
 
 // Create post
 // ---------------------------------------------
@@ -289,17 +194,26 @@ exports.create = function(req, res, next) {
 
     async.waterfall([
 
-        // before save the post, extract the inlined base64 picture
-        function preProcess(callback) {
+        // // before save the post, extract the inlined base64 picture
+        // function preProcess(callback) {
 
-            var base64Capture = /"data:image\/(.*?);base64,(.+)?"/g,
-                base64Data = base64Capture.exec(req.body.content);
+        //     var capture = /"data:image\/(.*?);base64,(.+?)"/g;
+        //         data = capture.exec(req.body.content);
 
-            callback(null, req.body.content);
-        },
+        //     while(data) {
+
+        //         var tempName = temp.path({suffix: '.' + data[1]});
+
+        //         console.log(tempName);
+
+        //         fs.writeFile(tempName, data[2], 'base64');
+        //     }
+
+        //     callback(null, req.body.content);
+        // },
 
         // create post
-        function createPost(content, callback) {
+        function createPost(callback) {
 
             Post.create({
                 _owner: req.user.id,
@@ -308,8 +222,8 @@ exports.create = function(req, res, next) {
             }, callback);
         },
 
-        // after post created
-        function afterProcess(post, callback) {
+        // create relate information
+        function createRelateInfo(post, callback) {
 
             async.parallel({
 
@@ -355,11 +269,7 @@ exports.create = function(req, res, next) {
 
                     solr.add(post.toSolr(), function(err, result) {
                         if (err) callback(err);
-                        else
-                            solr.commit(function(err, result) {
-                                if(err) callback(err);
-                                else callback(null, result);
-                            });
+                        else solr.commit(callback);
                     });
                 }
 
@@ -460,80 +370,134 @@ exports.create = function(req, res, next) {
 };
 
 // Update post
+// ---------------------------------------------
+// Update a post, and return the updated post
+// ---------------------------------------------
+// 1. find post with its Id
+// 2. update the post
+// 3. update the post in solr
+// 4. return the full representation of the post to client
+
 exports.update = function(req, res, next){
 
     // TODO: check post's ownership
 
-    // find the post and update it
-    Post.findByIdAndUpdate(req.params.post, req.body, function(err, post) {
+    async.waterfall([
+
+        // find the post and update it
+        function findAndUpdatePost(callback) {
+
+            Post.findByIdAndUpdate(req.params.post, req.body, callback);
+        },
+
+        // get the full representation of the post
+        function populatePost(post, callback) {
+
+            var setting = [{
+                    path:'_owner',
+                    select: populateField['_owner']
+                },{
+                    path:'group',
+                    select: populateField['group']
+                },{
+                    path:'comments._owner',
+                    select: populateField['comments._owner']
+                }];
+
+            // get the full representation of the post
+            post.populate(setting, callback);
+        }
+
+    ], function(err, post) {
 
         if (err) next(err);
-        else {
-
-            post.populate({
-                path: '_owner',
-                select: 'type firstName lastName title cover photo createDate'
-            }, function(err, result){
-                if (err) next(err);
-                else res.json(result);
-            });
-        }
+        // return the updated post
+        else res.json(post);
     });
+
 };
 
 // Remove post
+// ---------------------------------------------
+// Remove a post, and return the updated post
+// ---------------------------------------------
+// 1. find post with its Id
+// 2. update the "logicDelete" field of the post
+// 3. delete the pointer of the post from owner profile
+// 4. delete the pointer of the post from group profile
+// 5. delete the post in solr
+// 6. return the deleted post to client
+
 exports.remove = function(req, res, next) {
 
     // TODO: check post's ownership
-    // TODO: if this post was removed, what to do with the activites and notifications relate on it? and comments, bookmarks?
+    // TODO: if this post was removed, what to do with the activites
+    // and notifications relate on it? and comments, bookmarks?
 
-    // find the post and mark it as logical deleted
-    Post.findByIdAndUpdate(req.params.post, {logicDelete: true}, function(err, post) {
-        if (err) next(err);
-        else {
+    async.waterfall([
 
-            // remove the post id from user profile
-            req.user.posts.pull(post._id);
-            req.user.save(function(err) {
-                if (err) next(err);
-            });
+        // find the post and mark it as logical deleted
+        function findAndUpdatePost(callback) {
 
-            // if this post belong to some group
-            if (post.group)
-                // remove it from group profile
-                Group.findByIdAndUpdate(post.group, {$pull: {posts: post._id}}, function(err) {
-                    if (err) next(err);
-                });
+            Post.findByIdAndUpdate(req.params.post, {logicDelete: true}, callback);
+        },
 
-            // remove this post in solr
-            solr.delete('id', post.id, function(err, solrResult) {
-                if (err) next(err);
-                else {
-                    solr.commit(function(err,res){
-                       if(err) console.log(err);
-                       if(res) console.log(res);
+        function deleteRelateInfo(post, callback) {
+
+            async.parallel({
+
+                // remove the post id from user profile
+                updateUser: function(callback) {
+                    req.user.posts.pull(post.id);
+                    req.user.save(callback);
+                },
+
+                // remove the post id from group profile
+                updateGroup: function(callback) {
+
+                    if (post.group)
+                        // remove it from group profile
+                        Group.findByIdAndUpdate(post.group, {$pull: {posts: post._id}}, callback);
+                    else
+                        callback(null);
+                },
+
+                // remove this post in solr
+                updateSolr: function(callback) {
+
+                    solr.delete('id', post.id, function(err, solrResult) {
+                        if (err) callback(err);
+                        else solr.commit(callback);
                     });
                 }
-            });
 
-            res.json(post);
+            }, function(err, results) {
+
+                if (err) callback(err);
+                else callback(null, post);
+            });
         }
+
+    ], function(err, post) {
+
+        if (err) next(err);
+        // return the updated post
+        else res.json(post);
     });
 };
 
-/*
-    Like post
+// Like post
+// ---------------------------------------------
+// Like or unlike a post, and return the updated post
+// ---------------------------------------------
+// 1. find post with its Id
+// 2. update the "like" (and "liked") field of the post
+// 3. create activity for the people who like the post (except owner himself)
+// 4. create notification for the post owner when someone like this post as first time
+// 5. send real-time notification to post owner
+// 6. send email notification to post owner
+// 7. return the full representation of the post to client
 
-    1. find post with its Id
-        2. add user's Id to post's liked list
-        3. update post
-            if the user is not the post author
-                4. create user activity
-                5. create notification for post author
-                    6. send real-time notification to post author
-                7. send email notification to post author
-        8. return the post to client
-*/
 exports.like = function(req, res, next){
 
     async.waterfall([
@@ -662,7 +626,7 @@ exports.like = function(req, res, next){
 
                 // send email
             }
-            
+
             // the last result is the updated post
             callback(null, post);
         }
@@ -675,19 +639,18 @@ exports.like = function(req, res, next){
     });
 };
 
-/*
-    Bookmark post
+// Bookmark post
+// ---------------------------------------------
+// Bookmark or unbookmark a post, and return the updated post
+// ---------------------------------------------
+// 1. find post with its Id
+// 2. update the "bookmark" (and "bookmarked") field of the post
+// 3. create activity for the people who bookmark the post (except owner himself)
+// 4. create notification for the post owner when someone bookmark this post as first time
+// 5. send real-time notification to post owner
+// 6. send email notification to post owner
+// 7. return the full representation of the post to client
 
-    1. find post with its Id
-        2. add user's Id to post's bookmarked list
-        3. update post
-            if the user is not the post author
-                4. create user activity
-                5. create notification for post author
-                    6. send real-time notification to post author
-                7. send email notification to post author
-        8. return the post to client
-*/
 exports.bookmark = function(req, res, next){
 
     async.waterfall([
@@ -816,7 +779,7 @@ exports.bookmark = function(req, res, next){
 
                 // send email
             }
-            
+
             // the last result is the updated post
             callback(null, post);
         }

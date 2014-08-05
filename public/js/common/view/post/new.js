@@ -129,12 +129,17 @@ define([
 
             // create new post
             this.options.targetCollection.create(post, {
+
+                // show loading icon, and prevent user click twice
+                beforeSend: function() {
+                    self.ui.btnPost.button('loading');
+                },
+
                 success: function(model, response, options) {
                     // clear input area
                     self.ui.newPost.html("");
-                    // disable post button (can't post empty)
-                    self.ui.btnPost.addClass('disabled');
                 },
+
                 error: function(model, xhr, options) {
 
                     if (xhr.status === 413)
@@ -145,6 +150,12 @@ define([
                             class_name: 'gritter-error',
                             time: 12000,
                         });
+                },
+
+                complete: function() {
+                    self.ui.btnPost.button('reset');
+                    // disable post button (can't post empty)
+                    self.ui.btnPost.addClass('disabled');
                 },
                 wait: true
             });
