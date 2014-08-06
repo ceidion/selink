@@ -14,21 +14,18 @@ var populateField = {
     'replyTo': 'type firstName lastName title cover photo'
 };
 
-/*
-    Create a comment
+// Create comment
+// ---------------------------------------------
+// Create new comment, and return it
+// ---------------------------------------------
+// 1. find post with its Id
+// 2. create comment in the post's comments list
+// 3. create user activity
+// 4. create notification for post owner (and replied user as needed)
+// 5. send real-time notification to post owner and replied user
+// 6. send email notification to post author and replied user
+// 7. return the full representation of the comment to client
 
-    1. check post commentable flag, return error if uncommentable
-    2. find post with its Id
-        3. create comment object
-        4. add comment object to post's comments list
-        5. update post
-            if the comment author is not post author
-                6. create user activity
-                7. create notification for post author
-                    8. send real-time notification to post author
-                9. send email notification to post author
-            10. return comment to client
-*/
 exports.create = function(req, res, next) {
 
     // TODO: check post's forbidden flag, check ownership
@@ -111,6 +108,7 @@ exports.create = function(req, res, next) {
             });
         },
 
+        // populate embeded info of comment for later use (and return)
         function populateComment(post, comment, notification, callback) {
 
             var setting = [{
@@ -129,6 +127,7 @@ exports.create = function(req, res, next) {
             });
         },
 
+        // send messages
         function sendMessages(post, comment, notification, callback) {
 
             if (notification) {
@@ -140,7 +139,8 @@ exports.create = function(req, res, next) {
                         _from: comment._owner,
                         type: 'post-commented',
                         targetPost: post,
-                        targetComment: comment.id
+                        targetComment: comment.id,
+                        createDate: new Date()
                     });
                 });
 
@@ -160,147 +160,248 @@ exports.create = function(req, res, next) {
 };
 
 // Update comment
+// ---------------------------------------------
+// Update new comment, and return it
+// ---------------------------------------------
+// 1. find post with its Id
+// 2. update comment in the post's comments list
+// 3. return the full representation of the comment to client
+
 exports.update = function(req, res, next){
 
     // TODO: check ownership
 
-    // find post
-    Post.findById(req.params.post, function(err, post) {
+    async.waterfall([
 
-        if (err) next(err);
-        else {
+        // find the post
+        function findPost(callback) {
+            Post.findById(req.params.post, callback);
+        },
+
+        // update the comment
+        function updateComment(post, callback) {
 
             post.comments.id(req.params.comment).set('content', req.body.content);
 
-            // save the post
-            post.save(function(err, newPost) {
-
-                if (err) next(err);
-                else res.json(newPost.comments.id(req.params.comment));
+            post.save(function(err, post) {
+                if (err) callback(err);
+                else callback(null, post.comments.id(req.params.comment));
             });
-        }
-    });
+        },
 
+        // populate the comment for return
+        function populateComment(comment, callback) {
+
+            // "_owner" was not populated cause we know the owner is the current user
+            User.populate(comment, {
+                path:'replyTo',
+                select: populateField['replyTo']
+            }, callback);
+        }
+
+    ], function(err, comment) {
+
+        if (err) next(err);
+        // return the created comment
+        else res.json(comment);
+    });
 };
 
-// Remove comment
+// Update comment
+// ---------------------------------------------
+// Update comment, and return it
+// ---------------------------------------------
+// 1. find post with its Id
+// 2. update comment in the post's comments list
+// 3. return the comment to client
+
 exports.remove = function(req, res, next) {
 
     // TODO: check ownership
 
-    // find post
-    Post.findById(req.params.post, function(err, post) {
+    async.waterfall([
 
-        if (err) next(err);
-        else {
+        // find the post
+        function findPost(callback) {
+            Post.findById(req.params.post, callback);
+        },
+
+        // remove the comment
+        function removeComment(post, callback) {
 
             // comment was deleted in this way because I can't find a way to filter the deleted comment when the post are queried,
             // I tried $elemMatch, but it just return the first non-delete comment, not working here.
 
-            // push it to the backup array
+            // push the removed comment to the backup array
             post.removedComments.push(post.comments.id(req.params.comment));
-
-            // pull the removed comment out
+            // pull the removed comment out from comment array
             post.comments.pull(req.params.comment);
 
-            // save the post
-            post.save(function(err, newPost) {
-
-                if (err) next(err);
-                else res.json(newPost.removedComments.id(req.params.comment));
+            post.save(function(err, post) {
+                if (err) callback(err);
+                else callback(null, post.comments.id(req.params.comment));
             });
         }
+
+    ], function(err, comment) {
+
+        if (err) next(err);
+        // return the created comment
+        else res.json(comment);
     });
 };
 
-/*
-    Like comment
+// Like comment
+// ---------------------------------------------
+// Like or unlike a comment, and return it
+// ---------------------------------------------
+// 1. find the post with its Id
+// 2. find the comment with its Id in post's comments list
+// 3. update the "like" (and "liked") field of the comment
+// 4. create activity for the people who like the comment (except owner himself)
+// 5. create notification for the comment owner when someone like this comment as first time
+// 6. send real-time notification to comment owner
+// 7. send email notification to comment owner
+// 8. return the full representation of the comment to client
 
-    1. find the post with its Id
-        2. find the comment with its Id in post's comments list
-        3. add user id to comment's liked list
-        4. update post
-            if the comment author is not the user
-                5. create user activity
-                6. create notification for comment author
-                    7. send real-time notification to comment author
-                8. send email notification to comment author
-            9. return the comment to client
-*/
 exports.like = function(req, res, next){
 
-    // find post
-    Post.findById(req.params.post, function(err, post) {
+    async.waterfall([
+
+        // find the post
+        function findPost(callback) {
+            Post.findById(req.params.post, callback);
+        },
+
+        // update the like of comment
+        function updateLike(post, callback) {
+
+            // wether this is the first time this user like this comment
+            var comment = post.comments.id(req.params.comment),
+                isFirstTime = true,
+                type = 'comment-liked';
+
+            // if the user exists in the "liked" field
+            if (comment.liked.indexOf(req.user.id) >= 0)
+                // it's not the first time he/she like it
+                isFirstTime = false;
+            else
+                // it is the first time, save the user's id in "liked" field
+                comment.liked.push(req.user.id);
+
+            // if the user already liked this comment
+            if (comment.like.indexOf(req.user.id) >= 0) {
+                // unlike it
+                comment.like.pull(req.user.id);
+                type = 'comment-unliked';
+            }
+            else
+                // like it
+                comment.like.push(req.user.id);
+
+            // update the post (comment)
+            post.save(function(err, post) {
+                if (err) callback(err);
+                else callback(null, post, comment, type, isFirstTime);
+            });
+        },
+
+        // create related information
+        function createRelateInfo(post, comment, type, isFirstTime, callback) {
+
+            async.parallel({
+
+                // create activity
+                createActivity: function(callback) {
+
+                    // only for the people other than comment owner
+                    if (comment._owner != req.user.id)
+                        Activity.create({
+                            _owner: req.user.id,
+                            type: type,
+                            targetPost: req.params.post,
+                            targetComment: req.params.comment
+                        }, callback);
+                    else
+                        callback(null);
+                },
+
+                // create notification for comment owner
+                createNotification: function(callback) {
+
+                    // only in the firstTime other people like this comment
+                    if (type === 'comment-liked' && isFirstTime && comment._owner != req.user.id)
+                        Notification.create({
+                            _owner: comment._owner,
+                            _from: req.user.id,
+                            type: type,
+                            targetPost: req.params.post,
+                            targetComment: req.params.comment
+                        }, callback);
+                    else
+                        callback(null);
+                }
+
+            }, function(err, results) {
+
+                if (err) callback(err);
+                else callback(null, post, comment, results.createNotification);
+            });
+        },
+
+        // populate embeded info of comment for later use (and return)
+        function populateComment(post, comment, notification, callback) {
+
+            var setting = [{
+                    path:'_owner',
+                    select: populateField['_owner']
+                },{
+                    path:'replyTo',
+                    select: populateField['replyTo']
+                }];
+
+            // get the full representation of the comment
+            User.populate(comment, setting, function(err, comment) {
+
+                if (err) callback(err);
+                else callback(null, post, comment, notification);
+            });
+        },
+
+        // send messages
+        function sendMessages(post, comment, notification, callback) {
+
+            if (notification) {
+
+                // send real time message
+                sio.sockets.in(comment._owner._id).emit('comment-liked', {
+                    _id: notification.id,
+                    _from: {
+                        _id: req.user.id,
+                        type: req.user.type,
+                        firstName: req.user.firstName,
+                        lastName: req.user.lastName,
+                        title: req.user.title,
+                        cover: req.user.cover,
+                        photo: req.user.photo
+                    },
+                    type: 'comment-liked',
+                    targetPost: post,
+                    targetComment: req.params.comment,
+                    createDate: new Date()
+                });
+
+                // send email
+            }
+
+            callback(null, comment);
+        }
+
+    ], function(err, comment) {
 
         if (err) next(err);
-        else {
-
-            // TODO: one user can like a comment only once!
-
-            // add one like on comment
-            post.comments.id(req.params.comment).liked.addToSet(req.body.liked);
-
-            // save the post
-            post.save(function(err, newPost) {
-
-                if (err) next(err);
-                else {
-
-                    // if someone not post owner liked this comment
-                    if (newPost.comments.id(req.params.comment)._owner != req.user.id) {
-
-                        // create activity
-                        Activity.create({
-                            _owner: req.body.liked,
-                            type: 'comment-liked',
-                            targetPost: newPost._id,
-                            targetComment: req.params.comment
-                        }, function(err, activity) {
-                            if (err) next(err);
-                        });
-
-                        // create notification for post owner
-                        Notification.create({
-                            _owner: [newPost.comments.id(req.params.comment)._owner],
-                            _from: req.body.liked,
-                            type: 'comment-liked',
-                            targetPost: newPost._id,
-                            targetComment: req.params.comment
-                        }, function(err, notification) {
-
-                            if (err) next(err);
-                            else {
-
-                                var notyPopulateQuery = [{
-                                    path:'_from',
-                                    select: 'type firstName lastName title cover photo createDate'
-                                },{
-                                    path:'targetPost'
-                                }];
-
-                                // populate the respond notification with user's info
-                                notification.populate(notyPopulateQuery, function(err, noty) {
-                                    if(err) next(err);
-                                    // send real time message
-                                    sio.sockets.in(newPost.comments.id(req.params.comment)._owner._id).emit('comment-liked', noty);
-                                });
-                            }
-                        });
-                    }
-
-                    // populate the comment owner
-                    // cause if user reply this comment just after liked it, the owner info is needed.
-                    // post don't have this problem (?)
-                    User.populate(newPost.comments.id(req.params.comment), {
-                        path: '_owner',
-                        select: 'type firstName lastName title cover photo createDate'
-                    }, function(err, comment) {
-                        if(err) next(err);
-                        // return the saved post
-                        else res.json(comment);
-                    });
-                }
-            });
-        }
+        // return the liked comment
+        else res.json(comment);
     });
+
 };

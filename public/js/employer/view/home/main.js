@@ -26,7 +26,7 @@ define([
 
     var NewsFeedCollection = BaseCollection.extend({
 
-        url: '/newsfeed?embed=_owner,group,comments._owner',
+        url: '/newsfeed',
 
         model: function(attrs, options) {
 
@@ -107,7 +107,7 @@ define([
                     finishedMsg: '全部読込みました',
                 },
                 path: function() {
-                    return '/newsfeed?embed=_owner,group,comments._owner&before=' + moment(self.collection.last().get('createDate')).unix();
+                    return '/newsfeed?before=' + moment(self.collection.last().get('createDate')).unix();
                 }
             }, function(json, opts) {
 

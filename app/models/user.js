@@ -176,7 +176,7 @@ var User = new Schema({
     }],
 
     // User Setting
-    setting: {
+    mailSetting: {
 
         systemNotification: {
             type: Boolean,
@@ -237,69 +237,69 @@ var User = new Schema({
     }
 });
 
-User.methods.toSolrOld = function() {
+// User.methods.toSolrOld = function() {
 
-    var languages = _.map(this.languages, function(language) {
-        return {
-            id: language._id,
-            language: language.language,
-            weight: language.weight
-        };
-    });
+//     var languages = _.map(this.languages, function(language) {
+//         return {
+//             id: language._id,
+//             language: language.language,
+//             weight: language.weight
+//         };
+//     });
 
-    var skills = _.map(this.skills, function(skill) {
-        return {
-            id: skill._id,
-            skill: skill.skill,
-            weight: skill.weight
-        };
-    });
+//     var skills = _.map(this.skills, function(skill) {
+//         return {
+//             id: skill._id,
+//             skill: skill.skill,
+//             weight: skill.weight
+//         };
+//     });
 
-    var educations = _.map(this.educations, function(education) {
-        return {
-            id: education._id,
-            school: education.school,
-            major: education.major
-        };
-    });
+//     var educations = _.map(this.educations, function(education) {
+//         return {
+//             id: education._id,
+//             school: education.school,
+//             major: education.major
+//         };
+//     });
 
-    var employments = _.map(this.employments, function(employment) {
-        return {
-            id: employment._id,
-            company: employment.company,
-            position: employment.position
-        };
-    });
+//     var employments = _.map(this.employments, function(employment) {
+//         return {
+//             id: employment._id,
+//             company: employment.company,
+//             position: employment.position
+//         };
+//     });
 
-    var qualifications = _.map(this.qualifications, function(qualification) {
-        return {
-            id: qualification._id,
-            qualification: qualification.name
-        };
-    });
+//     var qualifications = _.map(this.qualifications, function(qualification) {
+//         return {
+//             id: qualification._id,
+//             qualification: qualification.name
+//         };
+//     });
 
-    return {
-        type: 'user',
-        id: this.id,
-        name: this.firstName + ' ' + this.lastName,
-        email: this.email,
-        title: this.title,
-        birthDay: this.birthDay,
-        gender: this.gender,
-        nationality: this.nationality,
-        marriage: this.marriage,
-        telNo: this.telNo,
-        webSite: this.webSite,
-        address: this.address,
-        nearestSt: this.nearestSt,
-        _childDocuments_: _.union(languages, skills, educations, employments, qualifications),
-        // educations: this.educations,
-        // employments: this.employments,
-        // qualifications: this.qualifications,
-        bio: _s.stripTags(this.bio),
-        logicDelete: this.logicDelete
-    };
-};
+//     return {
+//         type: 'user',
+//         id: this.id,
+//         name: this.firstName + ' ' + this.lastName,
+//         email: this.email,
+//         title: this.title,
+//         birthDay: this.birthDay,
+//         gender: this.gender,
+//         nationality: this.nationality,
+//         marriage: this.marriage,
+//         telNo: this.telNo,
+//         webSite: this.webSite,
+//         address: this.address,
+//         nearestSt: this.nearestSt,
+//         _childDocuments_: _.union(languages, skills, educations, employments, qualifications),
+//         // educations: this.educations,
+//         // employments: this.employments,
+//         // qualifications: this.qualifications,
+//         bio: _s.stripTags(this.bio),
+//         logicDelete: this.logicDelete
+//     };
+// };
 
 User.methods.toSolr = function() {
 

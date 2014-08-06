@@ -52,6 +52,12 @@ var Group = new Schema({
         ref: 'User'
     }],
 
+    // Group applicants
+    applicants: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
     // Group Posts
     posts: [{
         type: Schema.Types.ObjectId,

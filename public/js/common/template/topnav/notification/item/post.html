@@ -1,3 +1,9 @@
+<!--
+    note the "post-commented" process, it could be a "comment-replied" notification,
+    if the notification was delivered in real time, the targetComment's "replyTo" field
+    was an object populated with user info. otherwise it is a string of user id. This is
+    a little bit dirty, maybe should be better.
+-->
 <%
     var title,
         icon,
@@ -22,6 +28,14 @@
         icon = "fa-comment blue bigger-110";
 
         comment = _.findWhere(obj.targetPost.comments, {_id: obj.targetComment});
+
+        if ((_.isString(comment.replyTo) && comment.replyTo == selink.user.id)
+            || (_.isObject(comment.replyTo) && comment.replyTo._id == selink.user.id)) {
+
+            title = "あなたのコメントに返信しました。";
+            icon = "fa-reply blue bigger-110";
+        }
+
         content = _.str.stripTags(comment.content),
         summary = _.str.truncate(content, 50);
     }

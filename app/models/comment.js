@@ -23,7 +23,13 @@ var Comment = new Schema({
         trim: true,
     },
 
-    // People who like this Comment
+    // People who liking this Comment
+    like: [{
+        type: Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+
+    // People who liked this Comment
     liked: [{
         type: Schema.Types.ObjectId,
         ref: 'User'

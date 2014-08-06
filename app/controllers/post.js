@@ -109,11 +109,8 @@ _post_index = function(req, res, user, group, next) {
 // Return the latest 20 posts of current user's friends and groups, in descending order of create date.
 // ---------------------------------------------
 // Parameter:
-//   1. fields: Comma separate select fields for output              default: none
-//   2. embed : Comma separate embeded fields for populate           default: none
-//   3. sort  : Fields name used for sort                            default: createDate
-//   4. before: A Unix time stamp used as start point of retrive     default: none
-//   5. size  : record number of query                               default: 20
+//   1. before: A Unix time stamp used as start point of retrive     default: none
+//   2. size  : record number of query                               default: 20
 // ---------------------------------------------
 
 exports.newsfeed = function(req, res, next) {
@@ -128,32 +125,18 @@ exports.newsfeed = function(req, res, next) {
         {group: {$in: req.user.groups}}
     ]);
 
-    // if request specified output fields
-    if (req.query.fields)
-        query.select(req.query.fields.replace(/,/g, ' '));
-
-    // if request specified population
-    if (req.query.embed) {
-        req.query.embed.split(',').forEach(function(field) {
-
-            if (populateField[field])
-                query.populate(field, populateField[field]);
-            else
-                query.populate(field);
-        });
-    }
-
     // if request items before some time point
     if (req.query.before)
         query.where('createDate').lt(moment.unix(req.query.before).toDate());
 
-    // if request specified sort order and pagination
-    var sort = req.query.sort || '-createDate',
-        size = req.query.size || 20;
-
-    query.where('logicDelete').equals(false)
-        .limit(size)
-        .sort(sort)
+    query.select('-removedComments -logicDelete')
+        .populate('_owner', populateField['_owner'])
+        .populate('group', populateField['group'])
+        .populate('comments._owner', populateField['comments._owner'])
+        .populate('comments.replyTo', populateField['comments.replyTo'])
+        .where('logicDelete').equals(false)
+        .limit(req.query.size || 20)
+        .sort('-createDate')
         .exec(function(err, posts) {
             if (err) next(err);
             else if (posts.length === 0) res.json(404, {});

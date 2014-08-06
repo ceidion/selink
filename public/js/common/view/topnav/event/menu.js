@@ -134,7 +134,7 @@ define([
         updateBadge: function() {
 
             // filter out the past events
-            var eventNum = this.model.get('count');
+            var eventNum = this.model.get('count') > 99 ? '99+' : this.model.get('count');
 
             // badge
             var $badge = this.$el.find('.dropdown-toggle .badge');

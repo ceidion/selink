@@ -102,8 +102,6 @@ module.exports = function(app) {
     app.patch('/posts/:post/comments/:comment', checkLoginStatus, comment.update);
     // Like comment
     app.patch('/posts/:post/comments/:comment/like', checkLoginStatus, comment.like);
-    // Reply comment
-    app.patch('/posts/:post/comments/:comment/reply', checkLoginStatus, comment.create);
     // Remove comment
     app.delete('/posts/:post/comments/:comment', checkLoginStatus, comment.remove);
 

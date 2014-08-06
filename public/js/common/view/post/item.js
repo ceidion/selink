@@ -566,6 +566,10 @@ define([
                 self.trigger("ensureLayout");
             });
             this.openComment();
+
+            $('html,body').animate({
+                scrollTop: this.$el.find('.comment-area').offset().top - 150
+            }, 1000);
         },
 
         cancelReply: function() {

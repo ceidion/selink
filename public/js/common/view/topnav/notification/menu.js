@@ -170,9 +170,16 @@ define([
             });
 
             selink.socket.on('post-commented', function(data) {
+
+                var text = 'あなたの投稿にコメントしました。',
+                    comment = _.findWhere(data.targetPost.comments, {_id: data.targetComment});
+
+                if (comment.replyTo && comment.replyTo._id == selink.user.id)
+                    text = 'あなたのコメントに返信しました。';
+
                 $.gritter.add({
                     title: data._from.firstName + ' ' + data._from.lastName,
-                    text: 'あなたの投稿にコメントしました。',
+                    text: text,
                     image: data._from.photo,
                     time: 8000,
                     class_name: 'gritter-success'
@@ -344,7 +351,7 @@ define([
         // update the number badge when collection changed
         updateBadge: function() {
 
-            var notyNum = this.model.get('count');
+            var notyNum = this.model.get('count') > 99 ? '99+' : this.model.get('count');
 
             // badge
             var $badge = this.$el.find('.dropdown-toggle .badge');

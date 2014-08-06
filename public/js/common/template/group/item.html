@@ -1,5 +1,6 @@
 <%
-    var isJoined = (_.indexOf(selink.user.get('groups'), obj._id) >= 0) ? true : false,
+    var isMine = (obj._owner == selink.user.id) ? true : false,
+        isJoined = (_.indexOf(selink.user.get('groups'), obj._id) >= 0) ? true : false,
         description = obj.description ? _.str.truncate(description, 100, '...') : "";
 %>
 
@@ -53,17 +54,25 @@
 
     <div class="clearfix"></div>
 
-    <% if (!isJoined) { %>
-        <!-- footer -->
-        <div class="clearfix group-info" style="padding: 12px;">
+    <!-- footer -->
+    <div class="clearfix group-info" style="padding: 12px;">
+        <% if (!isMine && !isJoined) { %>
 
-            <!-- operation buttons -->
+            <!-- join button -->
             <button class="btn btn-info btn-block btn-join"
-                    data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;リクエストを送信しています・・・">
+                    data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;送信中・・・">
                 <i class="ace-icon fa fa-plus"></i>&nbsp;参加
             </button>
 
-        </div>
-    <% } %>
+        <% } else if (!isMine) { %>
+
+            <!-- leave button -->
+            <button class="btn btn-pink btn-block btn-leave"
+                    data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;送信中・・・">
+                <i class="ace-icon fa fa-sign-out"></i>&nbsp;脱退
+            </button>
+
+        <% } %>
+    </div>
 
 </div>

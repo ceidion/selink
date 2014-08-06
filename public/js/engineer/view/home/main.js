@@ -26,7 +26,7 @@ define([
 
     var NewsFeedCollection = BaseCollection.extend({
 
-        url: '/newsfeed?embed=_owner,group,comments._owner',
+        url: '/newsfeed',
 
         model: function(attrs, options) {
 
@@ -106,11 +106,11 @@ define([
                 dataType: 'json',
                 appendCallback: false,
                 loading: {
-                    msgText: '<em>読込み中・・・</em>',
-                    finishedMsg: '全部読込みました',
+                    msgText: '<em>隱ｭ霎ｼ縺ｿ荳ｭ繝ｻ繝ｻ繝ｻ</em>',
+                    finishedMsg: '蜈ｨ驛ｨ隱ｭ霎ｼ縺ｿ縺ｾ縺励◆',
                 },
                 path: function() {
-                    return '/newsfeed?embed=_owner,group,comments._owner&before=' + moment(self.collection.last().get('createDate')).unix();
+                    return '/newsfeed?before=' + moment(self.collection.last().get('createDate')).unix();
                 }
             }, function(json, opts) {
 

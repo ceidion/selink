@@ -32,15 +32,15 @@ define([
             'click @ui.replyBtn': 'onReply',
             'click @ui.editBtn': 'showEditor',
             'click @ui.removeBtn': 'showAlert',
-            'click .btn-remove-cancel': 'hideAlert',
-            'click .btn-remove-comfirm': 'onRemove',
-            'click .btn-edit-cancel': 'hideEditor',
-            'click .btn-edit-comfirm': 'onEdit',
+            'click .btn-comment-remove-cancel': 'hideAlert',
+            'click .btn-comment-remove-comfirm': 'onRemove',
+            'click .btn-comment-edit-cancel': 'hideEditor',
+            'click .btn-comment-edit-comfirm': 'onEdit',
         },
 
         modelEvents: {
             'change:content': 'renderContent',
-            'change:liked': 'renderLike'
+            'change:like': 'renderLike'
         },
 
         // after render
@@ -102,17 +102,20 @@ define([
         // rerender like icon and number
         renderLike: function() {
 
+            var likeNumber = this.model.get('like').length;
+
             // update the liked number
-            this.ui.likeNum
-                .empty()
-                .text(this.model.get('liked').length);
+            if (likeNumber > 0) {
+                this.ui.likeNum.empty().text(likeNumber);
+                this.ui.likeBtn.removeClass('blink');
+            }
+            else {
+                this.ui.likeNum.empty();
+                this.ui.likeBtn.addClass('blink');
+            }
+
             // flip the icon and mark this post as liked
-            this.ui.likeBtn
-                .removeClass('fa-heart-o')
-                .addClass('fa-heart')
-                .slFlip();
-            // remove like button, can't like it twice
-            this.ui.likeBtn.removeClass('btn-comment-like blink');
+            this.ui.likeBtn.toggleClass('fa-heart-o fa-heart').slFlip();
         },
 
         // reply comment
@@ -189,7 +192,7 @@ define([
 
         // rerender comment content
         renderContent: function() {
-            this.$el.find('.text').empty().html(this.model.get('content'));
+            this.$el.find('.comment-text').empty().html(this.model.get('content'));
         },
 
         // show the comfirm alert

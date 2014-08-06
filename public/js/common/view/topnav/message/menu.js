@@ -143,7 +143,7 @@ define([
         // update the number badge when collection changed
         updateBadge: function() {
 
-            var msgNum = this.model.get('count');
+            var msgNum = this.model.get('count') > 99 ? '99+' : this.model.get('count');
 
             // badge
             var $badge = this.$el.find('.dropdown-toggle .badge');
