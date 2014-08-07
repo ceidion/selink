@@ -13,6 +13,7 @@ define([], function() {
             "group": "showGroupView",
             "group/:id": "showGroupView",
             "people": "showPeopleView",
+            "people/:id": "showPeopleView",
             "bookmark": "showBookmarkView",
             "calendar": "showCalendarView",
             "notification": "showNotificationView",

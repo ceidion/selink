@@ -81,8 +81,8 @@ define([
 
                 // attach infinite scroll
                 self.$el.find(self.childViewContainer).infinitescroll({
-                    navSelector  : '#people_page_nav',
-                    nextSelector : '#people_page_nav a',
+                    navSelector  : '#friends_page_nav',
+                    nextSelector : '#friends_page_nav a',
                     behavior: 'local',
                     binder: self.$el.find(self.childViewContainer),
                     dataType: 'json',

@@ -30,30 +30,33 @@ define([
         // after show
         onShow: function() {
 
-            // create friends view, don't do this in initialize method
-            // cause the infinite scroll need the item container in the dom tree
-            this.friendsView = new FriendsView();
-            // show friends view on start
-            this.displayRegion.show(this.friendsView);
-
+            if (this.options.type == 'friends')
+                this.showFriendsView();
+            else if (this.options.type == 'invited')
+                this.showInvitedView();
+            else
+                this.showDiscoverView();
         },
 
         showDiscoverView: function() {
             // lazy load people discover view
             this.discoverView = new DiscoverView();
             this.displayRegion.show(this.discoverView);
+            selink.router.navigate('#people/discover');
         },
 
         showFriendsView: function() {
             // lazy load friends view
             this.friendsView = new FriendsView();
             this.displayRegion.show(this.friendsView);
+            selink.router.navigate('#people/friends');
         },
 
         showInvitedView: function() {
             // lazy load invited people view
             this.invitedView = new InvitedView();
             this.displayRegion.show(this.invitedView);
+            selink.router.navigate('#people/invited');
         }
     });
 });
