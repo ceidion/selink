@@ -100,6 +100,16 @@ define([
                         self.confirmRegion.show(self.confirmView);
                     }
                 }).on('finished', function(e) {
+                    
+                    var inviteIdList = _.pluck(self.model.get('invited'), 'id');
+
+                    self.model.set('invited', inviteIdList);
+                    
+                    self.model.save(null, {
+                        success: function() {
+                            selink.modalArea.$el.modal('hide');
+                        }
+                    });
                 });
         },
 

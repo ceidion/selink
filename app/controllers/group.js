@@ -3,8 +3,9 @@ var _ = require('underscore'),
     gm = require('gm'),
     util = require('util'),
     path = require('path'),
-    mongoose = require('mongoose'),
+    async = require('async'),
     moment = require('moment'),
+    mongoose = require('mongoose'),
     Mailer = require('../mailer/mailer.js'),
     Group = mongoose.model('Group'),
     User = mongoose.model('User'),
@@ -68,7 +69,8 @@ _group_index = function(req, res, user, next) {
 
     // if request "discover" groups
     else if (_s.endsWith(req.path, "/discover"))
-        query.where('_id').nin(user.groups);
+        query.where('_id').nin(user.groups)
+            .where('type').ne('private');
 
     // default to joined groups
     else
@@ -89,7 +91,7 @@ _group_index = function(req, res, user, next) {
         });
 };
 
-// Get single user
+// Get single Group
 // ---------------------------------------------
 // Retrun user profile info except password
 
@@ -151,72 +153,126 @@ exports.connections = function(req, res, next) {
 // Create group
 exports.create = function(req, res, next) {
 
-    Group.create({
-        _owner: req.user.id,
-        name: req.body.name,
-        participants: req.user.id
-    }, function(err, group) {
-        if (err) next(err);
-        else {
+    async.waterfall([
 
-            // put group id in creator's group list
-            req.user.groups.push(group.id);
-            req.user.save(function(err) {
-                if (err) next(err);
-            });
+        // create group
+        function createGroup(callback) {
 
-            // create activity
-            Activity.create({
-                _owner: req.user.id,
-                type: 'group-new',
-                targetGroup: group._id
-            }, function(err, activity) {
-                if (err) next(err);
-            });
+            req.body._owner = req.user.id;
+            req.body.participants = req.user.id;
 
-            // send notificaton to all friends
-            Notification.create({
-                _owner: req.user.friends,
-                _from: req.user.id,
-                type: 'group-new',
-                targetGroup: group._id
-            }, function(err, notification) {
-                if (err) next(err);
-                else {
+            Group.create(req.body, callback);
+        },
 
-                    var notyPopulateQuery = [{
-                        path:'_from',
-                        select: 'type firstName lastName title cover photo createDate'
-                    },{
-                        path:'targetGroup'
-                    }];
+        function createRelateInfo(group, callback) {
 
-                    // populate the respond notification with user's info
-                    notification.populate(notyPopulateQuery, function(err, noty) {
-                        if(err) next(err);
-                        // send real time message
-                        else
-                            req.user.friends.forEach(function(room) {
-                                sio.sockets.in(room).emit('group-new', noty);
-                            });
+            async.parallel({
+
+                // put group id in creator's group list
+                updateUser: function(callback) {
+
+                    req.user.groups.push(group.id);
+                    req.user.save(callback);
+                },
+
+                // create activity
+                createActivity: function(callback) {
+
+                    Activity.create({
+                        _owner: req.user.id,
+                        type: 'group-new',
+                        targetGroup: group.id
+                    }, callback);
+                },
+
+                // send notificaton to all friends
+                createNotification: function(callback) {
+
+                    if (req.user.friends && req.user.friends.length && group.type != 'private')
+                        Notification.create({
+                            _owner: req.user.friends,
+                            _from: req.user.id,
+                            type: 'group-new',
+                            targetGroup: group.id
+                        }, callback);
+                    else
+                        callback(null);
+                },
+
+                // send notificaton to invited people
+                createInvitation: function(callback) {
+
+                    if (req.body.invited && req.body.invited.length)
+                        Notification.create({
+                            _owner: req.body.invited,
+                            _from: req.user.id,
+                            type: 'group-invited',
+                            targetGroup: group.id
+                        }, callback);
+                    else
+                        callback(null)
+                },
+
+                // index group in solr
+                createSolr: function(callback) {
+
+                    solr.add(group.toSolr(), function(err, result) {
+                        if (err) callback(err);
+                        else solr.commit(callback);
                     });
                 }
-            });
 
-            // index group in solr
-            solr.add(group.toSolr(), function(err, solrResult) {
-                if (err) next(err);
-                else {
-                    console.log(solrResult);
-                    solr.commit(function(err,res){
-                       if(err) console.log(err);
-                       if(res) console.log(res);
+            }, function(err, results) {
+
+                if (err) callback(err);
+                else callback(null, group, results.createNotification, results.createInvitation);
+            });
+        },
+
+        function sendMessages(group, notification, invitation, callback) {
+
+            var from = {
+                    _id: req.user.id,
+                    type: req.user.type,
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    title: req.user.title,
+                    cover: req.user.cover,
+                    photo: req.user.photo
+                };
+
+            if (notification)
+                req.user.friends.forEach(function(room) {
+                    sio.sockets.in(room).emit('group-new', {
+                        _id: notification.id,
+                        _from: from,
+                        type: 'group-new',
+                        targetGroup: group,
+                        createDate: new Date()
                     });
-                }
+                });
+
+            req.body.invited.forEach(function(room) {
+                sio.sockets.in(room).emit('group-invited', {
+                    _id: invitation.id,
+                    _from: from,
+                    type: 'group-invited',
+                    targetGroup: group,
+                    createDate: new Date()
+                });
             });
 
-            res.json(group);
+            //send invitation email
+
+            // the last result is the new group
+            callback(null, group);
         }
+
+    ], function(err, group) {
+
+        if (err) next(err);
+        // return the created group
+        else res.json(group);
     });
 };
 

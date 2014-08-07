@@ -241,12 +241,15 @@ exports.create = function(req, res, next) {
                 // send notificaton to all friends
                 createNotification: function(callback) {
 
-                    Notification.create({
-                        _owner: req.user.friends,
-                        _from: req.user.id,
-                        type: 'post-new',
-                        targetPost: post.id
-                    }, callback);
+                    if (req.user.friends && req.user.friends.length)
+                        Notification.create({
+                            _owner: req.user.friends,
+                            _from: req.user.id,
+                            type: 'post-new',
+                            targetPost: post.id
+                        }, callback);
+                    else
+                        callback(null);
                 },
 
                 // index this post in solr
