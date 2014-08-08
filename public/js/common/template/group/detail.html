@@ -1,3 +1,9 @@
+<%
+    var isMine = (obj._owner._id == selink.user.id) ? true : false,
+        isJoined = (_.indexOf(obj.participants, selink.user.id) >= 0) ? true : false,
+        needApply = (obj.type == 'protected') ? true : false;
+%>
+
 <div class="isotope">
 
     <div class="stamp col-xs-12 col-md-4">
@@ -6,7 +12,7 @@
 
             <div style="position: relative;">
 
-                <% if (obj.isMine) { %>
+                <% if (isMine) { %>
                     <div id="cover"></div>
                 <% } else { %>
                     <img src="<%= obj.cover %>">
@@ -19,7 +25,7 @@
             </div>
 
             <blockquote>
-                <% if (obj.isMine) { %>
+                <% if (isMine) { %>
                     <p id="name" class="sl-editable" style="margin-bottom: 0px;"></p>
                     <div id="description" class="sl-editable"></div>
                 <% } else { %>
@@ -34,7 +40,7 @@
 
             <div class="clearfix group-info" style="padding: 12px;">
 
-                <% if (obj.isParticipated) { %>
+                <% if (isJoined) { %>
                     <span class="text-success"><i class="ace-icon fa fa-check"></i>&nbsp;参加中</span>
                 <% } else { %>
                     <button class="btn btn-sm btn-info btn-join"
@@ -48,7 +54,7 @@
                     <%= obj.participants.length %>
                 </div>
 
-                <% if (obj.isMine) { %>
+                <% if (isMine) { %>
                 <div class="pull-right red" style="padding-right: 10px;">
                     <i class="ace-icon fa fa-paper-plane tooltip-error"></i>
                     <span class="invitationNum"><%= obj.invited.length %></span>
@@ -70,11 +76,11 @@
         </div>
     </div>
 
-    <div id="new-post" class="stamp col-xs-12 col-md-8 post-area" 
-        style="<% if (!obj.isMine && !obj.isParticipated) print('display: none;') %>">
+    <div id="new-post" class="stamp col-xs-12 col-md-8 post-area"
+        style="<% if (!isMine && !isJoined) print('display: none;') %>">
     </div>
 
-    <div class="stamp col-xs-12 col-md-8 alert-area" style="<% if (obj.isMine || obj.isParticipated) print('display: none;') %>">
+    <div class="stamp col-xs-12 col-md-8 alert-area" style="<% if (isMine || isJoined) print('display: none;') %>">
         <div class="alert alert-block alert-danger">
             <p class="center">
                 <strong>

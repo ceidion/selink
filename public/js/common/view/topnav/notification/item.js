@@ -22,7 +22,7 @@ define([
         jobTargetNotification: ['job-new', 'job-bookmarked'],
 
         // notification type regard group relation
-        groupTargetNotification: ['group-new', 'group-invited', 'group-joined', 'group-refused'],
+        groupTargetNotification: ['group-new', 'group-invited', 'group-joined', 'group-refused', 'group-applied'],
 
         tagName: 'li',
 

@@ -9,11 +9,20 @@
 <div style="border: 1px solid #CCC; margin-top: 3px; margin-bottom: 3px;" data-create-date="<%= moment(obj.createDate).valueOf() %>">
 
     <!-- header -->
-    <div>
+    <div style="position: relative;">
         <!-- cover -->
         <a href="#group/<%= obj._id %>">
             <img src="<%= obj.cover %>" style="width: 100%; overflow: hidden;"/>
         </a>
+
+        <div style="position: absolute; top: 0px; left: 0px;">
+            <% if (obj.type == 'protected') { %>
+                <span class="label label-xlg label-success arrowed-right">参加申請要</span>
+            <% } %>
+            <% if (obj.type == 'private') { %>
+                <span class="label label-xlg label-danger arrowed-in-right">非公開</span>
+            <% } %>
+        </div>
     </div>
 
     <!-- body -->
@@ -71,14 +80,6 @@
             <button class="btn btn-info btn-block btn-apply"
                     data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;送信中・・・">
                 <i class="ace-icon fa fa-envelope"></i>&nbsp;参加申請
-            </button>
-
-        <% } else if (!isMine) { %>
-
-            <!-- leave button -->
-            <button class="btn btn-pink btn-block btn-leave"
-                    data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;送信中・・・">
-                <i class="ace-icon fa fa-sign-out"></i>&nbsp;脱退
             </button>
 
         <% } %>

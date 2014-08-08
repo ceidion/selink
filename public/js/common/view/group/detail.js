@@ -72,7 +72,7 @@ define([
             // create posts collection
             this.collection = new PostsCollection(null, {document: this.model});
 
-            if (this.model.get('isMine')) {
+            if (_.indexOf(this.model.get('participants'), selink.user.id) >= 0) {
                 // create component
                 this.coverItem = new CoverItem({model: this.model});
                 this.nameItem = new NameItem({model: this.model});
@@ -144,7 +144,7 @@ define([
 
             var self = this;
 
-            if (this.model.get('isMine')) {
+            if (_.indexOf(this.model.get('participants'), selink.user.id) >= 0) {
                 // show every component
                 this.regions.coverRegion.show(this.coverItem);
                 this.regions.nameRegion.show(this.nameItem);

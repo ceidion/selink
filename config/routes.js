@@ -136,7 +136,9 @@ module.exports = function(app) {
     // Join group
     app.patch('/groups/:group/join', checkLoginStatus, group.join);
     // Apply group
-    app.patch('/groups/:group/apply', checkLoginStatus, group.join);
+    app.patch('/groups/:group/apply', checkLoginStatus, group.apply);
+    // Leave group
+    app.patch('/groups/:group/leave', checkLoginStatus, group.join);
 
     // Get group member
     app.get('/groups/:group/connections/participants', checkLoginStatus, group.connections);

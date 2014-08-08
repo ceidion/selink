@@ -15,6 +15,7 @@ define([
         // events
         events: {
             'click .btn-join': 'onJoin',
+            'click .btn-apply': 'onApply'
         },
 
         // after render
@@ -46,10 +47,8 @@ define([
             this.$el.find('.btn-join').button('loading');
 
             // create a participant in this group
-            this.model.save({
-                participants: selink.user.id //TODO: no need to pass this parameter
-            }, {
-                url: this.model.url() + '/join',
+            this.model.save(null, {
+                url: 'groups/' + this.model.id + '/join',
                 success: function(model, response, options) {
 
                     var joinedLabel = $('<span class="text-success"><i class="ace-icon fa fa-check"></i>&nbsp;参加中</span>');
@@ -61,12 +60,43 @@ define([
                     });
 
                     // sycn with user model
-                    selink.user.groups.add(model);
+                    selink.user.get('groups').push(self.model.id);
                 },
                 patch: true,
                 wait: true
             });
         },
+
+        // apply to join group
+        onApply: function() {
+
+            console.log('message');
+
+            var self = this;
+
+            // show loading icon, and prevent user click twice
+            this.$el.find('.btn-apply').button('loading');
+
+            // create a participant in this group
+            this.model.save(null, {
+                url: 'groups/' + this.model.id + '/apply',
+                success: function(model, response, options) {
+
+                    var joinedLabel = $('<span class="text-success"><i class="ace-icon fa fa-check"></i>&nbsp;参加申請中</span>');
+
+                    // change the add button to label
+                    self.$el.find('.btn-apply').fadeOut(function() {
+                        self.$el.find('.group-info').prepend(joinedLabel);
+                        self.trigger('ensureLayout');
+                    });
+
+                    // sycn with user model
+                    selink.user.get('applying').push(self.model.id);
+                },
+                patch: true,
+                wait: true
+            });
+        }
 
     });
 });

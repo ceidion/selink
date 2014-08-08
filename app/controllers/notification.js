@@ -30,6 +30,9 @@ var populateField = {
     14. group-invited
     15. group-joined
     16. group-refused
+    17. group-applied
+    18. group-approved
+    19. group-declined
 */
 
 // Notification index
@@ -114,6 +117,10 @@ exports.update = function(req, res, next) {
         confirmed: {'$ne': req.user.id}  // only the unconfirmed notification
     }, function(err, notification) {
 
+        console.log('---------------------');
+        console.log(notification);
+        console.log('---------------------');
+
         // if error exist
         if (err) next(err);
 
@@ -123,13 +130,23 @@ exports.update = function(req, res, next) {
         }
 
         // approve friend invitation
-        else if (req.body.result == "approved") {
+        else if (req.body.result == "approved" && notification.type == 'friend-invited') {
             approve(req, res, next, notification);
         }
 
         // decline friend invitation
-        else if (req.body.result == "declined") {
+        else if (req.body.result == "declined" && notification.type == 'friend-invited') {
             decline(req, res, next, notification);
+        }
+
+        // approve group application
+        else if (req.body.result == "approved" && notification.type == 'group-applied') {
+            approveApplication(req, res, next, notification);
+        }
+
+        // decline group application
+        else if (req.body.result == "declined" && notification.type == 'group-applied') {
+            declineApplication(req, res, next, notification);
         }
 
         // accept group invitation
@@ -347,6 +364,137 @@ decline = function(req, res, next, notification) {
         else res.json(results.updateNotification[0]);
     });
 
+};
+
+// Approve group application
+// ---------------------------------------------
+// Add a friend to the friends list of current user. This request will:
+//   1. update the "invited" and "friends" field for current user
+//   2. update the "invited" and "friends" field for target user
+//   3. update the "result" field for notification as "approved"
+//   4. create "friend-approved" activity for current user
+//   5. create "friend-approved" notification for target user
+//   6. send real time message to target user
+//   7. send Email to target user
+// ---------------------------------------------
+// Parameter:
+//   1. id  : The user's id that was approved
+// ---------------------------------------------
+
+approveApplication = function(req, res, next, notification) {
+
+    async.parallel({
+
+        // add the group's id into user's group list
+        updateUser: function(callback) {
+
+            // remove the request sender's id from user's invited list
+            // (in case they invited each other)
+            req.user.invited.pull(notification._from);
+            // add the request sender's id into user's friend list
+            req.user.friends.addToSet(notification._from);
+
+            req.user.save(callback);
+        },
+
+        // find that friend, add current user to his friend list
+        updateFriend: function(callback) {
+
+            User.findByIdAndUpdate(notification._from, {
+                '$pull': {invited: req.user.id},
+                '$push': {friends: req.user.id},
+            }, callback);
+        },
+
+        // mark the notification as confirmed
+        updateNotification: function(callback) {
+
+            notification.result = req.body.result;
+            notification.confirmed.addToSet(req.user.id);
+            notification.save(callback);
+        },
+
+        // create activity for current user
+        createActivity: function(callback) {
+
+            Activity.create({
+                _owner: req.user.id,
+                type: 'friend-approved',
+                targetUser: notification._from
+            }, callback);
+        },
+
+        // create notification for target user
+        createNotification: function(callback) {
+
+            Notification.create({
+                _owner: notification._from,
+                _from: req.user.id,
+                type: 'friend-approved'
+            }, function(err, noty) {
+
+                if (err) callback(err);
+                else {
+
+                    // send real time message to target user
+                    sio.sockets.in(notification._from).emit('friend-approved', {
+                        _id: noty._id,
+                        _from: {
+                            type: req.user.type,
+                            firstName: req.user.firstName,
+                            lastName: req.user.lastName,
+                            title: req.user.title,
+                            cover: req.user.cover,
+                            photo: req.user.photo
+                        },
+                        type: 'friend-approved',
+                        createDate: new Date()
+                    });
+
+                    callback(null);
+                }
+            });
+        },
+
+        // send Email to target user
+        sendEmail: function (callback) {
+
+            User.findById(notification._from, 'email', function(err, user){
+                if (err) callback(err);
+                else {
+
+                    Mailer.friendApprove({
+                        from: req.user,
+                        email: user.email
+                    });
+
+                    callback(null);
+                }
+            });
+        }
+
+    }, function(err, results) {
+
+        if (err) next(err);
+        // return the updated notification
+        else res.json(results.updateNotification[0]);
+    });
+};
+
+// Decline group application
+// ---------------------------------------------
+// Remove a friend from the invited list of the user who create invitation. This request will:
+//   1. update the "invited" field for target user
+//   2. update the "result" field for notification as "declined"
+//   3. create "friend-declined" activity for current user
+//   4. create "friend-declined" notification for target user
+//   5. send real time message to target user
+// ---------------------------------------------
+// Parameter:
+//   1. id  : The user's id that was declined
+// ---------------------------------------------
+
+declineApplication = function(req, res, next, notification) {
 };
 
 accept = function(req, res, next, notification) {

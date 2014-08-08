@@ -373,9 +373,21 @@ exports.update = function(req, res, next){
     async.waterfall([
 
         // find the post and update it
-        function findAndUpdatePost(callback) {
+        function updatePost(callback) {
 
             Post.findByIdAndUpdate(req.params.post, req.body, callback);
+        },
+
+        // update solr
+        function updateSolr(post, callback) {
+
+            solr.add(post.toSolr(), function(err, result) {
+                if (err) callback(err);
+                else solr.commit(function(err, result) {
+                    if (err) callback(err);
+                    else callback(null, post);
+                });
+            });
         },
 
         // get the full representation of the post

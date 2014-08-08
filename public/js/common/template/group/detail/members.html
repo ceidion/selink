@@ -1,11 +1,17 @@
+<%
+    var isMine = (obj._owner._id == selink.user.id) ? true : false;
+%>
+
 <div class="widget-header widget-header-small">
     <h5 class="widget-title text-success">
         <i class="ace-icon fa fa-group"></i>
         グループメンバー
     </h5>
+    <% if (isMine) { %>
     <div class="widget-toolbar no-border action-buttons">
         <a class="green btn-member"><i class="ace-icon fa fa-list-alt"></i></a>
     </div>
+    <% } %>
 </div>
 
 <div class="widget-body">

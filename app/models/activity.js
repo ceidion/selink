@@ -19,10 +19,10 @@ var Activity = new Schema({
     },
 
     // activity target (user)
-    targetUser: {
+    targetUser: [{
         type: Schema.Types.ObjectId,
         ref: 'User'
-    },
+    }],
 
     // activity target (post)
     targetPost: {

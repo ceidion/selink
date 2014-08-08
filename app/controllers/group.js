@@ -151,6 +151,20 @@ exports.connections = function(req, res, next) {
 };
 
 // Create group
+// ---------------------------------------------
+// Create new group, and return it
+// ---------------------------------------------
+// 1. create group with posted content, and set the owner and first participant as current user
+// 2. save the group pointer in owner profile
+// 3. create owmer activity
+// 4. create notification for owner's friends
+// 5. create invitation (a kind of notification) for invited people as needed
+// 6. commit group to solr
+// 7. send real-time notification to owner's friends
+// 8. sent real-time invitation to invited people
+// 9. send email invitation to invited people
+// 10. return the new group to client
+
 exports.create = function(req, res, next) {
 
     async.waterfall([
@@ -210,7 +224,7 @@ exports.create = function(req, res, next) {
                             targetGroup: group.id
                         }, callback);
                     else
-                        callback(null)
+                        callback(null);
                 },
 
                 // index group in solr
@@ -263,6 +277,22 @@ exports.create = function(req, res, next) {
             });
 
             //send invitation email
+            User.find()
+                .select('email')
+                .where('_id').in(req.body.invited)
+                .where('logicDelete').equals(false)
+                .exec(function(err, users) {
+                    // send new-post mail
+                    Mailer.groupInvitation(users, {
+                        _id: group.id,
+                        ownerId: req.user.id,
+                        ownerName: req.user.firstName + ' ' + req.user.lastName,
+                        ownerPhoto: req.user.photo,
+                        name: group.name,
+                        cover: group.cover,
+                        description: group.description
+                    });
+                });
 
             // the last result is the new group
             callback(null, group);
@@ -276,244 +306,528 @@ exports.create = function(req, res, next) {
     });
 };
 
-// Edit group
+// Update group
+// ---------------------------------------------
+// Update a group, and return the updated group
+// ---------------------------------------------
+// 1. find group with its Id
+// 2. update the group
+// 3. update the group in solr
+// 4. return the full representation of the group to client
+
 exports.update = function(req, res, next) {
 
-    delete req.body._id;
-    delete req.body.invited;
+    async.waterfall([
 
-    // update group info
-    Group.findByIdAndUpdate(req.params.group, req.body, function(err, group) {
+        // update group info
+        function updateGroup(callback) {
 
-        if (err) next(err);
-        else {
+            // we will use req.body as update paremeter, so:
+            // delete _id, cause you can't update _id, it will be error if it exists
+            // delete invited, if you want invite someone, use the invite interface
+            delete req.body._id;
+            delete req.body.invited;
 
-            // index group in solr
-            solr.add(group.toSolr(), function(err, solrResult) {
-                if (err) next(err);
-                else {
-                    console.log(solrResult);
-                    solr.commit(function(err,res){
-                       if(err) console.log(err);
-                       if(res) console.log(res);
-                    });
-                }
+            Group.findByIdAndUpdate(req.params.group, req.body, callback);
+        },
+
+        // update solr
+        function updateSolr(group, callback) {
+
+            solr.add(group.toSolr(), function(err, result) {
+                if (err) callback(err);
+                else solr.commit(function(err, result) {
+                    if (err) callback(err);
+                    else callback(null, group);
+                });
             });
+        },
 
-            var populateQuery = [{
+        // populate group for the full representation
+        function populateGroup(group, callback) {
+
+            var setting = [{
                 path: 'invited',
-                select: 'type firstName lastName title cover photo createDate'
+                select: populateField['invited']
             }, {
                 path: 'participants',
-                select: 'type firstName lastName title cover photo createDate'
+                select: populateField['participants']
             }, {
                 path: 'events'
             }];
 
-            group.populate(populateQuery, function(err, group) {
-
-                if (err) next(err);
-                else res.json(group);
-            });
+            group.populate(setting, callback);
         }
+
+    ], function(err, group) {
+
+        if (err) next(err);
+        // return the updated group
+        else res.json(group);
     });
 };
 
-// Invite people into group
+// Invite people join group
+// ---------------------------------------------
+// Update the 'invited' field of a group, and return the updated group
+// ---------------------------------------------
+// 1. find group with its Id
+// 2. update the group
+// 3. create activity for current user
+// 4. create notification for invited people
+// 5. send real time message to invited people
+// 6. send email to invited people
+// 7. return the full representation of the group to client
+
 exports.invite = function(req, res, next) {
 
-    if (req.body.invited) {
+    async.waterfall([
 
-        // update group info
-        Group.findById(req.params.group, function(err, group) {
+        // find the group
+        function findGroup(callback) {
+            Group.findById(req.params.group, callback);
+        },
 
-            if (err) next(err);
-            else {
+        // update the 'invited' field
+        function updateGroup(group, callback) {
 
-                req.body.invited.forEach(function(userId) {
-                    group.invited.addToSet(userId);
+            req.body.invited.forEach(function(userId) {
+                group.invited.addToSet(userId);
+            });
+
+            group.save(callback);
+        },
+
+        // create relate information
+        function createRelateInfo(group, callback) {
+
+            async.parallel({
+
+                // create activity
+                createActivity: function(callback) {
+
+                    Activity.create({
+                        _owner: req.user.id,
+                        type: 'group-invited',
+                        targetGroup: group.id,
+                        targetUser: req.body.invited
+                    }, callback);
+                },
+
+                // create notification
+                createNotification: function(callback) {
+
+                    Notification.create({
+                        _owner: req.body.invited,
+                        _from: req.user.id,
+                        type: 'group-invited',
+                        targetGroup: group.id
+                    }, callback);
+                }
+
+            }, function(err, results) {
+
+                if (err) callback(err);
+                else callback(null, group, results.createNotification);
+            });
+
+        },
+
+        // send messages
+        function sendMessages(group, notification, callback) {
+
+            // send real time message to all invited people
+            req.body.invited.forEach(function(room) {
+                sio.sockets.in(room).emit('group-invited', {
+                    _id: notification.id,
+                    _from: {
+                        _id: req.user.id,
+                        type: req.user.type,
+                        firstName: req.user.firstName,
+                        lastName: req.user.lastName,
+                        title: req.user.title,
+                        cover: req.user.cover,
+                        photo: req.user.photo
+                    },
+                    type: 'group-invited',
+                    targetGroup: group,
+                    createDate: new Date()
+                });
+            });
+
+            // send email to all invited people
+            User.find()
+                .select('email')
+                .where('_id').in(req.body.invited)
+                .where('logicDelete').equals(false)
+                .exec(function(err, users) {
+                    Mailer.groupInvitation(users, {
+                        _id: group.id,
+                        ownerId: req.user.id,
+                        ownerName: req.user.firstName + ' ' + req.user.lastName,
+                        ownerPhoto: req.user.photo,
+                        name: group.name,
+                        cover: group.cover,
+                        description: group.description
+                    });
                 });
 
-                group.save(function(err, newGroup) {
+            callback(null, group);
+        },
 
-                    if (err) next(err);
-                    else {
+        // populate group
+        function populateGroup(group, callback) {
 
-                        // create activity
-                        Activity.create({
-                            _owner: req.user.id,
-                            type: 'group-invited',
-                            targetGroup: newGroup._id
-                        }, function(err, activity) {
-                            if (err) next(err);
-                        });
+            var setting = [{
+                path: 'invited',
+                select: populateField['invited']
+            }, {
+                path: 'participants',
+                select: populateField['participants']
+            }, {
+                path: 'events'
+            }];
 
-                        // send notificaton to all friends
-                        Notification.create({
-                            _owner: req.body.invited,
-                            _from: req.user.id,
-                            type: 'group-invited',
-                            targetGroup: newGroup._id
-                        }, function(err, notification) {
-                            if (err) next(err);
-                            else {
+            group.populate(setting, callback);
+        },
 
-                                var notyPopulateQuery = [{
-                                    path:'_from',
-                                    select: 'type firstName lastName title cover photo createDate'
-                                },{
-                                    path:'targetGroup'
-                                }];
+    ], function(err, group) {
 
-                                // populate the respond notification with user's info
-                                notification.populate(notyPopulateQuery, function(err, noty) {
-                                    if(err) next(err);
-                                    // send real time message
-                                    else
-                                        req.body.invited.forEach(function(room) {
-                                            sio.sockets.in(room).emit('group-invited', noty);
-                                        });
-                                });
-                            }
-                        });
+        if (err) next(err);
+        // return the updated group
+        else res.json(group);
+    });
 
-                        // send email to all friends
-                        User.find()
-                            .select('email')
-                            .where('_id').in(req.body.invited)
-                            .where('logicDelete').equals(false)
-                            .exec(function(err, users) {
-                                // send new-post mail
-                                Mailer.groupInvitation(users, {
-                                    _id: newGroup._id,
-                                    ownerId: req.user.id,
-                                    ownerName: req.user.firstName + ' ' + req.user.lastName,
-                                    ownerPhoto: req.user.photo,
-                                    name: newGroup.name,
-                                    cover: newGroup.cover,
-                                    description: newGroup.description
-                                });
-                            });
 
-                        var populateQuery = [{
-                            path:'invited',
-                            select: 'type firstName lastName title cover photo createDate'
-                        }, {
-                            path:'participants',
-                            select: 'type firstName lastName title cover photo createDate'
-                        }, {
-                            path: 'events'
-                        }];
+    // if (req.body.invited) {
 
-                        newGroup.populate(populateQuery, function(err, group) {
-                            if (err) next(err);
-                            else res.json(group);
-                        });
-                    }
-                });
+    //     // update group info
+    //     Group.findById(req.params.group, function(err, group) {
 
-            }
-        });
+    //         if (err) next(err);
+    //         else {
 
-    } else {
-        res.json(400, {});
-    }
+    //             req.body.invited.forEach(function(userId) {
+    //                 group.invited.addToSet(userId);
+    //             });
+
+    //             group.save(function(err, newGroup) {
+
+    //                 if (err) next(err);
+    //                 else {
+
+    //                     // create activity
+    //                     Activity.create({
+    //                         _owner: req.user.id,
+    //                         type: 'group-invited',
+    //                         targetGroup: newGroup._id
+    //                     }, function(err, activity) {
+    //                         if (err) next(err);
+    //                     });
+
+    //                     // send notificaton to all friends
+    //                     Notification.create({
+    //                         _owner: req.body.invited,
+    //                         _from: req.user.id,
+    //                         type: 'group-invited',
+    //                         targetGroup: newGroup._id
+    //                     }, function(err, notification) {
+    //                         if (err) next(err);
+    //                         else {
+
+    //                             var notyPopulateQuery = [{
+    //                                 path:'_from',
+    //                                 select: 'type firstName lastName title cover photo createDate'
+    //                             },{
+    //                                 path:'targetGroup'
+    //                             }];
+
+    //                             // populate the respond notification with user's info
+    //                             notification.populate(notyPopulateQuery, function(err, noty) {
+    //                                 if(err) next(err);
+    //                                 // send real time message
+    //                                 else
+    //                                     req.body.invited.forEach(function(room) {
+    //                                         sio.sockets.in(room).emit('group-invited', noty);
+    //                                     });
+    //                             });
+    //                         }
+    //                     });
+
+    //                     // send email to all friends
+    //                     User.find()
+    //                         .select('email')
+    //                         .where('_id').in(req.body.invited)
+    //                         .where('logicDelete').equals(false)
+    //                         .exec(function(err, users) {
+    //                             // send new-post mail
+    //                             Mailer.groupInvitation(users, {
+    //                                 _id: newGroup._id,
+    //                                 ownerId: req.user.id,
+    //                                 ownerName: req.user.firstName + ' ' + req.user.lastName,
+    //                                 ownerPhoto: req.user.photo,
+    //                                 name: newGroup.name,
+    //                                 cover: newGroup.cover,
+    //                                 description: newGroup.description
+    //                             });
+    //                         });
+
+    //                     var populateQuery = [{
+    //                         path:'invited',
+    //                         select: 'type firstName lastName title cover photo createDate'
+    //                     }, {
+    //                         path:'participants',
+    //                         select: 'type firstName lastName title cover photo createDate'
+    //                     }, {
+    //                         path: 'events'
+    //                     }];
+
+    //                     newGroup.populate(populateQuery, function(err, group) {
+    //                         if (err) next(err);
+    //                         else res.json(group);
+    //                     });
+    //                 }
+    //             });
+
+    //         }
+    //     });
+
+    // } else {
+    //     res.json(400, {});
+    // }
 };
 
 // Join group
+// ---------------------------------------------
+// Update the 'participants' (and 'invited' as needed) field of a group, and return the updated group
+// ---------------------------------------------
+// 1. find group with its Id
+// 2. update the user
+// 3. update the group
+// 4. create activity for current user
+// 5. create notification for group owner
+// 6. send real time message to group owner
+// 7. send email to group owner
+// 8. return the group to client
+
 exports.join = function(req, res, next) {
 
-    // update group info
-    Group.findById(req.params.group, function(err, group) {
+    async.waterfall([
 
-        if (err) next(err);
-        else {
+        // find group
+        function findGroup(callback) {
 
-            // save the group id in user profile
-            req.user.groups.addToSet(group._id);
-            req.user.save(function(err) {
-                if (err) next(err);
-            });
+            Group.findById(req.params.group, callback);
+        },
 
-            // remove user's id from group's invited list, in case he had been invited
-            group.invited.pull(req.user._id);
-            // add user id to group participants
-            group.participants.addToSet(req.user.id);
-            // update group
-            group.save(function(err, group) {
+        // join the group
+        function joinGroup(group, callback) {
 
-                if (err) next(err);
-                else {
+            async.parallel({
 
-                    // create respond notification
+                // save the group id in user profile
+                updateUser: function(callback) {
+
+                    req.user.groups.addToSet(group.id);
+                    req.user.save(callback);
+                },
+
+                // save the user id in group profile
+                updateGroup: function(callback) {
+
+                    // remove user's id from group's invited list, in case he had been invited
+                    group.invited.pull(req.user._id);
+                    // add user id to group participants
+                    group.participants.addToSet(req.user.id);
+                    // update group
+                    group.save(callback);
+                },
+
+                // log user's activity
+                createActivity: function(callback) {
+
+                    Activity.create({
+                        _owner: req.user.id,
+                        type: 'group-joined',
+                        targetGroup: group.id
+                    }, callback);
+                },
+
+                // create notification for group owner
+                createNotification: function(callback) {
+
                     Notification.create({
                         _owner: group._owner,
                         _from: req.user.id,
                         type: 'group-joined',
-                        targetGroup: group._id
-                    }, function(err, respond) {
+                        targetGroup: group.id
+                    }, callback);
+                }
 
-                        if (err) next(err);
-                        else {
+            }, function(err, results) {
 
-                            var notyPopulateQuery = [{
-                                path:'_from',
-                                select: 'type firstName lastName title cover photo createDate'
-                            },{
-                                path:'targetGroup'
-                            }];
+                if (err) callback(err);
+                else callback(null, group, results.createNotification);
+            });
+        },
 
-                            // populate the respond notification with user's info
-                            respond.populate(notyPopulateQuery, function(err, noty) {
+        // send messages
+        function sendMessages(group, notification, callback) {
 
-                                if (err) next(err);
-                                // send real time message
-                                else sio.sockets.in(group._owner._id).emit('group-joined', noty);
-                            });
-                        }
+            // send real time message to group owner
+            sio.sockets.in(group._owner).emit('group-joined', {
+                _id: notification.id,
+                _from: {
+                    _id: req.user.id,
+                    type: req.user.type,
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    title: req.user.title,
+                    cover: req.user.cover,
+                    photo: req.user.photo
+                },
+                type: 'group-joined',
+                targetGroup: group,
+                createDate: new Date()
+            });
+
+            // send email to group owner
+            User.findById(group._owner)
+                .select('email')
+                .where('logicDelete').equals(false)
+                .exec(function(err, recipient) {
+
+                    Mailer.groupJoin({
+                        email: recipient.email,
+                        groupName: group.name,
+                        participant: req.user
                     });
+                });
 
-                    // log user's activity
+            callback(null, group);
+        }
+
+    ], function(err, group) {
+
+        if (err) next(err);
+        // return the updated group
+        else res.json(group);
+    });
+};
+
+// Apply to join group
+// ---------------------------------------------
+// Update the 'applicants' field of a group, and return the updated group
+// ---------------------------------------------
+// 1. find group with its Id
+// 2. update the user
+// 3. update the group
+// 4. create activity for current user
+// 5. create notification for group owner
+// 6. send real time message to group owner
+// 7. send email to group owner
+// 8. return the group to client
+
+exports.apply = function(req, res, next) {
+
+    async.waterfall([
+
+        // find group
+        function findGroup(callback) {
+
+            Group.findById(req.params.group, callback);
+        },
+
+        // apply to join the group
+        function joinGroup(group, callback) {
+
+            async.parallel({
+
+                // save the group id in user profile
+                updateUser: function(callback) {
+
+                    req.user.applying.addToSet(group.id);
+                    req.user.save(callback);
+                },
+
+                // save the user id in group's applicants
+                updateGroup: function(callback) {
+
+                    // add user id to group applicants
+                    group.applicants.addToSet(req.user.id);
+                    // update group
+                    group.save(callback);
+                },
+
+                // log user's activity
+                createActivity: function(callback) {
+
                     Activity.create({
                         _owner: req.user.id,
-                        type: 'group-joined',
-                        targetGroup: group._id
-                    }, function(err) {
-                        if (err) next(err);
-                    });
+                        type: 'group-applied',
+                        targetGroup: group.id
+                    }, callback);
+                },
 
-                    // send email to group owner
-                    User.findById(group._owner)
-                        .select('email')
-                        .where('logicDelete').equals(false)
-                        .exec(function(err, recipient) {
+                // create notification for group owner
+                createNotification: function(callback) {
 
-                            Mailer.groupJoin({
-                                email: recipient.email,
-                                groupName: group.name,
-                                participant: req.user
-                            });
-                        });
-
-                    var populateQuery = [{
-                        path:'_owner',
-                        select: 'type firstName lastName title cover photo createDate'
-                    }, {
-                        path: 'participants',
-                        select: 'type firstName lastName title cover photo createDate'
-                    }, {
-                        path:'events'
-                    }];
-
-                    // return updated group
-                    group.populate(populateQuery, function(err, group) {
-
-                        if (err) next(err);
-                        else res.json(group);
-                    });
+                    Notification.create({
+                        _owner: group._owner,
+                        _from: req.user.id,
+                        type: 'group-applied',
+                        targetGroup: group.id
+                    }, callback);
                 }
+
+            }, function(err, results) {
+
+                if (err) callback(err);
+                else callback(null, group, results.createNotification);
             });
+        },
+
+        // send messages
+        function sendMessages(group, notification, callback) {
+
+            // send real time message to group owner
+            sio.sockets.in(group._owner).emit('group-applied', {
+                _id: notification.id,
+                _from: {
+                    _id: req.user.id,
+                    type: req.user.type,
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    title: req.user.title,
+                    cover: req.user.cover,
+                    photo: req.user.photo
+                },
+                type: 'group-applied',
+                targetGroup: group,
+                createDate: new Date()
+            });
+
+            // send email to group owner
+            // User.findById(group._owner)
+            //     .select('email')
+            //     .where('logicDelete').equals(false)
+            //     .exec(function(err, recipient) {
+
+            //         Mailer.groupApply({
+            //             email: recipient.email,
+            //             groupName: group.name,
+            //             participant: req.user
+            //         });
+            //     });
+
+            callback(null, group);
         }
+
+    ], function(err, group) {
+
+        if (err) next(err);
+        // return the updated group
+        else res.json(group);
     });
 };
 

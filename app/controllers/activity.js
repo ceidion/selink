@@ -23,11 +23,14 @@ var mongoose = require('mongoose'),
     17. | job-bookmarked    | job     | job name
     18. | message-new       | message | message subject
     19. | group-new         | group   | group
-    20. | group-invited     | group   | group
+    20. | group-invited     | group   | group, invited people
     21. | group-joined      | group   | group
     22. | group-refused     | group   | group
-    23. | event-new         | event   | event
-    24. | group-event-new   | event   | event
+    23. | group-applied     | group   | group
+    24. | group-approved    | group   | group
+    25. | group-declined    | group   | group
+    26. | event-new         | event   | event
+    27. | group-event-new   | event   | event
 */
 
 // Activity index

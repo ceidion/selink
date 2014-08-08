@@ -175,6 +175,12 @@ var User = new Schema({
         ref: 'Group'
     }],
 
+    // User applying Group
+    applying: [{
+        type: Schema.Types.ObjectId,
+        ref: 'Group'
+    }],
+
     // User Setting
     mailSetting: {
 
