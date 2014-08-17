@@ -189,7 +189,7 @@
                 background: #42a8e1;
             }
 
-            .headerContent h1{
+            .headerContent h2{
                 color: #ffffff !important;
             }
 
@@ -583,7 +583,8 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templatePreheader" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;background-color: #F4F4F4;border-bottom: 1px solid #CCCCCC;border-collapse: collapse !important;">
                                         <tr>
                                             <td valign="top" class="preheaderContent" style="padding-top: 10px;padding-right: 20px;padding-bottom: 10px;padding-left: 20px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;color: #808080;font-family: Helvetica;font-size: 10px;line-height: 125%;text-align: left;" mc:edit="preheader_content00">
-                                                <%= group.ownerName %>さんはあなたを<%= group.name %>に招待しました。
+                                                <%= sender.firstName %>&nbsp;<%= sender.lastName %><br>
+                                                あなたを「<%= group.name %>」に招待しました。
                                             </td>
                                             <!-- *|IFNOT:ARCHIVE_PAGE|* -->
                                             <td valign="top" width="180" class="preheaderContent" style="padding-top: 10px;padding-right: 20px;padding-bottom: 10px;padding-left: 0;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;color: #808080;font-family: Helvetica;font-size: 10px;line-height: 125%;text-align: left;" mc:edit="preheader_content01">
@@ -601,12 +602,12 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;background-color: #F4F4F4;border-top: 1px solid #FFFFFF;border-bottom: 1px solid #CCCCCC;border-collapse: collapse !important;">
                                         <tr>
                                             <td valign="top" class="headerContent" style="color: #fff;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;font-family: Helvetica;font-size: 20px;font-weight: bold;line-height: 100%;padding-top: 20px;padding-right: 20px;padding-bottom: 10px;padding-left: 20px;text-align: left;vertical-align: middle;background: #42a8e1;">
-                                                <h1 style="display: block;font-family: Helvetica;font-size: 26px;font-style: normal;font-weight: bold;line-height: 100%;letter-spacing: normal;margin-top: 0;margin-right: 0;margin-bottom: 10px;margin-left: 0;text-align: left;color: #ffffff !important;">SELink</h1>
-                                                <h3 style="display: block;font-family: Helvetica;font-size: 16px;font-weight: normal;line-height: 100%;letter-spacing: normal;margin-top: 0;margin-right: 0;margin-bottom: 10px;margin-left: 0;text-align: left;color: #eeeeee !important;"><%= group.ownerName %>さんはあなたを<%= group.name %>に招待しました</h3>
+                                                <h2 style="display: block;font-family: Helvetica;font-size: 20px;font-style: normal;font-weight: bold;line-height: 100%;letter-spacing: normal;margin-top: 0;margin-right: 0;margin-bottom: 10px;margin-left: 0;text-align: left;color: #ffffff !important;"><%= sender.firstName %>&nbsp;<%= sender.lastName %></h2>
+                                                <h3 style="display: block;font-family: Helvetica;font-size: 16px;font-weight: normal;line-height: 100%;letter-spacing: normal;margin-top: 0;margin-right: 0;margin-bottom: 10px;margin-left: 0;text-align: left;color: #eeeeee !important;">あなたを「<%= group.name %>」に招待しました</h3>
                                             </td>
                                             <td align="center" style="width: 74px;height: 100%;padding-right: 20px;background: #42a8e1;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                                <a href="#profile/<%= group.ownerId %>" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;">
-                                                    <img class="avatar" src="http://new.selink.jp/<%= group.ownerPhoto %>" style="-ms-interpolation-mode: bicubic;border: 2px solid #C9D6E5;height: auto;line-height: 100%;outline: none;text-decoration: none;max-width: 70px;max-height: 70px;border-radius: 100%;">
+                                                <a href="#profile/<%= sender.id %>" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;">
+                                                    <img class="avatar" src="http://new.selink.jp/<%= sender.photo %>" style="-ms-interpolation-mode: bicubic;border: 2px solid #C9D6E5;height: auto;line-height: 100%;outline: none;text-decoration: none;max-width: 70px;max-height: 70px;border-radius: 100%;">
                                                 </a>
                                             </td>
                                         </tr>

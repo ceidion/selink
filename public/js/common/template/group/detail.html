@@ -49,16 +49,21 @@
                     </button>
                 <% } %>
 
-                <div class="pull-right green">
-                    <i class="ace-icon fa fa-group tooltip-success"></i>
-                    <%= obj.participants.length %>
-                </div>
-
                 <% if (isMine) { %>
-                <div class="pull-right red" style="padding-right: 10px;">
-                    <i class="ace-icon fa fa-paper-plane tooltip-error"></i>
-                    <span class="invitationNum"><%= obj.invited.length %></span>
-                </div>
+                    <div class="pull-right green btn-member">
+                        <i class="ace-icon fa fa-group tooltip-success"></i>
+                        <span class="participantsNum"><%= obj.participants.length %></span>
+                    </div>
+
+                    <div class="pull-right red btn-invited" style="padding-right: 10px;">
+                        <i class="ace-icon fa fa-paper-plane tooltip-error"></i>
+                        <span class="invitationNum"><%= obj.invited.length %></span>
+                    </div>
+                <% } else { %>
+                    <div class="pull-right green">
+                        <i class="ace-icon fa fa-group tooltip-success"></i>
+                        <%= obj.participants.length %>
+                    </div>
                 <% } %>
 
                 <div class="pull-right orange" style="padding-right: 10px;">

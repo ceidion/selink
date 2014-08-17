@@ -7,8 +7,9 @@ define([
     'common/view/group/detail/description',
     'common/view/group/detail/events',
     'common/view/group/detail/members',
+    'common/view/group/detail/member/participants',
+    'common/view/group/detail/member/invited',
     'common/view/calendar/event',
-    'common/view/group/detail/member/main',
     'common/collection/base',
     'common/model/event',
     'common/model/post',
@@ -23,8 +24,9 @@ define([
     DescriptionItem,
     EventsItem,
     MembersItem,
-    EventView,
     MemberView,
+    InvitedView,
+    EventView,
     BaseCollection,
     EventModel,
     PostModel,
@@ -54,16 +56,14 @@ define([
         events: {
             'click .btn-join': 'onJoin',
             'click .avatar-owner': 'toProfile',
-            'click .btn-member': 'showMemberEditor',
-            'click .btn-event': 'showEventEditor'
+            'click .btn-event': 'showEventEditor',
+            'click .btn-member': 'showMemberView',
+            'click .btn-invited': 'showInvitedView'
         },
 
         modelEvents: {
-            'change:invited': 'renderInvited'
-        },
-
-        renderInvited: function() {
-            this.$el.find('.invitationNum').empty().text(this.model.get('invitationNum'));
+            'change:invited': 'renderInvited',
+            'change:participants': 'renderParticipants'
         },
 
         // initializer
@@ -72,7 +72,8 @@ define([
             // create posts collection
             this.collection = new PostsCollection(null, {document: this.model});
 
-            if (_.indexOf(this.model.get('participants'), selink.user.id) >= 0) {
+            // if (_.indexOf(this.model.get('participants'), selink.user.id) >= 0) {
+            if (this.model.get('_owner')._id == selink.user.id) {
                 // create component
                 this.coverItem = new CoverItem({model: this.model});
                 this.nameItem = new NameItem({model: this.model});
@@ -144,7 +145,8 @@ define([
 
             var self = this;
 
-            if (_.indexOf(this.model.get('participants'), selink.user.id) >= 0) {
+            // if (_.indexOf(this.model.get('participants'), selink.user.id) >= 0) {
+            if (this.model.get('_owner')._id == selink.user.id) {
                 // show every component
                 this.regions.coverRegion.show(this.coverItem);
                 this.regions.nameRegion.show(this.nameItem);
@@ -223,7 +225,7 @@ define([
                     });
 
                     // sycn with user model
-                    selink.user.groups.add(model);
+                    selink.user.get('groups').push(self.model.id);
                 },
                 patch: true,
                 wait: true
@@ -241,18 +243,13 @@ define([
             // turn the page manually
             window.location = '#profile/' + this.model.get('_owner')._id;
         },
+        
+        renderInvited: function() {
+            this.$el.find('.invitationNum').empty().text(this.model.get('invited').length);
+        },
 
-        // edit group member
-        showMemberEditor: function() {
-
-            // create member edit dialog with this view's model
-            var memberView = new MemberView({
-                model: this.model
-            });
-
-            // show edit dialog
-            selink.modalArea.show(memberView);
-            selink.modalArea.$el.modal('show');
+        renderParticipants: function() {
+            this.$el.find('.participantsNum').empty().text(this.model.get('participants').length);
         },
 
         // edit group event
@@ -269,6 +266,28 @@ define([
 
             // show modal
             selink.modalArea.show(eventModal);
+            selink.modalArea.$el.modal('show');
+        },
+
+        showMemberView: function() {
+
+            var memberModal = new MemberView({
+                model: this.model
+            });
+
+            // show modal
+            selink.modalArea.show(memberModal);
+            selink.modalArea.$el.modal('show');
+        },
+
+        showInvitedView: function() {
+
+            var invitedModal = new InvitedView({
+                model: this.model
+            });
+
+            // show modal
+            selink.modalArea.show(invitedModal);
             selink.modalArea.$el.modal('show');
         }
 

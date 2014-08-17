@@ -11,6 +11,10 @@
         icon = "fa-ticket red bigger-110";
         content = "あなたをグループ<strong>「" + groupName + "」</strong>に招待しました";
     }
+    else if (obj.type == "group-expeled") {
+        icon = "fa-frown-o purple bigger-110";
+        content = "グループ<strong>「" + groupName + "」</strong>から退会されました";
+    }
     else if (obj.type == "group-joined") {
         icon = "fa-sign-in green bigger-110";
         content = "グループ<strong>「" + groupName + "」</strong>に参加しました";
@@ -22,6 +26,14 @@
     else if (obj.type == "group-applied") {
         icon = "fa-calendar-o blue bigger-110";
         content = "グループ<strong>「" + groupName + "」</strong>を参加申請しました";
+    }
+    else if (obj.type == "group-approved") {
+        icon = "fa-smile-o green bigger-110";
+        content = "グループ<strong>「" + groupName + "」</strong>の参加申請を承認しました";
+    }
+    else if (obj.type == "group-declined") {
+        icon = "fa-frown-o purple bigger-110";
+        content = "グループ<strong>「" + groupName + "」</strong>の参加申請を拒否しました";
     }
 %>
 

@@ -22,15 +22,37 @@ define([
 
     return Backbone.Marionette.ItemView.extend({
 
-        loginActivity: ['user-login', 'user-logout'],
+        loginActivity: [
+            'user-login',
+            'user-logout'],
 
-        userTargetActivity: ['friend-invited', 'friend-approved', 'friend-declined', 'friend-break'],
+        userTargetActivity: [
+            'friend-invited', 
+            'friend-approved', 
+            'friend-declined', 
+            'friend-break'],
 
-        postTargetActivity: ['post-new', 'post-liked', 'post-bookmarked', 'post-commented', 'comment-liked'],
+        postTargetActivity: [
+            'post-new', 
+            'post-liked', 
+            'post-bookmarked', 
+            'post-commented', 
+            'comment-replied',
+            'comment-liked'],
 
-        jobTargetActivity: ['job-new', 'job-bookmarked'],
+        jobTargetActivity: [
+            'job-new', 
+            'job-bookmarked'],
 
-        groupTargetActivity: ['group-new', 'group-invited', 'group-joined', 'group-refused', 'group-event-new'],
+        groupTargetActivity: [
+            'group-new', 
+            'group-invited', 
+            'group-joined', 
+            'group-refused', 
+            'group-applied', 
+            'group-approved', 
+            'group-declined',
+            'group-event-new'],
 
         // template
         getTemplate: function(){

@@ -264,6 +264,7 @@
             .avatar {
                 max-width: 70px;
                 max-height: 70px;
+                margin: 8px;
                 border-radius: 100%;
                 border: 2px solid #C9D6E5;
             }
@@ -437,6 +438,7 @@
                 .avatar {
                     max-width: 70px;
                     max-height: 70px;
+                    margin: 8px;
                     border-radius: 100%;
                     border: 2px solid #C9D6E5;
                 }
@@ -494,7 +496,7 @@
                                         <tr>
                                             <td valign="top" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:20px;" mc:edit="preheader_content00">
                                                 <%= sender.firstName %>&nbsp;<%= sender.lastName %><br/>
-                                                お友達要請が届きました。
+                                                あなたの記事にブックマックを付けました
                                             </td>
                                             <!-- *|IFNOT:ARCHIVE_PAGE|* -->
                                             <td valign="top" width="180" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:0;" mc:edit="preheader_content01">
@@ -513,9 +515,11 @@
                                         <tr>
                                             <td valign="top" class="headerContent" style="color: #fff;">
                                                 <h2><%= sender.firstName %>&nbsp;<%= sender.lastName %></h2>
-                                                <h3>友達要請</h3>
+                                                <h3>
+                                                    あなたの記事にブックマックを付けました
+                                                </h3>
                                             </td>
-                                            <td align="center" style="width: 74px; height: 100%; padding-right: 20px; background: #42a8e1;">
+                                            <td align="center" style="width: 86px; height: 100%; padding-right: 20px; background: #42a8e1;">
                                                 <a href="#profile/<%= sender._id %>">
                                                     <img class="avatar" src="http://new.selink.jp/<%= sender.photo %>">
                                                 </a>
@@ -531,11 +535,11 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody">
                                         <tr>
                                             <td valign="top" class="bodyContent" mc:edit="body_content">
-                                                <h4>
-                                                    <%= sender.firstName %>&nbsp;<%= sender.lastName %>さんはあなたにお友達要請を送信しました。
-                                                </h4>
-                                                <a href="http://new.selink.jp/spa#home" class="btn-friend">
-                                                    承認へ
+                                                <div style="margin-bottom: 20px;">
+                                                    <%- post.content %>
+                                                </div>
+                                                <a href="http://new.selink.jp/spa#post/<%= post._id %>" class="btn-friend">
+                                                    SELinkで見る
                                                 </a>
                                             </td>
                                         </tr>

@@ -189,7 +189,7 @@
                 background: #42a8e1;
             }
 
-            .headerContent h1{
+            .headerContent h2{
                 color: #ffffff !important;
             }
 
@@ -493,7 +493,8 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templatePreheader" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;background-color: #F4F4F4;border-bottom: 1px solid #CCCCCC;border-collapse: collapse !important;">
                                         <tr>
                                             <td valign="top" class="preheaderContent" style="padding-top: 10px;padding-right: 20px;padding-bottom: 10px;padding-left: 20px;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;color: #808080;font-family: Helvetica;font-size: 10px;line-height: 125%;text-align: left;" mc:edit="preheader_content00">
-                                                <%= from.firstName %>&nbsp;<%= from.lastName %>さんからお友達要請が届きました。
+                                                <%= sender.firstName %>&nbsp;<%= sender.lastName %><br>
+                                                お友達要請が届きました。
                                             </td>
                                             <!-- *|IFNOT:ARCHIVE_PAGE|* -->
                                             <td valign="top" width="180" class="preheaderContent" style="padding-top: 10px;padding-right: 20px;padding-bottom: 10px;padding-left: 0;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;color: #808080;font-family: Helvetica;font-size: 10px;line-height: 125%;text-align: left;" mc:edit="preheader_content01">
@@ -511,12 +512,12 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;background-color: #F4F4F4;border-top: 1px solid #FFFFFF;border-bottom: 1px solid #CCCCCC;border-collapse: collapse !important;">
                                         <tr>
                                             <td valign="top" class="headerContent" style="color: #fff;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;font-family: Helvetica;font-size: 20px;font-weight: bold;line-height: 100%;padding-top: 20px;padding-right: 20px;padding-bottom: 10px;padding-left: 20px;text-align: left;vertical-align: middle;background: #42a8e1;">
-                                                <h1 style="display: block;font-family: Helvetica;font-size: 26px;font-style: normal;font-weight: bold;line-height: 100%;letter-spacing: normal;margin-top: 0;margin-right: 0;margin-bottom: 10px;margin-left: 0;text-align: left;color: #ffffff !important;">SELink</h1>
-                                                <h3 style="display: block;font-family: Helvetica;font-size: 16px;font-weight: normal;line-height: 100%;letter-spacing: normal;margin-top: 0;margin-right: 0;margin-bottom: 10px;margin-left: 0;text-align: left;color: #eeeeee !important;"><%= from.firstName %>&nbsp;<%= from.lastName %>から友達要請</h3>
+                                                <h2 style="display: block;font-family: Helvetica;font-size: 20px;font-style: normal;font-weight: bold;line-height: 100%;letter-spacing: normal;margin-top: 0;margin-right: 0;margin-bottom: 10px;margin-left: 0;text-align: left;color: #ffffff !important;"><%= sender.firstName %>&nbsp;<%= sender.lastName %></h2>
+                                                <h3 style="display: block;font-family: Helvetica;font-size: 16px;font-weight: normal;line-height: 100%;letter-spacing: normal;margin-top: 0;margin-right: 0;margin-bottom: 10px;margin-left: 0;text-align: left;color: #eeeeee !important;">友達要請</h3>
                                             </td>
                                             <td align="center" style="width: 74px;height: 100%;padding-right: 20px;background: #42a8e1;-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;">
-                                                <a href="#profile/<%= from._id %>" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;">
-                                                    <img class="avatar" src="http://new.selink.jp/<%= from.photo %>" style="-ms-interpolation-mode: bicubic;border: 2px solid #C9D6E5;height: auto;line-height: 100%;outline: none;text-decoration: none;max-width: 70px;max-height: 70px;border-radius: 100%;">
+                                                <a href="#profile/<%= sender._id %>" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;">
+                                                    <img class="avatar" src="http://new.selink.jp/<%= sender.photo %>" style="-ms-interpolation-mode: bicubic;border: 2px solid #C9D6E5;height: auto;line-height: 100%;outline: none;text-decoration: none;max-width: 70px;max-height: 70px;border-radius: 100%;">
                                                 </a>
                                             </td>
                                         </tr>
@@ -531,7 +532,7 @@
                                         <tr>
                                             <td valign="top" class="bodyContent" mc:edit="body_content" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;mso-table-lspace: 0pt;mso-table-rspace: 0pt;color: #505050;font-family: Helvetica;font-size: 12px;line-height: 150%;padding-top: 20px;padding-right: 20px;padding-bottom: 20px;padding-left: 20px;text-align: left;">
                                                 <h4 style="display: block;font-family: Helvetica;font-size: 14px;font-weight: normal;line-height: 100%;letter-spacing: normal;margin-top: 0;margin-right: 0;margin-bottom: 10px;margin-left: 0;text-align: left;color: #808080 !important;">
-                                                    <%= from.firstName %>&nbsp;<%= from.lastName %>さんはあなたにお友達要請を送信しました。
+                                                    <%= sender.firstName %>&nbsp;<%= sender.lastName %>さんはあなたにお友達要請を送信しました。
                                                 </h4>
                                                 <a href="http://new.selink.jp/spa#home" class="btn-friend" style="-webkit-text-size-adjust: 100%;-ms-text-size-adjust: 100%;display: inline-block;border: 5px solid #FFF;border-radius: 0;cursor: pointer;vertical-align: middle;margin: 0;position: relative;border-color: #6fb3e0;width: 98%;padding: 6px 0px;font-size: 14px;font-weight: normal;line-height: 1.428571429;text-align: center;white-space: nowrap;color: #FFF !important;text-decoration: underline;text-shadow: 0 -1px 0 rgba(0,0,0,0.25) !important;background-image: none !important;box-shadow: none !important;background-color: #6fb3e0 !important;">
                                                     承認へ

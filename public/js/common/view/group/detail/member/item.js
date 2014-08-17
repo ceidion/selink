@@ -12,7 +12,7 @@ define([
 
         tagName: 'li',
 
-        className: 'thumbnail-item col-xs-2 col-md-1',
+        className: 'thumbnail-item col-xs-2',
 
         ui: {
             checkMark: '.check-mark',

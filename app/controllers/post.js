@@ -17,7 +17,6 @@ var _ = require('underscore'),
 var populateField = {
     '_owner': 'type firstName lastName title cover photo',
     'comments._owner': 'type firstName lastName title cover photo',
-    'comments.replyTo': 'type firstName lastName title cover photo',
     'group': 'name cover description'
 };
 
@@ -93,7 +92,6 @@ _post_index = function(req, res, user, group, next) {
     // default query parameter below
     query.select('-removedComments -logicDelete')
         .populate('comments._owner', populateField['comments._owner'])
-        .populate('comments.replyTo', populateField['comments.replyTo'])
         .where('logicDelete').equals(false)
         .limit(req.query.size || 20)
         .sort('-createDate')
@@ -133,7 +131,6 @@ exports.newsfeed = function(req, res, next) {
         .populate('_owner', populateField['_owner'])
         .populate('group', populateField['group'])
         .populate('comments._owner', populateField['comments._owner'])
-        .populate('comments.replyTo', populateField['comments.replyTo'])
         .where('logicDelete').equals(false)
         .limit(req.query.size || 20)
         .sort('-createDate')
@@ -234,7 +231,8 @@ exports.create = function(req, res, next) {
                     Activity.create({
                         _owner: req.user.id,
                         type: 'post-new',
-                        targetPost: post.id
+                        targetPost: post.id,
+                        targetGroup: req.body.group
                     }, callback);
                 },
 
@@ -246,7 +244,8 @@ exports.create = function(req, res, next) {
                             _owner: req.user.friends,
                             _from: req.user.id,
                             type: 'post-new',
-                            targetPost: post.id
+                            targetPost: post.id,
+                            targetGroup: req.body.group
                         }, callback);
                     else
                         callback(null);
@@ -264,88 +263,81 @@ exports.create = function(req, res, next) {
             }, function(err, results) {
 
                 if (err) callback(err);
-                else {
-
-                    var postObj = post.toObject(),
-                        group = results.updateGroup,
-                        notification = results.createNotification,
-                        notifiedUser = req.user.friends,
-                        owner = {
-                            _id: req.user.id,
-                            type: req.user.type,
-                            firstName: req.user.firstName,
-                            lastName: req.user.lastName,
-                            title: req.user.title,
-                            cover: req.user.cover,
-                            photo: req.user.photo
-                        };
-
-                    // manually populate post owner
-                    postObj._owner = owner;
-
-                    // if the post belong to some group
-                    if (group) {
-                        // manually populate post group (as needed)
-                        postObj.group = {
-                            _id: group.id,
-                            name: group.name,
-                            cover: group.cover,
-                            description: group.description
-                        };
-
-                        // --------- this is NOT working :---------------
-                        // notifiedUser = _.union(req.user.friends, _.without(group.participants, req.user.id));
-                        // ----------------- Because :-------------------
-                        // intersection uses simple reference equality to compare the elements, rather than comparing their contents.
-                        // To compare two ObjectIds for equality you need to use the ObjectId.equals method.
-                        // So the simplest solution would be to convert the arrays to strings so that intersection will work.
-                        // ----------------------------------------------
-
-                        // change the notification receiver to group members + friends
-                        group.participants.forEach(function(participant) {
-                            // note that I use user's '_id', cause the participant is an ObjectId (object).
-                            // remember that the 'id' is the string representation of '_id'
-                            if (!_.isEqual(participant, req.user._id))
-                                notifiedUser.addToSet(participant);
-                        });
-                    }
-
-                    // send real time message to friends
-                    notifiedUser.forEach(function(room) {
-                        sio.sockets.in(room).emit('post-new', {
-                            _id: notification.id,
-                            _from: owner,
-                            targetPost: postObj,
-                            type: 'post-new',
-                            createDate: new Date()
-                        });
-                    });
-
-                    // send email to all friends
-                    User.find()
-                        .select('email')
-                        .where('_id').in(notifiedUser)
-                        .where('logicDelete').equals(false)
-                        .exec(function(err, users) {
-
-                            if (err) callback(err);
-                            else {
-
-                                // send new-post mail
-                                Mailer.newPost(users, {
-                                    _id: post.id,
-                                    authorId: req.user.id,
-                                    authorName: req.user.firstName + ' ' + req.user.lastName,
-                                    authorPhoto: req.user.photo,
-                                    content: post.content
-                                });
-                            }
-                        });
-
-                    // the last result is the created post
-                    callback(null, postObj);
-                }
+                else callback(null, post, results.updateGroup, results.createNotification);
             });
+        },
+
+        function sendMessages(post, group, notification, callback) {
+
+            var postObj = post.toObject(), // this object is the full representation of post, only used for return
+                notifiedUser = req.user.friends,
+                owner = {
+                    _id: req.user.id,
+                    type: req.user.type,
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    title: req.user.title,
+                    cover: req.user.cover,
+                    photo: req.user.photo
+                };
+
+            // manually populate post owner
+            postObj._owner = owner;
+
+            // if the post belong to some group
+            if (group) {
+                // manually populate post group (as needed)
+                postObj.group = {
+                    _id: group.id,
+                    name: group.name,
+                    cover: group.cover,
+                    description: group.description
+                };
+
+                // --------- this is NOT working :---------------
+                // notifiedUser = _.union(req.user.friends, _.without(group.participants, req.user.id));
+                // ----------------- Because :-------------------
+                // intersection uses simple reference equality to compare the elements, rather than comparing their contents.
+                // To compare two ObjectIds for equality you need to use the ObjectId.equals method.
+                // So the simplest solution would be to convert the arrays to strings so that intersection will work.
+                // ----------------------------------------------
+
+                // change the notification receiver to group members + friends
+                group.participants.forEach(function(participant) {
+                    // note that I use user's '_id', cause the participant is an ObjectId (object).
+                    // remember that the 'id' is the string representation of '_id'
+                    if (!_.isEqual(participant, req.user._id))
+                        notifiedUser.addToSet(participant);
+                });
+            }
+
+            // send real time message to friends
+            notifiedUser.forEach(function(room) {
+                sio.sockets.in(room).emit('post-new', {
+                    _id: notification.id,
+                    _from: owner,
+                    type: 'post-new',
+                    targetPost: post,
+                    targetGroup: group,
+                    createDate: new Date()
+                });
+            });
+
+            // send email to all friends
+            User.find()
+                .select('email')
+                .where('_id').in(notifiedUser)
+                .where('mailSetting.newPost').equals(true)
+                .where('logicDelete').equals(false)
+                .exec(function(err, recipients) {
+
+                    if (err) callback(err);
+                    // send new-post mail
+                    else if (recipients) Mailer.newPost(recipients, req.user, post, group);
+                });
+
+            // the last result is the created post
+            callback(null, postObj);
         }
 
     ], function(err, post) {
@@ -496,7 +488,7 @@ exports.remove = function(req, res, next) {
 // 4. create notification for the post owner when someone like this post as first time
 // 5. send real-time notification to post owner
 // 6. send email notification to post owner
-// 7. return the full representation of the post to client
+// 7. return the post to client
 
 exports.like = function(req, res, next){
 
@@ -625,6 +617,17 @@ exports.like = function(req, res, next){
                 });
 
                 // send email
+                User.findOne()
+                    .select('email')
+                    .where('_id').equals(post._owner._id)
+                    .where('mailSetting.postLiked').equals(true)
+                    .where('logicDelete').equals(false)
+                    .exec(function(err, recipient) {
+
+                        if (err) callback(err);
+                        // send new-post mail
+                        else if (recipient) Mailer.postLiked(recipient, req.user, post);
+                    });
             }
 
             // the last result is the updated post
@@ -649,7 +652,7 @@ exports.like = function(req, res, next){
 // 4. create notification for the post owner when someone bookmark this post as first time
 // 5. send real-time notification to post owner
 // 6. send email notification to post owner
-// 7. return the full representation of the post to client
+// 7. return the post to client
 
 exports.bookmark = function(req, res, next){
 
@@ -778,6 +781,17 @@ exports.bookmark = function(req, res, next){
                 });
 
                 // send email
+                User.findOne()
+                    .select('email')
+                    .where('_id').equals(post._owner._id)
+                    .where('mailSetting.postBookmarked').equals(true)
+                    .where('logicDelete').equals(false)
+                    .exec(function(err, recipient) {
+
+                        if (err) callback(err);
+                        // send new-post mail
+                        else if (recipient) Mailer.postBookmarked(recipient, req.user, post);
+                    });
             }
 
             // the last result is the updated post

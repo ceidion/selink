@@ -21,7 +21,7 @@ define([
 
             var $target = $(event.target);
 
-            this.model.save('setting.' + $target.attr('name'), $target.is(':checked'), {
+            this.model.save('mailSetting.' + $target.attr('name'), $target.is(':checked'), {
                 success: function() {
                     $target.closest('.row').find('i').slFlip();
                 },

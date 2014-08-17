@@ -559,7 +559,7 @@ define([
                 person = view.model.get('_owner'),
                 atPerson = "@" + person.firstName + ' ' + person.lastName + ' ';
 
-            this.replyTo = person._id;
+            this.replyTo = view.model.id;
 
             this.ui.replyTarget.empty().text(atPerson);
             this.ui.replyLabel.slideDown('fast', function() {

@@ -1,30 +1,50 @@
 <%
     var title,
         comment,
-        content = obj.targetPost.content;
+        content = obj.targetPost.content,
+        content = _.str.stripTags(content);
+        content = _.str.truncate(content, 200);
 
     if (obj.type == "post-new") {
-        title = "新しい記事を投稿しました";
+
+        if (obj.targetGroup)
+            title = '「<a class="group-link" href="#group/' + obj.targetGroup._id + '">' + obj.targetGroup.name + '</a>」に新しい記事を投稿しました';
+        else
+            title = "新しい記事を投稿しました";
     }
     else if (obj.type == "post-liked") {
         title = "あなたの投稿に「いいね！」しました";
-        content = _.str.stripTags(obj.targetPost.content);
-        content = _.str.truncate(content, 200);
     }
     else if (obj.type == "post-bookmarked") {
         title = "あなたの投稿にブックマークを付けました";
-        content = _.str.stripTags(obj.targetPost.content);
-        content = _.str.truncate(content, 200);
     }
     else if (obj.type == "post-commented") {
-        title = "あなたの投稿をコメントしました";
+
+        if (obj.targetPost._owner == selink.user.id)
+            title = "あなたの投稿をコメントしました";
+        else
+            title = "下記投稿をコメントしました";
+
         comment = _.findWhere(obj.targetPost.comments, {_id: obj.targetComment});
-        content = comment.content;
+    }
+    else if (obj.type == "comment-replied") {
+
+        comment = _.findWhere(obj.targetPost.comments, {_id: obj.targetComment});
+        content = _.findWhere(obj.targetPost.comments, {_id: obj.targetReplyTo}).content;
+
+        if (comment._owner == selink.user.id)
+            title = "あなたのコメントを返信しました";
+        else
+            title = "下記コメントを返信しました";
     }
     else if (obj.type == "comment-liked") {
-        title = "あなたのコメントに「いいね！」しました";
+
         comment = _.findWhere(obj.targetPost.comments, {_id: obj.targetComment});
-        content = comment.content;
+
+        if (comment._owner == selink.user.id)
+            title = "あなたのコメントに「いいね！」しました";
+        else
+            title = "下記コメントに「いいね！」しました";
     }
 
 %>
@@ -48,7 +68,16 @@
     </div>
     <div class="widget-body">
         <div class="widget-main">
-            <%= content %>
+            <% if (comment) { %>
+                <%= comment.content%>
+                <hr>
+                <div style="text-indent: 10px;">
+                    <i class="ace-icon fa fa-chevron-right blue"></i>
+                    <%= content %>
+                </div>
+            <% } else { %>
+                <%= content %>
+            <% } %>
             <div class="widget-toolbox clearfix">
                 <div class="pull-right action-buttons">
                     <div class="space-4"></div>

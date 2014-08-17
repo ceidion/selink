@@ -131,14 +131,16 @@ module.exports = function(app) {
     app.put('/groups/:group/cover', checkLoginStatus, group.uploadCover);
     app.put('/groups/:group/cover-scale', checkLoginStatus, group.scaleCover);
 
-    // Invite people
+    // Invite members
     app.patch('/groups/:group/invite', checkLoginStatus, group.invite);
+    // Expel members
+    app.patch('/groups/:group/expel', checkLoginStatus, group.expel);
     // Join group
     app.patch('/groups/:group/join', checkLoginStatus, group.join);
     // Apply group
     app.patch('/groups/:group/apply', checkLoginStatus, group.apply);
-    // Leave group
-    app.patch('/groups/:group/leave', checkLoginStatus, group.join);
+    // Quit group
+    app.patch('/groups/:group/quit', checkLoginStatus, group.expel);
 
     // Get group member
     app.get('/groups/:group/connections/participants', checkLoginStatus, group.connections);

@@ -280,18 +280,11 @@ exports.create = function(req, res, next) {
             User.find()
                 .select('email')
                 .where('_id').in(req.body.invited)
+                .where('mailSetting.groupInvitation').equals(true)
                 .where('logicDelete').equals(false)
                 .exec(function(err, users) {
-                    // send new-post mail
-                    Mailer.groupInvitation(users, {
-                        _id: group.id,
-                        ownerId: req.user.id,
-                        ownerName: req.user.firstName + ' ' + req.user.lastName,
-                        ownerPhoto: req.user.photo,
-                        name: group.name,
-                        cover: group.cover,
-                        description: group.description
-                    });
+                    if (err) callback(err);
+                    else if (users) Mailer.groupInvitation(users, req.user, group);
                 });
 
             // the last result is the new group
@@ -313,7 +306,7 @@ exports.create = function(req, res, next) {
 // 1. find group with its Id
 // 2. update the group
 // 3. update the group in solr
-// 4. return the full representation of the group to client
+// 4. return the group to client
 
 exports.update = function(req, res, next) {
 
@@ -341,22 +334,6 @@ exports.update = function(req, res, next) {
                     else callback(null, group);
                 });
             });
-        },
-
-        // populate group for the full representation
-        function populateGroup(group, callback) {
-
-            var setting = [{
-                path: 'invited',
-                select: populateField['invited']
-            }, {
-                path: 'participants',
-                select: populateField['participants']
-            }, {
-                path: 'events'
-            }];
-
-            group.populate(setting, callback);
         }
 
     ], function(err, group) {
@@ -377,7 +354,7 @@ exports.update = function(req, res, next) {
 // 4. create notification for invited people
 // 5. send real time message to invited people
 // 6. send email to invited people
-// 7. return the full representation of the group to client
+// 7. return the group to client
 
 exports.invite = function(req, res, next) {
 
@@ -388,20 +365,20 @@ exports.invite = function(req, res, next) {
             Group.findById(req.params.group, callback);
         },
 
-        // update the 'invited' field
-        function updateGroup(group, callback) {
-
-            req.body.invited.forEach(function(userId) {
-                group.invited.addToSet(userId);
-            });
-
-            group.save(callback);
-        },
-
         // create relate information
         function createRelateInfo(group, callback) {
 
             async.parallel({
+
+                // update the 'invited' field
+                updateGroup: function(callback) {
+
+                    req.body.invited.forEach(function(userId) {
+                        group.invited.addToSet(userId);
+                    });
+
+                    group.save(callback);
+                },
 
                 // create activity
                 createActivity: function(callback) {
@@ -428,7 +405,7 @@ exports.invite = function(req, res, next) {
             }, function(err, results) {
 
                 if (err) callback(err);
-                else callback(null, group, results.createNotification);
+                else callback(null, results.updateGroup[0], results.createNotification);
             });
 
         },
@@ -459,37 +436,15 @@ exports.invite = function(req, res, next) {
             User.find()
                 .select('email')
                 .where('_id').in(req.body.invited)
+                .where('mailSetting.groupInvitation').equals(true)
                 .where('logicDelete').equals(false)
                 .exec(function(err, users) {
-                    Mailer.groupInvitation(users, {
-                        _id: group.id,
-                        ownerId: req.user.id,
-                        ownerName: req.user.firstName + ' ' + req.user.lastName,
-                        ownerPhoto: req.user.photo,
-                        name: group.name,
-                        cover: group.cover,
-                        description: group.description
-                    });
+                    if (err) callback(err);
+                    else if (users) Mailer.groupInvitation(users, req.user, group);
                 });
 
             callback(null, group);
-        },
-
-        // populate group
-        function populateGroup(group, callback) {
-
-            var setting = [{
-                path: 'invited',
-                select: populateField['invited']
-            }, {
-                path: 'participants',
-                select: populateField['participants']
-            }, {
-                path: 'events'
-            }];
-
-            group.populate(setting, callback);
-        },
+        }
 
     ], function(err, group) {
 
@@ -498,104 +453,124 @@ exports.invite = function(req, res, next) {
         else res.json(group);
     });
 
-
-    // if (req.body.invited) {
-
-    //     // update group info
-    //     Group.findById(req.params.group, function(err, group) {
-
-    //         if (err) next(err);
-    //         else {
-
-    //             req.body.invited.forEach(function(userId) {
-    //                 group.invited.addToSet(userId);
-    //             });
-
-    //             group.save(function(err, newGroup) {
-
-    //                 if (err) next(err);
-    //                 else {
-
-    //                     // create activity
-    //                     Activity.create({
-    //                         _owner: req.user.id,
-    //                         type: 'group-invited',
-    //                         targetGroup: newGroup._id
-    //                     }, function(err, activity) {
-    //                         if (err) next(err);
-    //                     });
-
-    //                     // send notificaton to all friends
-    //                     Notification.create({
-    //                         _owner: req.body.invited,
-    //                         _from: req.user.id,
-    //                         type: 'group-invited',
-    //                         targetGroup: newGroup._id
-    //                     }, function(err, notification) {
-    //                         if (err) next(err);
-    //                         else {
-
-    //                             var notyPopulateQuery = [{
-    //                                 path:'_from',
-    //                                 select: 'type firstName lastName title cover photo createDate'
-    //                             },{
-    //                                 path:'targetGroup'
-    //                             }];
-
-    //                             // populate the respond notification with user's info
-    //                             notification.populate(notyPopulateQuery, function(err, noty) {
-    //                                 if(err) next(err);
-    //                                 // send real time message
-    //                                 else
-    //                                     req.body.invited.forEach(function(room) {
-    //                                         sio.sockets.in(room).emit('group-invited', noty);
-    //                                     });
-    //                             });
-    //                         }
-    //                     });
-
-    //                     // send email to all friends
-    //                     User.find()
-    //                         .select('email')
-    //                         .where('_id').in(req.body.invited)
-    //                         .where('logicDelete').equals(false)
-    //                         .exec(function(err, users) {
-    //                             // send new-post mail
-    //                             Mailer.groupInvitation(users, {
-    //                                 _id: newGroup._id,
-    //                                 ownerId: req.user.id,
-    //                                 ownerName: req.user.firstName + ' ' + req.user.lastName,
-    //                                 ownerPhoto: req.user.photo,
-    //                                 name: newGroup.name,
-    //                                 cover: newGroup.cover,
-    //                                 description: newGroup.description
-    //                             });
-    //                         });
-
-    //                     var populateQuery = [{
-    //                         path:'invited',
-    //                         select: 'type firstName lastName title cover photo createDate'
-    //                     }, {
-    //                         path:'participants',
-    //                         select: 'type firstName lastName title cover photo createDate'
-    //                     }, {
-    //                         path: 'events'
-    //                     }];
-
-    //                     newGroup.populate(populateQuery, function(err, group) {
-    //                         if (err) next(err);
-    //                         else res.json(group);
-    //                     });
-    //                 }
-    //             });
-
-    //         }
-    //     });
-
-    // } else {
-    //     res.json(400, {});
-    // }
 };
+
+// Expel members from group
+// ---------------------------------------------
+// Update the 'participants' field of a group, and return the updated group
+// ---------------------------------------------
+// 1. find group with its Id
+// 2. update the group
+// 3. update the expeded member
+// 4. create activity for current user
+// 5. create notification for expeled people
+// 6. send real time message to expeled people
+// 7. return the group to client
+
+exports.expel = function(req, res, next) {
+
+    async.waterfall([
+
+        // find the group
+        function findGroup(callback) {
+            Group.findById(req.params.group, callback);
+        },
+
+        // create relate information
+        function createRelateInfo(group, callback) {
+
+            async.parallel({
+
+                // update the 'participants' field
+                updateGroup: function(callback) {
+
+                    req.body.expeled.forEach(function(userId) {
+                        group.participants.pull(userId);
+                    });
+
+                    group.save(callback);
+                },
+
+                // remove the group from expeled member's group list
+                updateUser: function(callback) {
+
+                    User.update({_id: {$in: req.body.expeled}}, {$pull: {groups: group.id}}, callback);
+                },
+
+                // create activity
+                createActivity: function(callback) {
+
+                    Activity.create({
+                        _owner: req.user.id,
+                        type: 'group-expeled',
+                        targetGroup: group.id,
+                        targetUser: req.body.expeled
+                    }, callback);
+                },
+
+                // create notification
+                createNotification: function(callback) {
+
+                    Notification.create({
+                        _owner: req.body.expeled,
+                        _from: req.user.id,
+                        type: 'group-expeled',
+                        targetGroup: group.id
+                    }, callback);
+                }
+
+            }, function(err, results) {
+
+                if (err) callback(err);
+                else callback(null, results.updateGroup[0], results.createNotification);
+            });
+
+        },
+
+        // send messages
+        function sendMessages(group, notification, callback) {
+
+            // send real time message to all expeled people
+            req.body.expeled.forEach(function(room) {
+                sio.sockets.in(room).emit('group-expeled', {
+                    _id: notification.id,
+                    _from: {
+                        _id: req.user.id,
+                        type: req.user.type,
+                        firstName: req.user.firstName,
+                        lastName: req.user.lastName,
+                        title: req.user.title,
+                        cover: req.user.cover,
+                        photo: req.user.photo
+                    },
+                    type: 'group-expeled',
+                    targetGroup: group,
+                    createDate: new Date()
+                });
+            });
+
+            // // send email to all expeled people ?? should we ??
+            // User.find()
+            //     .select('email')
+            //     .where('_id').in(req.body.expeled)
+            //     .where('mailSetting.groupInvitation').equals(true)
+            //     .where('logicDelete').equals(false)
+            //     .exec(function(err, users) {
+            //         if (err) callback(err);
+            //         else if (users) Mailer.groupInvitation(users, req.user, group);
+            //     });
+
+            callback(null, group);
+        }
+
+    ], function(err, group) {
+
+        if (err) next(err);
+        // return the updated group
+        else res.json(group);
+    });
+
+}
 
 // Join group
 // ---------------------------------------------
@@ -694,14 +669,11 @@ exports.join = function(req, res, next) {
             // send email to group owner
             User.findById(group._owner)
                 .select('email')
+                .where('mailSetting.groupJoined').equals(true)
                 .where('logicDelete').equals(false)
                 .exec(function(err, recipient) {
-
-                    Mailer.groupJoin({
-                        email: recipient.email,
-                        groupName: group.name,
-                        participant: req.user
-                    });
+                    if (err) callback(err);
+                    else if (recipient) Mailer.groupJoined(recipient, req.user, group);
                 });
 
             callback(null, group);
@@ -808,17 +780,14 @@ exports.apply = function(req, res, next) {
             });
 
             // send email to group owner
-            // User.findById(group._owner)
-            //     .select('email')
-            //     .where('logicDelete').equals(false)
-            //     .exec(function(err, recipient) {
-
-            //         Mailer.groupApply({
-            //             email: recipient.email,
-            //             groupName: group.name,
-            //             participant: req.user
-            //         });
-            //     });
+            User.findById(group._owner)
+                .select('email')
+                .where('mailSetting.groupApplied').equals(true)
+                .where('logicDelete').equals(false)
+                .exec(function(err, recipient) {
+                    if (err) callback(err);
+                    else if (recipient) Mailer.groupApplied(recipient, req.user, group);
+                });
 
             callback(null, group);
         }

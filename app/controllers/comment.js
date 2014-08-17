@@ -40,11 +40,19 @@ exports.create = function(req, res, next) {
         // create comment
         function createComment(post, callback) {
 
-            var comment = post.comments.create({
-                _owner: req.user.id,
-                content: req.body.content,
-                replyTo: req.body.replyTo
-            });
+            var replyTo = null,
+                comment = post.comments.create({
+                    _owner: req.user.id,
+                    content: req.body.content
+                });
+
+            // if this comment is a reply to other comment
+            if (req.body.replyTo) {
+                // add the replied comment to this comment
+                comment.replyTo = req.body.replyTo;
+                // find out and hold the replied comment
+                replyTo = post.comments.id(req.body.replyTo);
+            }
 
             // add comment to post
             post.comments.push(comment);
@@ -52,50 +60,65 @@ exports.create = function(req, res, next) {
             // save the post
             post.save(function(err, post) {
                 if (err) callback(err);
-                else callback(null, post, comment);
+                else callback(null, post, comment, replyTo);
             });
         },
 
         // create relate information
-        function createRelateInfo(post, comment, callback) {
+        function createRelateInfo(post, comment, replyTo, callback) {
 
             async.parallel({
 
                 // create activity
                 createActivity: function(callback) {
 
-                    Activity.create({
-                        _owner: req.user.id,
-                        type: 'post-commented',
-                        targetPost: post.id,
-                        targetComment: comment.id
-                    }, callback);
+                    if (req.body.replyTo)
+                        Activity.create({
+                            _owner: req.user.id,
+                            type: 'comment-replied',
+                            targetPost: post.id,
+                            targetComment: comment.id,
+                            targetReplyTo: replyTo.id
+                        }, callback);
+                    else
+                        Activity.create({
+                            _owner: req.user.id,
+                            type: 'post-commented',
+                            targetPost: post.id,
+                            targetComment: comment.id
+                        }, callback);
                 },
 
                 // create notification for post owner
-                createNotification: function(callback) {
+                commentNotification: function(callback) {
 
-                    // determine the notify target
-                    var notifyTarget = [];
-
-                    // if the comment owner is not the post owner
-                    if (post._owner != req.user.id)
-                        // notify the post owner
-                        notifyTarget.push(post._owner);
-
-                    // if the comment is reply someone other than the post owner
-                    if (req.body.replyTo && req.body.replyTo != post._owner)
-                        // notify that person
-                        notifyTarget.push(req.body.replyTo);
-
-                    // if there are anyone need to be notified
-                    if (notifyTarget.length)
+                    // if the comment is not a reply and the comment owner is not the post owner
+                    // or if the comment is a reply and not reply the post owner
+                    if ((!replyTo && post._owner != req.user.id) 
+                        || (replyTo && !post._owner.equals(replyTo._owner)))
                         Notification.create({
-                            _owner: notifyTarget,
+                            _owner: post._owner,
                             _from: req.user.id,
                             type: 'post-commented',
                             targetPost: post.id,
                             targetComment: comment.id
+                        }, callback);
+                    else
+                        callback(null);
+                },
+
+                // create notification for replied user
+                replyNotification: function(callback) {
+
+                    // if the comment is a reply
+                    if (replyTo)
+                        Notification.create({
+                            _owner: replyTo._owner,
+                            _from: req.user.id,
+                            type: 'comment-replied',
+                            targetPost: post.id,
+                            targetComment: comment.id,
+                            targetReplyTo: replyTo.id
                         }, callback);
                     else
                         callback(null);
@@ -104,50 +127,80 @@ exports.create = function(req, res, next) {
             }, function(err, results) {
 
                 if (err) callback(err);
-                else callback(null, post, comment, results.createNotification);
-            });
-        },
-
-        // populate embeded info of comment for later use (and return)
-        function populateComment(post, comment, notification, callback) {
-
-            var setting = [{
-                    path:'_owner',
-                    select: populateField['_owner']
-                },{
-                    path:'replyTo',
-                    select: populateField['replyTo']
-                }];
-
-            // get the full representation of the comment
-            User.populate(comment, setting, function(err, comment) {
-
-                if (err) callback(err);
-                else callback(null, post, comment, notification);
+                else callback(null, post, comment, replyTo, results.commentNotification, results.replyNotification);
             });
         },
 
         // send messages
-        function sendMessages(post, comment, notification, callback) {
+        function sendMessages(post, comment, replyTo, commentNotification, replyNotification, callback) {
 
-            if (notification) {
+            var commentObj = comment.toObject(),
+                commentOwner = {
+                    _id: req.user.id,
+                    type: req.user.type,
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    title: req.user.title,
+                    cover: req.user.cover,
+                    photo: req.user.photo
+                };
+
+            commentObj._owner = commentOwner;
+
+            // send message about comment
+            if (commentNotification) {
 
                 // send real time message
-                notification._owner.forEach(function(room) {
-                    sio.sockets.in(room).emit('post-commented', {
-                        _id: notification.id,
-                        _from: comment._owner,
-                        type: 'post-commented',
-                        targetPost: post,
-                        targetComment: comment.id,
-                        createDate: new Date()
-                    });
+                sio.sockets.in(commentNotification._owner).emit('post-commented', {
+                    _id: commentNotification.id,
+                    _from: commentOwner,
+                    type: 'post-commented',
+                    targetPost: post,
+                    targetComment: comment.id,
+                    createDate: new Date()
                 });
 
                 // send email
+                User.findOne()
+                    .select('email')
+                    .where('_id').equals(commentNotification._owner)
+                    .where('mailSetting.postCommented').equals(true)
+                    .where('logicDelete').equals(false)
+                    .exec(function(err, recipient) {
+
+                        if (err) callback(err);
+                        else if (recipient) Mailer.postCommented(recipient, req.user, comment, post);
+                    });
             }
 
-            callback(null, comment);
+            // send message about reply
+            if (replyNotification) {
+
+                // send real time message
+                sio.sockets.in(replyNotification._owner).emit('comment-replied', {
+                    _id: replyNotification.id,
+                    _from: commentOwner,
+                    type: 'comment-replied',
+                    targetPost: post,
+                    targetComment: comment.id,
+                    targetReplyTo: replyTo.id,
+                    createDate: new Date()
+                });
+
+                // send email
+                User.findOne()
+                    .select('email')
+                    .where('_id').equals(replyNotification._owner)
+                    .where('mailSetting.commentReplied').equals(true)
+                    .where('logicDelete').equals(false)
+                    .exec(function(err, recipient) {
+
+                        if (err) callback(err);
+                        else if (recipient) Mailer.commentReplied(recipient, req.user, comment, replyTo, post);
+                    });
+            }
+
+            callback(null, commentObj);
         }
 
     ], function(err, comment) {
@@ -392,6 +445,16 @@ exports.like = function(req, res, next){
                 });
 
                 // send email
+                User.findOne()
+                    .select('email')
+                    .where('_id').equals(comment._owner._id)
+                    .where('mailSetting.commentLiked').equals(true)
+                    .where('logicDelete').equals(false)
+                    .exec(function(err, recipient) {
+
+                        if (err) callback(err);
+                        else if (recipient) Mailer.commentLiked(recipient, req.user, comment, post);
+                    });
             }
 
             callback(null, comment);

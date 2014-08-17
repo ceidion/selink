@@ -82,6 +82,10 @@ define([
             // if new post delivered
             selink.socket.on('post-new', function(data) {
 
+                // assemble the new post
+                data.targetPost._owner = data._from;
+                data.targetPost.group = data.targetGroup;
+
                 // save the post in collection
                 self.realtimePost.add(data.targetPost);
                 // update the number on indicator

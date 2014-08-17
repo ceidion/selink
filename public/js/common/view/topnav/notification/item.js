@@ -13,16 +13,36 @@ define([
     return Backbone.Marionette.ItemView.extend({
 
         // notification type regard friend relation
-        userTargetNotification: ['friend-invited', 'friend-approved', 'friend-declined', 'friend-break'],
+        userTargetNotification: [
+            'friend-invited', 
+            'friend-approved', 
+            'friend-declined', 
+            'friend-break'],
 
         // notification type regard post action
-        postTargetNotification: ['post-new', 'post-liked', 'post-bookmarked', 'post-commented', 'comment-liked'],
+        postTargetNotification: [
+            'post-new', 
+            'post-liked', 
+            'post-bookmarked', 
+            'post-commented',
+            'comment-replied',
+            'comment-liked'],
 
         // notification type regard job action
-        jobTargetNotification: ['job-new', 'job-bookmarked'],
+        jobTargetNotification: [
+            'job-new', 
+            'job-bookmarked'],
 
         // notification type regard group relation
-        groupTargetNotification: ['group-new', 'group-invited', 'group-joined', 'group-refused', 'group-applied'],
+        groupTargetNotification: [
+            'group-new', 
+            'group-invited', 
+            'group-expeled', 
+            'group-joined', 
+            'group-refused', 
+            'group-applied', 
+            'group-approved', 
+            'group-declined'],
 
         tagName: 'li',
 
@@ -96,8 +116,10 @@ define([
             var self = this;
 
             this.model.save({result: 'accepted'}, {
-                success: function() {
+                success: function(model, response, options) {
                     self.$el.slideUp(function() {
+                        // add targetGroup to current user's group list
+                        selink.user.get('groups').push(response.targetGroup);
                         self.model.collection.remove(self.model);
                     });
                 },

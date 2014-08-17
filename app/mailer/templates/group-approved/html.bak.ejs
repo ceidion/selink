@@ -221,7 +221,7 @@
             * @tip Set the background color and borders for your email's body area.
             */
             #templateBody{
-                /*@editable*/ background-color:#FFFFFF;
+                /*@editable*/ background-color:#F4F4F4;
                 /*@editable*/ border-top:1px solid #FFFFFF;
                 /*@editable*/ border-bottom:1px solid #CCCCCC;
             }
@@ -261,11 +261,56 @@
                 max-width:560px;
             }
 
+            .widget-box {
+                padding: 0;
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                margin: 3px 0;
+            }
+
+            .widget-header {
+                background: #F7F7F7;
+                -moz-box-sizing: content-box;
+                box-sizing: content-box;
+                position: relative;
+                min-height: 38px;
+                background-repeat: repeat-x;
+                color: #669fc7 !important;
+                border: 1px solid #CCC;
+                border-bottom: 1px solid #DDD;
+            }
+
+            .widget-header h4 {
+                font-size: 18px;
+                font-weight: normal;
+                font-family: 'Hiragino Kaku Gothic ProN',Meiryo,'MS PGothic',Sans-serif;
+                margin-top: 10px;
+                margin-bottom: 10px;
+                color: #669fc7 !important;
+            }
+
             .avatar {
                 max-width: 70px;
                 max-height: 70px;
                 border-radius: 100%;
                 border: 2px solid #C9D6E5;
+            }
+
+            .widget-body {
+                border: 1px solid #CCC;
+                border-top: none;
+                background-color: #FFF;
+            }
+
+            .widget-main {
+                padding: 12px;
+            }
+
+            .widget-toolbox {
+                background-color: #EEE;
+                padding: 8px;
+                border-top: 1px solid #CCC;
+                clear: both;
             }
 
             .btn-friend {
@@ -434,11 +479,56 @@
                     /*@editable*/ line-height:125% !important;
                 }
 
+                .widget-box {
+                    padding: 0;
+                    -webkit-box-shadow: none;
+                    box-shadow: none;
+                    margin: 3px 0;
+                }
+
+                .widget-header {
+                    background: #F7F7F7;
+                    -moz-box-sizing: content-box;
+                    box-sizing: content-box;
+                    position: relative;
+                    min-height: 38px;
+                    background-repeat: repeat-x;
+                    color: #669fc7 !important;
+                    border: 1px solid #CCC;
+                    border-bottom: 1px solid #DDD;
+                }
+
+                .widget-header h4 {
+                    font-size: 18px;
+                    font-weight: normal;
+                    font-family: 'Hiragino Kaku Gothic ProN',Meiryo,'MS PGothic',Sans-serif;
+                    margin-top: 10px;
+                    margin-bottom: 10px;
+                    color: #669fc7 !important;
+                }
+
                 .avatar {
                     max-width: 70px;
                     max-height: 70px;
                     border-radius: 100%;
                     border: 2px solid #C9D6E5;
+                }
+
+                .widget-body {
+                    border: 1px solid #CCC;
+                    border-top: none;
+                    background-color: #FFF;
+                }
+
+                .widget-main {
+                    padding: 12px;
+                }
+
+                .widget-toolbox {
+                    background-color: #EEE;
+                    padding: 8px;
+                    border-top: 1px solid #CCC;
+                    clear: both;
                 }
 
                 .btn-friend {
@@ -494,7 +584,7 @@
                                         <tr>
                                             <td valign="top" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:20px;" mc:edit="preheader_content00">
                                                 <%= sender.firstName %>&nbsp;<%= sender.lastName %><br/>
-                                                お友達要請が届きました。
+                                                「<%= group.name %>」の参加申請を承認しました。
                                             </td>
                                             <!-- *|IFNOT:ARCHIVE_PAGE|* -->
                                             <td valign="top" width="180" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:0;" mc:edit="preheader_content01">
@@ -513,10 +603,10 @@
                                         <tr>
                                             <td valign="top" class="headerContent" style="color: #fff;">
                                                 <h2><%= sender.firstName %>&nbsp;<%= sender.lastName %></h2>
-                                                <h3>友達要請</h3>
+                                                <h3>「<%= group.name %>」の参加申請を承認しました</h3>
                                             </td>
                                             <td align="center" style="width: 74px; height: 100%; padding-right: 20px; background: #42a8e1;">
-                                                <a href="#profile/<%= sender._id %>">
+                                                <a href="#profile/<%= sender.id %>">
                                                     <img class="avatar" src="http://new.selink.jp/<%= sender.photo %>">
                                                 </a>
                                             </td>
@@ -531,12 +621,23 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateBody">
                                         <tr>
                                             <td valign="top" class="bodyContent" mc:edit="body_content">
-                                                <h4>
-                                                    <%= sender.firstName %>&nbsp;<%= sender.lastName %>さんはあなたにお友達要請を送信しました。
-                                                </h4>
-                                                <a href="http://new.selink.jp/spa#home" class="btn-friend">
-                                                    承認へ
-                                                </a>
+                                                <div class="widget-box">
+                                                    <div class="widget-header widget-header-flat">
+                                                        <img src="http://new.selink.jp/<%= group.cover %>">
+                                                    </div>
+
+                                                    <div class="widget-body">
+                                                        <div class="widget-main">
+                                                            <h3><%= group.name %></h3>
+                                                            <h4 style="line-height: 150%;"><%- group.description %></h4>
+                                                        </div>
+                                                        <div class="widget-toolbox">
+                                                            <a href="http://new.selink.jp/spa#group/<%= group._id %>" class="btn-friend">
+                                                                グループへ
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                     </table>

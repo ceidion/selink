@@ -70,8 +70,6 @@ define([
         // apply to join group
         onApply: function() {
 
-            console.log('message');
-
             var self = this;
 
             // show loading icon, and prevent user click twice

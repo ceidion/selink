@@ -139,6 +139,7 @@ exports.create = function(req, res, next) {
                     sio.sockets.in(req.body.id).emit('friend-invited', {
                         _id: notification._id,
                         _from: {
+                            _id: req.user.id,
                             type: req.user.type,
                             firstName: req.user.firstName,
                             lastName: req.user.lastName,
@@ -158,18 +159,17 @@ exports.create = function(req, res, next) {
         // send Email to target user
         sendEmail: function (callback) {
 
-            User.findById(req.body.id, 'email', function(err, user){
-                if (err) callback(err);
-                else {
+            User.findOne()
+                .select('email')
+                .where('_id').equals(req.body.id)
+                .where('mailSetting.friendInvitation').equals(true)
+                .where('logicDelete').equals(false)
+                .exec(function(err, recipient) {
+                    if (err) callback(err);
+                    else if (recipient) Mailer.friendInvitation(recipient, req.user);
+                });
 
-                    Mailer.friendInvitation({
-                        from: req.user,
-                        email: user.email
-                    });
-
-                    callback(null);
-                }
-            });
+            callback(null);
         }
 
     }, function(err, results) {
@@ -239,6 +239,7 @@ exports.remove = function(req, res, next) {
                     sio.sockets.in(req.body.id).emit('friend-break', {
                         _id: notification._id,
                         _from: {
+                            _id: req.user.id,
                             type: req.user.type,
                             firstName: req.user.firstName,
                             lastName: req.user.lastName,

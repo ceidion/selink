@@ -36,6 +36,12 @@ var Activity = new Schema({
         ref: 'Comment'
     },
 
+    // notification target (replied comment)
+    targetReplyTo: {
+        type: Schema.Types.ObjectId,
+        ref: 'Comment'
+    },
+
     // activity target (job)
     targetJob: {
         type: Schema.Types.ObjectId,

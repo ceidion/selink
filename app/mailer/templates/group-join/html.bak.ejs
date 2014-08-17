@@ -189,7 +189,7 @@
                 background: #42a8e1;
             }
 
-            .headerContent h1{
+            .headerContent h2{
                 color: #ffffff !important;
             }
 
@@ -493,7 +493,8 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templatePreheader">
                                         <tr>
                                             <td valign="top" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:20px;" mc:edit="preheader_content00">
-                                                <%= participant.firstName %>&nbsp;<%= participant.lastName %>は「<%= groupName %>」参加しました。
+                                                <%= sender.firstName %>&nbsp;<%= sender.lastName %><br/>
+                                                「<%= group.name %>」参加しました。
                                             </td>
                                             <!-- *|IFNOT:ARCHIVE_PAGE|* -->
                                             <td valign="top" width="180" class="preheaderContent" style="padding-top:10px; padding-right:20px; padding-bottom:10px; padding-left:0;" mc:edit="preheader_content01">
@@ -511,12 +512,12 @@
                                     <table border="0" cellpadding="0" cellspacing="0" width="100%" id="templateHeader">
                                         <tr>
                                             <td valign="top" class="headerContent" style="color: #fff;">
-                                                <h1>SELink</h1>
-                                                <h3><%= participant.firstName %>&nbsp;<%= participant.lastName %>は「<%= groupName %>」参加しました</h3>
+                                                <h2><%= sender.firstName %>&nbsp;<%= sender.lastName %></h2>
+                                                <h3>「<%= group.name %>」参加しました</h3>
                                             </td>
                                             <td align="center" style="width: 74px; height: 100%; padding-right: 20px; background: #42a8e1;">
-                                                <a href="#profile/<%= participant._id %>">
-                                                    <img class="avatar" src="http://new.selink.jp/<%= participant.photo %>">
+                                                <a href="#profile/<%= sender._id %>">
+                                                    <img class="avatar" src="http://new.selink.jp/<%= sender.photo %>">
                                                 </a>
                                             </td>
                                         </tr>
@@ -531,7 +532,7 @@
                                         <tr>
                                             <td valign="top" class="bodyContent" mc:edit="body_content">
                                                 <h4>
-                                                    <%= participant.firstName %>&nbsp;<%= participant.lastName %>はあなたのグループ「<%= groupName %>」に参加しました
+                                                    <%= sender.firstName %>&nbsp;<%= sender.lastName %>はあなたのグループ「<%= group.name %>」に参加しました
                                                 </h4>
                                                 <a href="http://new.selink.jp/spa#home" class="btn-friend">
                                                     SELinkで見る

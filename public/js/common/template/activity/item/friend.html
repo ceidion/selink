@@ -36,12 +36,12 @@
                 <strong><%= obj._owner.firstName %>&nbsp;<%= obj._owner.lastName %></strong>
             </a>
             は
-            <a href="#profile/<%= obj.targetUser._id %>">
-                <strong><%= obj.targetUser.firstName %>&nbsp;<%= obj.targetUser.lastName %></strong>
+            <a href="#profile/<%= obj.targetUser[0]._id %>">
+                <strong><%= obj.targetUser[0].firstName %>&nbsp;<%= obj.targetUser[0].lastName %></strong>
             </a>
             <%= content %>
-            <a class="pull-right" href="#profile/<%= obj.targetUser._id %>">
-                <img src="<%= obj.targetUser.photo %>" style="max-width: 50px;" />
+            <a class="pull-right" href="#profile/<%= obj.targetUser[0]._id %>">
+                <img src="<%= obj.targetUser[0].photo %>" style="max-width: 50px;" />
             </a>
             <div class="clearfix"></div>
         </div>

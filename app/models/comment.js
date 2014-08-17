@@ -11,10 +11,10 @@ var Comment = new Schema({
         required: true
     },
 
-    // reply recipient
+    // Reply other comment
     replyTo: {
         type: Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'Comment',
     },
 
     // Content

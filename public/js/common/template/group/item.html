@@ -1,6 +1,7 @@
 <%
     var isMine = (obj._owner == selink.user.id) ? true : false,
         isJoined = (_.indexOf(selink.user.get('groups'), obj._id) >= 0) ? true : false,
+        isApplied = (_.indexOf(selink.user.get('applying'), obj._id) >= 0) ? true : false,
         needApply = (obj.type == 'protected') ? true : false,
         description = obj.description ? _.str.truncate(description, 100, '...') : "";
 %>
@@ -74,13 +75,17 @@
                 <i class="ace-icon fa fa-plus"></i>&nbsp;参加
             </button>
 
-        <% } else if (!isMine && !isJoined && needApply) { %>
+        <% } else if (!isMine && !isJoined && needApply && !isApplied) { %>
 
             <!-- apply button -->
             <button class="btn btn-info btn-block btn-apply"
                     data-loading-text="<i class='ace-icon fa fa-spinner fa-spin white bigger-125'></i>&nbsp;&nbsp;送信中・・・">
                 <i class="ace-icon fa fa-envelope"></i>&nbsp;参加申請
             </button>
+
+        <% } else if (!isMine && !isJoined && needApply && isApplied) { %>
+
+            <span class="text-success"><i class="ace-icon fa fa-check"></i>&nbsp;参加申請中</span>
 
         <% } %>
     </div>

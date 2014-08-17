@@ -43,6 +43,19 @@ define([
             'change:like': 'renderLike'
         },
 
+        initialize: function() {
+
+            // if this comment is a reply, populate the replyTo field with replied user
+            if (this.model.get('replyTo')) {
+                var replyTo = this.model.collection.get(this.model.get('replyTo'));
+                this.model.set('replyTo', {
+                    _id: replyTo.get('_owner')._id,
+                    firstName: replyTo.get('_owner').firstName,
+                    lastName: replyTo.get('_owner').lastName
+                });
+            }
+        },
+
         // after render
         onRender: function() {
 
@@ -89,11 +102,8 @@ define([
         // like comment
         onLike: function() {
 
-            this.model.save({
-                liked: selink.user.get('_id') // TODO: no need to pass this parameter
-            }, {
+            this.model.save(null, {
                 url: this.model.url() + '/like',
-                reIsotope: false, // do not re-isotope whole collection, that will cause image flicker
                 patch: true,
                 wait: true
             });

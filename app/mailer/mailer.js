@@ -11,15 +11,13 @@ exports.accountActive = function(recipient) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) {
-            console.log(err);
-        } else {
+        if (err) console.log(err);
+        else {
 
             // send account active email
             template('account-active', recipient, function(err, html, text) {
-                if (err) {
-                    console.log(err);
-                } else {
+                if (err) console.log(err);
+                else {
                     transport.sendMail({
                         from: 'SELink <noreply@selink.jp>',
                         to: recipient.email,
@@ -27,9 +25,8 @@ exports.accountActive = function(recipient) {
                         html: html,
                         text: text
                     }, function(err, responseStatus) {
-                        if (err) {
-                            console.log(err);
-                        } else {
+                        if (err) console.log(err);
+                        else {
                             console.log(responseStatus.message);
                         }
                     });
@@ -43,15 +40,13 @@ exports.resetPassword = function(recipient) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) {
-            console.log(err);
-        } else {
+        if (err) console.log(err);
+        else {
 
             // send account active email
             template('password-retrieve', recipient, function(err, html, text) {
-                if (err) {
-                    console.log(err);
-                } else {
+                if (err) console.log(err);
+                else {
                     transport.sendMail({
                         from: 'SELink <noreply@selink.jp>',
                         to: recipient.email,
@@ -59,9 +54,8 @@ exports.resetPassword = function(recipient) {
                         html: html,
                         text: text
                     }, function(err, responseStatus) {
-                        if (err) {
-                            console.log(err);
-                        } else {
+                        if (err) console.log(err);
+                        else {
                             console.log(responseStatus.message);
                         }
                     });
@@ -71,29 +65,31 @@ exports.resetPassword = function(recipient) {
     });
 };
 
-exports.friendInvitation = function(recipient) {
+exports.friendInvitation = function(recipient, sender) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) {
-            console.log(err);
-        } else {
+        if (err) console.log(err);
+        else {
 
-            template('friend-invitation', recipient, function(err, html, text) {
-                if (err) {
-                    console.log(err);
-                } else {
+            var locals = {
+                sender: sender
+            };
+
+            template('friend-invitation', locals, function(err, html, text) {
+                if (err) console.log(err);
+                else {
 
                     transport.sendMail({
                         from: 'SELink <noreply@selink.jp>',
                         to: recipient.email,
-                        subject: 'お友達要請',
+                        subject: sender.firstName + ' ' + sender.lastName + ' ー 友達要請',
                         html: html,
                         text: text
                     }, function(err, responseStatus) {
-                        if (err) {
-                            console.log(err);
-                        } else {
+                        if (err) console.log(err);
+                        else {
+                            console.log('send friend-invitation email to: ' + recipient.email);
                             console.log(responseStatus.message);
                         }
                     });
@@ -103,29 +99,31 @@ exports.friendInvitation = function(recipient) {
     });
 };
 
-exports.friendApprove = function(recipient) {
+exports.friendApprove = function(recipient, sender) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) {
-            console.log(err);
-        } else {
+        if (err) console.log(err);
+        else {
+
+            var locals = {
+                sender: sender
+            };
 
             // send account active email
-            template('friend-approve', recipient, function(err, html, text) {
-                if (err) {
-                    console.log(err);
-                } else {
+            template('friend-approve', locals, function(err, html, text) {
+                if (err) console.log(err);
+                else {
                     transport.sendMail({
                         from: 'SELink <noreply@selink.jp>',
                         to: recipient.email,
-                        subject: 'お友達要請が承認されました',
+                        subject: sender.firstName + ' ' + sender.lastName + ' ー 友達要請を承認しました',
                         html: html,
                         text: text
                     }, function(err, responseStatus) {
-                        if (err) {
-                            console.log(err);
-                        } else {
+                        if (err) console.log(err);
+                        else {
+                            console.log('send friend-approve email to: ' + recipient.email);
                             console.log(responseStatus.message);
                         }
                     });
@@ -135,35 +133,34 @@ exports.friendApprove = function(recipient) {
     });
 };
 
-exports.groupInvitation = function(recipients, group) {
+exports.groupInvitation = function(recipients, sender, group) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) {
-            console.log(err);
-        } else {
+        if (err) console.log(err);
+        else {
 
             var Render = function(recipient, group) {
 
                 this.locals = {
                     recipient: recipient,
+                    sender: sender,
                     group: group
                 };
 
                 this.send = function(err, html, text) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                            transport.sendMail({
+                    if (err) console.log(err);
+                    else {
+                        transport.sendMail({
                             from: 'SELink <noreply@selink.jp>',
                             to: recipient.email,
-                            subject: 'グループ招待',
+                            subject: sender.firstName + ' ' + sender.lastName + ' ー グループ招待',
                             html: html,
                             text: text
                         }, function(err, responseStatus) {
-                            if (err) {
-                                console.log(err);
-                            } else {
+                            if (err) console.log(err);
+                            else {
+                                console.log('send group-invitation email to: ' + recipient.email);
                                 console.log(responseStatus.message);
                             }
                         });
@@ -186,29 +183,32 @@ exports.groupInvitation = function(recipients, group) {
     });
 };
 
-exports.groupJoin = function(recipient) {
+exports.groupJoined = function(recipient, sender, group) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) {
-            console.log(err);
-        } else {
+        if (err) console.log(err);
+        else {
+
+            var locals = {
+                sender: sender,
+                group: group
+            };
 
             // send account active email
-            template('group-join', recipient, function(err, html, text) {
-                if (err) {
-                    console.log(err);
-                } else {
+            template('group-join', locals, function(err, html, text) {
+                if (err) console.log(err);
+                else {
                     transport.sendMail({
                         from: 'SELink <noreply@selink.jp>',
                         to: recipient.email,
-                        subject: '新しいグループメンバー',
+                        subject: sender.firstName + ' ' + sender.lastName + ' ー グループ「' + group.name + '」参加しました',
                         html: html,
                         text: text
                     }, function(err, responseStatus) {
-                        if (err) {
-                            console.log(err);
-                        } else {
+                        if (err) console.log(err);
+                        else {
+                            console.log('send group-joined email to: ' + recipient.email);
                             console.log(responseStatus.message);
                         }
                     });
@@ -218,35 +218,105 @@ exports.groupJoin = function(recipient) {
     });
 };
 
-exports.newPost = function(recipients, post) {
+exports.groupApplied = function(recipient, sender, group) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) {
-            console.log(err);
-        } else {
+        if (err) console.log(err);
+        else {
 
-            var Render = function(recipient, post) {
+            var locals = {
+                sender: sender,
+                group: group
+            };
+
+            // send account active email
+            template('group-applied', locals, function(err, html, text) {
+                if (err) console.log(err);
+                else {
+                    transport.sendMail({
+                        from: 'SELink <noreply@selink.jp>',
+                        to: recipient.email,
+                        subject: sender.firstName + ' ' + sender.lastName + ' ー グループ参加申請',
+                        html: html,
+                        text: text
+                    }, function(err, responseStatus) {
+                        if (err) console.log(err);
+                        else {
+                            console.log('send group-applied email to: ' + recipient.email);
+                            console.log(responseStatus.message);
+                        }
+                    });
+                }
+            });
+        }
+    });
+};
+
+exports.groupApproved = function(recipient, sender, group) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) console.log(err);
+        else {
+
+            var locals = {
+                sender: sender,
+                group: group
+            };
+
+            // send account active email
+            template('group-approved', locals, function(err, html, text) {
+                if (err) console.log(err);
+                else {
+                    transport.sendMail({
+                        from: 'SELink <noreply@selink.jp>',
+                        to: recipient.email,
+                        subject: sender.firstName + ' ' + sender.lastName + ' ー グループ参加承認',
+                        html: html,
+                        text: text
+                    }, function(err, responseStatus) {
+                        if (err) console.log(err);
+                        else {
+                            console.log('send group-approved email to: ' + recipient.email);
+                            console.log(responseStatus.message);
+                        }
+                    });
+                }
+            });
+        }
+    });
+};
+
+exports.newPost = function(recipients, sender, post, group) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) console.log(err);
+        else {
+
+            var Render = function(recipient, sender, post, group) {
 
                 this.locals = {
                     recipient: recipient,
-                    post: post
+                    sender: sender,
+                    post: post,
+                    group: group
                 };
 
                 this.send = function(err, html, text) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                            transport.sendMail({
+                    if (err) console.log(err);
+                    else {
+                        transport.sendMail({
                             from: 'SELink <noreply@selink.jp>',
                             to: recipient.email,
-                            subject: '新しい記事',
+                            subject: sender.firstName + ' ' + sender.lastName + ' ー 新しい記事',
                             html: html,
                             text: text
                         }, function(err, responseStatus) {
-                            if (err) {
-                                console.log(err);
-                            } else {
+                            if (err) console.log(err);
+                            else {
+                                console.log('send new-post email to: ' + recipient.email);
                                 console.log(responseStatus.message);
                             }
                         });
@@ -261,8 +331,182 @@ exports.newPost = function(recipients, post) {
             // Load the template and send the emails
             template('new-post', true, function(err, batch) {
                 for(recipient in recipients) {
-                    var render = new Render(recipients[recipient], post);
+                    var render = new Render(recipients[recipient], sender, post, group);
                     render.batch(batch);
+                }
+            });
+        }
+    });
+};
+
+exports.postLiked = function(recipient, sender, post) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) console.log(err);
+        else {
+
+            var locals = {
+                sender: sender,
+                post: post
+            };
+
+            template('post-liked', locals, function(err, html, text) {
+                if (err) console.log(err);
+                else {
+                    transport.sendMail({
+                        from: 'SELink <noreply@selink.jp>',
+                        to: recipient.email,
+                        subject: sender.firstName + ' ' + sender.lastName + ' ー あなたの記事を「いいね！」しました',
+                        html: html,
+                        text: text
+                    }, function(err, responseStatus) {
+                        if (err) console.log(err);
+                        else {
+                            console.log('send post-liked email to: ' + recipient.email);
+                            console.log(responseStatus.message);
+                        }
+                    });
+                }
+            });
+        }
+    });
+};
+
+exports.postBookmarked = function(recipient, sender, post) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) console.log(err);
+        else {
+
+            var locals = {
+                sender: sender,
+                post: post
+            };
+
+            template('post-bookmarked', locals, function(err, html, text) {
+                if (err) console.log(err);
+                else {
+                    transport.sendMail({
+                        from: 'SELink <noreply@selink.jp>',
+                        to: recipient.email,
+                        subject: sender.firstName + ' ' + sender.lastName + ' ー あなたの記事にブックマックを付けました',
+                        html: html,
+                        text: text
+                    }, function(err, responseStatus) {
+                        if (err) console.log(err);
+                        else {
+                            console.log('send post-bookmarked email to: ' + recipient.email);
+                            console.log(responseStatus.message);
+                        }
+                    });
+                }
+            });
+        }
+    });
+};
+
+exports.postCommented = function(recipient, sender, comment, post) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) console.log(err);
+        else {
+
+            var locals = {
+                sender: sender,
+                comment: comment,
+                post: post
+            };
+
+            template('post-commented', locals, function(err, html, text) {
+                if (err) console.log(err);
+                else {
+                    transport.sendMail({
+                        from: 'SELink <noreply@selink.jp>',
+                        to: recipient.email,
+                        subject: sender.firstName + ' ' + sender.lastName + ' ー あなたの記事をコメントしました',
+                        html: html,
+                        text: text
+                    }, function(err, responseStatus) {
+                        if (err) console.log(err);
+                        else {
+                            console.log('send post-commented email to: ' + recipient.email);
+                            console.log(responseStatus.message);
+                        }
+                    });
+                }
+            });
+        }
+    });
+};
+
+exports.commentReplied = function(recipient, sender, comment, reply, post) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) console.log(err);
+        else {
+
+            var locals = {
+                sender: sender,
+                comment: comment,
+                reply: reply,
+                post: post
+            };
+
+            template('comment-replied', locals, function(err, html, text) {
+                if (err) console.log(err);
+                else {
+                    transport.sendMail({
+                        from: 'SELink <noreply@selink.jp>',
+                        to: recipient.email,
+                        subject: sender.firstName + ' ' + sender.lastName + ' ー あなたのコメントを返信しました',
+                        html: html,
+                        text: text
+                    }, function(err, responseStatus) {
+                        if (err) console.log(err);
+                        else {
+                            console.log('send comment-replied email to: ' + recipient.email);
+                            console.log(responseStatus.message);
+                        }
+                    });
+                }
+            });
+        }
+    });
+};
+
+exports.commentLiked = function(recipient, sender, comment, post) {
+
+    emailTemplates(templatesDir, function(err, template) {
+
+        if (err) console.log(err);
+        else {
+
+            var locals = {
+                sender: sender,
+                comment: comment,
+                post: post
+            };
+
+            template('comment-liked', locals, function(err, html, text) {
+                if (err) console.log(err);
+                else {
+                    transport.sendMail({
+                        from: 'SELink <noreply@selink.jp>',
+                        to: recipient.email,
+                        subject: sender.firstName + ' ' + sender.lastName + ' ー あなたのコメントを「いいね！」しました',
+                        html: html,
+                        text: text
+                    }, function(err, responseStatus) {
+                        if (err) console.log(err);
+                        else {
+                            console.log('send comment-liked email to: ' + recipient.email);
+                            console.log(responseStatus.message);
+                        }
+                    });
                 }
             });
         }
@@ -273,9 +517,8 @@ exports.newJob = function(recipients, job) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) {
-            console.log(err);
-        } else {
+        if (err) console.log(err);
+        else {
 
             var Render = function(recipient, job) {
 
@@ -285,19 +528,17 @@ exports.newJob = function(recipients, job) {
                 };
 
                 this.send = function(err, html, text) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                            transport.sendMail({
+                    if (err) console.log(err);
+                    else {
+                        transport.sendMail({
                             from: 'SELink <noreply@selink.jp>',
                             to: recipient.email,
                             subject: '仕事情報',
                             html: html,
                             text: text
                         }, function(err, responseStatus) {
-                            if (err) {
-                                console.log(err);
-                            } else {
+                            if (err) console.log(err);
+                            else {
                                 console.log(responseStatus.message);
                             }
                         });
@@ -324,9 +565,8 @@ exports.newMessage = function(recipients, message) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) {
-            console.log(err);
-        } else {
+        if (err) console.log(err);
+        else {
 
             var Render = function(recipient, message) {
 
@@ -336,19 +576,17 @@ exports.newMessage = function(recipients, message) {
                 };
 
                 this.send = function(err, html, text) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                            transport.sendMail({
+                    if (err) console.log(err);
+                    else {
+                        transport.sendMail({
                             from: 'SELink <noreply@selink.jp>',
                             to: recipient.email,
                             subject: '新しいメッセージ',
                             html: html,
                             text: text
                         }, function(err, responseStatus) {
-                            if (err) {
-                                console.log(err);
-                            } else {
+                            if (err) console.log(err);
+                            else {
                                 console.log(responseStatus.message);
                             }
                         });
@@ -375,9 +613,8 @@ exports.newEvent = function(recipients, event) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) {
-            console.log(err);
-        } else {
+        if (err) console.log(err);
+        else {
 
             var Render = function(recipient, event) {
 
@@ -387,19 +624,17 @@ exports.newEvent = function(recipients, event) {
                 };
 
                 this.send = function(err, html, text) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                            transport.sendMail({
+                    if (err) console.log(err);
+                    else {
+                        transport.sendMail({
                             from: 'SELink <noreply@selink.jp>',
                             to: recipient.email,
                             subject: 'イベント開催',
                             html: html,
                             text: text
                         }, function(err, responseStatus) {
-                            if (err) {
-                                console.log(err);
-                            } else {
+                            if (err) console.log(err);
+                            else {
                                 console.log(responseStatus.message);
                             }
                         });
@@ -427,9 +662,8 @@ exports.newAnnouncement = function(recipients, announcement) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) {
-            console.log(err);
-        } else {
+        if (err) console.log(err);
+        else {
 
             var Render = function(recipient, announcement) {
 
@@ -439,19 +673,17 @@ exports.newAnnouncement = function(recipients, announcement) {
                 };
 
                 this.send = function(err, html, text) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                            transport.sendMail({
+                    if (err) console.log(err);
+                    else {
+                        transport.sendMail({
                             from: 'SELink <noreply@selink.jp>',
                             to: recipient.email,
                             subject: 'SELinkからのお知らせ',
                             html: html,
                             text: text
                         }, function(err, responseStatus) {
-                            if (err) {
-                                console.log(err);
-                            } else {
+                            if (err) console.log(err);
+                            else {
                                 console.log(responseStatus.message);
                             }
                         });
@@ -478,9 +710,8 @@ exports.newUser = function(recipients, user) {
 
     emailTemplates(templatesDir, function(err, template) {
 
-        if (err) {
-            console.log(err);
-        } else {
+        if (err) console.log(err);
+        else {
 
             var Render = function(recipient, user) {
 
@@ -490,19 +721,17 @@ exports.newUser = function(recipients, user) {
                 };
 
                 this.send = function(err, html, text) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                            transport.sendMail({
+                    if (err) console.log(err);
+                    else {
+                        transport.sendMail({
                             from: 'SELink <noreply@selink.jp>',
                             to: recipient.email,
                             subject: '新しいユーザが登録しました',
                             html: html,
                             text: text
                         }, function(err, responseStatus) {
-                            if (err) {
-                                console.log(err);
-                            } else {
+                            if (err) console.log(err);
+                            else {
                                 console.log(responseStatus.message);
                             }
                         });

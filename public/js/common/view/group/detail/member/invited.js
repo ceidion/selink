@@ -1,7 +1,7 @@
 define([
     'text!common/template/group/detail/member/invited.html',
     'common/collection/base',
-    'common/view/group/detail/member/item-ro'
+    'common/view/group/detail/member/item'
 ], function(
     template,
     BaseCollection,
@@ -17,14 +17,14 @@ define([
 
     return Backbone.Marionette.CompositeView.extend({
 
-        // class name
-        className: "widget-box transparent",
+        // this view is a modal dialog
+        className: "modal-dialog",
 
         // template
         template: template,
 
         // child view container
-        childViewContainer: '.widget-main',
+        childViewContainer: '.ace-thumbnails',
 
         // child view
         childView: ItemView,
@@ -33,7 +33,17 @@ define([
         initialize: function() {
 
             this.collection = new InvitedCollection(null, {document: this.model});
-            this.collection.fetch();
+        },
+
+        attachHtml: function(collectionView, itemView, index) {
+
+            var self = this;
+            
+            // ensure the image are loaded
+            itemView.$el.imagesLoaded(function() {
+                // prepend new item and reIsotope
+                self.$el.find(self.childViewContainer).isotope('insert', itemView.$el);
+            });
         },
 
         // after show
@@ -52,18 +62,12 @@ define([
                     itemSelector : '.thumbnail-item'
                 });
 
-                self.attachHtml = function(collectionView, itemView, index) {
-                    // ensure the image are loaded
-                    itemView.$el.imagesLoaded(function() {
-                        // prepend new item and reIsotope
-                        self.$el.find(self.childViewContainer).isotope('insert', itemView.$el);
-                    });
-                };
-
                 // make container scrollable
                 self.$el.find('.widget-main').niceScroll({
                     horizrailenabled: false
                 });
+
+                self.collection.fetch();
 
             }, 500);
         }

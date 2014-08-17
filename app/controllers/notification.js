@@ -22,17 +22,18 @@ var populateField = {
     6. post-liked
     7. post-bookmarked
     8. post-commented
-    9. comment-liked
-    10. job-new
-    11. job-bookmarked
-    12. message-new
-    13. group-new
-    14. group-invited
-    15. group-joined
-    16. group-refused
-    17. group-applied
-    18. group-approved
-    19. group-declined
+    9. comment-replied
+    10. comment-liked
+    11. job-new
+    12. job-bookmarked
+    13. message-new
+    14. group-new
+    15. group-invited
+    16. group-joined
+    17. group-refused
+    18. group-applied
+    19. group-approved
+    20. group-declined
 */
 
 // Notification index
@@ -116,10 +117,6 @@ exports.update = function(req, res, next) {
         _owner: req.user.id,  // ensure notification owner is current user
         confirmed: {'$ne': req.user.id}  // only the unconfirmed notification
     }, function(err, notification) {
-
-        console.log('---------------------');
-        console.log(notification);
-        console.log('---------------------');
 
         // if error exist
         if (err) next(err);
@@ -240,6 +237,7 @@ approve = function(req, res, next, notification) {
                     sio.sockets.in(notification._from).emit('friend-approved', {
                         _id: noty._id,
                         _from: {
+                            _id: req.user.id,
                             type: req.user.type,
                             firstName: req.user.firstName,
                             lastName: req.user.lastName,
@@ -259,18 +257,17 @@ approve = function(req, res, next, notification) {
         // send Email to target user
         sendEmail: function (callback) {
 
-            User.findById(notification._from, 'email', function(err, user){
-                if (err) callback(err);
-                else {
+            User.findOne()
+                .select('email')
+                .where('_id').equals(notification._from)
+                .where('mailSetting.invitationAccpected').equals(true)
+                .where('logicDelete').equals(false)
+                .exec(function(err, recipient) {
+                    if (err) callback(err);
+                    else if (recipient) Mailer.friendApprove(recipient, req.user);
+                });
 
-                    Mailer.friendApprove({
-                        from: req.user,
-                        email: user.email
-                    });
-
-                    callback(null);
-                }
-            });
+            callback(null);
         }
 
     }, function(err, results) {
@@ -341,6 +338,7 @@ decline = function(req, res, next, notification) {
                     sio.sockets.in(notification._from).emit('friend-declined', {
                         _id: noty._id,
                         _from: {
+                            _id: req.user.id,
                             type: req.user.type,
                             firstName: req.user.firstName,
                             lastName: req.user.lastName,
@@ -368,42 +366,40 @@ decline = function(req, res, next, notification) {
 
 // Approve group application
 // ---------------------------------------------
-// Add a friend to the friends list of current user. This request will:
-//   1. update the "invited" and "friends" field for current user
-//   2. update the "invited" and "friends" field for target user
-//   3. update the "result" field for notification as "approved"
-//   4. create "friend-approved" activity for current user
-//   5. create "friend-approved" notification for target user
-//   6. send real time message to target user
-//   7. send Email to target user
+// Add the group applicant to the group member list
 // ---------------------------------------------
-// Parameter:
-//   1. id  : The user's id that was approved
-// ---------------------------------------------
+// 1. update the "applying" and "groups" field for applicants
+// 2. update the "applicants" and "participants" field for target group
+// 3. update the "result" field for notification as "approved"
+// 4. create "friend-approved" activity for current user
+// 5. create "friend-approved" notification for applicants
+// 6. send real time message to applicants
+// 7. send Email to applicants
 
 approveApplication = function(req, res, next, notification) {
 
     async.parallel({
 
-        // add the group's id into user's group list
+        // update user
         updateUser: function(callback) {
 
-            // remove the request sender's id from user's invited list
-            // (in case they invited each other)
-            req.user.invited.pull(notification._from);
-            // add the request sender's id into user's friend list
-            req.user.friends.addToSet(notification._from);
-
-            req.user.save(callback);
+            // remove the group's id from applicant's applying list
+            // then add it into applicant's groups list
+            User.findByIdAndUpdate(notification._from, {
+                '$pull': {applying: notification.targetGroup},
+                '$addToSet': {groups: notification.targetGroup},
+            }, callback);
         },
 
-        // find that friend, add current user to his friend list
-        updateFriend: function(callback) {
+        // update group
+        updateGroup: function(callback) {
 
-            User.findByIdAndUpdate(notification._from, {
-                '$pull': {invited: req.user.id},
-                '$push': {friends: req.user.id},
-            }, callback);
+            // remove the applicant's from group's applicants list
+            // then add it into group's participants list
+            Group.findByIdAndUpdate(notification.targetGroup, {
+                '$pull': {applicants: notification._from},
+                '$addToSet': {participants: notification._from},
+            }, callback)
         },
 
         // mark the notification as confirmed
@@ -414,70 +410,66 @@ approveApplication = function(req, res, next, notification) {
             notification.save(callback);
         },
 
-        // create activity for current user
+        // create activity for group owner
         createActivity: function(callback) {
 
             Activity.create({
                 _owner: req.user.id,
-                type: 'friend-approved',
-                targetUser: notification._from
+                type: 'group-approved',
+                targetUser: notification._from,
+                targetGroup: notification.targetGroup
             }, callback);
         },
 
-        // create notification for target user
+        // create notification for approved user
         createNotification: function(callback) {
 
             Notification.create({
                 _owner: notification._from,
                 _from: req.user.id,
-                type: 'friend-approved'
-            }, function(err, noty) {
-
-                if (err) callback(err);
-                else {
-
-                    // send real time message to target user
-                    sio.sockets.in(notification._from).emit('friend-approved', {
-                        _id: noty._id,
-                        _from: {
-                            type: req.user.type,
-                            firstName: req.user.firstName,
-                            lastName: req.user.lastName,
-                            title: req.user.title,
-                            cover: req.user.cover,
-                            photo: req.user.photo
-                        },
-                        type: 'friend-approved',
-                        createDate: new Date()
-                    });
-
-                    callback(null);
-                }
-            });
-        },
-
-        // send Email to target user
-        sendEmail: function (callback) {
-
-            User.findById(notification._from, 'email', function(err, user){
-                if (err) callback(err);
-                else {
-
-                    Mailer.friendApprove({
-                        from: req.user,
-                        email: user.email
-                    });
-
-                    callback(null);
-                }
-            });
+                type: 'group-approved',
+                targetGroup: notification.targetGroup
+            }, callback);
         }
 
     }, function(err, results) {
 
         if (err) next(err);
-        // return the updated notification
-        else res.json(results.updateNotification[0]);
+        else {
+
+            var group = results.updateGroup,
+                newNotification = results.createNotification;
+
+            // send real time message to approved user
+            sio.sockets.in(notification._from).emit('group-approved', {
+                _id: newNotification._id,
+                _from: {
+                    _id: req.user.id,
+                    type: req.user.type,
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    title: req.user.title,
+                    cover: req.user.cover,
+                    photo: req.user.photo
+                },
+                type: 'group-approved',
+                targetGroup: group,
+                createDate: new Date()
+            });
+
+            // send email to approved user
+            User.findById(notification._from)
+                .select('email')
+                .where('mailSetting.groupApproved').equals(true)
+                .where('logicDelete').equals(false)
+                .exec(function(err, recipient) {
+                    if (err) callback(err);
+                    else if (recipient) Mailer.groupApproved(recipient, req.user, group);
+                });
+
+            // return the updated notification
+            res.json(results.updateNotification[0]);   
+        }
     });
 };
 
@@ -495,162 +487,257 @@ approveApplication = function(req, res, next, notification) {
 // ---------------------------------------------
 
 declineApplication = function(req, res, next, notification) {
+
+    async.parallel({
+
+        // update user
+        updateUser: function(callback) {
+
+            // remove the group's id from applicant's applying list
+            User.findByIdAndUpdate(notification._from, {
+                '$pull': {applying: notification.targetGroup}
+            }, callback);
+        },
+
+        // update group
+        updateGroup: function(callback) {
+
+            // remove the applicant's from group's applicants list
+            Group.findByIdAndUpdate(notification.targetGroup, {
+                '$pull': {applicants: notification._from}
+            }, callback)
+        },
+
+        // mark the notification as confirmed
+        updateNotification: function(callback) {
+
+            notification.result = req.body.result;
+            notification.confirmed.addToSet(req.user.id);
+            notification.save(callback);
+        },
+
+        // create activity for group owner
+        createActivity: function(callback) {
+
+            Activity.create({
+                _owner: req.user.id,
+                type: 'group-declined',
+                targetUser: notification._from,
+                targetGroup: notification.targetGroup
+            }, callback);
+        },
+
+        // create notification for declined user
+        createNotification: function(callback) {
+
+            Notification.create({
+                _owner: notification._from,
+                _from: req.user.id,
+                type: 'group-declined',
+                targetGroup: notification.targetGroup
+            }, callback);
+        }
+
+    }, function(err, results) {
+
+        if (err) next(err);
+        else {
+
+            var group = results.updateGroup,
+                newNotification = results.createNotification;
+
+            // send real time message to declined user
+            sio.sockets.in(notification._from).emit('group-declined', {
+                _id: newNotification._id,
+                _from: {
+                    _id: req.user.id,
+                    type: req.user.type,
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    title: req.user.title,
+                    cover: req.user.cover,
+                    photo: req.user.photo
+                },
+                type: 'group-declined',
+                targetGroup: group,
+                createDate: new Date()
+            });
+
+            // // send email to declined user
+            // Mailer.friendApprove({
+            //     from: req.user,
+            //     email: user.email
+            // });
+
+            // return the updated notification
+            res.json(results.updateNotification[0]);   
+        }
+    });
 };
 
 accept = function(req, res, next, notification) {
 
-    // find target group
-    Group.findById(notification.targetGroup, function(err, group){
+    async.parallel({
+
+        // save the group id in user profile
+        updateUser: function(callback) {
+
+            req.user.groups.addToSet(notification.targetGroup);
+            req.user.save(callback);
+        },
+
+        // move user's id from group's invited list
+        // to the participants list
+        updateGroup: function(callback) {
+
+            Group.findByIdAndUpdate(notification.targetGroup, {
+                '$pull': {invited: req.user.id},
+                '$addToSet': {participants: req.user.id},
+            }, callback);
+        },
+
+        // mark the notification as confirmed
+        updateNotification: function(callback) {
+            
+            notification.result = req.body.result;
+            notification.confirmed.addToSet(req.user.id);
+            notification.save(callback);
+        },
+
+        // log user's activity
+        createActivity: function(callback) {
+
+            Activity.create({
+                _owner: req.user.id,
+                type: 'group-joined',
+                targetGroup: notification.targetGroup
+            }, callback);
+        },
+
+        // create notification from group owner
+        createNotification: function(callback) {
+
+            Notification.create({
+                _owner: notification._from,   // TODO: this should be the group owner!!!
+                _from: req.user.id,
+                type: 'group-joined',
+                targetGroup: notification.targetGroup
+            }, callback);
+        }
+
+    }, function(err, results) {
 
         if (err) next(err);
         else {
 
-            // save the group id in user profile
-            req.user.groups.addToSet(group._id);
-            req.user.save(function(err) {
-                if (err) next(err);
+            var group = results.updateGroup,
+                newNotification = results.createNotification;
+
+            // send real time message
+            sio.sockets.in(group._owner).emit('group-joined', {
+                _id: newNotification._id,
+                _from: {
+                    _id: req.user.id,
+                    type: req.user.type,
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    title: req.user.title,
+                    cover: req.user.cover,
+                    photo: req.user.photo
+                },
+                type: 'group-joined',
+                targetGroup: group,
+                createDate: new Date()
             });
 
-            // move user's id from group's invited list
-            // to the participants list
-            group.invited.pull(req.user._id);
-            group.participants.addToSet(req.user._id);
+            // send email to group owner
+            User.findById(group._owner)
+                .select('email')
+                .where('mailSetting.groupJoined').equals(true)
+                .where('logicDelete').equals(false)
+                .exec(function(err, recipient) {
+                    if (err) callback(err);
+                    else if (recipient) Mailer.groupJoined(recipient, req.user, group);
+                });
 
-            // update group
-            group.save(function(err, updatedGroup) {
-
-                if (err) next(err);
-                else {
-
-                    // create respond notification
-                    Notification.create({
-                        _owner: updatedGroup._owner,
-                        _from: req.user.id,
-                        type: 'group-joined',
-                        targetGroup: updatedGroup._id
-                    }, function(err, respond) {
-
-                        if (err) next(err);
-                        else {
-
-                            var notyPopulateQuery = [{
-                                path:'_from',
-                                select: 'type firstName lastName title cover photo createDate'
-                            },{
-                                path:'targetGroup'
-                            }];
-
-                            // populate the respond notification with user's info
-                            respond.populate(notyPopulateQuery, function(err, noty) {
-
-                                if (err) next(err);
-                                // send real time message
-                                else sio.sockets.in(updatedGroup._owner).emit('group-joined', noty);
-                            });
-                        }
-                    });
-
-                    // log user's activity
-                    Activity.create({
-                        _owner: req.user.id,
-                        type: 'group-joined',
-                        targetGroup: updatedGroup._id
-                    }, function(err) {
-                        if (err) next(err);
-                    });
-
-                    // send email to group owner
-                    User.findById(updatedGroup._owner)
-                        .select('email')
-                        .where('logicDelete').equals(false)
-                        .exec(function(err, recipient) {
-
-                            Mailer.groupJoin({
-                                email: recipient.email,
-                                groupName: updatedGroup.name,
-                                participant: req.user
-                            });
-                        });
-
-                    // mark the notification as confirmed
-                    notification.result = req.body.result;
-                    notification.confirmed.addToSet(req.user.id);
-                    notification.save(function(err, confirmedNotification) {
-                        if (err) next(err);
-                        else res.json(confirmedNotification);
-                    });
-
-                }
-            });
+            // return the updated notification
+            res.json(results.updateNotification[0]);
         }
     });
+
 };
 
 refuse = function(req, res, next, notification) {
 
-    // find target group
-    Group.findById(notification.targetGroup, function(err, group){
+    async.parallel({
+
+        // remove user's id from group's invited list
+        updateGroup: function(callback) {
+
+            Group.findByIdAndUpdate(notification.targetGroup, {
+                '$pull': {invited: req.user.id}
+            }, callback);
+        },
+
+        // mark the notification as confirmed
+        updateNotification: function(callback) {
+
+            notification.result = req.body.result;
+            notification.confirmed.addToSet(req.user.id);
+            notification.save(callback);
+        },
+
+        // log user's activity
+        createActivity: function(callback) {
+
+            Activity.create({
+                _owner: req.user.id,
+                type: 'group-refused',
+                targetGroup: notification.targetGroup
+            }, callback);
+        },
+
+        // create notification from group owner
+        createNotification: function(callback) {
+
+            Notification.create({
+                _owner: notification._from,
+                _from: req.user.id,
+                type: 'group-refused',
+                targetGroup: notification.targetGroup
+            }, callback);
+        }
+
+    }, function(err, results) {
 
         if (err) next(err);
         else {
 
-            // remove user's id from group's invited list
-            group.invited.pull(req.user._id);
+            var group = results.updateGroup,
+                newNotification = results.createNotification;
 
-            // update group
-            group.save(function(err, updatedGroup) {
-
-                if (err) next(err);
-                else {
-
-                    // create respond notification
-                    Notification.create({
-                        _owner: updatedGroup._owner,
-                        _from: req.user.id,
-                        type: 'group-refused',
-                        targetGroup: updatedGroup._id
-                    }, function(err, respond) {
-
-                        if (err) next(err);
-                        else {
-
-                            var notyPopulateQuery = [{
-                                path:'_from',
-                                select: 'type firstName lastName title cover photo createDate'
-                            },{
-                                path:'targetGroup'
-                            }];
-
-                            // populate the respond notification with user's info
-                            respond.populate(notyPopulateQuery, function(err, noty) {
-
-                                if(err) next(err);
-                                // send real time message
-                                else sio.sockets.in(updatedGroup._owner).emit('group-refused', noty);
-                            });
-                        }
-                    });
-
-                    // log user's activity
-                    Activity.create({
-                        _owner: req.user.id,
-                        type: 'group-refused',
-                        targetGroup: updatedGroup._id
-                    }, function(err) {
-                        if (err) next(err);
-                    });
-
-                    // mark the notification as confirmed
-                    notification.result = req.body.result;
-                    notification.confirmed.addToSet(req.user.id);
-                    notification.save(function(err, confirmedNotification) {
-                        if (err) next(err);
-                        else res.json(confirmedNotification);
-                    });
-                }
+            // send real time message
+            sio.sockets.in(group._owner).emit('group-refused', {
+                _id: newNotification._id,
+                _from: {
+                    _id: req.user.id,
+                    type: req.user.type,
+                    firstName: req.user.firstName,
+                    lastName: req.user.lastName,
+                    title: req.user.title,
+                    cover: req.user.cover,
+                    photo: req.user.photo
+                },
+                type: 'group-refused',
+                targetGroup: group,
+                createDate: new Date()
             });
+
+            // return the updated notification
+            res.json(results.updateNotification[0]);
         }
     });
+
 };
 
 acknowledge = function(req, res, next, notification) {

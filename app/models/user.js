@@ -199,17 +199,42 @@ var User = new Schema({
             default: true
         },
 
-        friendNewPost: {
+        groupInvitation: {
             type: Boolean,
             default: true
         },
 
-        jobPost: {
+        groupJoined: {
+            type: Boolean,
+            default: true
+        },
+
+        groupApplied: {
+            type: Boolean,
+            default: true
+        },
+
+        groupApproved: {
+            type: Boolean,
+            default: true
+        },
+
+        newPost: {
+            type: Boolean,
+            default: true
+        },
+
+        newJob: {
             type: Boolean,
             default: true
         },
 
         postLiked: {
+            type: Boolean,
+            default: true
+        },
+
+        postBookmarked: {
             type: Boolean,
             default: true
         },
@@ -220,6 +245,11 @@ var User = new Schema({
         },
 
         commentReplied: {
+            type: Boolean,
+            default: true
+        },
+
+        commentLiked: {
             type: Boolean,
             default: true
         }

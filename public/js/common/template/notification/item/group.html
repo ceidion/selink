@@ -25,6 +25,18 @@
         icon = "fa-sign-out purple bigger-110";
         content = "グループ<a class='group-link' href='#group/" + obj.targetGroup._id + "'><strong>「" + groupName + "」</strong></a>の招待を拒否しました";
     }
+    else if (obj.type == "group-applied") {
+        icon = "fa-calendar-o blue bigger-110";
+        content = "グループ<a class='group-link' href='#group/" + obj.targetGroup._id + "'><strong>「" + groupName + "」</strong></a>を参加申請しました";
+    }
+    else if (obj.type == "group-approved") {
+        icon = "fa-smile-o green bigger-110";
+        content = "グループ<a class='group-link' href='#group/" + obj.targetGroup._id + "'><strong>「" + groupName + "」</strong></a>の参加申請を承認しました";
+    }
+    else if (obj.type == "group-declined") {
+        icon = "fa-frown-o purple bigger-110";
+        content = "グループ<a class='group-link' href='#group/" + obj.targetGroup._id + "'><strong>「" + groupName + "」</strong></a>の参加申請を拒否しました";
+    }
 %>
 
 <div class="profile-activity clearfix isotope-item">

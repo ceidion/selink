@@ -30,6 +30,8 @@ require.config({
         'datepicker': "lib/date-time/bootstrap-datepicker",
         'timepicker': "lib/date-time/bootstrap-timepicker",
         'moment': "lib/date-time/moment-with-langs",
+        // wizard
+        'wizard': "lib/fuelux/fuelux.wizard",
         // file upload
         'jquery.ui.widget': 'lib/jquery.ui.widget',
         'iframetransport': 'lib/jquery.iframe-transport',
@@ -91,7 +93,7 @@ require.config({
             deps: ['jquery']
         },
         'full-calendar': {
-            deps: ['jquery', 'moment']
+            deps: ['jquery']
         },
         'google-calendar': {
             deps: ['full-calendar']
@@ -104,6 +106,9 @@ require.config({
         },
         'timepicker': {
             deps: ['jquery']
+        },
+        'wizard': {
+            deps: ['bootstrap']
         },
         'fileupload': {
             deps: ['jquery', 'jquery.ui.widget', 'iframetransport']
@@ -174,6 +179,7 @@ require.config({
                 'datepicker-locale',
                 'timepicker',
                 'moment',
+                'wizard',
                 'fileupload',
                 'jcrop',
                 'maskedinput',

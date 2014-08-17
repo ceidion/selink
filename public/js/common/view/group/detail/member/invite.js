@@ -1,5 +1,5 @@
 define([
-    'text!common/template/group/detail/member/friends.html',
+    'text!common/template/group/detail/member/invite.html',
     'common/collection/base',
     'common/view/group/detail/member/item'
 ], function(
@@ -10,19 +10,19 @@ define([
 
     var FriendsCollection = BaseCollection.extend({
 
-        url: '/connections/friends'
+        url: '/connections/friends?size=40'
     });
 
     return Backbone.Marionette.CompositeView.extend({
 
-        // class name
-        className: "widget-box widget-color-green",
+        // this view is a modal dialog
+        className: "modal-dialog",
 
         // template
         template: template,
 
         // child view container
-        childViewContainer: '.widget-main',
+        childViewContainer: '.ace-thumbnails',
 
         // child view
         childView: ItemView,
